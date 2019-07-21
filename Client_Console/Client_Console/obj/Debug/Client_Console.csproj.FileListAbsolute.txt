@@ -1,0 +1,7 @@
+C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Client_Console\Client_Console\bin\Debug\Client_Console.exe.config
+C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Client_Console\Client_Console\bin\Debug\Client_Console.exe
+C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Client_Console\Client_Console\bin\Debug\Client_Console.pdb
+C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Client_Console\Client_Console\obj\Debug\Client_Console.csprojAssemblyReference.cache
+C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Client_Console\Client_Console\obj\Debug\Client_Console.csproj.CoreCompileInputs.cache
+C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Client_Console\Client_Console\obj\Debug\Client_Console.exe
+C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Client_Console\Client_Console\obj\Debug\Client_Console.pdb

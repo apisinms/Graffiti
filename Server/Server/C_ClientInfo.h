@@ -1,0 +1,42 @@
+#pragma once
+#include "C_Packet.h"
+#include "C_Global.h"
+#include "C_State.h"
+#include "C_Stack.h"
+
+#define STACK_SIZE 5
+
+class C_LoginState;
+class C_LobbyState;
+class C_ChatState;
+
+class C_ClientInfo : public C_Packet
+{
+private:
+	int roomNum;		// 소속된 방의 번호(소속된 방 없을시 음수 값인 -1)
+	UserInfo* userInfo;
+	C_State* state;
+	C_Stack<C_State*, STACK_SIZE>* stateStack;	// Undo 기능을 구현할 스택
+
+	// 미리 상태를 정의해둔다.
+	C_LoginState* loginState;
+	C_LobbyState* lobbyState;
+	C_ChatState*  chatState;
+	
+public:
+	C_ClientInfo(UserInfo* _userInfo, C_State* _state, SOCKET _sock, SOCKADDR_IN _addr);
+	~C_ClientInfo();
+
+	void SetState(C_State* _state);
+	C_State* GetCurrentState();
+	C_State* GetLobbyState();
+	C_State* GetLoginState();
+	C_State* GetChatState();
+	void PushState(C_State* _state);
+	C_State* PopState();
+	void SetUserInfo(UserInfo* _userInfo);
+	UserInfo* GetUserInfo();
+
+	void SetRoomNum(int _roomNum);
+	int GetRoomNum();
+};
