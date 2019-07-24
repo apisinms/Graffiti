@@ -53,19 +53,38 @@ public class NetworkManager : ScriptableObject
 		LOGIN_STATE = ((Int64)0x1 << 63),
 		LOBBY_STATE = ((Int64)0x1 << 62),
 		CHAT_STATE = ((Int64)0x1 << 61),
+<<<<<<< Updated upstream:Unity_Graffiti/Assets/Minsung/Scripts/NetworkManager.cs
 		//60
 		//59
 	};
+=======
+        INGAME_STATE = ((Int64)0x1 << 60),
+        //60
+        //59
+    };
+
+>>>>>>> Stashed changes:Unity - Graffiti/Graffiti/Assets/Minsung/Scripts/NetworkManager.cs
 	//58 ~ 54
 	enum PROTOCOL : Int64
 	{
 		// LoginState
 		JOIN_PROTOCOL = ((Int64)0x1 << 58),
 		LOGIN_PROTOCOL = ((Int64)0x1 << 57),
+<<<<<<< Updated upstream:Unity_Graffiti/Assets/Minsung/Scripts/NetworkManager.cs
 
 		// LobbyState
 		ENTER_ROOM_PROTOCOL = ((Int64)0x1 << 58),
 		CREATE_ROOM_PROTOCOL = ((Int64)0x1 << 57),
+=======
+        START_PROTOCOL = ((Int64)0x1 << 58),
+        ITEMSELECT_PROTOCOL = ((Int64)0x1 << 58),
+        // 56
+        // 55
+        // 54
+
+        // LobbyState
+        MATCHING_PROTOCOL = ((Int64)0x1 << 58),
+>>>>>>> Stashed changes:Unity - Graffiti/Graffiti/Assets/Minsung/Scripts/NetworkManager.cs
 		LOGOUT_PROTOCOL = ((Int64)0x1 << 56),
 		ROOMLIST_PROTOCOL = ((Int64)0x1 << 55),
 		// 54
@@ -73,6 +92,45 @@ public class NetworkManager : ScriptableObject
 		// ChatState
 		LEAVE_ROOM_PROTOCOL = ((Int64)0x1 << 58),
 		CHAT_PROTOCOL = ((Int64)0x1 << 57),
+<<<<<<< Updated upstream:Unity_Graffiti/Assets/Minsung/Scripts/NetworkManager.cs
+=======
+		// 56
+		// 55
+		// 54
+	};
+
+	// 53 ~ 49
+	enum RESULT : Int64
+	{
+		//LoginState
+		JOIN_SUCCESS = ((Int64)0x1 << 53),
+		LOGIN_SUCCESS = ((Int64)0x1 << 53),
+
+        ITEMSELECT_SUCCESS = ((Int64)0x1 << 53),
+        ITEMSELECT_FAIL = ((Int64)0x1 << 52),
+
+        LOGOUT_SUCCESS = ((Int64)0x1 << 53),
+        LOGOUT_FAIL = ((Int64)0x1 << 52),
+
+        START_SUCCESS = ((Int64)0x1 << 53),
+        START_FAIL = ((Int64)0x1 << 52),
+
+        // Join & Login result
+        ID_EXIST = ((Int64)0x1 << 52),
+		ID_ERROR = ((Int64)0x1 << 51),
+		PW_ERROR = ((Int64)0x1 << 50),
+
+		// LobbyState
+		MATCHING_SUCCESS = ((Int64)0x1 << 53),	// 매칭 성공
+		MATCHING_FAIL = ((Int64)0x1 << 52),		// 매칭 성공
+
+		// ChatState
+		LEAVE_ROOM_SUCCESS = ((Int64)0x1 << 53),
+		LEAVE_ROOM_FAIL = ((Int64)0x1 << 52),
+		
+
+		NODATA = ((Int64)0x1 << 49)
+>>>>>>> Stashed changes:Unity - Graffiti/Graffiti/Assets/Minsung/Scripts/NetworkManager.cs
 	};
 
 	struct _User_Info
@@ -207,8 +265,72 @@ public class NetworkManager : ScriptableObject
 		protocol = (PROTOCOL)((Int64)_state | (Int64)_protocol | (Int64)_result);
 		return protocol;
 	}
+    private void PackPacket(ref byte[] _buf, PROTOCOL _protocol, out int _size)
+    {
 
-	private void PackPacket(ref byte[] _buf, PROTOCOL _protocol, string _str1, string _str2, out int _size)
+        // 암호화된 내용을 저장할 버퍼이다.
+        byte[] encryptBuf = new byte[BUFSIZE];
+        byte[] buf = new byte[BUFSIZE];
+
+        _size = 0;
+        int offset = 0;
+
+        // 프로토콜
+        Buffer.BlockCopy(BitConverter.GetBytes((Int64)_protocol), 0, buf, offset, sizeof(PROTOCOL));
+        offset += sizeof(PROTOCOL);
+        _size += sizeof(PROTOCOL);
+
+        // 암호화된 내용을 encryptBuf에 저장
+        C_Encrypt.GetInstance.Encrypt(buf, encryptBuf, _size);
+
+        // 가장 앞에 size를 넣고, 그 뒤에 암호화했던 버퍼를 붙임.
+        offset = 0;
+        Buffer.BlockCopy(BitConverter.GetBytes(_size), 0, _buf, offset, sizeof(int));
+        offset += sizeof(int);
+        Buffer.BlockCopy(encryptBuf, 0, _buf, offset, _size);
+        offset += _size;
+
+        _size += sizeof(int);   // 총 보내야 할 바이트 수 저장한다.
+    }
+    private void PackPacket(ref byte[] _buf, PROTOCOL _protocol, int _num1, int _num2, out int _size)
+    {
+
+        // 암호화된 내용을 저장할 버퍼이다.
+        byte[] encryptBuf = new byte[BUFSIZE];
+        byte[] buf = new byte[BUFSIZE];
+
+        _size = 0;
+        int offset = 0;
+
+        // 프로토콜
+        Buffer.BlockCopy(BitConverter.GetBytes((Int64)_protocol), 0, buf, offset, sizeof(PROTOCOL));
+        offset += sizeof(PROTOCOL);
+        _size += sizeof(PROTOCOL);
+
+        // 정수 1
+        Buffer.BlockCopy(BitConverter.GetBytes(_num1), 0, buf, offset, sizeof(int));
+        offset += sizeof(int);
+        _size += sizeof(int);
+
+        // 정수 2
+        Buffer.BlockCopy(BitConverter.GetBytes(_num2), 0, buf, offset, sizeof(int));
+        offset += sizeof(int);
+        _size += sizeof(int);
+
+
+        // 암호화된 내용을 encryptBuf에 저장
+        C_Encrypt.GetInstance.Encrypt(buf, encryptBuf, _size);
+
+        // 가장 앞에 size를 넣고, 그 뒤에 암호화했던 버퍼를 붙임.
+        offset = 0;
+        Buffer.BlockCopy(BitConverter.GetBytes(_size), 0, _buf, offset, sizeof(int));
+        offset += sizeof(int);
+        Buffer.BlockCopy(encryptBuf, 0, _buf, offset, _size);
+        offset += _size;
+
+        _size += sizeof(int);   // 총 보내야 할 바이트 수 저장한다.
+    }
+    private void PackPacket(ref byte[] _buf, PROTOCOL _protocol, string _str1, string _str2, out int _size)
 	{
 		int strsize1 = _str1.Length * sizeof(char);
 		int strsize2 = _str2.Length * sizeof(char);
@@ -257,7 +379,7 @@ public class NetworkManager : ScriptableObject
 
 		_size += sizeof(int);   // 총 보내야 할 바이트 수 저장한다.
 	}
-	private void PackPacket(ref byte[] _buf, PROTOCOL _protocol, string _str1, string _str2, string _str3, out int _size)
+    private void PackPacket(ref byte[] _buf, PROTOCOL _protocol, string _str1, string _str2, string _str3, out int _size)
 	{
 		int strsize1 = _str1.Length * sizeof(char);
 		int strsize2 = _str2.Length * sizeof(char);
@@ -338,9 +460,25 @@ public class NetworkManager : ScriptableObject
 		// 이제 다시 string으로 변환
 		_str1 = ByteToString(arrStrByte);
 	}
+    private void UnPackPacket(byte[] _buf, out int num1, out int num2)
+    {
+        byte[] arrStrsize = new byte[sizeof(int)];
+
+        int offset = sizeof(PROTOCOL);
+
+        Buffer.BlockCopy(_buf, offset, arrStrsize, 0, sizeof(int));
+        offset += sizeof(int);
+        num1 = BitConverter.ToInt32(arrStrsize, 0);
+
+        Buffer.BlockCopy(_buf, offset, arrStrsize, 0, sizeof(int));
+        offset += sizeof(int);
+        num2 = BitConverter.ToInt32(arrStrsize, 0);
 
 
-	public string MayIJoin(string _id, string _pw, string _nickname)
+    }
+
+
+    public string MayIJoin(string _id, string _pw, string _nickname)
 	{
 
 		// 프로토콜 셋팅
@@ -407,40 +545,221 @@ public class NetworkManager : ScriptableObject
 		//Console.WriteLine(msg);
 	}
 
+<<<<<<< Updated upstream:Unity_Graffiti/Assets/Minsung/Scripts/NetworkManager.cs
     public bool CheckLoginSuccess()
     {
         if (result == RESULT.LOGIN_SUCCESS)
+=======
+    public string MayILogout()
+    {
+        // 프로토콜 셋팅
+        protocol = SetProtocol(
+                STATE_PROTOCOL.LOGIN_STATE,
+                PROTOCOL.LOGOUT_PROTOCOL,
+                RESULT.NODATA);
+        Console.WriteLine((Int64)protocol);
+
+        // 패킹 및 전송
+        int packetSize;
+        PackPacket(ref sendBuf, protocol, out packetSize);
+        bw.Write(sendBuf, 0, packetSize);
+
+
+        // 서버로부터 결과 얻기
+        int readSize = br.ReadInt32();      // 먼저 총 size를 얻어온다.
+        recvBuf = br.ReadBytes(readSize);   // 그리고 받아야할 size만큼 byte[]를 얻어온다.
+
+
+        // 얻은 버퍼를 복호화 진행
+        byte[] decryptBuf = new byte[BUFSIZE];
+        C_Encrypt.GetInstance.Decrypt(recvBuf, decryptBuf, readSize);
+
+        GetProtocol(decryptBuf, out state, out protocol, out result);
+
+        string msg = string.Empty;
+        UnPackPacket(decryptBuf, out msg);
+        Debug.Log(msg);
+
+        return msg;
+    }
+
+    public string MayIStart()
+    {
+        // 프로토콜 셋팅
+        protocol = SetProtocol(
+                STATE_PROTOCOL.LOBBY_STATE,
+                PROTOCOL.START_PROTOCOL,
+                RESULT.NODATA);
+        Console.WriteLine((Int64)protocol);
+
+        // 패킹 및 전송
+        int packetSize;
+        PackPacket(ref sendBuf, protocol, out packetSize);
+        bw.Write(sendBuf, 0, packetSize);
+
+
+        // 서버로부터 결과 얻기
+        int readSize = br.ReadInt32();      // 먼저 총 size를 얻어온다.
+        recvBuf = br.ReadBytes(readSize);   // 그리고 받아야할 size만큼 byte[]를 얻어온다.
+
+
+        // 얻은 버퍼를 복호화 진행
+        byte[] decryptBuf = new byte[BUFSIZE];
+        C_Encrypt.GetInstance.Decrypt(recvBuf, decryptBuf, readSize);
+
+        GetProtocol(decryptBuf, out state, out protocol, out result);
+
+        string msg = string.Empty;
+        UnPackPacket(decryptBuf, out msg);
+        Debug.Log(msg);
+
+        return msg;
+    }
+
+    public string MayIItemSelect(int mainW, int subW)
+    {
+        // 프로토콜 셋팅
+        protocol = SetProtocol(
+                STATE_PROTOCOL.LOBBY_STATE,
+                PROTOCOL.START_PROTOCOL,
+                RESULT.NODATA);
+        Console.WriteLine((Int64)protocol);
+
+        // 패킹 및 전송
+        int packetSize;
+        PackPacket(ref sendBuf, protocol, mainW, subW, out packetSize);
+        bw.Write(sendBuf, 0, packetSize);
+
+        // 서버로부터 결과 얻기
+        int readSize = br.ReadInt32();      // 먼저 총 size를 얻어온다.
+        recvBuf = br.ReadBytes(readSize);   // 그리고 받아야할 size만큼 byte[]를 얻어온다.
+
+
+        // 얻은 버퍼를 복호화 진행
+        byte[] decryptBuf = new byte[BUFSIZE];
+        C_Encrypt.GetInstance.Decrypt(recvBuf, decryptBuf, readSize);
+
+        GetProtocol(decryptBuf, out state, out protocol, out result);
+
+        string msg = string.Empty;
+        UnPackPacket(decryptBuf, out msg);
+        Debug.Log(msg);
+
+        return msg;
+    }
+
+    public bool CheckLoginSuccess()
+	{
+		if (result == RESULT.LOGIN_SUCCESS)
+			return true;
+		else
+			return false;
+	}
+	public bool CheckIDError()
+	{
+		if (result == RESULT.ID_ERROR)
+			return true;
+		else
+			return false;
+	}
+	public bool CheckPWError()
+	{
+		if (result == RESULT.PW_ERROR)
+			return true;
+		else
+			return false;
+	}
+
+	public bool CheckJoinSuccess()
+	{
+		if (result == RESULT.JOIN_SUCCESS)
+			return true;
+		else
+			return false;
+	}
+	public bool CheckIDExit()
+	{
+		if (result == RESULT.ID_EXIST)
+			return true;
+		else
+			return false;
+	}
+    public bool CheckLogoutSuccess()
+    {
+        if (result == RESULT.LOGOUT_SUCCESS)
+>>>>>>> Stashed changes:Unity - Graffiti/Graffiti/Assets/Minsung/Scripts/NetworkManager.cs
             return true;
         else
             return false;
     }
+<<<<<<< Updated upstream:Unity_Graffiti/Assets/Minsung/Scripts/NetworkManager.cs
     public bool CheckIDError()
     {
         if (result == RESULT.ID_ERROR)
+=======
+    public bool CheckLogoutFail()
+    {
+        if (result == RESULT.LOGOUT_FAIL)
+>>>>>>> Stashed changes:Unity - Graffiti/Graffiti/Assets/Minsung/Scripts/NetworkManager.cs
             return true;
         else
             return false;
     }
+<<<<<<< Updated upstream:Unity_Graffiti/Assets/Minsung/Scripts/NetworkManager.cs
     public bool CheckPWError()
     {
         if (result == RESULT.PW_ERROR)
+=======
+    public bool CheckStartSuccess()
+    {
+        if (result == RESULT.START_SUCCESS)
+>>>>>>> Stashed changes:Unity - Graffiti/Graffiti/Assets/Minsung/Scripts/NetworkManager.cs
             return true;
         else
             return false;
     }
+<<<<<<< Updated upstream:Unity_Graffiti/Assets/Minsung/Scripts/NetworkManager.cs
 
     public bool CheckJoinSuccess()
     {
         if (result == RESULT.JOIN_SUCCESS)
+=======
+    public bool CheckStartFail()
+    {
+        if (result == RESULT.START_FAIL)
             return true;
         else
             return false;
     }
+    public bool CheckItemSelectSuccess()
+    {
+        if (result == RESULT.ITEMSELECT_SUCCESS)
+>>>>>>> Stashed changes:Unity - Graffiti/Graffiti/Assets/Minsung/Scripts/NetworkManager.cs
+            return true;
+        else
+            return false;
+    }
+<<<<<<< Updated upstream:Unity_Graffiti/Assets/Minsung/Scripts/NetworkManager.cs
     public bool CheckIDExit()
     {
         if (result == RESULT.ID_EXIST)
+=======
+    public bool CheckItemSelectFail()
+    {
+        if (result == RESULT.ITEMSELECT_FAIL)
+>>>>>>> Stashed changes:Unity - Graffiti/Graffiti/Assets/Minsung/Scripts/NetworkManager.cs
             return true;
         else
             return false;
     }
+<<<<<<< Updated upstream:Unity_Graffiti/Assets/Minsung/Scripts/NetworkManager.cs
+=======
+
+    public void Disconnect()
+	{
+		bw.Close();
+		br.Close();
+		tcpClient.Close();
+	}
+>>>>>>> Stashed changes:Unity - Graffiti/Graffiti/Assets/Minsung/Scripts/NetworkManager.cs
 }

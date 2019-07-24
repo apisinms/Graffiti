@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="소스 파일\Manager">
+      <UniqueIdentifier>{f8f21cc3-7202-4be4-acd5-2d9f1291dd28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Network_Model">
+      <UniqueIdentifier>{da643fad-9d59-4962-ad13-0064eb97becb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Encryption">
+      <UniqueIdentifier>{2f29b39c-776f-44d2-b944-a13fb8ce6445}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Client">
+      <UniqueIdentifier>{2f87b91a-a3ee-4c20-8a21-53eb5f1f3b28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Manager">
+      <UniqueIdentifier>{2b3c5285-77b6-4ea5-a02b-c4f19481bb80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Encryption">
+      <UniqueIdentifier>{4d156283-b1a4-40cd-93f4-f5b2ad32fd19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Network_Model">
+      <UniqueIdentifier>{2d39578f-4eb3-4470-8d64-804613eacefc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Packet&amp;Socket">
+      <UniqueIdentifier>{00eb7283-cf93-4a06-8303-7644944847fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Client">
+      <UniqueIdentifier>{96db0c89-5ceb-4e3c-8e54-7f33662ceb0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\List">
+      <UniqueIdentifier>{a8ec13e6-a3d2-4ff8-a91c-3f581f287d71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Packet&amp;Socket">
+      <UniqueIdentifier>{338687f3-3efb-458a-8beb-c63242c186f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Utility">
+      <UniqueIdentifier>{7cab8ed0-441e-447b-ad0f-5f3de47a9570}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\State">
+      <UniqueIdentifier>{074d5f57-9ebc-4418-a82a-a5e6da490187}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\ETC">
+      <UniqueIdentifier>{c64b77b5-20bc-4ed1-ac0a-4dbb28d8c55c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="UtilityManager.h">
+      <Filter>헤더 파일\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="SessionManager.h">
+      <Filter>헤더 파일\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="MainManager.h">
+      <Filter>헤더 파일\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="LogManager.h">
+      <Filter>헤더 파일\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="LoginManager.h">
+      <Filter>헤더 파일\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="LobbyManager.h">
+      <Filter>헤더 파일\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="DatabaseManager.h">
+      <Filter>헤더 파일\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="ChatManager.h">
+      <Filter>헤더 파일\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="C_Encrypt.h">
+      <Filter>헤더 파일\Encryption</Filter>
+    </ClInclude>
+    <ClInclude Include="C_IOCP.h">
+      <Filter>헤더 파일\Network_Model</Filter>
+    </ClInclude>
+    <ClInclude Include="C_Select.h">
+      <Filter>헤더 파일\Network_Model</Filter>
+    </ClInclude>
+    <ClInclude Include="C_ClientInfo.h">
+      <Filter>헤더 파일\Client</Filter>
+    </ClInclude>
+    <ClInclude Include="C_State.h">
+      <Filter>헤더 파일\State</Filter>
+    </ClInclude>
+    <ClInclude Include="C_LoginState.h">
+      <Filter>헤더 파일\State</Filter>
+    </ClInclude>
+    <ClInclude Include="C_LobbyState.h">
+      <Filter>헤더 파일\State</Filter>
+    </ClInclude>
+    <ClInclude Include="C_ChatState.h">
+      <Filter>헤더 파일\State</Filter>
+    </ClInclude>
+    <ClInclude Include="C_List.h">
+      <Filter>헤더 파일\List</Filter>
+    </ClInclude>
+    <ClInclude Include="C_LinkedList.h">
+      <Filter>헤더 파일\List</Filter>
+    </ClInclude>
+    <ClInclude Include="C_Node.h">
+      <Filter>헤더 파일\List</Filter>
+    </ClInclude>
+    <ClInclude Include="C_ComfortableCS.h">
+      <Filter>헤더 파일\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="C_SyncCS.h">
+      <Filter>헤더 파일\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="C_Packet.h">
+      <Filter>헤더 파일\Packet&amp;Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="C_Socket.h">
+      <Filter>헤더 파일\Packet&amp;Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="C_Stack.h">
+      <Filter>헤더 파일\List</Filter>
+    </ClInclude>
+    <ClInclude Include="C_Global.h">
+      <Filter>헤더 파일\ETC</Filter>
+    </ClInclude>
+    <ClInclude Include="C_InGameState.h">
+      <Filter>헤더 파일\State</Filter>
+    </ClInclude>
+    <ClInclude Include="InGameManager.h">
+      <Filter>헤더 파일\Manager</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="DatabaseManager.cpp">
+      <Filter>소스 파일\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="LobbyManager.cpp">
+      <Filter>소스 파일\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="LoginManager.cpp">
+      <Filter>소스 파일\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="LogManager.cpp">
+      <Filter>소스 파일\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="MainManager.cpp">
+      <Filter>소스 파일\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="SessionManager.cpp">
+      <Filter>소스 파일\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="UtilityManager.cpp">
+      <Filter>소스 파일\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ChatManager.cpp">
+      <Filter>소스 파일\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="C_Select.cpp">
+      <Filter>소스 파일\Network_Model</Filter>
+    </ClCompile>
+    <ClCompile Include="C_IOCP.cpp">
+      <Filter>소스 파일\Network_Model</Filter>
+    </ClCompile>
+    <ClCompile Include="C_Encrypt.cpp">
+      <Filter>소스 파일\Encryption</Filter>
+    </ClCompile>
+    <ClCompile Include="C_ClientInfo.cpp">
+      <Filter>소스 파일\Client</Filter>
+    </ClCompile>
+    <ClCompile Include="C_Packet.cpp">
+      <Filter>소스 파일\Packet&amp;Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="C_Socket.cpp">
+      <Filter>소스 파일\Packet&amp;Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="InGameManager.cpp">
+      <Filter>소스 파일\Manager</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
