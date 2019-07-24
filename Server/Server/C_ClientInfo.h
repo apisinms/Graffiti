@@ -11,10 +11,12 @@ class C_LobbyState;
 class C_ChatState;
 class C_InGameState;
 
+struct RoomInfo;
+
 class C_ClientInfo : public C_Packet
 {
 private:
-	int roomNum;		// 소속된 방의 번호(소속된 방 없을시 음수 값인 -1)
+	RoomInfo* room;
 	UserInfo* userInfo;
 	C_State* state;
 	C_Stack<C_State*, STACK_SIZE>* stateStack;	// Undo 기능을 구현할 스택
@@ -40,6 +42,6 @@ public:
 	void SetUserInfo(UserInfo* _userInfo);
 	UserInfo* GetUserInfo();
 
-	void SetRoomNum(int _roomNum);
-	int GetRoomNum();
+	void SetRoom(RoomInfo* _room);
+	RoomInfo* GetRoom();
 };

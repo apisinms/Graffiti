@@ -6,7 +6,7 @@
 class C_ChatState : public C_State
 {
 private:
-	POSITION pos = CHAT;
+	POSITION pos = LOBBY;
 public:
 	void Init()override {}
 	void End()override {}
@@ -17,9 +17,9 @@ public:
 		if (ChatManager::GetInstance()->CanILeaveRoom(_ptr) == true)
 			pos = LOBBY;
 
-		// 채팅 메시지를 방에 소속된 다른 클라들에게 전송하도록 검사한다.
-		else if (ChatManager::GetInstance()->CheckChattingMessage(_ptr) == true)
-			pos = CHAT;
+		//// 채팅 메시지를 방에 소속된 다른 클라들에게 전송하도록 검사한다.
+		//else if (ChatManager::GetInstance()->CheckChattingMessage(_ptr) == true)
+		//	pos = CHAT;
 	}
 
 	void Write(C_ClientInfo* _ptr) override

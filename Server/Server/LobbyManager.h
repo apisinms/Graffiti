@@ -15,43 +15,20 @@
 
 class C_ClientInfo;
 
-
-struct RoomInfo
-{
-	static int incRoomNum;
-
-	C_List<C_ClientInfo*>* userList;
-	int roomNum;
-	TCHAR roomTitle[ROOM_TITLE_LEN];
-
-	// 생성자
-	RoomInfo(C_ClientInfo* _user, TCHAR *_roomTitle)
-	{
-		userList = new C_List<C_ClientInfo*>();
-		userList->Insert(_user);
-		roomNum = ++incRoomNum;
-		_tcscpy_s(roomTitle, ROOM_TITLE_LEN, _roomTitle);
-	}
-
-	~RoomInfo()
-	{
-		delete userList;
-	}
-};
-
 class LobbyManager
 {
 	enum PROTOCOL_LOBBY : __int64
 	{
 		MATCH_PROTOCOL = ((__int64)0x1 << 58),		// 매칭 프로토콜
+		START_PROTOCOL = ((__int64)0x1 << 57),		// 게임시작 프로토콜
 
 		LOGOUT_PROTOCOL = ((__int64)0x1 << 56),			// LOGIN 매니저에서 사용되기 때문에
 	};
 
 	enum RESULT_LOBBY : __int64
 	{
-		MATCHING_SUCCESS = ((__int64)0x1 << 53),
-		MATCHING_FAIL = ((__int64)0x1 << 52),
+		MATCH_SUCCESS = ((__int64)0x1 << 53),
+		MATCH_FAIL = ((__int64)0x1 << 52),
 
 		NODATA = ((__int64)0x1 << 49)
 	};
@@ -61,8 +38,6 @@ private:
 	LobbyManager() {}
 	~LobbyManager() {}
 	static LobbyManager* instance;
-
-	C_List<RoomInfo*>* roomList;
 
 public:
 	void Init();
@@ -81,4 +56,6 @@ private:
 
 public:
 	bool CanIMatch(C_ClientInfo* _ptr);			// 매칭을 할 수 있는가
+	bool CanILeaveLobby(C_ClientInfo* _ptr);	// 로그아웃 할 수 있는가
+	bool CanIStart(C_ClientInfo* _ptr);			// 시작 할 수 있는가
 };

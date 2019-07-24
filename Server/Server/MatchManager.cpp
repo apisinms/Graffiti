@@ -1,5 +1,8 @@
 #include "MatchManager.h"
+#include "RoomManager.h"
 #include "C_ClientInfo.h"
+
+MatchManager* MatchManager::instance;
 
 MatchManager* MatchManager::GetInstance()
 {
@@ -12,11 +15,9 @@ MatchManager* MatchManager::GetInstance()
 
 void MatchManager::Init()
 {
-	instance->waitList = new C_List<C_ClientInfo*>();
 }
 void MatchManager::End()
 {
-	delete waitList;
 }
 
 void MatchManager::Destroy()
@@ -26,20 +27,19 @@ void MatchManager::Destroy()
 
 bool MatchManager::MatchProcess(C_ClientInfo* _ptr)
 {
-	// 4인이상이 됐다면 나랑 내 앞에를 한 팀, 남은 2명을 한 팀으로 만들어서
-	if (waitList->GetCount() >= 4)
+	waitQueue.emplace(_ptr);
+
+
+	// 4인이상이 됐다면 
+	if (waitQueue.size() >= 4)
 	{
-		// 리스트에 있는 4명을 빼내서 방을 만들고
-		// 이제 무기 선택 화면으로
+		//나랑 내 앞에를 한 팀, 그리고 남은 2명을 한 팀으로 만들어서 방을 만들고
+		RoomManager::GetInstance()->CreateRoom(waitQueue.front(),waitQueue.front(),waitQueue.front(),waitQueue.front());
 
 		return true;
 	}
 
 	// 아직 매칭이 안잡히는 상황이라면
 	else
-	{
-		// 대기리스트에 넣고 false 리턴
-		waitList->Insert(_ptr);	
 		return false;
-	}
 }

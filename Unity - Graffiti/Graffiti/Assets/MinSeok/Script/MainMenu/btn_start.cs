@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class btn_start : MonoBehaviour {
+public class btn_start : MonoBehaviour
+{
 
 	public GameObject obj_loadingBar;
 	Animator am_loadingBar;
@@ -14,6 +15,8 @@ public class btn_start : MonoBehaviour {
 	void Start()
 	{
 		am_loadingBar = obj_loadingBar.GetComponent<Animator>();
+
+		
 	}
 
 	public void BtnStart() //매칭버튼 눌렀을때.
@@ -26,9 +29,12 @@ public class btn_start : MonoBehaviour {
 			obj_loadingBar.SetActive(true);
 			am_loadingBar.SetBool("isStart", true);
 
-			// 여기에서 매칭 호출
+			// 여기에서 매칭에 성공하면 
+			if (NetworkManager.instance.MayIMatch() == true)
+				SceneManager.LoadScene("SelectWeapons");
 
-			Invoke("DelayMatching", 3.0f); //3초뒤 무기선택으로 전환
+			//DelayMatching();
+			//Invoke("DelayMatching", 3.0f); //3초뒤 무기선택으로 전환
 		}
 		else if(flag == 1) //3초전에 취소눌렀을경우 원상복구
 		{
@@ -42,5 +48,13 @@ public class btn_start : MonoBehaviour {
 	void DelayMatching()
 	{
 		SceneManager.LoadScene("SelectWeapons");
+	}
+
+	IEnumerator WaitMatch()
+	{
+		while(true)
+		{
+
+		}
 	}
 }

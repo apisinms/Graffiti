@@ -19,7 +19,7 @@ public class InputInfoManager : MonoBehaviour {
 
     void Start()
     {
-		networkManager = NetworkManager.GetInstance;
+		networkManager = NetworkManager.instance;
         inputField_login_id.Select(); //맨처음 로그인아이디 입력창 자동선택
     }
 

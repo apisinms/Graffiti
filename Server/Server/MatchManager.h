@@ -1,11 +1,10 @@
 #pragma once
-#include "C_List.h"
-
-class C_ClientInfo;
+#include <queue>
+#include "C_ClientInfo.h"
 
 class MatchManager
 {
-	C_List<C_ClientInfo*>* waitList;	// 매칭 대기중인 리스트 목록
+	queue<C_ClientInfo*> waitQueue;
 	
 private:
 	static MatchManager* instance;

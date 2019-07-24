@@ -16,6 +16,14 @@ public:
 		// 매칭이 가능한지
 		if (LobbyManager::GetInstance()->CanIMatch(_ptr) == true)
 			pos = INGAME;
+
+		// 로비를 떠나서 로그인 창으로 가는게 가능한지
+		else if (LobbyManager::GetInstance()->CanILeaveLobby(_ptr) == true)
+			pos = LOGIN;
+
+		// 게임 시작이 가능한지
+		else if(LobbyManager::GetInstance()->CanIStart(_ptr) == true)
+			pos = INGAME;
 	}
 
 	void Write(C_ClientInfo* _ptr) override
@@ -23,7 +31,7 @@ public:
 		// 바뀌어야하는 상태에따라 상태를 변경한다.
 		switch (pos)
 		{
-		case MATCH:
+		case INGAME:
 			_ptr->SetState(_ptr->GetInGameState());		// 인게임 상태로 이동한다.
 			break;
 

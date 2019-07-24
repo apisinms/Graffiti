@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class SelectWeapons : MonoBehaviour {
+public class SelectWeapons : MonoBehaviour
+{
 
     public GameObject panel_mainWeapon, panel_subWeapon; //스크롤될 패널 2개
     public Button[] btn_mainWeapons = new Button[3]; //주무기 버튼 3개

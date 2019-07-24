@@ -93,20 +93,20 @@ bool ChatManager::LeaveRoomProcess(C_ClientInfo* _ptr, char* _buf)
 	char buf[BUFSIZE];		// 버퍼
 	int packetSize = 0;     // 총 사이즈
 
-	// 로비로 돌아간 것에 성공하면 result 변경
-	if (LobbyManager::GetInstance()->CheckLeaveRoom(_ptr) == true)
-	{
-		leaveResult = RESULT_CHAT::LEAVE_ROOM_SUCCESS;
-		_tcscpy_s(msg, MSGSIZE, GOTO_LOBBY_SUCCESS_MSG);
+	//// 로비로 돌아간 것에 성공하면 result 변경
+	//if (LobbyManager::GetInstance()->CheckLeaveRoom(_ptr) == true)
+	//{
+	//	leaveResult = RESULT_CHAT::LEAVE_ROOM_SUCCESS;
+	//	_tcscpy_s(msg, MSGSIZE, GOTO_LOBBY_SUCCESS_MSG);
 
-		_ptr->SetRoomNum(-1);	// 소속된 방이 이제 없음
-	}
+	//	_ptr->SetRoomNum(-1);	// 소속된 방이 이제 없음
+	//}
 
-	else
-	{
-		leaveResult = RESULT_CHAT::LEAVE_ROOM_FAIL;
-		_tcscpy_s(msg, MSGSIZE, GOTO_LOBBY_SUCCESS_MSG);
-	}
+	//else
+	//{
+	//	leaveResult = RESULT_CHAT::LEAVE_ROOM_FAIL;
+	//	_tcscpy_s(msg, MSGSIZE, GOTO_LOBBY_SUCCESS_MSG);
+	//}
 
 	// 프로토콜 세팅 
 	protocol = SetProtocol(CHAT_STATE, PROTOCOL_CHAT::LEAVE_ROOM_PROTOCOL, leaveResult);
@@ -146,30 +146,30 @@ bool ChatManager::CheckChattingMessage(C_ClientInfo* _ptr)
 
 	if (protocol == CHAT_PROTOCOL)
 	{
-		while (1)
-		{
-			// 방에있는 클라의 정보를 하나씩얻어옴
-			C_ClientInfo* ptr = LobbyManager::GetInstance()->GetRoomClient(_ptr->GetRoomNum());
+		//while (1)
+		//{
+		//	// 방에있는 클라의 정보를 하나씩얻어옴
+		//	C_ClientInfo* ptr = LobbyManager::GetInstance()->GetRoomClient(_ptr->GetRoomNum());
 
-			// 자신에게는 안보낸다.
-			if (ptr == _ptr)
-				continue;
+		//	// 자신에게는 안보낸다.
+		//	if (ptr == _ptr)
+		//		continue;
 
-			// 클라 정보가 없으면 빠져나간다.
-			if (ptr == nullptr)
-				break;
+		//	// 클라 정보가 없으면 빠져나간다.
+		//	if (ptr == nullptr)
+		//		break;
 
 
 
-			// 그 외에 경우에는 채팅 메시지를 보내준다.
+		//	// 그 외에 경우에는 채팅 메시지를 보내준다.
 
-			// 프로토콜 세팅 
-			protocol = SetProtocol(CHAT_STATE, PROTOCOL_CHAT::CHAT_PROTOCOL, (RESULT_CHAT)0);
-			ZeroMemory(buf, sizeof(BUFSIZE));
-			// 패킹 및 전송
-			PackPacket(buf, compleChatMsg, packetSize);
-			ptr->SendPacket(protocol, buf, packetSize);
-		}
+		//	// 프로토콜 세팅 
+		//	protocol = SetProtocol(CHAT_STATE, PROTOCOL_CHAT::CHAT_PROTOCOL, (RESULT_CHAT)0);
+		//	ZeroMemory(buf, sizeof(BUFSIZE));
+		//	// 패킹 및 전송
+		//	PackPacket(buf, compleChatMsg, packetSize);
+		//	ptr->SendPacket(protocol, buf, packetSize);
+		//}
 
 		return true;
 	}

@@ -17,7 +17,7 @@ C_ClientInfo::C_ClientInfo(UserInfo* _userInfo, C_State* _state, SOCKET _sock, S
 	this->sendData.compSendBytes = 0;
 	this->sendData.sendBytes = 0;
 
-	this->roomNum = -1;
+	this->room = nullptr;
 
 	ZeroMemory(&rOverlapped, sizeof(rOverlapped));
 	ZeroMemory(&sOverlapped, sizeof(sOverlapped));
@@ -64,5 +64,5 @@ C_State* C_ClientInfo::PopState()
 	return nullptr;
 }
 
-void C_ClientInfo::SetRoomNum(int _roomNum) { roomNum = _roomNum; }
-int C_ClientInfo::GetRoomNum() { return roomNum; }
+void C_ClientInfo::SetRoom(RoomInfo* _room) { room = _room; }
+RoomInfo* C_ClientInfo::GetRoom() { return room; }
