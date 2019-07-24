@@ -43,7 +43,7 @@ class LobbyManager
 {
 	enum PROTOCOL_LOBBY : __int64
 	{
-		MATCHING_PROTOCOL = ((__int64)0x1 << 58),		// 매칭 프로토콜
+		MATCH_PROTOCOL = ((__int64)0x1 << 58),		// 매칭 프로토콜
 
 		LOGOUT_PROTOCOL = ((__int64)0x1 << 56),			// LOGIN 매니저에서 사용되기 때문에
 	};

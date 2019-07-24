@@ -132,6 +132,12 @@
     <ClInclude Include="C_Global.h">
       <Filter>헤더 파일\ETC</Filter>
     </ClInclude>
+    <ClInclude Include="MatchManager.h">
+      <Filter>헤더 파일\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="C_InGameState.h">
+      <Filter>헤더 파일\State</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -178,6 +184,9 @@
     </ClCompile>
     <ClCompile Include="C_Socket.cpp">
       <Filter>소스 파일\Packet&amp;Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="MatchManager.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
