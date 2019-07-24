@@ -9,6 +9,7 @@
 class C_LoginState;
 class C_LobbyState;
 class C_ChatState;
+class C_InGameState;
 
 class C_ClientInfo : public C_Packet
 {
@@ -22,6 +23,7 @@ private:
 	C_LoginState* loginState;
 	C_LobbyState* lobbyState;
 	C_ChatState*  chatState;
+	C_InGameState*  inGameState;
 	
 public:
 	C_ClientInfo(UserInfo* _userInfo, C_State* _state, SOCKET _sock, SOCKADDR_IN _addr);
@@ -32,6 +34,7 @@ public:
 	C_State* GetLobbyState();
 	C_State* GetLoginState();
 	C_State* GetChatState();
+	C_State* GetInGameState();
 	void PushState(C_State* _state);
 	C_State* PopState();
 	void SetUserInfo(UserInfo* _userInfo);

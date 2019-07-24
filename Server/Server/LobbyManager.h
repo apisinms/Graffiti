@@ -79,21 +79,6 @@ private:
 
 	PROTOCOL_LOBBY GetBufferAndProtocol(C_ClientInfo* _ptr, char* _buf);	// buf와 Protocol을 동시에 얻는 함수
 
-private:
-	bool EnterRoomProcess(C_ClientInfo* _ptr, char* _buf);			// 방에 들어가는 처리
-	RoomInfo* CheckEnterRoom(int _roomNum, RESULT_LOBBY& _result);	// 방에 들어갈수 있는지 검사
-
-	bool CreateRoomProcess(C_ClientInfo* _ptr, char* _buf);			// 방을 생성하는 처리
-
-	bool RoomListProcess(C_ClientInfo* _ptr, char* _buf);			// 룸 리스트를 얻어서 클라에게 보내주는 처리
-	bool GetRoomList(TCHAR* _msg);									// 룸 리스트를 얻어 _msg에 저장
-
 public:
-	bool CanIEnterRoom(C_ClientInfo* _ptr);		// 방에 입장 가능한가
-	bool CanICreateRoom(C_ClientInfo* _ptr);	// 방을 생성할 수 있는가
-	bool CanIGetRoomList(C_ClientInfo* _ptr);	// 방 목록을 얻어올 수 있는가
-	bool CanILeaveLobby(C_ClientInfo* _ptr);	// 로비로 갈 수 있는가
-	bool CheckLeaveRoom(C_ClientInfo* _ptr);	// 방을 나갈 수 있는가(CHAT_STATE에서 호출하게 됨)
-
-	C_ClientInfo* GetRoomClient(int _roomNum);	// _roomNum 번호에 해당하는 방에 있는 유저들의 정보를 얻어옴
+	bool CanIMatch(C_ClientInfo* _ptr);			// 매칭을 할 수 있는가
 };

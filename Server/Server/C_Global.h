@@ -16,7 +16,7 @@ using namespace std;
 
 enum POSITION : int
 {
-	LOGIN, LOBBY, CHAT
+	LOGIN, LOBBY, MATCH, INGAME,
 };
 
 
