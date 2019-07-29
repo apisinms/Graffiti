@@ -20,10 +20,10 @@ struct Team
 // 방의 정보
 struct RoomInfo
 {
-	Team team1;
-	Team team2;
+	Team* team1;
+	Team* team2;
 
-	RoomInfo(Team _team1, Team _team2)
+	RoomInfo(Team* _team1, Team* _team2)
 	{
 		team1 = _team1;
 		team2 = _team2;

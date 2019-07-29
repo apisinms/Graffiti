@@ -27,14 +27,27 @@ void MatchManager::Destroy()
 
 bool MatchManager::MatchProcess(C_ClientInfo* _ptr)
 {
-	waitQueue.emplace(_ptr);
+	waitQueue.emplace(_ptr);	// 큐에 삽입
 
 
 	// 4인이상이 됐다면 
 	if (waitQueue.size() >= 4)
 	{
+		// 4인의 플레이어 정보를 얻는다.
+		C_ClientInfo* player[4];
+		for (int i = 0; i < 4; i++)
+		{
+			player[i] = waitQueue.front();
+			waitQueue.pop();
+		}
+
 		//나랑 내 앞에를 한 팀, 그리고 남은 2명을 한 팀으로 만들어서 방을 만들고
-		RoomManager::GetInstance()->CreateRoom(waitQueue.front(),waitQueue.front(),waitQueue.front(),waitQueue.front());
+		RoomManager::GetInstance()->CreateRoom(
+		player[0],
+		player[1],
+		player[2],
+		player[3]
+		);
 
 		return true;
 	}

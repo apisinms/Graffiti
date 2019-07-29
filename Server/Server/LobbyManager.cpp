@@ -106,11 +106,17 @@ bool LobbyManager::CanIMatch(C_ClientInfo* _ptr)
 
 			// 패킹 및 전송
 			int packetSize = 0;
-			PackPacket(buf, nullptr, packetSize);	// 이 부분이 null로 넘겼을 때 처리가 될지??
-			_ptr->GetRoom()->team1.player1->SendPacket(protocol, buf, packetSize);
-			_ptr->GetRoom()->team1.player2->SendPacket(protocol, buf, packetSize);
-			_ptr->GetRoom()->team2.player1->SendPacket(protocol, buf, packetSize);
+			//PackPacket(buf, nullptr, packetSize);	// 이 부분이 null로 넘겼을 때 처리가 될지??
+			_ptr->GetRoom()->team1->player1->SendPacket(protocol, buf, packetSize);
+			_ptr->GetRoom()->team1->player2->SendPacket(protocol, buf, packetSize);
+			_ptr->GetRoom()->team2->player1->SendPacket(protocol, buf, packetSize);
 			_ptr->SendPacket(protocol, buf, packetSize);
+
+			wprintf(L"1팀 : %s, %s\n2팀 : %s, %s\n"
+				, _ptr->GetRoom()->team1->player1->GetUserInfo()->id
+				, _ptr->GetRoom()->team1->player2->GetUserInfo()->id
+				, _ptr->GetRoom()->team2->player1->GetUserInfo()->id
+				, _ptr->GetRoom()->team2->player2->GetUserInfo()->id);
 
 			return true;
 		}

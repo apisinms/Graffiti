@@ -34,8 +34,8 @@ bool RoomManager::CreateRoom(
 	C_ClientInfo* _myPlayer)
 {
 	// 플레이어를 2명씩 나눠서 팀을 만들고, 이를 방 정보에 추가한다.
-	Team team1(_player1, _player2);
-	Team team2(_player3, _myPlayer);
+	Team* team1 = new Team(_player1, _player2);
+	Team* team2 = new Team(_player3, _myPlayer);
 
 	RoomInfo* room = new RoomInfo(team1, team2);
 
