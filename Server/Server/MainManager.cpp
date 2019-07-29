@@ -8,6 +8,7 @@
 #include "ChatManager.h"
 #include "C_ClientInfo.h"
 #include "UtilityManager.h"
+#include "RoomManager.h"
 #include "MatchManager.h"
 #include <locale.h>
 
@@ -50,6 +51,7 @@ void MainManager::Init()
 	DatabaseManager::GetInstance()->Init();	// DB매니저에서 초기화 하는 작업 수행
 	LoginManager::GetInstance()->Init();	// 로그인 매니저에서 초기화 해야하는 작업을 진행한다(예:회원가입 리스트 불러오기)
 	LobbyManager::GetInstance()->Init();
+	RoomManager::GetInstance()->Init();
 	MatchManager::GetInstance()->Init();
 	ChatManager::GetInstance()->Init();
 
@@ -153,6 +155,7 @@ void MainManager::End()
 {
 	LoginManager::GetInstance()->End();
 	LobbyManager::GetInstance()->End();
+	RoomManager::GetInstance()->End();
 	MatchManager::GetInstance()->End();
 	ChatManager::GetInstance()->End();
 	DatabaseManager::GetInstance()->End();

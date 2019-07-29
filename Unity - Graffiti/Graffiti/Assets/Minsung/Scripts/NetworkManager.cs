@@ -18,7 +18,7 @@ public class NetworkManager : MonoBehaviour
 	const int IDSIZE = 255;
 	const int PWSIZE = 255;
 	const int NICKNAMESIZE = 255;
-	const int BUFSIZE = 4096;   // 버퍼 사이즈
+	
 
 	// 63 ~ 59 
 	enum STATE_PROTOCOL : Int64
@@ -80,21 +80,6 @@ public class NetworkManager : MonoBehaviour
 		NODATA = ((Int64)0x1 << 49)
 	};
 
-	// 큐에 들어갈 정보
-	struct Info
-	{
-		public STATE_PROTOCOL	state;
-		public PROTOCOL			protocol;
-		public RESULT			result;
-
-		public Info(STATE_PROTOCOL _state, PROTOCOL _protocol, RESULT _result)
-		{
-			state = _state;
-			protocol = _protocol;
-			result = _result;
-		}
-	}
-
 	struct _User_Info
 	{
 		public string id;
@@ -111,9 +96,8 @@ public class NetworkManager : MonoBehaviour
 	private static int serverPort = 9000;
 
 	// 버퍼
-	private byte[] sendBuf = new byte[BUFSIZE];				// 송신 버퍼
-	private byte[] recvBuf = new byte[BUFSIZE];				// 수신 버퍼
-	private byte[] recvDecryptBuf = new byte[BUFSIZE];		// 수신 복호화 버퍼
+	private byte[] sendBuf = new byte[C_Global.BUFSIZE];				// 송신 버퍼
+	//private byte[] recvBuf = new byte[C_Global.BUFSIZE];				// 수신 버퍼
 
 	// TCP 클라, 바이너리 리더, 라이터
 	private static TcpClient tcpClient = new TcpClient();
@@ -121,21 +105,21 @@ public class NetworkManager : MonoBehaviour
 	private BinaryWriter bw = null;
 
 	private object key = new object();      // 동기화에 사용할 key이다.
-	private bool recvFlag = false;          // 모두 recv했는지 나타내는 플래그
-	private string msg = string.Empty;  // 서버로부터 전달되는 메시지를 저장할 변수
-
-	private Thread thread = null;
+	private string msg = string.Empty;		// 서버로부터 전달되는 메시지를 저장할 변수
 
 
-	private Queue<Info> queue = new Queue<Info>();
+	private Queue<C_Global.QueueInfo> queue;	// recv에 관한 패킷이 저장될 큐
+
+	public Queue<C_Global.QueueInfo> GetQueue { get { return queue; } }
+	public BinaryReader GetBinaryReader { get { return br; } }
+	public BinaryWriter GetBinaryWriter { get { return bw; } }
 
 	public static NetworkManager instance = null;
 
-	private void Start()
+	private void Awake()
 	{
 		if (instance == null)
 		{
-			//instance = new NetworkManager();
 			instance = this;
 
 			// 처음 서버와 연결하는 부분
@@ -149,14 +133,9 @@ public class NetworkManager : MonoBehaviour
 				instance.br = new BinaryReader(tcpClient.GetStream());
 				instance.bw = new BinaryWriter(tcpClient.GetStream());
 
-				// 수신전용 쓰레드 생성 및 실행
-				//thread = new Thread(new ThreadStart(instance.RecvThread));
-				//thread.Start();
-				thread = new Thread(RecvThread);
-				thread.Start();     //thread 시작 
+				queue = new Queue<C_Global.QueueInfo>();	// 처리되야할 작업들을 담을 큐 생성
 
-				// 코루틴 쓰레드 생성 및 실행
-				//instance.StartCoroutine(instance.RecvCoroutine());
+				ThreadManager.GetInstance.Init();
 			}
 		}
 
@@ -236,8 +215,8 @@ public class NetworkManager : MonoBehaviour
 	private void PackPacket(ref byte[] _buf, PROTOCOL _protocol, out int _size)
 	{
 		// 암호화된 내용을 저장할 버퍼이다.
-		byte[] encryptBuf = new byte[BUFSIZE];
-		byte[] buf = new byte[BUFSIZE];
+		byte[] encryptBuf = new byte[C_Global.BUFSIZE];
+		byte[] buf = new byte[C_Global.BUFSIZE];
 
 		_size = 0;
 		int offset = 0;
@@ -266,8 +245,8 @@ public class NetworkManager : MonoBehaviour
 		int strsize2 = _str2.Length * sizeof(char);
 
 		// 암호화된 내용을 저장할 버퍼이다.
-		byte[] encryptBuf = new byte[BUFSIZE];
-		byte[] buf = new byte[BUFSIZE];
+		byte[] encryptBuf = new byte[C_Global.BUFSIZE];
+		byte[] buf = new byte[C_Global.BUFSIZE];
 
 		_size = 0;
 		int offset = 0;
@@ -316,8 +295,8 @@ public class NetworkManager : MonoBehaviour
 		int strsize3 = _str3.Length * sizeof(char);
 
 		// 암호화된 내용을 저장할 버퍼이다.
-		byte[] encryptBuf = new byte[BUFSIZE];
-		byte[] buf = new byte[BUFSIZE];
+		byte[] encryptBuf = new byte[C_Global.BUFSIZE];
+		byte[] buf = new byte[C_Global.BUFSIZE];
 
 		_size = 0;
 		int offset = 0;
@@ -392,7 +371,7 @@ public class NetworkManager : MonoBehaviour
 
 
 
-	public string MayILogin(string _id, string _pw)
+	public void MayILogin(string _id, string _pw)
 	{
 		// 프로토콜 셋팅
 		protocol = SetProtocol(
@@ -405,13 +384,6 @@ public class NetworkManager : MonoBehaviour
 		int packetSize;
 		PackPacket(ref sendBuf, protocol, _id, _pw, out packetSize);
 		bw.Write(sendBuf, 0, packetSize);
-
-		// 코루틴을 통해서 Recv를 하고, 다 받으면 다시 플래그를 초기화 해준다.
-		while (recvFlag == false) ;
-		recvFlag = false;
-
-		// 받은 메시지 리턴
-		return msg;
 	}
 
 	public bool CheckLoginSuccess()
@@ -437,7 +409,7 @@ public class NetworkManager : MonoBehaviour
 	}
 
 
-	public string MayIJoin(string _id, string _pw, string _nickname)
+	public void MayIJoin(string _id, string _pw, string _nickname)
 	{
 		// 프로토콜 셋팅
 		protocol = SetProtocol(
@@ -450,14 +422,6 @@ public class NetworkManager : MonoBehaviour
 		int packetSize;
 		PackPacket(ref sendBuf, protocol, _id, _pw, _nickname, out packetSize);
 		bw.Write(sendBuf, 0, packetSize);
-
-
-		// 코루틴을 통해서 Recv를 하고, 다 받으면 다시 플래그를 초기화 해준다.
-		while (recvFlag == false) ;
-		recvFlag = false;
-
-		// 받은 메시지 리턴
-		return msg;
 	}
 
 	public bool CheckJoinSuccess()
@@ -475,7 +439,7 @@ public class NetworkManager : MonoBehaviour
 			return false;
 	}
 
-	public bool MayIMatch()
+	public void MayIMatch()
 	{
 		// 프로토콜 셋팅
 		protocol = SetProtocol(
@@ -488,161 +452,100 @@ public class NetworkManager : MonoBehaviour
 		int packetSize;
 		PackPacket(ref sendBuf, protocol, out packetSize);
 		bw.Write(sendBuf, 0, packetSize);
+	}
 
+	public bool CheckMatched()
+	{
+		if (protocol == PROTOCOL.START_PROTOCOL)
+			return true;
 
-		// 서버로부터 결과 얻기
-		int readSize = br.ReadInt32();      // 먼저 총 size를 얻어온다.
-		recvBuf = br.ReadBytes(readSize);   // 그리고 받아야할 size만큼 byte[]를 얻어온다.
+		return false;
+	}
 
-
-		// 얻은 버퍼를 복호화 진행
-		byte[] decryptBuf = new byte[BUFSIZE];
-		C_Encrypt.GetInstance.Decrypt(recvBuf, decryptBuf, readSize);
-
-		GetProtocol(decryptBuf, out state, out protocol, out result);
-
+	public bool CheckMatchSuccess()
+	{
 		if (result == RESULT.MATCH_SUCCESS)
 			return true;
 
-		else
-			return false;
+		return false;
 	}
 
-	private IEnumerator RecvCoroutine()
+	public string GetRetMsg()
 	{
-		int readSize = 0;
-		byte[] decryptBuf = new byte[BUFSIZE];
-		while (true)
-		{
-			// 서버로부터 결과 얻기
-			readSize = br.ReadInt32();      // 먼저 총 size를 얻어온다.
-			recvBuf = br.ReadBytes(readSize);   // 그리고 받아야할 size만큼 byte[]를 얻어온다.
-
-			yield return null;
-
-			// 얻은 버퍼를 복호화 진행
-			C_Encrypt.GetInstance.Decrypt(recvBuf, decryptBuf, readSize);
-
-			GetProtocol(decryptBuf, out state, out protocol, out result);
-			switch (state)
-			{
-				// Login 상태일 때
-				case STATE_PROTOCOL.LOGIN_STATE:
-					{
-						switch (result)
-						{
-							case RESULT.LOGIN_SUCCESS:
-							//case RESULT.JOIN_SUCCESS:
-							//case RESULT.LOGOUT_SUCCESS:
-							case RESULT.ID_EXIST:
-							//case RESULT.LOGOUT_FAIL:
-							case RESULT.ID_ERROR:
-							case RESULT.PW_ERROR:
-								{
-									Monitor.Enter(key);
-
-									string msg = string.Empty;
-									UnPackPacket(decryptBuf, out msg);
-									Debug.Log(msg);
-									recvFlag = true;    // 수신 후 모든 처리 완료
-
-									Monitor.Exit(key);
-								}
-								break;
-						}
-					}
-					break;
-
-				// Lobby 상태일 때
-				case STATE_PROTOCOL.LOBBY_STATE:
-					{
-
-					}
-					break;
-
-			}
-		}
+		return msg;
 	}
 
-
-	private void RecvThread()
-	{
-		int readSize = 0;
-		//while (true)
-		//{
-		// 서버로부터 결과 얻기
-		readSize = br.ReadInt32();      // 먼저 총 size를 얻어온다.
-		recvBuf = br.ReadBytes(readSize);   // 그리고 받아야할 size만큼 byte[]를 얻어온다.
-
-		// 얻은 버퍼를 복호화 진행
-		C_Encrypt.GetInstance.Decrypt(recvBuf, recvDecryptBuf, readSize);
-
-		// 상태, 프로토콜, 결과를 얻음
-		GetProtocol(recvDecryptBuf, out state, out protocol, out result);
-
-		// 이를 큐에 저장
-		Info info = new Info(state, protocol, result);
-		queue.Enqueue(info);
-
-		Debug.Log(Thread.CurrentThread);
-
-		/// 만약 종료 프로토콜같은게 들어왔다면 break한다.
-		//}
-	}
 	private void Update()
 	{
-		Debug.Log(Thread.CurrentThread);
-
-		if (queue.Count > 0)
-		{
-			Info info = queue.Dequeue();
-
-			switch (info.state)
-			{
-				// Login 상태일 때
-				case STATE_PROTOCOL.LOGIN_STATE:
-					{
-						// 프로토콜은 제외했다.
-
-
-						switch (info.result)
-						{
-							case RESULT.LOGIN_SUCCESS:
-							//case RESULT.JOIN_SUCCESS:
-							//case RESULT.LOGOUT_SUCCESS:
-							case RESULT.ID_EXIST:
-							//case RESULT.LOGOUT_FAIL:
-							case RESULT.ID_ERROR:
-							case RESULT.PW_ERROR:
-								{
-									Monitor.Enter(key);
-
-
-									string msg = string.Empty;
-									UnPackPacket(recvDecryptBuf, out msg);
-									Debug.Log(msg);
-									recvFlag = true;    // 수신 후 모든 처리 완료
-
-									Monitor.Exit(key);
-								}
-								break;
-						}
-					}
-					break;
-
-				// Lobby 상태일 때
-				case STATE_PROTOCOL.LOBBY_STATE:
-					{
-
-					}
-					break;
-
-			}
-
-			thread.Start();
-		}
+		// 클라이언트가 연결되었고, 큐에 내용이 있다면 RecvProcess를 호출하여 recv에 관한 처리를 한다.
+		if (tcpClient.Connected && queue.Count > 0)
+			RecvProcess();
 	}
 
+	private void RecvProcess()
+	{
+		// 큐에 저장된 패킷을 꺼내온다.
+		C_Global.QueueInfo info = queue.Dequeue();
+		byte[] packet = info.GetPakcet;
+
+		// 얻어온 패킷으로 state, protocol, result를 각각 추출한다.
+		GetProtocol(packet, out state, out protocol, out result);
+
+		// 얻어온 정보를 switch하여 처리한다.
+		switch (state)
+		{
+			// Login 상태일 때
+			case STATE_PROTOCOL.LOGIN_STATE:
+				{
+					// Login 상태에서 프로토콜은 제외했다.(같은 값이 존재해서)
+
+
+					switch (result)
+					{
+						case RESULT.LOGIN_SUCCESS:
+						//case RESULT.JOIN_SUCCESS:
+						//case RESULT.LOGOUT_SUCCESS:
+						case RESULT.ID_EXIST:
+						//case RESULT.LOGOUT_FAIL:
+						case RESULT.ID_ERROR:
+						case RESULT.PW_ERROR:
+							{
+								lock (key)
+								{
+									msg = string.Empty;
+									UnPackPacket(packet, out msg);
+									Debug.Log(msg);
+								}
+							}
+							break;
+					}
+				}
+				break;
+
+			// Lobby 상태일 때
+			case STATE_PROTOCOL.LOBBY_STATE:
+				{
+					switch (protocol)
+					{
+						case PROTOCOL.START_PROTOCOL:
+							{
+								switch (result)
+								{
+									case RESULT.MATCH_SUCCESS:
+										Debug.Log("매칭 성공!!");
+										break;
+
+									case RESULT.MATCH_FAIL:
+										Debug.Log("매칭 실패!!");
+										break;
+								}
+							}
+							break;
+					}
+				}
+				break;
+		}
+	}
 
 	public void Disconnect()
 	{

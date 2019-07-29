@@ -104,13 +104,20 @@ bool LobbyManager::CanIMatch(C_ClientInfo* _ptr)
 			protocol = SetProtocol(LOBBY_STATE, PROTOCOL_LOBBY::START_PROTOCOL, RESULT_LOBBY::MATCH_SUCCESS);
 			ZeroMemory(buf, sizeof(BUFSIZE));
 
-			// 패킹 및 전송
+			// 패킹 및 전송(매칭이 완료되었고, 게임을 시작해도 좋음)
 			int packetSize = 0;
-			PackPacket(buf, nullptr, packetSize);	// 이 부분이 null로 넘겼을 때 처리가 될지??
-			_ptr->GetRoom()->team1.player1->SendPacket(protocol, buf, packetSize);
-			_ptr->GetRoom()->team1.player2->SendPacket(protocol, buf, packetSize);
-			_ptr->GetRoom()->team2.player1->SendPacket(protocol, buf, packetSize);
+
+			// 같은 방에 있는 모든 플레이어에게 시작 프로토콜을 전송함.
+			_ptr->GetRoom()->team1->player1->SendPacket(protocol, buf, packetSize);
+			_ptr->GetRoom()->team1->player2->SendPacket(protocol, buf, packetSize);
+			_ptr->GetRoom()->team2->player1->SendPacket(protocol, buf, packetSize);
 			_ptr->SendPacket(protocol, buf, packetSize);
+
+			//wprintf(L"1팀:%s, %s\n2팀:%s, %s\n"
+			//	,_ptr->GetRoom()->team1->player1->GetUserInfo()->id
+			//	,_ptr->GetRoom()->team1->player2->GetUserInfo()->id
+			//	,_ptr->GetRoom()->team2->player1->GetUserInfo()->id
+			//	,_ptr->GetRoom()->team2->player2->GetUserInfo()->id);
 
 			return true;
 		}

@@ -33,8 +33,16 @@ bool MatchManager::MatchProcess(C_ClientInfo* _ptr)
 	// 4인이상이 됐다면 
 	if (waitQueue.size() >= 4)
 	{
+		// 매칭을 누른 플레이어들의 정보를 얻어서 배열에 저장한다.
+		C_ClientInfo* players[4];
+		for (int i = 0; i < 4; i++)
+		{
+			players[i] = waitQueue.front();
+			waitQueue.pop();
+		}
+		
 		//나랑 내 앞에를 한 팀, 그리고 남은 2명을 한 팀으로 만들어서 방을 만들고
-		RoomManager::GetInstance()->CreateRoom(waitQueue.front(),waitQueue.front(),waitQueue.front(),waitQueue.front());
+		RoomManager::GetInstance()->CreateRoom(players);
 
 		return true;
 	}
