@@ -4,8 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class InputInfoManager : MonoBehaviour
-{
+public class InputInfoManager : MonoBehaviour {
 
     public GameObject panel_login, panel_join; //로그인창, 회원가입창
 
@@ -13,14 +12,14 @@ public class InputInfoManager : MonoBehaviour
     public InputField inputField_login_id, inputField_login_pw, 
         inputField_join_id, inputField_join_nick, inputField_join_pw;
 
-    public Button btn_login_enter, btn_join_enter; //확인버튼들
+    public Button btn_login_enter, btn_join_enter; //확인버튼들]
     public Text txt_login_result, txt_join_result; //로그인, 가입 오류시 문자출력
 
 	private NetworkManager networkManager;
 
     void Start()
     {
-		networkManager = NetworkManager.GetInstance;
+		networkManager = NetworkManager.instance;
         inputField_login_id.Select(); //맨처음 로그인아이디 입력창 자동선택
     }
 
@@ -95,23 +94,7 @@ public class InputInfoManager : MonoBehaviour
 		Debug.Log("입력한 로그인 ID: " + inputField_login_id.text);
 		Debug.Log("입력한 로그인 PW: " + inputField_login_pw.text);
 
-		// 로그인이 가능한지 서버로 정보를 보낸다.
-		networkManager.MayILogin(
-			inputField_login_id.text,
-			inputField_login_pw.text);
-
-		// 0.05초마다 로그인 체크가 가능한지 확인함.
-		InvokeRepeating("LoginCheck", 0.05f, 0.05f);
-
-
-		inputField_login_id.Select();
-	}
-
-	private void LoginCheck()
-	{
-		string retMsg = networkManager.GetResultMsg();
-		if (retMsg == "")
-			return;
+		string retMsg = networkManager.MayILogin(inputField_login_id.text, inputField_login_pw.text);
 
 		Debug.Log("로그인 결과 : " + retMsg);
 
@@ -123,7 +106,7 @@ public class InputInfoManager : MonoBehaviour
 			txt_login_result.text = retMsg;
 		}
 
-		else if (networkManager.CheckPWError() == true)
+		if (networkManager.CheckPWError() == true)
 		{
 			inputField_login_id.text = null;
 			inputField_login_pw.text = null;
@@ -131,12 +114,11 @@ public class InputInfoManager : MonoBehaviour
 		}
 
 		//로그인이 성공하면 아래작성
-		else if (networkManager.CheckLoginSuccess() == true)
+		if (networkManager.CheckLoginSuccess() == true)
 			SceneManager.LoadScene("MainMenu"); //메인타이틀로 입장
 
 
-		// 로그인 결과를 검사했다면 이제 함수 반복호출을 끝낸다.
-		CancelInvoke("LoginCheck");
+		inputField_login_id.Select();
 	}
 
 	public void BtnEnterJoin() //회원가입 정보 입력후 확인버튼
@@ -145,21 +127,7 @@ public class InputInfoManager : MonoBehaviour
 		Debug.Log("입력한 회원가입 PW: " + inputField_join_pw.text);
 		Debug.Log("입력한 회원가입 NICKNAME: " + inputField_join_nick.text);
 
-		// 회원가입이 가능한지 서버로 보낸다.
-		networkManager.MayIJoin(
-			inputField_join_id.text, 
-			inputField_join_pw.text, 
-			inputField_join_nick.text);
-
-		// 0.05초마다 회원가입 가능한지 확인함.
-		InvokeRepeating("JoinCheck", 0.05f, 0.05f);
-	}
-
-	private void JoinCheck()
-	{
-		string retMsg = networkManager.GetResultMsg();
-		if (retMsg == "")
-			return;
+		string retMsg = networkManager.MayIJoin(inputField_join_id.text, inputField_join_pw.text, inputField_join_nick.text);
 
 		Debug.Log("회원가입 결과 : " + retMsg);
 
@@ -169,31 +137,26 @@ public class InputInfoManager : MonoBehaviour
 			inputField_join_id.text = null;
 			inputField_join_pw.text = null;
 			txt_join_result.text = retMsg;
-			inputField_join_id.Select();
 		}
 
-		else if (networkManager.CheckPWError() == true)
+		if (networkManager.CheckPWError() == true)
 		{
 			inputField_join_id.text = null;
 			inputField_join_pw.text = null;
 			txt_join_result.text = retMsg;
-			inputField_join_id.Select();
 		}
-
 		//회원가입에 성공하면 아래작성
-		else if (networkManager.CheckLoginSuccess() == true)
+		if (networkManager.CheckLoginSuccess() == true)
 		{
 			EnablePanel(2);
-			txt_login_result.text = retMsg;
-			inputField_login_id.Select();
+			txt_join_result.text = retMsg;
 		}
 
-		
-		// 회원가입 결과를 검사했다면 이제 함수 반복호출을 끝낸다.
-		CancelInvoke("JoinCheck");
+		inputField_login_id.Select();
 	}
 
-	public void BtnQuit() //로그인 패널에서 종료를 누르면
+
+    public void BtnQuit() //로그인 패널에서 종료를 누르면
     {
 		networkManager.Disconnect();
         Application.Quit();
