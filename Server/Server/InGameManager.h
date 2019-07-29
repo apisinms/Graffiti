@@ -23,7 +23,12 @@ class InGameManager
 
 		NODATA = ((__int64)0x1 << 49)
 	};
+	struct Weapon
+	{
+		int mainW;
+		int subW;
 
+	}weapon;
 
 private:
 	InGameManager() {}
@@ -38,6 +43,7 @@ public:
 
 private:
 	void PackPacket(char* _setptr, TCHAR* _str1, int& _size);	// 문자열 1개를 Pack하는 함수
+	void UnPackPacket(char* _getBuf, Weapon& _struct);
 	void UnPackPacket(char* _getBuf, int& _num1, int& _num2);				// 문자열 1개를 UnPack하는 함수
 
 	void GetProtocol(PROTOCOL_INGAME& _protocol);								// 프로토콜을 얻음

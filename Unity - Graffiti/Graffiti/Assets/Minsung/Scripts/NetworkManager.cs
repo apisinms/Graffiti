@@ -6,6 +6,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.IO;
 using UnityEngine;
+using System.Runtime.InteropServices;
+using System.Runtime.Serialization.Formatters.Binary;
 
 /// <summary>
 /// 싱글톤 클래스 NetworkManager
@@ -216,6 +218,39 @@ public class NetworkManager : ScriptableObject
 		protocol = (PROTOCOL)((Int64)_state | (Int64)_protocol | (Int64)_result);
 		return protocol;
 	}
+
+    private void PackPacket(ref byte[] _buf, PROTOCOL _protocol, WeaponPakcet _weapon, out int _size)
+    {
+
+        // 암호화된 내용을 저장할 버퍼이다.
+        byte[] encryptBuf = new byte[BUFSIZE];
+        byte[] buf = new byte[BUFSIZE];
+
+        _size = 0;
+        int offset = 0;
+
+        // 프로토콜
+        Buffer.BlockCopy(BitConverter.GetBytes((Int64)_protocol), 0, buf, offset, sizeof(PROTOCOL));
+        offset += sizeof(PROTOCOL);
+        _size += sizeof(PROTOCOL);
+
+        // 프로토콜
+        Buffer.BlockCopy(_weapon.Serialize(), 0, buf, offset, Marshal.SizeOf(_weapon));
+        offset += Marshal.SizeOf(_weapon);
+        _size += Marshal.SizeOf(_weapon);
+
+        // 암호화된 내용을 encryptBuf에 저장
+        C_Encrypt.GetInstance.Encrypt(buf, encryptBuf, _size);
+
+        // 가장 앞에 size를 넣고, 그 뒤에 암호화했던 버퍼를 붙임.
+        offset = 0;
+        Buffer.BlockCopy(BitConverter.GetBytes(_size), 0, _buf, offset, sizeof(int));
+        offset += sizeof(int);
+        Buffer.BlockCopy(encryptBuf, 0, _buf, offset, _size);
+        offset += _size;
+
+        _size += sizeof(int);   // 총 보내야 할 바이트 수 저장한다.
+    }
     private void PackPacket(ref byte[] _buf, PROTOCOL _protocol, out int _size)
     {
 
@@ -541,7 +576,6 @@ public class NetworkManager : ScriptableObject
         PackPacket(ref sendBuf, protocol, out packetSize);
         bw.Write(sendBuf, 0, packetSize);
 
-
         // 서버로부터 결과 얻기
         int readSize = br.ReadInt32();      // 먼저 총 size를 얻어온다.
         recvBuf = br.ReadBytes(readSize);   // 그리고 받아야할 size만큼 byte[]를 얻어온다.
@@ -569,15 +603,18 @@ public class NetworkManager : ScriptableObject
                 RESULT.NODATA);
         Console.WriteLine((Int64)protocol);
 
+        WeaponPakcet weapon = new WeaponPakcet();
+        weapon.mainW = mainW;
+        weapon.subW = subW;
+
         // 패킹 및 전송
-        int packetSize;
-        PackPacket(ref sendBuf, protocol, mainW, subW, out packetSize);
-        bw.Write(sendBuf, 0, packetSize);
+        int packetsize;
+        PackPacket(ref sendBuf, protocol, weapon, out packetsize);
+        bw.Write(sendBuf, 0, packetsize);
 
         // 서버로부터 결과 얻기
         int readSize = br.ReadInt32();      // 먼저 총 size를 얻어온다.
         recvBuf = br.ReadBytes(readSize);   // 그리고 받아야할 size만큼 byte[]를 얻어온다.
-
 
         // 얻은 버퍼를 복호화 진행
         byte[] decryptBuf = new byte[BUFSIZE];
@@ -677,4 +714,37 @@ public class NetworkManager : ScriptableObject
 		br.Close();
 		tcpClient.Close();
 	}
+
+    [StructLayout(LayoutKind.Sequential)]
+    struct WeaponPakcet
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int mainW;
+
+        [MarshalAs(UnmanagedType.I4)]
+        public int subW;
+
+        public byte[] Serialize()
+        {
+            // allocate a byte array for the struct data
+            var buffer = new byte[Marshal.SizeOf(typeof(WeaponPakcet))];
+
+            // Allocate a GCHandle and get the array pointer
+            var gch = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+            var pBuffer = gch.AddrOfPinnedObject();
+
+            // copy data from struct to array and unpin the gc pointer
+            Marshal.StructureToPtr(this, pBuffer, false);
+            gch.Free();
+
+            return buffer;
+        }
+        public void Deserialize(ref byte[] data)
+        {
+            var gch = GCHandle.Alloc(data, GCHandleType.Pinned);
+            this = (WeaponPakcet)Marshal.PtrToStructure(gch.AddrOfPinnedObject(), typeof(WeaponPakcet));
+            gch.Free();
+        }
+    }
+
 }

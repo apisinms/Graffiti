@@ -24,6 +24,7 @@ private:
 	C_LobbyState* lobbyState;
 	C_ChatState*  chatState;
 	C_InGameState* inGameState;
+	// 자기의 무기정보
 
 public:
 	C_ClientInfo(UserInfo* _userInfo, C_State* _state, SOCKET _sock, SOCKADDR_IN _addr);

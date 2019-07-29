@@ -42,6 +42,17 @@ void InGameManager::PackPacket(char* _setptr, TCHAR* _str1, int& _size)
 	ptr = ptr + strsize1;
 	_size = _size + strsize1;
 }
+
+void InGameManager::UnPackPacket(char* _getBuf, Weapon& _struct)
+{
+	char* ptr = _getBuf + sizeof(PROTOCOL_INGAME);
+
+	// 구조체 받음
+	memcpy(&_struct, ptr, sizeof(Weapon));
+	ptr = ptr + sizeof(Weapon);
+
+}
+
 void InGameManager::UnPackPacket(char* _getBuf, int& _num1, int& _num2)
 {
 	char* ptr = _getBuf + sizeof(PROTOCOL_INGAME);
@@ -90,15 +101,17 @@ InGameManager::PROTOCOL_INGAME InGameManager::GetBufferAndProtocol(C_ClientInfo*
 bool InGameManager::ItemSelctProcess(C_ClientInfo* _ptr, char* _buf)
 {
 	TCHAR msg[MSGSIZE] = { 0, };
-	int mainW, subW;
 	PROTOCOL_INGAME protocol;
+	int mainW, subW;
 	char buf[BUFSIZE];
 	int packetSize;
 
 	RESULT_INGAME itemSelect = RESULT_INGAME::ITEMSELECT_SUCCESS;
 
+	UnPackPacket(_buf, weapon);
 	UnPackPacket(_buf, mainW, subW);
 
+	//LogManager::GetInstance()->ErrorPrintf("메인무기 : %d, 서브무기 : %d",weapon.mainW, weapon.subW);
 	// 프로토콜 세팅
 	protocol = SetProtocol(LOGIN_STATE, PROTOCOL_INGAME::ITEMSELECT_PROTOCOL, itemSelect);
 
