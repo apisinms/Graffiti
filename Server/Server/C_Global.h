@@ -23,9 +23,10 @@ enum POSITION : int
 // 상위 5비트 스테이트를 표현해주는 프로토콜
 enum STATE_PROTOCOL : __int64
 {
-	LOGIN_STATE = ((__int64)0x1 << 63),
-	LOBBY_STATE = ((__int64)0x1 << 62),
-	CHAT_STATE = ((__int64)0x1 << 61),
+	LOGIN_STATE  = ((__int64)0x1 << 63),
+	LOBBY_STATE  = ((__int64)0x1 << 62),
+	CHAT_STATE   = ((__int64)0x1 << 61),
+	INGAME_STATE = ((__int64)0x1 << 60),
 	//60
 	//59
 };

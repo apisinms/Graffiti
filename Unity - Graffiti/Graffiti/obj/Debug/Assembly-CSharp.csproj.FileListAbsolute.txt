@@ -334,3 +334,7 @@ C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝�
 C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Graffiti\obj\Debug\Assembly-CSharp.csproj.CopyComplete
 C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Graffiti\obj\Debug\Assembly-CSharp.dll
 C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Graffiti\obj\Debug\Assembly-CSharp.pdb
+C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Graffiti\Temp\bin\Debug\ChannelPurchase.dll
+C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Graffiti\Temp\bin\Debug\Editor.dll
+C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Graffiti\Temp\bin\Debug\UnityStore.dll
+C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Graffiti\Temp\bin\Debug\XiaomiSupport.dll

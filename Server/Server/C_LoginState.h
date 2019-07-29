@@ -17,7 +17,7 @@ public:
 			pos = LOBBY;
 
 		// 회원가입을 할 수 있는지
-		else if (LoginManager::GetInstance()->CanIJoin(_ptr) == true)
+		if (LoginManager::GetInstance()->CanIJoin(_ptr) == true)
 			pos = LOGIN;
 	}
 

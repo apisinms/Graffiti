@@ -96,10 +96,6 @@ public class SelectWeapons : MonoBehaviour
 
 
 				/// 테스트로 보내본다
-
-				for (int i = 0; i < btn_subWeapons.Length; i++)
-					btn_subWeapons[i].interactable = false;
-
 				NetworkManager.instance.MayIItemSelect((sbyte)myMainWeapon, (sbyte)mySubWeapon);
 
 				if (NetworkManager.instance.CheckItemSelectSuccess() == true)
@@ -107,12 +103,13 @@ public class SelectWeapons : MonoBehaviour
 					Debug.Log(myMainWeapon);
 					Debug.Log(mySubWeapon);
 					Debug.Log("itemselect 성공");
+
+					SceneManager.LoadScene("MainGame"); //메인타이틀로 입장
 				}
 
 				else
 					Debug.Log("itemselect 실패");
 
-				SceneManager.LoadScene("MainGame"); //메인타이틀로 입장
 				break;
 		}
 	}

@@ -46,15 +46,15 @@ public partial class NetworkManager : MonoBehaviour
 				STATE_PROTOCOL.INGAME_STATE,
 				PROTOCOL.ITEMSELECT_PROTOCOL,
 				RESULT.NODATA);
-		Console.WriteLine((Int64)protocol);
 
 		WeaponPacket weapon = new WeaponPacket();
-		weapon.mainW = (sbyte)mainW;
-		weapon.subW = (sbyte)subW;
+		weapon.mainW = mainW;
+		weapon.subW  = subW;
 
 		// 패킹 및 전송
 		int packetsize;
 		PackPacket(ref sendBuf, protocol, weapon, out packetsize);
+		//PackPacket(ref sendBuf, protocol, weapon.mainW, weapon.subW, out packetsize);
 		bw.Write(sendBuf, 0, packetsize);
 	}
 
@@ -62,6 +62,7 @@ public partial class NetworkManager : MonoBehaviour
 	{
 		if (result == RESULT.INGAME_SUCCESS)
 			return true;
+
 		else
 			return false;
 	}

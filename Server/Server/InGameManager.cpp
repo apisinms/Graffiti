@@ -128,6 +128,11 @@ bool InGameManager::ItemSelctProcess(C_ClientInfo* _ptr, char* _buf)
 
 bool InGameManager::CanIItemSelect(C_ClientInfo* _ptr)
 {
+
+	//////////// 4명이 무기선택 다 해야 서버로 send가 됨
+	//////////// STATE 앞으로 2칸 밀리고 PROTOCOL 뒤로 1칸 밀림
+
+
 	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
 	PROTOCOL_INGAME protocol = GetBufferAndProtocol(_ptr, buf);
 

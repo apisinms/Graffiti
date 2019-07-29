@@ -54,19 +54,17 @@ public class btn_start : MonoBehaviour
 
 		// 매칭에 성공했다면 반복호출되던 Invoke를 취소하고 무기선택화면으로 넘어간다.
 		if (NetworkManager.instance.CheckMatchSuccess() == true)
-		{
-			CancelInvoke("CheckMatch");
 			SceneManager.LoadScene("SelectWeapons");
-		}
 
 		// 매칭에 실패했다면 원상복구한다.
 		else
 		{
-			CancelInvoke("CheckMatch");
 			txt_startBtn.text = "매칭";
 			am_loadingBar.SetBool("isStart", false);
 			obj_loadingBar.SetActive(false);
 		}
+
+		CancelInvoke("CheckMatch");
 	}
 
 	//void DelayMatching()

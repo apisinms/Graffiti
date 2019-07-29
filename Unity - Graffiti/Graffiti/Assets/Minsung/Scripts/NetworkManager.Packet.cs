@@ -266,6 +266,53 @@ public partial class NetworkManager : MonoBehaviour
 		// 이제 다시 string으로 변환
 		_str1 = ByteToString(arrStrByte);
 	}
+
+
+
+
+
+
+
+
+	/// 테스트용
+	private void PackPacket(ref byte[] _buf, PROTOCOL _protocol, sbyte _num1, sbyte _num2, out int _size)
+	{
+
+		// 암호화된 내용을 저장할 버퍼이다.
+		byte[] encryptBuf = new byte[C_Global.BUFSIZE];
+		byte[] buf = new byte[C_Global.BUFSIZE];
+
+		_size = 0;
+		int offset = 0;
+
+		// 프로토콜
+		Buffer.BlockCopy(BitConverter.GetBytes((Int64)_protocol), 0, buf, offset, sizeof(PROTOCOL));
+		offset += sizeof(PROTOCOL);
+		_size += sizeof(PROTOCOL);
+
+		// 정수 1
+		Buffer.BlockCopy(BitConverter.GetBytes(_num1), 0, buf, offset, sizeof(sbyte));
+		offset += sizeof(sbyte);
+		_size += sizeof(sbyte);
+
+		// 정수 2
+		Buffer.BlockCopy(BitConverter.GetBytes(_num2), 0, buf, offset, sizeof(sbyte));
+		offset += sizeof(sbyte);
+		_size += sizeof(sbyte);
+
+
+		// 암호화된 내용을 encryptBuf에 저장
+		C_Encrypt.GetInstance.Encrypt(buf, encryptBuf, _size);
+
+		// 가장 앞에 size를 넣고, 그 뒤에 암호화했던 버퍼를 붙임.
+		offset = 0;
+		Buffer.BlockCopy(BitConverter.GetBytes(_size), 0, _buf, offset, sizeof(int));
+		offset += sizeof(int);
+		Buffer.BlockCopy(encryptBuf, 0, _buf, offset, _size);
+		offset += _size;
+
+		_size += sizeof(int);   // 총 보내야 할 바이트 수 저장한다.
+	}
 }
 
 

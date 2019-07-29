@@ -129,6 +129,7 @@ public partial class NetworkManager : MonoBehaviour
 	STATE_PROTOCOL state;   // 클라 상태
 	PROTOCOL protocol;      // 프로토콜
 	RESULT result;          // 결과
+	bool isInGame = false;	// 인게임에 들어갔는지
 
 	// 서버 IP와 포트
 	private static IPAddress serverIP = IPAddress.Parse("127.0.0.1");

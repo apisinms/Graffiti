@@ -13,15 +13,17 @@ public:
 
 	void Read(C_ClientInfo* _ptr) override
 	{
+		// 모두가 다같이 인게임으로 넘어가는 이 프로토콜을 받았을 때만이 INGAME으로 넘어가야된다.
 		if (LobbyManager::GetInstance()->CanIStart(_ptr) == true)
 			pos = INGAME;
 
 		// 매칭이 가능한지
-		else if (LobbyManager::GetInstance()->CanIMatch(_ptr) == true)
-			pos = INGAME;
+		if (LobbyManager::GetInstance()->CanIMatch(_ptr) == true)
+			pos = LOBBY;
+			//pos = INGAME;
 
 		// 로비를 떠나서 로그인 창으로 가는게 가능한지
-		else if (LobbyManager::GetInstance()->CanILeaveLobby(_ptr) == true)
+		if (LobbyManager::GetInstance()->CanILeaveLobby(_ptr) == true)
 			pos = LOGIN;
 			
 	}
