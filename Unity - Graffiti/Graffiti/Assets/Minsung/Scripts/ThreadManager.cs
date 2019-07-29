@@ -23,8 +23,8 @@ public class ThreadManager
 			if (instance == null)
 			{
 				instance = new ThreadManager();
-				instance.bw = NetworkManager.instance.GetBinaryWriter;
-				instance.br = NetworkManager.instance.GetBinaryReader;
+				instance.bw = NetworkManager.instance.BinaryWriter;
+				instance.br = NetworkManager.instance.BinaryReader;
 			}
 
 
@@ -73,7 +73,7 @@ public class ThreadManager
 				Buffer.BlockCopy(recvBuf, 0, packet, 0, readSize);
 
 				// 큐에 담는다.
-				NetworkManager.instance.GetQueue.Enqueue(new C_Global.QueueInfo(packet));
+				NetworkManager.instance.Queue.Enqueue(new C_Global.QueueInfo(packet));
 			}
 		}
 	}

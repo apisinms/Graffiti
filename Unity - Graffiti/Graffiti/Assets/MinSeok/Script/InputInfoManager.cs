@@ -108,7 +108,7 @@ public class InputInfoManager : MonoBehaviour
 
 	private void LoginCheck()
 	{
-		string retMsg = networkManager.GetRetMsg();
+		string retMsg = networkManager.SysMsg;
 		if (retMsg == "")
 			return;
 
@@ -154,7 +154,7 @@ public class InputInfoManager : MonoBehaviour
 
 	private void JoinCheck()
 	{
-		string retMsg = networkManager.GetRetMsg();
+		string retMsg = networkManager.SysMsg;
 		if (retMsg == "")
 			return;
 

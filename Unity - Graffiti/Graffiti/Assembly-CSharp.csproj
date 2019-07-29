@@ -70,6 +70,10 @@
     <Compile Include="Assets\Minsung\Scripts\C_Encrypt.cs" />
     <Compile Include="Assets\Minsung\Scripts\C_Global.cs" />
     <Compile Include="Assets\Minsung\Scripts\NetworkManager.cs" />
+    <Compile Include="Assets\Minsung\Scripts\NetworkManager.Login.cs" />
+    <Compile Include="Assets\Minsung\Scripts\NetworkManager.Match.cs" />
+    <Compile Include="Assets\Minsung\Scripts\NetworkManager.Networking.cs" />
+    <Compile Include="Assets\Minsung\Scripts\NetworkManager.Packet.cs" />
     <Compile Include="Assets\Minsung\Scripts\ThreadManager.cs" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>C:/_PROGRAMMING_/19년 1학기/Network Game Programming_심화학기/프로젝트/게임 포폴/Graffiti/Unity - Graffiti/Graffiti/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
@@ -79,6 +83,12 @@
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
       <HintPath>C:/_PROGRAMMING_/19년 1학기/Network Game Programming_심화학기/프로젝트/게임 포폴/Graffiti/Unity - Graffiti/Graffiti/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Editor">
+      <HintPath>C:/_PROGRAMMING_/19년 1학기/Network Game Programming_심화학기/프로젝트/게임 포폴/Graffiti/Unity - Graffiti/Graffiti/Library/ScriptAssemblies/Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="XiaomiSupport">
+      <HintPath>C:/_PROGRAMMING_/19년 1학기/Network Game Programming_심화학기/프로젝트/게임 포폴/Graffiti/Unity - Graffiti/Graffiti/Library/ScriptAssemblies/XiaomiSupport.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>C:/_PROGRAMMING_/19년 1학기/Network Game Programming_심화학기/프로젝트/게임 포폴/Graffiti/Unity - Graffiti/Graffiti/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
@@ -286,6 +296,12 @@
     </Reference>
     <Reference Include="UnityEngine.StandardEvents">
       <HintPath>C:/Users/Kimtler/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.13/UnityEngine.StandardEvents.dll</HintPath>
+    </Reference>
+    <Reference Include="ChannelPurchase">
+      <HintPath>C:/Users/Kimtler/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.xiaomi@1.0.3/ChannelPurchase.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityStore">
+      <HintPath>C:/Users/Kimtler/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.xiaomi@1.0.3/UnityStore.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity2018/Editor/Data/MonoBleedingEdge/lib/mono/unity/mscorlib.dll</HintPath>

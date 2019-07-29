@@ -11,16 +11,7 @@ public class C_Global
 	// 큐에 들어갈 정보
 	public struct QueueInfo
 	{
-		byte[] packet;
-
-
-		public byte[] GetPakcet
-		{
-			get
-			{
-				return packet;
-			}
-		}
+		public byte[] packet;
 
 		public QueueInfo(byte[] _packet)
 		{
