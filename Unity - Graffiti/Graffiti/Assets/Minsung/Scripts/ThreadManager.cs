@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.IO;
 
@@ -11,7 +8,7 @@ using System.IO;
 public class ThreadManager
 {
 	private Thread recvThread = null;			// 수신전용 쓰레드
-	private BinaryWriter bw   = null;			// 이 클라의 쓰기 스트림		
+	//private BinaryWriter bw   = null;			// 이 클라의 쓰기 스트림		
 	private BinaryReader br   = null;			// 이 클라의 읽기 스트림
 	private object key        = new object();	// 동기화에 사용할 key
 
@@ -23,7 +20,7 @@ public class ThreadManager
 			if (instance == null)
 			{
 				instance = new ThreadManager();
-				instance.bw = NetworkManager.instance.BinaryWriter;
+				//instance.bw = NetworkManager.instance.BinaryWriter;
 				instance.br = NetworkManager.instance.BinaryReader;
 			}
 

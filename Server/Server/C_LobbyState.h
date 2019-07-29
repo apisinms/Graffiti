@@ -13,17 +13,17 @@ public:
 
 	void Read(C_ClientInfo* _ptr) override
 	{
+		if (LobbyManager::GetInstance()->CanIStart(_ptr) == true)
+			pos = INGAME;
+
 		// 매칭이 가능한지
-		if (LobbyManager::GetInstance()->CanIMatch(_ptr) == true)
+		else if (LobbyManager::GetInstance()->CanIMatch(_ptr) == true)
 			pos = INGAME;
 
 		// 로비를 떠나서 로그인 창으로 가는게 가능한지
 		else if (LobbyManager::GetInstance()->CanILeaveLobby(_ptr) == true)
 			pos = LOGIN;
-
-		// 게임 시작이 가능한지
-		else if(LobbyManager::GetInstance()->CanIStart(_ptr) == true)
-			pos = INGAME;
+			
 	}
 
 	void Write(C_ClientInfo* _ptr) override

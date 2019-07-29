@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Text;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Sockets;
-using System.IO;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 
@@ -93,6 +90,39 @@ public partial class NetworkManager : MonoBehaviour
 		Buffer.BlockCopy(BitConverter.GetBytes((Int64)_protocol), 0, buf, offset, sizeof(PROTOCOL));
 		offset += sizeof(PROTOCOL);
 		_size += sizeof(PROTOCOL);
+
+		// 암호화된 내용을 encryptBuf에 저장
+		C_Encrypt.GetInstance.Encrypt(buf, encryptBuf, _size);
+
+		// 가장 앞에 size를 넣고, 그 뒤에 암호화했던 버퍼를 붙임.
+		offset = 0;
+		Buffer.BlockCopy(BitConverter.GetBytes(_size), 0, _buf, offset, sizeof(int));
+		offset += sizeof(int);
+		Buffer.BlockCopy(encryptBuf, 0, _buf, offset, _size);
+		offset += _size;
+
+		_size += sizeof(int);   // 총 보내야 할 바이트 수 저장한다.
+	}
+
+	private void PackPacket(ref byte[] _buf, PROTOCOL _protocol, WeaponPacket _weapon, out int _size)
+	{
+
+		// 암호화된 내용을 저장할 버퍼이다.
+		byte[] encryptBuf = new byte[C_Global.BUFSIZE];
+		byte[] buf = new byte[C_Global.BUFSIZE];
+
+		_size = 0;
+		int offset = 0;
+
+		// 프로토콜
+		Buffer.BlockCopy(BitConverter.GetBytes((Int64)_protocol), 0, buf, offset, sizeof(PROTOCOL));
+		offset += sizeof(PROTOCOL);
+		_size += sizeof(PROTOCOL);
+
+		// 프로토콜
+		Buffer.BlockCopy(_weapon.Serialize(), 0, buf, offset, Marshal.SizeOf(_weapon));
+		offset += Marshal.SizeOf(_weapon);
+		_size += Marshal.SizeOf(_weapon);
 
 		// 암호화된 내용을 encryptBuf에 저장
 		C_Encrypt.GetInstance.Encrypt(buf, encryptBuf, _size);

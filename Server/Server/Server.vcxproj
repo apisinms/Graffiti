@@ -150,6 +150,7 @@
     <ClInclude Include="C_State.h" />
     <ClInclude Include="C_SyncCS.h" />
     <ClInclude Include="DatabaseManager.h" />
+    <ClInclude Include="InGameManager.h" />
     <ClInclude Include="LobbyManager.h" />
     <ClInclude Include="LoginManager.h" />
     <ClInclude Include="LogManager.h" />
@@ -168,6 +169,7 @@
     <ClCompile Include="C_Select.cpp" />
     <ClCompile Include="C_Socket.cpp" />
     <ClCompile Include="DatabaseManager.cpp" />
+    <ClCompile Include="InGameManager.cpp" />
     <ClCompile Include="LobbyManager.cpp" />
     <ClCompile Include="LoginManager.cpp" />
     <ClCompile Include="LogManager.cpp" />

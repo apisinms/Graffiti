@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Sockets;
-using System.IO;
 using UnityEngine;
 
 /// <summary>
@@ -40,5 +36,33 @@ public partial class NetworkManager : MonoBehaviour
 			return true;
 
 		return false;
+	}
+
+
+	public void MayIItemSelect(sbyte mainW, sbyte subW)
+	{
+		// 프로토콜 셋팅
+		protocol = SetProtocol(
+				STATE_PROTOCOL.INGAME_STATE,
+				PROTOCOL.ITEMSELECT_PROTOCOL,
+				RESULT.NODATA);
+		Console.WriteLine((Int64)protocol);
+
+		WeaponPacket weapon = new WeaponPacket();
+		weapon.mainW = (sbyte)mainW;
+		weapon.subW = (sbyte)subW;
+
+		// 패킹 및 전송
+		int packetsize;
+		PackPacket(ref sendBuf, protocol, weapon, out packetsize);
+		bw.Write(sendBuf, 0, packetsize);
+	}
+
+	public bool CheckItemSelectSuccess()
+	{
+		if (result == RESULT.INGAME_SUCCESS)
+			return true;
+		else
+			return false;
 	}
 }
