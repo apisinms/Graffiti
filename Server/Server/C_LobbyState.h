@@ -15,7 +15,7 @@ public:
 	{
 		// 모두가 다같이 인게임으로 넘어가는 이 프로토콜을 받았을 때만이 INGAME으로 넘어가야된다.
 		if (LobbyManager::GetInstance()->CanIStart(_ptr) == true)
-			pos = INGAME;
+			_ptr->SetState(_ptr->GetInGameState());		// 인게임 상태로 이동한다.
 
 		// 매칭이 가능한지
 		if (LobbyManager::GetInstance()->CanIMatch(_ptr) == true)
@@ -33,9 +33,9 @@ public:
 		// 바뀌어야하는 상태에따라 상태를 변경한다.
 		switch (pos)
 		{
-		case INGAME:
-			_ptr->SetState(_ptr->GetInGameState());		// 인게임 상태로 이동한다.
-			break;
+		//case INGAME:
+		//	_ptr->SetState(_ptr->GetInGameState());		// 인게임 상태로 이동한다.
+		//	break;
 
 		//case CHAT:
 		//	_ptr->SetState(_ptr->GetChatState());		// 채팅 상태로 이동한다.

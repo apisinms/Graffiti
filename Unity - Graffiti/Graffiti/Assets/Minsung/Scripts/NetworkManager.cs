@@ -1,4 +1,11 @@
-﻿using System;
+﻿/*
+ 프로토콜 32, 64비트 관여 파일
+ NetworkManager.cs
+ NetworkManager.Packet.cs
+ */
+
+#define __64BIT__
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -16,7 +23,8 @@ public partial class NetworkManager : MonoBehaviour
 	const int IDSIZE = 255;
 	const int PWSIZE = 255;
 	const int NICKNAMESIZE = 255;
-	
+
+#if __64BIT__
 	// 63 ~ 59 
 	enum STATE_PROTOCOL : Int64
 	{
@@ -84,6 +92,76 @@ public partial class NetworkManager : MonoBehaviour
 
 		NODATA = ((Int64)0x1 << 49)
 	};
+#endif
+
+#if __32BIT__
+	// 31~27
+	enum STATE_PROTOCOL : int
+	{
+		// 상위 5비트 스테이트를 표현해주는 프로토콜
+		LOGIN_STATE = ((int)0x1 << 31),
+		LOBBY_STATE = ((int)0x1 << 30),
+		CHAT_STATE = ((int)0x1 << 29),
+		INGAME_STATE = ((int)0x1 << 28),
+		//27
+	};
+
+	// 26 ~ 22
+	enum PROTOCOL : int
+	{
+		// LoginState
+		JOIN_PROTOCOL = ((int)0x1 << 26),
+		LOGIN_PROTOCOL = ((int)0x1 << 25),
+		// 56
+		// 55
+		// 54
+
+		// LobbyState
+		MATCH_PROTOCOL = ((int)0x1 << 26),
+		START_PROTOCOL = ((int)0x1 << 25),      // 게임시작 프로토콜
+		LOGOUT_PROTOCOL = ((int)0x1 << 24),
+
+		// ChatState
+		LEAVE_ROOM_PROTOCOL = ((int)0x1 << 26),
+		CHAT_PROTOCOL = ((int)0x1 << 25),
+
+		// InGameState
+		ITEMSELECT_PROTOCOL = ((int)0x1 << 26),
+		// 56
+		// 55
+		// 54
+	};
+
+	// 21 ~ 17
+	enum RESULT : int
+	{
+		//LoginState
+		JOIN_SUCCESS   = ((int)0x1 << 21),
+		LOGIN_SUCCESS  = ((int)0x1 << 21),
+		LOGOUT_SUCCESS = ((int)0x1 << 21),
+		LOGOUT_FAIL    = ((int)0x1 << 20),
+
+		// Join & Login result
+		ID_EXIST = ((int)0x1 << 20),
+		ID_ERROR = ((int)0x1 << 19),
+		PW_ERROR = ((int)0x1 << 18),
+
+		// LobbyState
+		MATCH_SUCCESS = ((int)0x1 << 21),     // 매칭 성공
+		MATCH_FAIL    = ((int)0x1 << 20),        // 매칭 성공
+
+		// ChatState
+		LEAVE_ROOM_SUCCESS = ((int)0x1 << 21),
+		LEAVE_ROOM_FAIL    = ((int)0x1 << 20),
+
+		// InGameState
+		INGAME_SUCCESS = ((int)0x1 << 21),
+		INGAME_FAIL    = ((int)0x1 << 20),
+
+
+		NODATA = ((int)0x1 << 17)
+	};
+#endif
 
 	struct _User_Info
 	{

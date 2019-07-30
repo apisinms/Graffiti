@@ -74,7 +74,13 @@ ChatManager::PROTOCOL_CHAT ChatManager::SetProtocol(STATE_PROTOCOL _state, PROTO
 
 ChatManager::PROTOCOL_CHAT ChatManager::GetBufferAndProtocol(C_ClientInfo* _ptr, char* _buf)
 {
-	__int64 bitProtocol;
+#ifdef __64BIT__
+	__int64 bitProtocol = 0;
+#endif
+
+#ifdef __32BIT__
+	int bitProtocol = 0;
+#endif
 	_ptr->GetPacket(bitProtocol, _buf);	// 우선 걸러지지않은 프로토콜을 가져온다.
 
 	// 진짜 프로토콜을 가져와 준다.(안에서 프로토콜 AND 검사)

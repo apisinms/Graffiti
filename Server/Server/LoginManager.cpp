@@ -106,7 +106,13 @@ void LoginManager::UnPackPacket(char* _getBuf, TCHAR* _str1, TCHAR* _str2)
 void LoginManager::GetProtocol(PROTOCOL_LOGIN& _protocol)
 {
 	// major state를 제외한(클라는 state를 안보내니까(혹시나 추후에 보내게되면 이부분을 수정)) protocol을 가져오기 위해서 상위 10비트 위치에 마스크를 만듦
+#ifdef __64BIT__
 	__int64 mask = ((__int64)0x1f << (64 - 10));
+#endif
+
+#ifdef __32BIT__
+	int mask = ((int)0x1f << (32 - 10));
+#endif
 
 	// 마스크에 걸러진 1개의 프로토콜이 저장된다. 
 	PROTOCOL_LOGIN protocol = (PROTOCOL_LOGIN)(_protocol & (PROTOCOL_LOGIN)mask);
@@ -133,7 +139,14 @@ LoginManager::PROTOCOL_LOGIN LoginManager::SetProtocol(STATE_PROTOCOL _state, PR
 
 LoginManager::PROTOCOL_LOGIN LoginManager::GetBufferAndProtocol(C_ClientInfo* _ptr, char* _buf)
 {
-	__int64 bitProtocol;
+#ifdef __64BIT__
+	__int64 bitProtocol = 0;
+#endif
+
+#ifdef __32BIT__
+	int bitProtocol = 0;
+#endif
+
 	_ptr->GetPacket(bitProtocol, _buf);	// 우선 걸러지지않은 프로토콜을 가져온다.
 
 	// 진짜 프로토콜을 가져와 준다.(안에서 프로토콜 AND 검사)

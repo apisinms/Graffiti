@@ -212,11 +212,6 @@ public class SelectWeapons : MonoBehaviour
 
 //		 else //보조무기 선택시
 //        {
-//            for (int i = 0; i<btn_subWeapons.Length; i++)
-//            {
-//                btn_subWeapons[i].interactable = false;
-//            }
-
 //NetworkManager.GetInstance.MayIItemSelect(myWeapon[0], myWeapon[1]);
 
 

@@ -2,6 +2,8 @@
 #include <tchar.h>
 using namespace std;
 	
+#define __64BIT__
+
 #define BUFSIZE			4096
 #define HALF_BUFSIZE	2048
 
@@ -19,7 +21,7 @@ enum POSITION : int
 	LOGIN, LOBBY, MATCH, INGAME,
 };
 
-
+#ifdef __64BIT__
 // 상위 5비트 스테이트를 표현해주는 프로토콜
 enum STATE_PROTOCOL : __int64
 {
@@ -30,6 +32,20 @@ enum STATE_PROTOCOL : __int64
 	//60
 	//59
 };
+#endif
+
+#ifdef __32BIT__
+// 상위 5비트 스테이트를 표현해주는 프로토콜
+enum STATE_PROTOCOL : int
+{
+	LOGIN_STATE  = ((int)0x1 << 31),
+	LOBBY_STATE  = ((int)0x1 << 30),
+	CHAT_STATE   = ((int)0x1 << 29),
+	INGAME_STATE = ((int)0x1 << 28),
+	//60
+	//59
+};
+#endif
 
 
 enum IO_TYPE

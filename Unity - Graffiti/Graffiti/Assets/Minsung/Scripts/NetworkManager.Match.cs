@@ -52,10 +52,11 @@ public partial class NetworkManager : MonoBehaviour
 		weapon.subW  = subW;
 
 		// 패킹 및 전송
-		int packetsize;
-		PackPacket(ref sendBuf, protocol, weapon, out packetsize);
+		int packetSize;
+		PackPacket(ref sendBuf, protocol, weapon, out packetSize);
 		//PackPacket(ref sendBuf, protocol, weapon.mainW, weapon.subW, out packetsize);
-		bw.Write(sendBuf, 0, packetsize);
+		//tcpClient.GetStream().Write(sendBuf, 0, packetSize);
+		bw.Write(sendBuf, 0, packetSize);
 	}
 
 	public bool CheckItemSelectSuccess()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+
 public class C_Global
 {
 	public const int BUFSIZE = 4096;   // 버퍼 사이즈
