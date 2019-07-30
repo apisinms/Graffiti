@@ -8,6 +8,8 @@
 #include "ChatManager.h"
 #include "C_ClientInfo.h"
 #include "UtilityManager.h"
+#include "RoomManager.h"
+#include "MatchManager.h"
 #include <locale.h>
 
 // 초기화
@@ -49,6 +51,8 @@ void MainManager::Init()
 	DatabaseManager::GetInstance()->Init();	// DB매니저에서 초기화 하는 작업 수행
 	LoginManager::GetInstance()->Init();	// 로그인 매니저에서 초기화 해야하는 작업을 진행한다(예:회원가입 리스트 불러오기)
 	LobbyManager::GetInstance()->Init();
+	RoomManager::GetInstance()->Init();
+	MatchManager::GetInstance()->Init();
 	ChatManager::GetInstance()->Init();
 
 	SetConsoleCtrlHandler((PHANDLER_ROUTINE)CtrlHandler, TRUE);	// 종료를 감지하는 핸들러 함수 등록
@@ -85,6 +89,7 @@ void MainManager::Destroy()
 	LogManager::GetInstance()->Destroy();
 	LoginManager::GetInstance()->Destroy();
 	LobbyManager::GetInstance()->Destroy();
+	MatchManager::GetInstance()->Destroy();
 	ChatManager::GetInstance()->Destroy();
 	SessionManager::GetInstance()->Destroy();
 
@@ -112,6 +117,7 @@ void MainManager::IOCP_Read(void* _ptr, int _len)
 		break;
 	case SOC_FALSE:
 		break;
+	
 		// 모두 받았을 때(SOC_TRUE) 바로 WSA_Recv를 다시 켜준다.(Recv하고나서 Recv를 켜주는게 맞다)
 	case SOC_TRUE:
 		ptr->GetCurrentState()->Read(ptr);
@@ -149,6 +155,8 @@ void MainManager::End()
 {
 	LoginManager::GetInstance()->End();
 	LobbyManager::GetInstance()->End();
+	RoomManager::GetInstance()->End();
+	MatchManager::GetInstance()->End();
 	ChatManager::GetInstance()->End();
 	DatabaseManager::GetInstance()->End();
 	LogManager::GetInstance()->End();
@@ -164,6 +172,7 @@ void MainManager::IOCP_Disconnected(void* _ptr)
 		inet_ntoa(ptr->GetAddress().sin_addr), ntohs(ptr->GetAddress().sin_port));
 
 	
+	//LobbyManager::GetInstance()->CheckLeaveRoom(ptr);	// 방삭제
 	LoginManager::GetInstance()->LoginListDelete(ptr);	// 로그인 목록에서도 지워준다.
 	SessionManager::GetInstance()->Remove(ptr);			// 데이터까지 완전 종료되는 Remove를 호출
 	

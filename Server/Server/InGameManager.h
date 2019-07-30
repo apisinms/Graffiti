@@ -11,6 +11,7 @@ class C_ClientInfo;
 
 class InGameManager
 {
+#ifdef __64BIT__
 	enum PROTOCOL_INGAME : __int64
 	{
 		ITEMSELECT_PROTOCOL = ((__int64)0x1 << 58),
@@ -18,16 +19,32 @@ class InGameManager
 
 	enum RESULT_INGAME : __int64
 	{
-		ITEMSELECT_SUCCESS = ((__int64)0x1 << 53),
-		ITEMSELECT_FAIL = ((__int64)0x1 << 52),
+		INGAME_SUCCESS = ((__int64)0x1 << 53),
+		INGAME_FAIL    = ((__int64)0x1 << 52),
 
 		NODATA = ((__int64)0x1 << 49)
 	};
+#endif
+
+#ifdef __32BIT__
+	enum PROTOCOL_INGAME : int
+	{
+		ITEMSELECT_PROTOCOL = ((int)0x1 << 26),
+	};
+
+	enum RESULT_INGAME : int
+	{
+		INGAME_SUCCESS = ((int)0x1 << 21),
+		INGAME_FAIL    = ((int)0x1 << 20),
+
+		NODATA = ((int)0x1 << 17)
+	};
+#endif
+
 	struct Weapon
 	{
-		int mainW;
-		int subW;
-
+		char mainW;
+		char subW;
 	}weapon;
 
 private:

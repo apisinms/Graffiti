@@ -1,10 +1,9 @@
 #include "LobbyManager.h"
 #include "LoginManager.h"
 #include "LogManager.h"
+#include "MatchManager.h"
+#include "RoomManager.h"
 #include "C_ClientInfo.h"
-
-
-int RoomInfo::incRoomNum = 0;
 
 LobbyManager* LobbyManager::instance;
 
@@ -22,12 +21,10 @@ void LobbyManager::Destroy()
 
 void LobbyManager::Init()
 {
-	roomList = new C_List<RoomInfo*>();
 }
 
 void LobbyManager::End()
 {
-	delete roomList;
 }
 
 void LobbyManager::PackPacket(char* _setptr, TCHAR* _str1, int& _size)
@@ -62,7 +59,13 @@ void LobbyManager::UnPackPacket(char* _getBuf, TCHAR* _str1)
 void LobbyManager::GetProtocol(PROTOCOL_LOBBY& _protocol)
 {
 	// major state를 제외한(클라는 state를 안보내니까(혹시나 추후에 보내게되면 이부분을 수정)) protocol을 가져오기 위해서 상위 10비트 위치에 마스크를 만듦
+#ifdef __64BIT__
 	__int64 mask = ((__int64)0x1f << (64 - 10));
+#endif
+
+#ifdef __32BIT__
+	int mask = ((int)0x1f << (32 - 10));
+#endif
 
 	// 마스크에 걸러진 1개의 프로토콜이 저장된다. 
 	PROTOCOL_LOBBY protocol = (PROTOCOL_LOBBY)(_protocol & (PROTOCOL_LOBBY)mask);
@@ -81,7 +84,14 @@ LobbyManager::PROTOCOL_LOBBY LobbyManager::SetProtocol(STATE_PROTOCOL _state, PR
 
 LobbyManager::PROTOCOL_LOBBY LobbyManager::GetBufferAndProtocol(C_ClientInfo* _ptr, char* _buf)
 {
-	__int64 bitProtocol;
+#ifdef __64BIT__
+	__int64 bitProtocol = 0;
+#endif
+
+#ifdef __32BIT__
+	int bitProtocol = 0;
+#endif
+
 	_ptr->GetPacket(bitProtocol, _buf);	// 우선 걸러지지않은 프로토콜을 가져온다.
 
 	// 진짜 프로토콜을 가져와 준다.(안에서 프로토콜 AND 검사)
@@ -89,6 +99,45 @@ LobbyManager::PROTOCOL_LOBBY LobbyManager::GetBufferAndProtocol(C_ClientInfo* _p
 	GetProtocol(realProtocol);
 
 	return realProtocol;
+}
+
+// 매칭할 수 있는지
+bool LobbyManager::CanIMatch(C_ClientInfo* _ptr)
+{
+	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
+	PROTOCOL_LOBBY protocol = GetBufferAndProtocol(_ptr, buf);
+
+	// 로비에서 매칭버튼을 눌렀다면, 매칭매니저에서 처리해야한다.
+	if (protocol == MATCH_PROTOCOL)
+	{
+		if (MatchManager::GetInstance()->MatchProcess(_ptr) == true)
+		{
+
+			// 모든 플레이어들에게 게임을 시작하라는 프로토콜을 보내서 인게임상태로 넘어감
+			protocol = SetProtocol(LOBBY_STATE, PROTOCOL_LOBBY::START_PROTOCOL, RESULT_LOBBY::MATCH_SUCCESS);
+			ZeroMemory(buf, sizeof(BUFSIZE));
+
+			// 패킹 및 전송(매칭이 완료되었고, 게임을 시작해도 좋음)
+			int packetSize = 0;
+
+			// 같은 방에 있는 모든 플레이어에게 시작 프로토콜을 전송함.
+			_ptr->GetRoom()->team1->player1->SendPacket(protocol, buf, packetSize);
+			_ptr->GetRoom()->team1->player2->SendPacket(protocol, buf, packetSize);
+			_ptr->GetRoom()->team2->player1->SendPacket(protocol, buf, packetSize);
+			_ptr->SendPacket(protocol, buf, packetSize);
+
+			//wprintf(L"1팀:%s, %s\n2팀:%s, %s\n"
+			//	,_ptr->GetRoom()->team1->player1->GetUserInfo()->id
+			//	,_ptr->GetRoom()->team1->player2->GetUserInfo()->id
+			//	,_ptr->GetRoom()->team2->player1->GetUserInfo()->id
+			//	,_ptr->GetRoom()->team2->player2->GetUserInfo()->id);
+
+			return true;
+		}
+		
+	}
+
+	return false;
 }
 
 bool LobbyManager::CanILeaveLobby(C_ClientInfo* _ptr)
@@ -103,40 +152,15 @@ bool LobbyManager::CanILeaveLobby(C_ClientInfo* _ptr)
 	return false;
 }
 
-bool LobbyManager::StartProcess(C_ClientInfo* _ptr)
-{
-	TCHAR msg[MSGSIZE] = { 0, };
-	PROTOCOL_LOBBY protocol;
-	char buf[BUFSIZE];
-	int packetSize;
-
-	RESULT_LOBBY startResult = RESULT_LOBBY::START_SUCCESS;
-
-	// 프로토콜 세팅
-	protocol = SetProtocol(LOGIN_STATE, PROTOCOL_LOBBY::START_PROTOCOL, startResult);
-
-	ZeroMemory(buf, sizeof(BUFSIZE));
-
-	// 패킹 및 전송
-	PackPacket(buf, msg, packetSize);
-	_ptr->SendPacket(protocol, buf, packetSize);
-
-
-	if (startResult == RESULT_LOBBY::START_SUCCESS)
-		return true;
-
-	return false;
-}
-
-
+// 게임을 시작할 수 있는지
 bool LobbyManager::CanIStart(C_ClientInfo* _ptr)
 {
 	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
 	PROTOCOL_LOBBY protocol = GetBufferAndProtocol(_ptr, buf);
 
-	// 로비에서 Logout을 요청했다면, LoginList를 관리하는 LoginManager의 CanILogout()을 호출해서 검사받아야한다.
+	// 만약 4인 매칭이 성공하여 성공했던 클라가 나에게 시작 프로토콜을 보낸다면 인게임으로 들어가야한다.
 	if (protocol == START_PROTOCOL)
-		return StartProcess(_ptr);
+		return true;
 
 	return false;
 }

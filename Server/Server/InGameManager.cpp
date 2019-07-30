@@ -3,7 +3,6 @@
 #include "C_ClientInfo.h"
 
 
-
 InGameManager* InGameManager::instance;
 
 InGameManager* InGameManager::GetInstance()
@@ -68,7 +67,13 @@ void InGameManager::UnPackPacket(char* _getBuf, int& _num1, int& _num2)
 void InGameManager::GetProtocol(PROTOCOL_INGAME& _protocol)
 {
 	// major state를 제외한(클라는 state를 안보내니까(혹시나 추후에 보내게되면 이부분을 수정)) protocol을 가져오기 위해서 상위 10비트 위치에 마스크를 만듦
+#ifdef __64BIT__
 	__int64 mask = ((__int64)0x1f << (64 - 10));
+#endif
+
+#ifdef __32BIT__
+	int mask = ((int)0x1f << (32 - 10));
+#endif
 
 	// 마스크에 걸러진 1개의 프로토콜이 저장된다. 
 	PROTOCOL_INGAME protocol = (PROTOCOL_INGAME)(_protocol & (PROTOCOL_INGAME)mask);
@@ -87,7 +92,13 @@ InGameManager::PROTOCOL_INGAME InGameManager::SetProtocol(STATE_PROTOCOL _state,
 
 InGameManager::PROTOCOL_INGAME InGameManager::GetBufferAndProtocol(C_ClientInfo* _ptr, char* _buf)
 {
-	__int64 bitProtocol;
+#ifdef __64BIT__
+	__int64 bitProtocol = 0;
+#endif
+
+#ifdef __32BIT__
+	int bitProtocol = 0;
+#endif
 	_ptr->GetPacket(bitProtocol, _buf);	// 우선 걸러지지않은 프로토콜을 가져온다.
 
 	// 진짜 프로토콜을 가져와 준다.(안에서 프로토콜 AND 검사)
@@ -106,12 +117,11 @@ bool InGameManager::ItemSelctProcess(C_ClientInfo* _ptr, char* _buf)
 	char buf[BUFSIZE];
 	int packetSize;
 
-	RESULT_INGAME itemSelect = RESULT_INGAME::ITEMSELECT_SUCCESS;
+	RESULT_INGAME itemSelect = RESULT_INGAME::INGAME_SUCCESS;
 
 	UnPackPacket(_buf, weapon);
-	UnPackPacket(_buf, mainW, subW);
+	//UnPackPacket(_buf, mainW, subW);
 
-	//LogManager::GetInstance()->ErrorPrintf("메인무기 : %d, 서브무기 : %d",weapon.mainW, weapon.subW);
 	// 프로토콜 세팅
 	protocol = SetProtocol(LOGIN_STATE, PROTOCOL_INGAME::ITEMSELECT_PROTOCOL, itemSelect);
 
@@ -122,7 +132,7 @@ bool InGameManager::ItemSelctProcess(C_ClientInfo* _ptr, char* _buf)
 	_ptr->SendPacket(protocol, buf, packetSize);
 
 
-	if (itemSelect == RESULT_INGAME::ITEMSELECT_SUCCESS)
+	if (itemSelect == RESULT_INGAME::INGAME_SUCCESS)
 		return true;
 
 	return false;
@@ -130,6 +140,11 @@ bool InGameManager::ItemSelctProcess(C_ClientInfo* _ptr, char* _buf)
 
 bool InGameManager::CanIItemSelect(C_ClientInfo* _ptr)
 {
+
+	//////////// 4명이 무기선택 다 해야 서버로 send가 됨
+	//////////// STATE 앞으로 2칸 밀리고 PROTOCOL 뒤로 1칸 밀림
+
+
 	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
 	PROTOCOL_INGAME protocol = GetBufferAndProtocol(_ptr, buf);
 

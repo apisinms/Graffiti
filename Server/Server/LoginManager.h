@@ -15,6 +15,7 @@ class LoginManager
 {
 	// state + protocol + result 순서로 프로토콜이 저장된다.
 
+#ifdef __64BIT__
 	// 64비트 프로토콜 열거형
 	enum PROTOCOL_LOGIN : __int64
 	{
@@ -41,7 +42,34 @@ class LoginManager
 
 		NODATA = ((__int64)0x1 << 49)
 	};
+#endif
 
+#ifdef __32BIT__
+	enum PROTOCOL_LOGIN : int
+	{
+		JOIN_PROTOCOL = ((int)0x1 << 26),
+		LOGIN_PROTOCOL = ((int)0x1 << 25),
+		LOGOUT_PROTOCOL = ((int)0x1 << 24),
+	};
+
+	enum RESULT_LOGIN : int
+	{
+		JOIN_SUCCESS   = ((int)0x1 << 21),
+		LOGIN_SUCCESS  = ((int)0x1 << 21),
+		LOGOUT_SUCCESS = ((int)0x1 << 21),
+		LOGOUT_FAIL    = ((int)0x1 << 20),	// Logout Fail
+
+		// Join Fail
+		ID_EXIST = ((int)0x1 << 20),
+
+		// Login Fail
+		ID_ERROR = ((int)0x1 << 19),
+		PW_ERROR = ((int)0x1 << 18),
+
+
+		NODATA = ((int)0x1 << 17)
+	};
+#endif
 
 
 private:

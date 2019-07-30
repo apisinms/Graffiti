@@ -12,7 +12,6 @@ public:
 
 	void Read(C_ClientInfo* _ptr) override
 	{
-
 		if (InGameManager::GetInstance()->CanIItemSelect(_ptr) == true)
 			pos = INGAME;
 	}

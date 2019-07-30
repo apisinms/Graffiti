@@ -74,7 +74,13 @@ ChatManager::PROTOCOL_CHAT ChatManager::SetProtocol(STATE_PROTOCOL _state, PROTO
 
 ChatManager::PROTOCOL_CHAT ChatManager::GetBufferAndProtocol(C_ClientInfo* _ptr, char* _buf)
 {
-	__int64 bitProtocol;
+#ifdef __64BIT__
+	__int64 bitProtocol = 0;
+#endif
+
+#ifdef __32BIT__
+	int bitProtocol = 0;
+#endif
 	_ptr->GetPacket(bitProtocol, _buf);	// 우선 걸러지지않은 프로토콜을 가져온다.
 
 	// 진짜 프로토콜을 가져와 준다.(안에서 프로토콜 AND 검사)
@@ -82,6 +88,54 @@ ChatManager::PROTOCOL_CHAT ChatManager::GetBufferAndProtocol(C_ClientInfo* _ptr,
 	GetProtocol(realProtocol);
 
 	return realProtocol;
+}
+
+bool ChatManager::LeaveRoomProcess(C_ClientInfo* _ptr, char* _buf)
+{
+	RESULT_CHAT leaveResult = RESULT_CHAT::NODATA;
+	TCHAR msg[MSGSIZE] = { 0, };
+	PROTOCOL_CHAT protocol;
+
+	char buf[BUFSIZE];		// 버퍼
+	int packetSize = 0;     // 총 사이즈
+
+	//// 로비로 돌아간 것에 성공하면 result 변경
+	//if (LobbyManager::GetInstance()->CheckLeaveRoom(_ptr) == true)
+	//{
+	//	leaveResult = RESULT_CHAT::LEAVE_ROOM_SUCCESS;
+	//	_tcscpy_s(msg, MSGSIZE, GOTO_LOBBY_SUCCESS_MSG);
+
+	//	_ptr->SetRoomNum(-1);	// 소속된 방이 이제 없음
+	//}
+
+	//else
+	//{
+	//	leaveResult = RESULT_CHAT::LEAVE_ROOM_FAIL;
+	//	_tcscpy_s(msg, MSGSIZE, GOTO_LOBBY_SUCCESS_MSG);
+	//}
+
+	// 프로토콜 세팅 
+	protocol = SetProtocol(CHAT_STATE, PROTOCOL_CHAT::LEAVE_ROOM_PROTOCOL, leaveResult);
+	ZeroMemory(buf, sizeof(BUFSIZE));
+	// 패킹 및 전송
+	PackPacket(buf, msg, packetSize);
+	_ptr->SendPacket(protocol, buf, packetSize);
+
+	if (leaveResult == RESULT_CHAT::LEAVE_ROOM_SUCCESS)
+		return true;
+
+	return false;
+}
+
+bool ChatManager::CanILeaveRoom(C_ClientInfo* _ptr)
+{
+	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
+	PROTOCOL_CHAT protocol = GetBufferAndProtocol(_ptr, buf);
+
+	if (protocol == LEAVE_ROOM_PROTOCOL)
+		return LeaveRoomProcess(_ptr, buf);
+
+	return false;
 }
 
 bool ChatManager::CheckChattingMessage(C_ClientInfo* _ptr)
@@ -95,30 +149,34 @@ bool ChatManager::CheckChattingMessage(C_ClientInfo* _ptr)
 	TCHAR compleChatMsg[IDSIZE + MSGSIZE] = { 0, };
 	UnPackPacket(buf, chatMsg);
 	wsprintf(compleChatMsg, TEXT("%s:%s"), _ptr->GetUserInfo()->id, chatMsg);
+
 	if (protocol == CHAT_PROTOCOL)
 	{
-		while (1)
-		{
-			// 방에있는 클라의 정보를 하나씩얻어옴
-			//C_ClientInfo* ptr = LobbyManager::GetInstance()->GetRoomClient(_ptr->GetRoomNum());
+		//while (1)
+		//{
+		//	// 방에있는 클라의 정보를 하나씩얻어옴
+		//	C_ClientInfo* ptr = LobbyManager::GetInstance()->GetRoomClient(_ptr->GetRoomNum());
 
-			// 자신에게는 안보낸다.
-			//if (ptr == _ptr)
-			//	continue;
+		//	// 자신에게는 안보낸다.
+		//	if (ptr == _ptr)
+		//		continue;
 
-			// 클라 정보가 없으면 빠져나간다.
-			//if (ptr == nullptr)
-			//	break;
+		//	// 클라 정보가 없으면 빠져나간다.
+		//	if (ptr == nullptr)
+		//		break;
 
-			// 그 외에 경우에는 채팅 메시지를 보내준다.
 
-			// 프로토콜 세팅 
-			protocol = SetProtocol(CHAT_STATE, PROTOCOL_CHAT::CHAT_PROTOCOL, (RESULT_CHAT)0);
-			ZeroMemory(buf, sizeof(BUFSIZE));
-			// 패킹 및 전송
-			PackPacket(buf, compleChatMsg, packetSize);
-			//ptr->SendPacket(protocol, buf, packetSize);
-		}
+
+		//	// 그 외에 경우에는 채팅 메시지를 보내준다.
+
+		//	// 프로토콜 세팅 
+		//	protocol = SetProtocol(CHAT_STATE, PROTOCOL_CHAT::CHAT_PROTOCOL, (RESULT_CHAT)0);
+		//	ZeroMemory(buf, sizeof(BUFSIZE));
+		//	// 패킹 및 전송
+		//	PackPacket(buf, compleChatMsg, packetSize);
+		//	ptr->SendPacket(protocol, buf, packetSize);
+		//}
+
 		return true;
 	}
 	return false;
