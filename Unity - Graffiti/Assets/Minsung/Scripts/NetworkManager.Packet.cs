@@ -143,7 +143,7 @@ public partial class NetworkManager : MonoBehaviour
 		_size += sizeof(PROTOCOL);
 
 		// 암호화된 내용을 encryptBuf에 저장
-		C_Encrypt.GetInstance.Encrypt(buf, encryptBuf, _size);
+		C_Encrypt.instance.Encrypt(buf, encryptBuf, _size);
 
 		// 가장 앞에 size를 넣고, 그 뒤에 암호화했던 버퍼를 붙임.
 		offset = 0;
@@ -181,7 +181,7 @@ public partial class NetworkManager : MonoBehaviour
 		_size += Marshal.SizeOf(_weapon);
 
 		// 암호화된 내용을 encryptBuf에 저장
-		C_Encrypt.GetInstance.Encrypt(buf, encryptBuf, _size);
+		C_Encrypt.instance.Encrypt(buf, encryptBuf, _size);
 
 		// 가장 앞에 size를 넣고, 그 뒤에 암호화했던 버퍼를 붙임.
 		offset = 0;
@@ -236,7 +236,7 @@ public partial class NetworkManager : MonoBehaviour
 		_size += strsize2;
 
 		// 암호화된 내용을 encryptBuf에 저장
-		C_Encrypt.GetInstance.Encrypt(buf, encryptBuf, _size);
+		C_Encrypt.instance.Encrypt(buf, encryptBuf, _size);
 
 		// 가장 앞에 size를 넣고, 그 뒤에 암호화했던 버퍼를 붙임.
 		offset = 0;
@@ -301,7 +301,7 @@ public partial class NetworkManager : MonoBehaviour
 		_size += strsize3;
 
 		// 암호화된 내용을 encryptBuf에 저장
-		C_Encrypt.GetInstance.Encrypt(buf, encryptBuf, _size);
+		C_Encrypt.instance.Encrypt(buf, encryptBuf, _size);
 
 		// 가장 앞에 size를 넣고, 그 뒤에 암호화했던 버퍼를 붙임.
 		offset = 0;
@@ -373,7 +373,7 @@ public partial class NetworkManager : MonoBehaviour
 
 
 		// 암호화된 내용을 encryptBuf에 저장
-		C_Encrypt.GetInstance.Encrypt(buf, encryptBuf, _size);
+		C_Encrypt.instance.Encrypt(buf, encryptBuf, _size);
 
 		// 가장 앞에 size를 넣고, 그 뒤에 암호화했던 버퍼를 붙임.
 		offset = 0;

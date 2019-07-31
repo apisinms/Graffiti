@@ -8,6 +8,8 @@ private:
 	static UtilityManager* instance;
 
 public:
+	void Init();
+	void End();
 	static UtilityManager* GetInstance();
 	static void Destroy();
 

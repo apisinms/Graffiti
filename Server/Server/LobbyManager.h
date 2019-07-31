@@ -20,8 +20,8 @@ class LobbyManager
 #ifdef __64BIT__
 	enum PROTOCOL_LOBBY : __int64
 	{
-		MATCH_PROTOCOL = ((__int64)0x1 << 58),		// 매칭 프로토콜
-		START_PROTOCOL = ((__int64)0x1 << 57),		// 게임시작 프로토콜
+		MATCH_PROTOCOL        = ((__int64)0x1 << 58),		// 매칭 프로토콜
+		GOTO_INGAME_PROTOCOL = ((__int64)0x1 << 57),		// 인게임 진입 프로토콜
 
 		LOGOUT_PROTOCOL = ((__int64)0x1 << 56),			// LOGIN 매니저에서 사용되기 때문에
 	};
@@ -76,5 +76,5 @@ private:
 public:
 	bool CanIMatch(C_ClientInfo* _ptr);			// 매칭을 할 수 있는가
 	bool CanILeaveLobby(C_ClientInfo* _ptr);	// 로그아웃 할 수 있는가
-	bool CanIStart(C_ClientInfo* _ptr);			// 시작 할 수 있는가
+	bool CanISelectWeapon(C_ClientInfo* _ptr);	// 무기 선택창으로 갈 수 있는가
 };

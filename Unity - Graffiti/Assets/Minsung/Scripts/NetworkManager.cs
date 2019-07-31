@@ -12,6 +12,8 @@ using System.Net.Sockets;
 using System.IO;
 using System.Runtime.InteropServices;
 using UnityEngine;
+//using Unity.Jobs
+//using Unity.Collections
 
 
 /// <summary>
@@ -29,9 +31,9 @@ public partial class NetworkManager : MonoBehaviour
 	enum STATE_PROTOCOL : Int64
 	{
 		// 상위 5비트 스테이트를 표현해주는 프로토콜
-		LOGIN_STATE = ((Int64)0x1 << 63),
-		LOBBY_STATE = ((Int64)0x1 << 62),
-		CHAT_STATE = ((Int64)0x1 << 61),
+		LOGIN_STATE  = ((Int64)0x1 << 63),
+		LOBBY_STATE  = ((Int64)0x1 << 62),
+		CHAT_STATE   = ((Int64)0x1 << 61),
 		INGAME_STATE = ((Int64)0x1 << 60),
 		//60
 		//59
@@ -48,16 +50,17 @@ public partial class NetworkManager : MonoBehaviour
 		// 54
 
 		// LobbyState
-		MATCH_PROTOCOL = ((Int64)0x1 << 58),
-		START_PROTOCOL = ((Int64)0x1 << 57),      // 게임시작 프로토콜
-		LOGOUT_PROTOCOL = ((Int64)0x1 << 56),
+		MATCH_PROTOCOL        = ((Int64)0x1 << 58),
+		GOTO_INGAME_PROTOCOL  = ((Int64)0x1 << 57),      // 인게임 상태로 진입 프로토콜
+		LOGOUT_PROTOCOL       = ((Int64)0x1 << 56),
 
 		// ChatState
 		LEAVE_ROOM_PROTOCOL = ((Int64)0x1 << 58),
-		CHAT_PROTOCOL = ((Int64)0x1 << 57),
+		CHAT_PROTOCOL       = ((Int64)0x1 << 57),
 
 		// InGameState
-		ITEMSELECT_PROTOCOL = ((Int64)0x1 << 58),
+		//ITEMSELECT_PROTOCOL = ((Int64)0x1 << 58),
+		WEAPON_PROTOCOL		= ((Int64)0x1 << 58),
 		// 56
 		// 55
 		// 54
@@ -207,7 +210,6 @@ public partial class NetworkManager : MonoBehaviour
 	STATE_PROTOCOL state;   // 클라 상태
 	PROTOCOL protocol;      // 프로토콜
 	RESULT result;          // 결과
-	bool isInGame = false;	// 인게임에 들어갔는지
 
 	// 서버 IP와 포트
 	private static IPAddress serverIP = IPAddress.Parse("127.0.0.1");

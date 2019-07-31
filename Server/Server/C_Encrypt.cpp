@@ -2,6 +2,15 @@
 
 C_Encrypt* C_Encrypt::instance;
 
+void C_Encrypt::Init()
+{
+}
+
+void C_Encrypt::End()
+{
+}
+
+
 C_Encrypt* C_Encrypt::GetInstance()
 {
 	if (instance == nullptr)

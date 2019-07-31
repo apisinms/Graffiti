@@ -4,6 +4,8 @@
 #include "MatchManager.h"
 #include "RoomManager.h"
 #include "C_ClientInfo.h"
+#include "InGameManager.h"
+#include <process.h>
 
 LobbyManager* LobbyManager::instance;
 
@@ -113,8 +115,8 @@ bool LobbyManager::CanIMatch(C_ClientInfo* _ptr)
 		if (MatchManager::GetInstance()->MatchProcess(_ptr) == true)
 		{
 
-			// 모든 플레이어들에게 게임을 시작하라는 프로토콜을 보내서 인게임상태로 넘어감
-			protocol = SetProtocol(LOBBY_STATE, PROTOCOL_LOBBY::START_PROTOCOL, RESULT_LOBBY::MATCH_SUCCESS);
+			// 모든 플레이어들에게 인게임 상태로 진입하라는 프로토콜을 보내버림
+			protocol = SetProtocol(LOBBY_STATE, PROTOCOL_LOBBY::GOTO_INGAME_PROTOCOL, RESULT_LOBBY::MATCH_SUCCESS);
 			ZeroMemory(buf, sizeof(BUFSIZE));
 
 			// 패킹 및 전송(매칭이 완료되었고, 게임을 시작해도 좋음)
@@ -153,14 +155,26 @@ bool LobbyManager::CanILeaveLobby(C_ClientInfo* _ptr)
 }
 
 // 게임을 시작할 수 있는지
-bool LobbyManager::CanIStart(C_ClientInfo* _ptr)
+bool LobbyManager::CanISelectWeapon(C_ClientInfo* _ptr)
 {
 	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
 	PROTOCOL_LOBBY protocol = GetBufferAndProtocol(_ptr, buf);
 
-	// 만약 4인 매칭이 성공하여 성공했던 클라가 나에게 시작 프로토콜을 보낸다면 인게임으로 들어가야한다.
-	if (protocol == START_PROTOCOL)
+	// 만약 4인 매칭이 성공하여 성공했던 클라가 나에게 시작 프로토콜을 보낸다면 인게임의 무기선택 창으로 들어가야한다.
+	if (protocol == GOTO_INGAME_PROTOCOL)
+	{
+		// 만약 타이머 쓰레드가 아직 생성이 안됐다면
+		if (_ptr->GetRoom()->timerHandle == NULL)
+		{
+			// InGameManager에게 타이머 쓰레드를 생성해 30초를 세도록 부탁한다.
+			_ptr->GetRoom()->timerHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)InGameManager::TimerThread, (void*)_ptr, 0, NULL);
+			if (_ptr->GetRoom()->timerHandle == NULL)
+				LogManager::GetInstance()->ErrorPrintf("_beginthreadex() in CanIStart()");
+
+			_ptr->GetRoom()->roomStatus = ROOMSTATUS::ROOM_ITELSEL;	// 이제 아이템 선택 상태로
+		}
 		return true;
+	}
 
 	return false;
 }

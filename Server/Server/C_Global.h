@@ -3,6 +3,7 @@
 using namespace std;
 	
 #define __64BIT__
+//#define __32BIT__
 
 #define BUFSIZE			4096
 #define HALF_BUFSIZE	2048
@@ -16,9 +17,14 @@ using namespace std;
 
 #define THREAD_END		-777
 
-enum POSITION : int
+enum STATE : int
 {
-	LOGIN, LOBBY, MATCH, INGAME,
+	STATE_LOGIN = 1, STATE_LOBBY, STATE_MATCH, STATE_INGAME,
+};
+
+enum ROOMSTATUS
+{
+	ROOM_NONE = -1, ROOM_ITELSEL = 1, ROOM_GAME
 };
 
 #ifdef __64BIT__

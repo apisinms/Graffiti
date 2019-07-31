@@ -10,6 +10,7 @@
 #include "UtilityManager.h"
 #include "RoomManager.h"
 #include "MatchManager.h"
+#include "InGameManager.h"
 #include <locale.h>
 
 // 초기화
@@ -48,12 +49,17 @@ void MainManager::Init()
 	listenSock->Listen(SOMAXCONN);
 
 	IOCP_Init();
+	LogManager::GetInstance()->Init();
+	UtilityManager::GetInstance()->Init();
+	C_Encrypt::GetInstance()->Init();
+	SessionManager::GetInstance()->Init();
 	DatabaseManager::GetInstance()->Init();	// DB매니저에서 초기화 하는 작업 수행
 	LoginManager::GetInstance()->Init();	// 로그인 매니저에서 초기화 해야하는 작업을 진행한다(예:회원가입 리스트 불러오기)
 	LobbyManager::GetInstance()->Init();
 	RoomManager::GetInstance()->Init();
 	MatchManager::GetInstance()->Init();
 	ChatManager::GetInstance()->Init();
+	InGameManager::GetInstance()->Init();
 
 	SetConsoleCtrlHandler((PHANDLER_ROUTINE)CtrlHandler, TRUE);	// 종료를 감지하는 핸들러 함수 등록
 }
@@ -82,16 +88,17 @@ void MainManager::Run()
 // 이 Destroy 함수에서 싱글톤 객체들의 Destroy도 호출하여 자원을 반납한다.
 void MainManager::Destroy()
 {
-	C_Encrypt::GetInstance()->Destroy();
-	//FileManager<UserInfo>::GetInstance()->Destroy();
-	UtilityManager::GetInstance()->Destroy();
-	DatabaseManager::GetInstance()->Destroy();
-	LogManager::GetInstance()->Destroy();
-	LoginManager::GetInstance()->Destroy();
-	LobbyManager::GetInstance()->Destroy();
-	MatchManager::GetInstance()->Destroy();
+	InGameManager::GetInstance()->Destroy();
 	ChatManager::GetInstance()->Destroy();
+	MatchManager::GetInstance()->Destroy();
+	RoomManager::GetInstance()->Destroy();
+	LobbyManager::GetInstance()->Destroy();
+	LoginManager::GetInstance()->Destroy();	// 로그인 매니저에서 초기화 해야하는 작업을 진행한다(예:회원가입 리스트 불러오기)
+	DatabaseManager::GetInstance()->Destroy();	// DB매니저에서 초기화 하는 작업 수행
 	SessionManager::GetInstance()->Destroy();
+	C_Encrypt::GetInstance()->Destroy();
+	UtilityManager::GetInstance()->Destroy();
+	LogManager::GetInstance()->Destroy();
 
 	MessageBeep(0);	// 잘 종료되나 메시지비프 울림
 	delete instance;
@@ -153,12 +160,16 @@ void MainManager::IOCP_Write(void* _ptr, int _len)
 
 void MainManager::End()
 {
-	LoginManager::GetInstance()->End();
-	LobbyManager::GetInstance()->End();
-	RoomManager::GetInstance()->End();
-	MatchManager::GetInstance()->End();
+	InGameManager::GetInstance()->End();
 	ChatManager::GetInstance()->End();
-	DatabaseManager::GetInstance()->End();
+	MatchManager::GetInstance()->End();
+	RoomManager::GetInstance()->End();
+	LobbyManager::GetInstance()->End();
+	LoginManager::GetInstance()->End();	// 로그인 매니저에서 초기화 해야하는 작업을 진행한다(예:회원가입 리스트 불러오기)
+	DatabaseManager::GetInstance()->End();	// DB매니저에서 초기화 하는 작업 수행
+	SessionManager::GetInstance()->End();
+	C_Encrypt::GetInstance()->End();
+	UtilityManager::GetInstance()->End();
 	LogManager::GetInstance()->End();
 	IOCP_End();
 }

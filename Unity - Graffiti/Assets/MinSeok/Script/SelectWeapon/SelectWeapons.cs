@@ -52,6 +52,8 @@ public class SelectWeapons : MonoBehaviour
 	void Start()
 	{
 		StartCoroutine(AppearMainWeapon());
+
+		InvokeRepeating("SelectWeaponTimer", 0.0f, 1.0f); //1초마다 시간을 깎는 인보크
 	}
 
 	void Update()
@@ -96,7 +98,7 @@ public class SelectWeapons : MonoBehaviour
 
 
 				/// 테스트로 보내본다
-				NetworkManager.instance.MayIItemSelect((sbyte)myMainWeapon, (sbyte)mySubWeapon);
+				NetworkManager.instance.MayISelectWeapon((sbyte)myMainWeapon, (sbyte)mySubWeapon);
 
 				if (NetworkManager.instance.CheckItemSelectSuccess() == true)
 				{
@@ -202,6 +204,20 @@ public class SelectWeapons : MonoBehaviour
 
 
 		yield break;
+	}
+
+	public void SelectWeaponTimer() //30초 시간제한거는 인보크함수
+	{
+		if (selectTime <= 0)
+		{
+			Debug.Log("무기선택 종료!!!");
+			CancelInvoke();
+			//제한시간 종료시 아래 작성.
+
+
+		}
+		txt_selectTime.text = ((int)selectTime).ToString() + "초";
+		selectTime--; // (Time.smoothDeltaTime * 1.0f);
 	}
 
 }

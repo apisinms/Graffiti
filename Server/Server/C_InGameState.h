@@ -5,7 +5,7 @@
 class C_InGameState : public C_State
 {
 private:
-	POSITION pos = INGAME;
+	STATE state = STATE_INGAME;
 public:
 	void Init()override {}
 	void End()override {}
@@ -13,7 +13,7 @@ public:
 	void Read(C_ClientInfo* _ptr) override
 	{
 		if (InGameManager::GetInstance()->CanIItemSelect(_ptr) == true)
-			pos = INGAME;
+			state = STATE_INGAME;
 	}
 
 	void Write(C_ClientInfo* _ptr) override

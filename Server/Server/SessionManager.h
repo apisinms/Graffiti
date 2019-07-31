@@ -11,6 +11,8 @@ private:
 	C_List<C_ClientInfo*>* clientList;
 
 public:
+	void Init();
+	void End();
 	static SessionManager* GetInstance();
 	static void Destroy();
 
