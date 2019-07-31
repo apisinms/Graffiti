@@ -1,6 +1,7 @@
 #include "InGameManager.h"
 #include "LogManager.h"
 #include "C_ClientInfo.h"
+#include "RoomManager.h"
 
 
 InGameManager* InGameManager::instance;
@@ -25,6 +26,17 @@ void InGameManager::End()
 {
 }
 
+void InGameManager::PackPacket(char* _setptr, Position& _struct, int& _size)
+{
+	char* ptr = _setptr;
+	_size = 0;
+
+	// 문자열 길이
+	memcpy(ptr, &_struct, sizeof(Position));
+	ptr = ptr + sizeof(Position);
+	_size = _size + sizeof(Position);
+}
+
 void InGameManager::PackPacket(char* _setptr, TCHAR* _str1, int& _size)
 {
 	char* ptr = _setptr;
@@ -42,6 +54,16 @@ void InGameManager::PackPacket(char* _setptr, TCHAR* _str1, int& _size)
 	_size = _size + strsize1;
 }
 
+void InGameManager::UnPackPacket(char* _getBuf, Position& _struct)
+{
+	char* ptr = _getBuf + sizeof(PROTOCOL_INGAME);
+
+	// 구조체 받음
+	memcpy(&_struct, ptr, sizeof(Position));
+	ptr = ptr + sizeof(Position);
+}
+
+
 void InGameManager::UnPackPacket(char* _getBuf, Weapon& _struct)
 {
 	char* ptr = _getBuf + sizeof(PROTOCOL_INGAME);
@@ -49,8 +71,8 @@ void InGameManager::UnPackPacket(char* _getBuf, Weapon& _struct)
 	// 구조체 받음
 	memcpy(&_struct, ptr, sizeof(Weapon));
 	ptr = ptr + sizeof(Weapon);
-
 }
+
 
 void InGameManager::UnPackPacket(char* _getBuf, int& _num1, int& _num2)
 {
@@ -82,6 +104,7 @@ void InGameManager::GetProtocol(PROTOCOL_INGAME& _protocol)
 	// 나중에 한번더 저장해주는 이유는 나중에 추가로 받을 수 있는 result 에 대해서 protocol 을 살려놓기 위해 
 	_protocol = protocol;
 }
+
 InGameManager::PROTOCOL_INGAME InGameManager::SetProtocol(STATE_PROTOCOL _state, PROTOCOL_INGAME _protocol, RESULT_INGAME _result)
 {
 	// 완성된 프로토콜을 리턴 
@@ -123,7 +146,7 @@ bool InGameManager::ItemSelctProcess(C_ClientInfo* _ptr, char* _buf)
 	//UnPackPacket(_buf, mainW, subW);
 
 	// 프로토콜 세팅
-	protocol = SetProtocol(LOGIN_STATE, PROTOCOL_INGAME::ITEMSELECT_PROTOCOL, itemSelect);
+	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::ITEMSELECT_PROTOCOL, itemSelect);
 
 	ZeroMemory(buf, sizeof(BUFSIZE));
 
@@ -133,6 +156,41 @@ bool InGameManager::ItemSelctProcess(C_ClientInfo* _ptr, char* _buf)
 
 
 	if (itemSelect == RESULT_INGAME::INGAME_SUCCESS)
+		return true;
+
+	return false;
+}
+
+bool InGameManager::MoveProcess(C_ClientInfo* _ptr, char* _buf)
+{
+	TCHAR msg[MSGSIZE] = { 0, };
+	PROTOCOL_INGAME protocol;
+	char buf[BUFSIZE];
+	int packetSize;
+
+	RESULT_INGAME move = RESULT_INGAME::INGAME_SUCCESS;
+
+	UnPackPacket(_buf, position);
+	//UnPackPacket(_buf, posX, posZ);
+
+	printf("%f, %f\n", position.posX, position.posZ);
+
+	// 프로토콜 세팅
+	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::MOVE_PROTOCOL, move);
+
+	ZeroMemory(buf, sizeof(BUFSIZE));
+
+	// 패킹 및 전송
+	PackPacket(buf, position, packetSize);
+
+	//_ptr->GetRoom()->team1->player1->SendPacket(protocol, buf, packetSize);
+	//_ptr->GetRoom()->team1->player2->SendPacket(protocol, buf, packetSize);
+
+	//_ptr->GetRoom()->team2->player1->SendPacket(protocol, buf, packetSize);
+	_ptr->SendPacket(protocol, buf, packetSize);
+
+
+	if (move == RESULT_INGAME::INGAME_SUCCESS)
 		return true;
 
 	return false;
@@ -151,6 +209,18 @@ bool InGameManager::CanIItemSelect(C_ClientInfo* _ptr)
 	// 로비에서 Logout을 요청했다면, LoginList를 관리하는 LoginManager의 CanILogout()을 호출해서 검사받아야한다.
 	if (protocol == ITEMSELECT_PROTOCOL)
 		return ItemSelctProcess(_ptr, buf);
+
+	return false;
+}
+
+bool InGameManager::CanIIMove(C_ClientInfo* _ptr)
+{
+	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
+	PROTOCOL_INGAME protocol = GetBufferAndProtocol(_ptr, buf);
+
+	// 로비에서 Logout을 요청했다면, LoginList를 관리하는 LoginManager의 CanILogout()을 호출해서 검사받아야한다.
+	if (protocol == MOVE_PROTOCOL)
+		return MoveProcess(_ptr, buf);
 
 	return false;
 }

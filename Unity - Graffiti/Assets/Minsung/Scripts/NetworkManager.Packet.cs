@@ -71,7 +71,15 @@ public partial class NetworkManager : MonoBehaviour
 				_result = (RESULT)((Int64)wholeProtocol & mask);       // 이제 마지막으로 result
 				break;
 
-			case STATE_PROTOCOL.CHAT_STATE:
+            case STATE_PROTOCOL.INGAME_STATE:
+                mask = ((Int64)0x1f << (64 - 10));
+                _protocol = (PROTOCOL)((Int64)wholeProtocol & mask);  // 이제 state를 얻었으니 protocol을 얻어보자
+
+                mask = ((Int64)0x1f << (64 - 15));
+                _result = (RESULT)((Int64)wholeProtocol & mask);       // 이제 마지막으로 result
+                break;
+
+            case STATE_PROTOCOL.CHAT_STATE:
 				break;
 		}
 #endif
@@ -193,7 +201,46 @@ public partial class NetworkManager : MonoBehaviour
 		_size += sizeof(int);   // 총 보내야 할 바이트 수 저장한다.
 	}
 
-	private void PackPacket(ref byte[] _buf, PROTOCOL _protocol, string _str1, string _str2, out int _size)
+    private void PackPacket(ref byte[] _buf, PROTOCOL _protocol, PositionPacket  _position, out int _size)
+    {
+
+        // 암호화된 내용을 저장할 버퍼이다.
+        byte[] encryptBuf = new byte[C_Global.BUFSIZE];
+        byte[] buf = new byte[C_Global.BUFSIZE];
+
+        _size = 0;
+        int offset = 0;
+
+        // 프로토콜
+#if __64BIT__
+        Buffer.BlockCopy(BitConverter.GetBytes((Int64)_protocol), 0, buf, offset, sizeof(PROTOCOL));
+#endif
+#if __32BIT__
+		Buffer.BlockCopy(BitConverter.GetBytes((Int32)_protocol), 0, buf, offset, sizeof(PROTOCOL));
+#endif
+        offset += sizeof(PROTOCOL);
+        _size += sizeof(PROTOCOL);
+
+        // 프로토콜
+        Buffer.BlockCopy(_position.Serialize(), 0, buf, offset, Marshal.SizeOf(_position));
+        offset += Marshal.SizeOf(_position);
+        _size += Marshal.SizeOf(_position);
+
+        // 암호화된 내용을 encryptBuf에 저장
+        C_Encrypt.GetInstance.Encrypt(buf, encryptBuf, _size);
+
+        // 가장 앞에 size를 넣고, 그 뒤에 암호화했던 버퍼를 붙임.
+        offset = 0;
+        Buffer.BlockCopy(BitConverter.GetBytes(_size), 0, _buf, offset, sizeof(int));
+        offset += sizeof(int);
+        Buffer.BlockCopy(encryptBuf, 0, _buf, offset, _size);
+        offset += _size;
+
+        _size += sizeof(int);   // 총 보내야 할 바이트 수 저장한다.
+    }
+
+
+    private void PackPacket(ref byte[] _buf, PROTOCOL _protocol, string _str1, string _str2, out int _size)
 	{
 		int strsize1 = _str1.Length * sizeof(char);
 		int strsize2 = _str2.Length * sizeof(char);
@@ -312,6 +359,8 @@ public partial class NetworkManager : MonoBehaviour
 
 		_size += sizeof(int);   // 총 보내야 할 바이트 수 저장한다.
 	}
+
+
 	private void UnPackPacket(byte[] _buf, out string _str1)
 	{
 		byte[] arrStrsize1 = new byte[sizeof(int)];
@@ -333,15 +382,24 @@ public partial class NetworkManager : MonoBehaviour
 		_str1 = ByteToString(arrStrByte);
 	}
 
+    private void UnPackPacket(byte[] _buf, PositionPacket _struct)
+    {
+
+        int offset = sizeof(PROTOCOL);
+
+        // 문자열 길이
+
+        // 문자열 길이 만큼 생성해서 문자열을 저장함
+        byte[] posByte = new byte[Marshal.SizeOf(_struct)];
+        Buffer.BlockCopy(_buf, offset, posByte, 0, Marshal.SizeOf(_struct));
+
+        
+        position.Deserialize(ref posByte);
+    }
 
 
-
-
-
-
-
-	/// 테스트용
-	private void PackPacket(ref byte[] _buf, PROTOCOL _protocol, sbyte _num1, sbyte _num2, out int _size)
+    /// 테스트용
+    private void PackPacket(ref byte[] _buf, PROTOCOL _protocol, sbyte _num1, sbyte _num2, out int _size)
 	{
 
 		// 암호화된 내용을 저장할 버퍼이다.

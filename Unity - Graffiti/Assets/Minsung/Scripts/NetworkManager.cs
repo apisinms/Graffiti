@@ -47,9 +47,12 @@ public partial class NetworkManager : MonoBehaviour
 		// 55
 		// 54
 
-		// LobbyState
+	    // InGameState
 		MATCH_PROTOCOL = ((Int64)0x1 << 58),
-		START_PROTOCOL = ((Int64)0x1 << 57),      // 게임시작 프로토콜
+
+
+	    // LobbyState
+        START_PROTOCOL = ((Int64)0x1 << 57),      // 게임시작 프로토콜
 		LOGOUT_PROTOCOL = ((Int64)0x1 << 56),
 
 		// ChatState
@@ -58,10 +61,11 @@ public partial class NetworkManager : MonoBehaviour
 
 		// InGameState
 		ITEMSELECT_PROTOCOL = ((Int64)0x1 << 58),
-		// 56
-		// 55
-		// 54
-	};
+        MOVE_PROTOCOL = ((Int64)0x1 << 57),
+        // 56
+        // 55
+        // 54
+    };
 
 	// 53 ~ 49
 	enum RESULT : Int64
@@ -203,8 +207,40 @@ public partial class NetworkManager : MonoBehaviour
 		}
 	}
 
+    [StructLayout(LayoutKind.Sequential)]
+    struct PositionPacket
+    {
+        [MarshalAs(UnmanagedType.R4)]
+        public float posX;
 
-	STATE_PROTOCOL state;   // 클라 상태
+        [MarshalAs(UnmanagedType.R4)]
+        public float posZ;
+
+        public byte[] Serialize()
+        {
+            // allocate a byte array for the struct data
+            var buffer = new byte[Marshal.SizeOf(typeof(PositionPacket))];
+
+            // Allocate a GCHandle and get the array pointer
+            var gch = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+            var pBuffer = gch.AddrOfPinnedObject();
+
+            // copy data from struct to array and unpin the gc pointer
+            Marshal.StructureToPtr(this, pBuffer, false);
+            gch.Free();
+
+            return buffer;
+        }
+        public void Deserialize(ref byte[] data)
+        {
+            var gch = GCHandle.Alloc(data, GCHandleType.Pinned);
+            this = (PositionPacket)Marshal.PtrToStructure(gch.AddrOfPinnedObject(), typeof(PositionPacket));
+            gch.Free();
+        }
+    } PositionPacket position;
+
+
+    STATE_PROTOCOL state;   // 클라 상태
 	PROTOCOL protocol;      // 프로토콜
 	RESULT result;          // 결과
 	bool isInGame = false;	// 인게임에 들어갔는지
@@ -225,7 +261,6 @@ public partial class NetworkManager : MonoBehaviour
 	private object key = new object();      // 동기화에 사용할 key이다.
 	private string sysMsg = string.Empty;	// 서버로부터 전달되는 메시지를 저장할 변수
 
-
 	private Queue<C_Global.QueueInfo> queue;	// recv에 관한 패킷이 저장될 큐
 
 	public Queue<C_Global.QueueInfo> Queue { get { return queue; } }
@@ -238,6 +273,15 @@ public partial class NetworkManager : MonoBehaviour
 		set { sysMsg = value; }
 	}
 
-	public static NetworkManager instance = null;
+    public float GetPosX
+    {
+        get { return position.posX; }
+    }
+    public float GetPosZ
+    {
+        get { return position.posZ; }
+    }
+
+    public static NetworkManager instance = null;
 
 }

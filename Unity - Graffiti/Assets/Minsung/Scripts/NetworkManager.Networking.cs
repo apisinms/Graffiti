@@ -52,30 +52,26 @@ public partial class NetworkManager : MonoBehaviour
 	{
 		// 큐에 저장된 패킷을 꺼내온다.
 		C_Global.QueueInfo info = queue.Dequeue();
+        Debug.Log("RECV");
+        // 얻어온 패킷으로 state, protocol, result를 각각 추출한다.
+        GetProtocol(info.packet, out state, out protocol, out result);
+        Debug.Log(protocol);
 
-		// 얻어온 패킷으로 state, protocol, result를 각각 추출한다.
-		GetProtocol(info.packet, out state, out protocol, out result);
-
-		// 얻어온 정보를 switch하여 처리한다.
-		switch (state)
+        // 얻어온 정보를 switch하여 처리한다.
+        switch (state)
 		{
 			// Login 상태일 때
 			case STATE_PROTOCOL.LOGIN_STATE:
 				{
 					// Login 상태에서 프로토콜은 제외했다.(같은 값이 존재해서)
-
-
 					switch (result)
 					{
 						case RESULT.LOGIN_SUCCESS:
-						//case RESULT.JOIN_SUCCESS:
-						//case RESULT.LOGOUT_SUCCESS:
 						case RESULT.ID_EXIST:
-						//case RESULT.LOGOUT_FAIL:
 						case RESULT.ID_ERROR:
 						case RESULT.PW_ERROR:
 							{
-								lock (key)
+                                lock (key)
 								{
 									sysMsg = string.Empty;
 									UnPackPacket(info.packet, out sysMsg);
@@ -86,13 +82,13 @@ public partial class NetworkManager : MonoBehaviour
 					}
 				}
 				break;
-
 			// Lobby 상태일 때
 			case STATE_PROTOCOL.LOBBY_STATE:
 				{
-					switch (protocol)
+                    Debug.Log("로비 스테이트");
+                    switch (protocol)
 					{
-						case PROTOCOL.START_PROTOCOL:
+                        case PROTOCOL.START_PROTOCOL:
 							{
 								switch (result)
 								{
@@ -123,6 +119,50 @@ public partial class NetworkManager : MonoBehaviour
 					}
 				}
 				break;
+
+            case STATE_PROTOCOL.INGAME_STATE:
+                {
+                    Debug.Log("인게임 스테이트");
+                    Debug.Log(protocol);
+
+                    switch (protocol)
+                    {
+                        case PROTOCOL.ITEMSELECT_PROTOCOL:
+                            {
+                                Debug.Log("아이템 선택");
+                                switch (result)
+                                {
+                                    case RESULT.INGAME_SUCCESS:
+                                        {
+                                            sysMsg = string.Empty;
+                                            UnPackPacket(info.packet, out sysMsg);
+                                            Debug.Log(sysMsg);
+                                        }
+                                        break;
+                                }
+                            }
+                            break;
+                        case PROTOCOL.MOVE_PROTOCOL:
+                            {
+                                Debug.Log("무브");
+                                switch (result)
+                                {
+                                    case RESULT.INGAME_SUCCESS:
+                                        {
+                                            UnPackPacket(info.packet, position);
+                                            Debug.Log(position.posX);
+                                            Debug.Log(position.posZ);
+
+                                            Debug.Log(GetPosX);
+                                            Debug.Log(GetPosZ);
+                                        }
+                                        break;
+                                }
+                            }
+                            break;
+                    }
+                }
+                break;
 		}
 	}
 

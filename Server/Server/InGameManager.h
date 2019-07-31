@@ -15,6 +15,7 @@ class InGameManager
 	enum PROTOCOL_INGAME : __int64
 	{
 		ITEMSELECT_PROTOCOL = ((__int64)0x1 << 58),
+		MOVE_PROTOCOL = ((__int64)0x1 << 57),
 	};
 
 	enum RESULT_INGAME : __int64
@@ -45,7 +46,15 @@ class InGameManager
 	{
 		char mainW;
 		char subW;
+
 	}weapon;
+
+	struct Position
+	{
+		float posX;
+		float posZ;
+
+	}position;
 
 private:
 	InGameManager() {}
@@ -59,7 +68,9 @@ public:
 	static void Destroy();
 
 private:
+	void PackPacket(char* _setptr, Position& _struct, int& _size);
 	void PackPacket(char* _setptr, TCHAR* _str1, int& _size);	// 문자열 1개를 Pack하는 함수
+	void UnPackPacket(char* _getBuf, Position& _struct);
 	void UnPackPacket(char* _getBuf, Weapon& _struct);
 	void UnPackPacket(char* _getBuf, int& _num1, int& _num2);				// 문자열 1개를 UnPack하는 함수
 
@@ -68,6 +79,8 @@ private:
 
 	PROTOCOL_INGAME GetBufferAndProtocol(C_ClientInfo* _ptr, char* _buf);	// buf와 Protocol을 동시에 얻는 함수
 	bool ItemSelctProcess(C_ClientInfo* _ptr, char* _buf);
+	bool MoveProcess(C_ClientInfo* _ptr, char* _buf);
 public:
 	bool CanIItemSelect(C_ClientInfo* _ptr);	// 아이템 선택
+	bool CanIIMove(C_ClientInfo* _ptr);	// 아이템 선택
 };

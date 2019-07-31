@@ -38,33 +38,4 @@ public partial class NetworkManager : MonoBehaviour
 		return false;
 	}
 
-
-	public void MayIItemSelect(sbyte mainW, sbyte subW)
-	{
-		// 프로토콜 셋팅
-		protocol = SetProtocol(
-				STATE_PROTOCOL.INGAME_STATE,
-				PROTOCOL.ITEMSELECT_PROTOCOL,
-				RESULT.NODATA);
-
-		WeaponPacket weapon = new WeaponPacket();
-		weapon.mainW = mainW;
-		weapon.subW  = subW;
-
-		// 패킹 및 전송
-		int packetSize;
-		PackPacket(ref sendBuf, protocol, weapon, out packetSize);
-		//PackPacket(ref sendBuf, protocol, weapon.mainW, weapon.subW, out packetsize);
-		//tcpClient.GetStream().Write(sendBuf, 0, packetSize);
-		bw.Write(sendBuf, 0, packetSize);
-	}
-
-	public bool CheckItemSelectSuccess()
-	{
-		if (result == RESULT.INGAME_SUCCESS)
-			return true;
-
-		else
-			return false;
-	}
 }

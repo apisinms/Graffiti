@@ -63,7 +63,24 @@ public class SelectWeapons : MonoBehaviour
 			selectTime--;
 		}
 	}
-	public void BtnSelectWeapons(_WEAPONS_TYPE _type, _WEAPONS _name) //어떤무기를 선택했는가.
+
+    private void ItemSelectCheck()
+    {
+        if (NetworkManager.instance.CheckInGameSuccess() == true)
+        {
+            Debug.Log(myMainWeapon);
+            Debug.Log(mySubWeapon);
+            Debug.Log("itemselect 성공");
+
+            SceneManager.LoadScene("MainGame"); //메인타이틀로 입장
+        }
+        else
+            Debug.Log("itemselect 실패");
+
+        CancelInvoke("ItemSelectCheck");
+    }
+
+    public void BtnSelectWeapons(_WEAPONS_TYPE _type, _WEAPONS _name) //어떤무기를 선택했는가.
 	{
 		switch (_type)
 		{
@@ -93,24 +110,12 @@ public class SelectWeapons : MonoBehaviour
 				}
 				btn_return.interactable = false;
 
-
-
 				/// 테스트로 보내본다
 				NetworkManager.instance.MayIItemSelect((sbyte)myMainWeapon, (sbyte)mySubWeapon);
 
-				if (NetworkManager.instance.CheckItemSelectSuccess() == true)
-				{
-					Debug.Log(myMainWeapon);
-					Debug.Log(mySubWeapon);
-					Debug.Log("itemselect 성공");
+                InvokeRepeating("ItemSelectCheck", 0.01f, 0.01f);
 
-					SceneManager.LoadScene("MainGame"); //메인타이틀로 입장
-				}
-
-				else
-					Debug.Log("itemselect 실패");
-
-				break;
+                break;
 		}
 	}
 

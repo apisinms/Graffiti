@@ -14,6 +14,9 @@ public:
 	{
 		if (InGameManager::GetInstance()->CanIItemSelect(_ptr) == true)
 			pos = INGAME;
+
+		if (InGameManager::GetInstance()->CanIIMove(_ptr) == true)
+			pos = INGAME;
 	}
 
 	void Write(C_ClientInfo* _ptr) override
