@@ -50,9 +50,10 @@ public partial class NetworkManager : MonoBehaviour
 		// 54
 
 		// LobbyState
-		MATCH_PROTOCOL        = ((Int64)0x1 << 58),
-		GOTO_INGAME_PROTOCOL  = ((Int64)0x1 << 57),      // 인게임 상태로 진입 프로토콜
-		LOGOUT_PROTOCOL       = ((Int64)0x1 << 56),
+		MATCH_PROTOCOL               = ((Int64)0x1 << 58),
+		MATCH_CANCEL_PROTOCOL        = ((Int64)0x1 << 57),
+		GOTO_INGAME_PROTOCOL         = ((Int64)0x1 << 56),      // 인게임 상태로 진입 프로토콜
+		LOGOUT_PROTOCOL              = ((Int64)0x1 << 55),
 
 		// ChatState
 		LEAVE_ROOM_PROTOCOL = ((Int64)0x1 << 58),
@@ -81,8 +82,8 @@ public partial class NetworkManager : MonoBehaviour
 		PW_ERROR = ((Int64)0x1 << 50),
 
 		// LobbyState
-		MATCH_SUCCESS = ((Int64)0x1 << 53),		// 매칭 성공
-		MATCH_FAIL = ((Int64)0x1 << 52),        // 매칭 성공
+		LOBBY_SUCCESS = ((Int64)0x1 << 53),		// 로비에서 성공 처리
+		LOBBY_FAIL = ((Int64)0x1 << 52),        // 로비에서 실패 처리
 
 		// ChatState
 		LEAVE_ROOM_SUCCESS = ((Int64)0x1 << 53),

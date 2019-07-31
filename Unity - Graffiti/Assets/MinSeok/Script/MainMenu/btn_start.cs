@@ -35,10 +35,8 @@ public class btn_start : MonoBehaviour
 
 		else if (flag == 1) //3초전에 취소눌렀을경우 원상복구
 		{
-			StopCoroutine(CheckMatch());    // 코루틴 정지
-			txt_startBtn.text = "매칭";
-			am_loadingBar.SetBool("isStart", false);
-			obj_loadingBar.SetActive(false);
+			NetworkManager.instance.MayICancelMatch();  // 매칭 취소가 가능한지 서버로 전송
+			StartCoroutine(CheckMatchCancel());			// 매칭 취소 결과 받을 때까지 코루틴 돌림
 		}
 	}
 
@@ -46,15 +44,40 @@ public class btn_start : MonoBehaviour
 	{
 		while (true)
 		{
+			// 만약 매칭이 캔슬 됐으면 이 코루틴을 빠져나온다.
+			if (NetworkManager.instance.CheckMatchCancel() == true)
+				yield break;
+
 			// 아직 매칭이 안됐으면 그냥 나온다.
 			if (NetworkManager.instance.CheckMatched() == false)
 				yield return null;
 
 			// 매칭에 성공했다면 씬을 로드하고
-			//if (NetworkManager.instance.CheckMatchSuccess() == true)
 			else
 			{
 				SceneManager.LoadScene("SelectWeapons");
+				yield break;    // 코루틴 종료
+			}
+
+		}
+	}
+
+	private IEnumerator CheckMatchCancel()
+	{
+		while (true)
+		{
+			// 아직 매칭취소 프로토콜이 안왔으면 그냥 나온다.
+			if (NetworkManager.instance.CheckMatchCancel() == false)
+				yield return null;
+
+			// 매칭 취소 성공했다면
+			else
+			{
+				// UI바꾸고
+				txt_startBtn.text = "매칭";
+				am_loadingBar.SetBool("isStart", false);
+				obj_loadingBar.SetActive(false);
+
 				yield break;    // 코루틴 종료
 			}
 

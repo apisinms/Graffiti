@@ -1,4 +1,5 @@
 #pragma once
+#include <list>
 #include "C_List.h"
 #include "C_Global.h"
 
@@ -27,6 +28,10 @@ struct RoomInfo
 	Team* team1;
 	Team* team2;
 
+	/// 나중에 인원수가 더 많아지는 모드가 생기면...
+	//C_List<C_ClientInfo*>*playerList;
+	//int numOfPlayer;
+
 	RoomInfo(Team* _team1, Team* _team2)
 	{
 		timerHandle = NULL;
@@ -53,7 +58,12 @@ public:
 	void Init();
 	void End();
 
+
+private:
+	bool CheckInRoomPlayer(C_ClientInfo* _ptr);
+
 public:
 	bool CreateRoom(C_ClientInfo* _players[]);
+	bool CheckLeaveRoom(C_ClientInfo* _ptr);
 
 };

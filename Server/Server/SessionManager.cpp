@@ -69,11 +69,6 @@ bool SessionManager::Insert(C_ClientInfo* _info)
 	return clientList->Insert(_info);
 }
 
-bool SessionManager::Delete(C_ClientInfo* _info)
-{
-	return clientList->Delete(_info);
-}
-
 bool SessionManager::Remove(C_ClientInfo* _info)
 {
 	return clientList->Remove(_info);

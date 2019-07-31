@@ -42,3 +42,36 @@ bool RoomManager::CreateRoom(C_ClientInfo* _players[]/*, int _numOfPlayer 만약 3
 	// 방 리스트에 추가
 	return roomList->Insert(room);
 }
+
+bool RoomManager::CheckLeaveRoom(C_ClientInfo* _ptr)
+{
+	// 속한 방이 있다면
+	if (_ptr->GetRoom() != nullptr)
+	{
+		//// 이거를 자신을 제외한 모든 플레이어에게 종료 프로토콜 전송
+		//if (_ptr->GetRoom()->team1->player1 != _ptr)
+		//{
+		//	// SendProtocol
+		//}
+
+		/// 해당 자리를 null로 만드는 코드.. 도저히 내 스스로 용납할 수가 없는 코드...ㅂㄷㅂㄷ
+		if (_ptr->GetRoom()->team1->player1 == _ptr)
+			_ptr->GetRoom()->team1->player1 = nullptr;
+
+		else if (_ptr->GetRoom()->team1->player2 == _ptr)
+			_ptr->GetRoom()->team1->player2 = nullptr;
+
+		else if (_ptr->GetRoom()->team2->player1 == _ptr)
+			_ptr->GetRoom()->team2->player1 = nullptr;
+
+		else if (_ptr->GetRoom()->team2->player2 == _ptr)
+			_ptr->GetRoom()->team2->player2 = nullptr;
+
+		_ptr->SetRoom(nullptr);
+
+		return true;
+	}
+
+	else 
+		return false;
+}

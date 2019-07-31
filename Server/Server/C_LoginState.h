@@ -1,6 +1,7 @@
 #pragma once
 #include "C_State.h"
 #include "LoginManager.h"
+#include "MainManager.h"
 
 class C_LoginState : public C_State
 {
@@ -23,9 +24,19 @@ public:
 
 	void Write(C_ClientInfo* _ptr) override
 	{
-		// 이동해야하는 곳이 어딘지보고 그 상태로 변경한다.
-		if (state == STATE_LOBBY)
-			_ptr->SetState(_ptr->GetLobbyState());
+		// 바뀌어야하는 상태에따라 상태를 변경한다.
+		switch (state)
+		{
+		case STATE_LOGIN:
+			_ptr->SetState(_ptr->GetLoginState());		// 로그인 상태로 이동한다.
+			break;
+
+		case STATE_LOBBY:
+			_ptr->SetState(_ptr->GetLobbyState());		// 로비 상태로 이동한다.
+			break;
+		default:
+			break;
+		}
 
 		// 이전 상태로 돌아가는 코드
 		{

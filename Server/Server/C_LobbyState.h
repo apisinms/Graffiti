@@ -14,7 +14,7 @@ public:
 	void Read(C_ClientInfo* _ptr) override
 	{
 		// 모두가 다같이 인게임으로 넘어가는 이 프로토콜을 받았을 때만이 INGAME으로 넘어가야된다.
-		if (LobbyManager::GetInstance()->CanISelectWeapon(_ptr) == true)
+		if (LobbyManager::GetInstance()->CanIGotoInGame(_ptr) == true)
 			_ptr->SetState(_ptr->GetInGameState());		// 인게임 상태로 이동한다.
 
 		// 매칭이 가능한지
@@ -22,10 +22,13 @@ public:
 			state = STATE_LOBBY;
 			//pos = INGAME;
 
-		// 로비를 떠나서 로그인 창으로 가는게 가능한지
-		if (LobbyManager::GetInstance()->CanILeaveLobby(_ptr) == true)
-			state = STATE_LOGIN;
-			
+		// 매칭 취소가 가능한지
+		if (LobbyManager::GetInstance()->CanICancelMatch(_ptr) == true)
+			state = STATE_LOBBY;
+
+		//// 로비를 떠나서 로그인 창으로 가는게 가능한지
+		//if (LobbyManager::GetInstance()->CanILeaveLobby(_ptr) == true)
+		//	state = STATE_LOGIN;
 	}
 
 	void Write(C_ClientInfo* _ptr) override
@@ -33,18 +36,18 @@ public:
 		// 바뀌어야하는 상태에따라 상태를 변경한다.
 		switch (state)
 		{
-		//case INGAME:
-		//	_ptr->SetState(_ptr->GetInGameState());		// 인게임 상태로 이동한다.
-		//	break;
-
-		//case CHAT:
-		//	_ptr->SetState(_ptr->GetChatState());		// 채팅 상태로 이동한다.
-		//	break;
-
 		case STATE_LOGIN:
-			//_ptr->PushState(_ptr->GetCurrentState());	// 현재 상태를 스택에 저장하고
 			_ptr->SetState(_ptr->GetLoginState());		// 로그인 상태로 이동한다.
 			break;
+
+		case STATE_LOBBY:
+			_ptr->SetState(_ptr->GetLobbyState());		// 로비 상태로 이동한다.
+			break;
+
+		case STATE_INGAME:
+			_ptr->SetState(_ptr->GetInGameState());		// 인게임 상태로 이동한다.
+			break;
+
 
 		default:
 			break;

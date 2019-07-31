@@ -122,18 +122,19 @@ public partial class NetworkManager : MonoBehaviour
 		return protocol;
 	}
 
-	private void PackPacket(ref byte[] _buf, PROTOCOL _protocol, out int _size)
+	private void PackPacket(ref byte[] _sendBuf, PROTOCOL _protocol, out int _size)
 	{
-		// 암호화된 내용을 저장할 버퍼이다.
-		byte[] encryptBuf = new byte[C_Global.BUFSIZE];
-		byte[] buf = new byte[C_Global.BUFSIZE];
+		Array.Clear(_sendBuf, 0, C_Global.BUFSIZE);	// 송신 버퍼 초기화
+
+		// 임시 저장 버퍼 + 암호화 시킬 버퍼
+		byte[] tmpBuf = new byte[C_Global.BUFSIZE];
 
 		_size = 0;
 		int offset = 0;
 
 		// 프로토콜
 #if __64BIT__
-		Buffer.BlockCopy(BitConverter.GetBytes((Int64)_protocol), 0, buf, offset, sizeof(PROTOCOL));
+		Buffer.BlockCopy(BitConverter.GetBytes((Int64)_protocol), 0, tmpBuf, offset, sizeof(PROTOCOL));
 #endif
 #if __32BIT__
 		Buffer.BlockCopy(BitConverter.GetBytes((Int32)_protocol), 0, buf, offset, sizeof(PROTOCOL));
@@ -143,13 +144,13 @@ public partial class NetworkManager : MonoBehaviour
 		_size += sizeof(PROTOCOL);
 
 		// 암호화된 내용을 encryptBuf에 저장
-		C_Encrypt.instance.Encrypt(buf, encryptBuf, _size);
+		C_Encrypt.instance.Encrypt(tmpBuf, tmpBuf, _size);
 
 		// 가장 앞에 size를 넣고, 그 뒤에 암호화했던 버퍼를 붙임.
 		offset = 0;
-		Buffer.BlockCopy(BitConverter.GetBytes(_size), 0, _buf, offset, sizeof(int));
+		Buffer.BlockCopy(BitConverter.GetBytes(_size), 0, _sendBuf, offset, sizeof(int));
 		offset += sizeof(int);
-		Buffer.BlockCopy(encryptBuf, 0, _buf, offset, _size);
+		Buffer.BlockCopy(tmpBuf, 0, _sendBuf, offset, _size);
 		offset += _size;
 
 		_size += sizeof(int);   // 총 보내야 할 바이트 수 저장한다.
@@ -200,7 +201,7 @@ public partial class NetworkManager : MonoBehaviour
 
 		// 암호화된 내용을 저장할 버퍼이다.
 		byte[] encryptBuf = new byte[C_Global.BUFSIZE];
-		byte[] buf = new byte[C_Global.BUFSIZE];
+		byte[] buf        = new byte[C_Global.BUFSIZE];
 
 		_size = 0;
 		int offset = 0;
@@ -213,7 +214,7 @@ public partial class NetworkManager : MonoBehaviour
 		Buffer.BlockCopy(BitConverter.GetBytes((Int32)_protocol), 0, buf, offset, sizeof(PROTOCOL));
 #endif
 		offset += sizeof(PROTOCOL);
-		_size += sizeof(PROTOCOL);
+		_size  += sizeof(PROTOCOL);
 
 		// 문자열1 길이
 		Buffer.BlockCopy(BitConverter.GetBytes(strsize1), 0, buf, offset, sizeof(int));

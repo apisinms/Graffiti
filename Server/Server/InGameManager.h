@@ -11,7 +11,7 @@ class C_ClientInfo;
 
 class InGameManager
 {
-	static const int itemSelTime = 10;	// 아이템 선택 시간(초 단위)
+	static const int itemSelTime = 3;	// 아이템 선택 시간(초 단위)
 	
 
 #ifdef __64BIT__

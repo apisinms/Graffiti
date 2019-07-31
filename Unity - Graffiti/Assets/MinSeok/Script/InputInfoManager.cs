@@ -92,7 +92,12 @@ public class InputInfoManager : MonoBehaviour
 
 	public void BtnEnterLogin() //로그인 정보 입력후 확인버튼
 	{
-		
+		//공백이 없을시에만
+		if (inputField_login_id.text.Length == 0 || inputField_login_pw.text.Length == 0)
+		{
+			txt_login_result.text = "공백입력은 불가."; //예시로 해놓은거임
+		}
+
 		Debug.Log("입력한 로그인 ID: " + inputField_login_id.text);
 		Debug.Log("입력한 로그인 PW: " + inputField_login_pw.text);
 
@@ -121,14 +126,21 @@ public class InputInfoManager : MonoBehaviour
 				Debug.Log("로그인 결과 : " + retMsg);
 
 				//로그인정보가 틀렸다면 아래작성
-				if (networkManager.CheckIDError() == true)
+				if (networkManager.CheckLogin_IDError() == true)
 				{
 					inputField_login_id.text = null;
 					inputField_login_pw.text = null;
 					txt_login_result.text = retMsg;
 				}
 
-				else if (networkManager.CheckPWError() == true)
+				else if (networkManager.CheckLogin_PWError() == true)
+				{
+					inputField_login_id.text = null;
+					inputField_login_pw.text = null;
+					txt_login_result.text = retMsg;
+				}
+
+				else if (networkManager.CheckLogin_IDExist() == true)
 				{
 					inputField_login_id.text = null;
 					inputField_login_pw.text = null;
@@ -146,6 +158,12 @@ public class InputInfoManager : MonoBehaviour
 
 	public void BtnEnterJoin() //회원가입 정보 입력후 확인버튼
 	{
+		//공백이 없을시에만
+		if (inputField_join_id.text.Length == 0 || inputField_join_pw.text.Length == 0 || inputField_join_nick.text.Length == 0)
+		{
+			txt_join_result.text = "공백입력은 불가.";
+		}
+
 		Debug.Log("입력한 회원가입 ID: " + inputField_join_id.text);
 		Debug.Log("입력한 회원가입 PW: " + inputField_join_pw.text);
 		Debug.Log("입력한 회원가입 NICKNAME: " + inputField_join_nick.text);
@@ -174,15 +192,7 @@ public class InputInfoManager : MonoBehaviour
 				Debug.Log("회원가입 결과 : " + retMsg);
 
 				// 회원가입 정보가 틀렸다면 아래작성
-				if (networkManager.CheckIDExit() == true)
-				{
-					inputField_join_id.text = null;
-					inputField_join_pw.text = null;
-					txt_join_result.text = retMsg;
-					inputField_join_id.Select();
-				}
-
-				else if (networkManager.CheckPWError() == true)
+				if (networkManager.CheckJoin_IDExist() == true)
 				{
 					inputField_join_id.text = null;
 					inputField_join_pw.text = null;
@@ -191,7 +201,7 @@ public class InputInfoManager : MonoBehaviour
 				}
 
 				//회원가입에 성공하면 아래작성
-				else if (networkManager.CheckJoinSuccess() == true)
+				else if (networkManager.CheckJoin_Success() == true)
 				{
 					EnablePanel(2);
 					txt_login_result.text = retMsg;

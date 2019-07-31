@@ -24,22 +24,43 @@ public partial class NetworkManager : MonoBehaviour
 
 	public bool CheckLoginSuccess()
 	{
-		if (result == RESULT.LOGIN_SUCCESS)
+		if (state == STATE_PROTOCOL.LOGIN_STATE &&
+			protocol == PROTOCOL.LOGIN_PROTOCOL &&
+			result == RESULT.LOGIN_SUCCESS)
 			return true;
+
 		else
 			return false;
 	}
-	public bool CheckIDError()
+	public bool CheckLogin_IDError()
 	{
-		if (result == RESULT.ID_ERROR)
+		if (state == STATE_PROTOCOL.LOGIN_STATE &&
+			protocol == PROTOCOL.LOGIN_PROTOCOL &&
+			result == RESULT.ID_ERROR)
 			return true;
+
 		else
 			return false;
 	}
-	public bool CheckPWError()
+
+	public bool CheckLogin_IDExist()
 	{
-		if (result == RESULT.PW_ERROR)
+		if (state == STATE_PROTOCOL.LOGIN_STATE &&
+			protocol == PROTOCOL.LOGIN_PROTOCOL &&
+			result == RESULT.ID_EXIST)
 			return true;
+
+		else
+			return false;
+	}
+
+	public bool CheckLogin_PWError()
+	{
+		if (state == STATE_PROTOCOL.LOGIN_STATE &&
+			protocol == PROTOCOL.LOGIN_PROTOCOL &&
+			result == RESULT.PW_ERROR)
+			return true;
+
 		else
 			return false;
 	}
@@ -60,17 +81,23 @@ public partial class NetworkManager : MonoBehaviour
 		bw.Write(sendBuf, 0, packetSize);
 	}
 
-	public bool CheckJoinSuccess()
+	public bool CheckJoin_Success()
 	{
-		if (result == RESULT.JOIN_SUCCESS)
+		if (state == STATE_PROTOCOL.LOGIN_STATE &&
+			protocol == PROTOCOL.JOIN_PROTOCOL &&
+			result == RESULT.JOIN_SUCCESS)
 			return true;
+
 		else
 			return false;
 	}
-	public bool CheckIDExit()
+	public bool CheckJoin_IDExist()
 	{
-		if (result == RESULT.ID_EXIST)
+		if (state == STATE_PROTOCOL.LOGIN_STATE &&
+			protocol == PROTOCOL.JOIN_PROTOCOL &&
+			result == RESULT.ID_EXIST)
 			return true;
+
 		else
 			return false;
 	}

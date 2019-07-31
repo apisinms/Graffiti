@@ -48,6 +48,12 @@ public partial class NetworkManager : MonoBehaviour
 			RecvProcess();
 	}
 
+	//// 프로그램이 종료될 때
+	//private void OnApplicationQuit()
+	//{
+	//	Disconnect();
+	//}
+
 	private void RecvProcess()
 	{
 		// 큐에 저장된 패킷을 꺼내온다.
@@ -96,7 +102,7 @@ public partial class NetworkManager : MonoBehaviour
 							{
 								switch (result)
 								{
-									case RESULT.MATCH_SUCCESS:
+									case RESULT.LOBBY_SUCCESS:
 
 										// 클라가 매칭 성공을 수신했고, 인게임 상태로 넘겨달라는(확인차원의) 프로토콜 셋팅
 										PROTOCOL gotoInGameProtocol = SetProtocol(
@@ -113,8 +119,23 @@ public partial class NetworkManager : MonoBehaviour
 										Debug.Log("매칭 성공!!");
 										break;
 
-									case RESULT.MATCH_FAIL:
+									case RESULT.LOBBY_FAIL:
 										Debug.Log("매칭 실패!!");
+										break;
+								}
+							}
+							break;
+
+						case PROTOCOL.MATCH_CANCEL_PROTOCOL:
+							{
+								switch (result)
+								{
+									case RESULT.LOBBY_SUCCESS:
+										Debug.Log("매칭 취소 성공!");
+										break;
+
+									case RESULT.LOBBY_FAIL:
+										Debug.Log("매칭 취소 실패!");
 										break;
 								}
 							}
@@ -127,6 +148,7 @@ public partial class NetworkManager : MonoBehaviour
 
 	public void Disconnect()
 	{
+		// 뒷정리
 		bw.Close();
 		br.Close();
 		tcpClient.Close();

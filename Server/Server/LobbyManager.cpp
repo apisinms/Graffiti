@@ -116,7 +116,7 @@ bool LobbyManager::CanIMatch(C_ClientInfo* _ptr)
 		{
 
 			// 모든 플레이어들에게 인게임 상태로 진입하라는 프로토콜을 보내버림
-			protocol = SetProtocol(LOBBY_STATE, PROTOCOL_LOBBY::GOTO_INGAME_PROTOCOL, RESULT_LOBBY::MATCH_SUCCESS);
+			protocol = SetProtocol(LOBBY_STATE, PROTOCOL_LOBBY::GOTO_INGAME_PROTOCOL, RESULT_LOBBY::LOBBY_SUCCESS);
 			ZeroMemory(buf, sizeof(BUFSIZE));
 
 			// 패킹 및 전송(매칭이 완료되었고, 게임을 시작해도 좋음)
@@ -142,20 +142,49 @@ bool LobbyManager::CanIMatch(C_ClientInfo* _ptr)
 	return false;
 }
 
-bool LobbyManager::CanILeaveLobby(C_ClientInfo* _ptr)
+// 매칭 취소 할 수 있는지
+bool LobbyManager::CanICancelMatch(C_ClientInfo* _ptr)
 {
 	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
 	PROTOCOL_LOBBY protocol = GetBufferAndProtocol(_ptr, buf);
 
-	// 로비에서 Logout을 요청했다면, LoginList를 관리하는 LoginManager의 CanILogout()을 호출해서 검사받아야한다.
-	if (protocol == LOGOUT_PROTOCOL)
-		return LoginManager::GetInstance()->CanILogout(_ptr);
+	// 매칭 취소 프로토콜이라면
+	if (protocol == MATCH_CANCEL_PROTOCOL)
+	{
+		// 이 클라 정보를 대기리스트에서 삭제하고
+		MatchManager::GetInstance()->WaitListDelete(_ptr);
+
+
+		// 매칭 취소 성공 프로토콜 조립
+		protocol = SetProtocol(LOBBY_STATE, PROTOCOL_LOBBY::MATCH_CANCEL_PROTOCOL, RESULT_LOBBY::LOBBY_SUCCESS);
+		ZeroMemory(buf, sizeof(BUFSIZE));
+
+		// 패킹 및 전송(매칭이 완료되었고, 게임을 시작해도 좋음)
+		int packetSize = 0;
+
+		// 성공적으로 매칭 취소되었음을 알려줌
+		_ptr->SendPacket(protocol, buf, packetSize);
+
+		return true;	// 성공 리턴
+	}
+
+	return false;
+}
+
+bool LobbyManager::CanILeaveLobby(C_ClientInfo* _ptr)
+{
+	//char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
+	//PROTOCOL_LOBBY protocol = GetBufferAndProtocol(_ptr, buf);
+
+	//// 로비에서 Logout을 요청했다면, LoginList를 관리하는 LoginManager의 CanILogout()을 호출해서 검사받아야한다.
+	//if (protocol == LOGOUT_PROTOCOL)
+	//	return LoginManager::GetInstance()->CanILogout(_ptr);
 
 	return false;
 }
 
 // 게임을 시작할 수 있는지
-bool LobbyManager::CanISelectWeapon(C_ClientInfo* _ptr)
+bool LobbyManager::CanIGotoInGame(C_ClientInfo* _ptr)
 {
 	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
 	PROTOCOL_LOBBY protocol = GetBufferAndProtocol(_ptr, buf);
@@ -163,16 +192,17 @@ bool LobbyManager::CanISelectWeapon(C_ClientInfo* _ptr)
 	// 만약 4인 매칭이 성공하여 성공했던 클라가 나에게 시작 프로토콜을 보낸다면 인게임의 무기선택 창으로 들어가야한다.
 	if (protocol == GOTO_INGAME_PROTOCOL)
 	{
-		// 만약 타이머 쓰레드가 아직 생성이 안됐다면
-		if (_ptr->GetRoom()->timerHandle == NULL)
-		{
-			// InGameManager에게 타이머 쓰레드를 생성해 30초를 세도록 부탁한다.
-			_ptr->GetRoom()->timerHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)InGameManager::TimerThread, (void*)_ptr, 0, NULL);
-			if (_ptr->GetRoom()->timerHandle == NULL)
-				LogManager::GetInstance()->ErrorPrintf("_beginthreadex() in CanIStart()");
+		printf("4인 매칭성공\n");
+		//// 만약 타이머 쓰레드가 아직 생성이 안됐다면
+		//if (_ptr->GetRoom()->timerHandle == NULL)
+		//{
+		//	// InGameManager에게 타이머 쓰레드를 생성해 30초를 세도록 부탁한다.
+		//	_ptr->GetRoom()->timerHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)InGameManager::TimerThread, (void*)_ptr, 0, NULL);
+		//	if (_ptr->GetRoom()->timerHandle == NULL)
+		//		LogManager::GetInstance()->ErrorPrintf("_beginthreadex() in CanIStart()");
 
-			_ptr->GetRoom()->roomStatus = ROOMSTATUS::ROOM_ITELSEL;	// 이제 아이템 선택 상태로
-		}
+		//	_ptr->GetRoom()->roomStatus = ROOMSTATUS::ROOM_ITELSEL;	// 이제 아이템 선택 상태로
+		//}
 		return true;
 	}
 

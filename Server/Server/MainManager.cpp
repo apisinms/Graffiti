@@ -182,11 +182,20 @@ void MainManager::IOCP_Disconnected(void* _ptr)
 	LogManager::GetInstance()->ConnectFileWrite("[TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",
 		inet_ntoa(ptr->GetAddress().sin_addr), ntohs(ptr->GetAddress().sin_port));
 
+	printf("[TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",
+		inet_ntoa(ptr->GetAddress().sin_addr), ntohs(ptr->GetAddress().sin_port));
 	
-	//LobbyManager::GetInstance()->CheckLeaveRoom(ptr);	// 방삭제
-	LoginManager::GetInstance()->LoginListDelete(ptr);	// 로그인 목록에서도 지워준다.
+	// 1. 로그인 목록에서 지움
+	// 2. 대기접속큐(or리스트)에서 지움
+	// 3. 방 목록에서 지움
+	// + 무기 선택 도중 나갔을 경우 게임 다시 대기?
+	// + 만약 게임중인 상태였다면 해당 게임 방 + 게임 종료?
+
+
+	LoginManager::GetInstance()->LoginListDelete(ptr);	// 로그인 목록에 있다면 지워준다.
+	MatchManager::GetInstance()->WaitListDelete(ptr);	// 매칭 대기 목록에 있다면 지워준다.
+	RoomManager::GetInstance()->CheckLeaveRoom(ptr);	// 방에 있다면 방 정보에서 지워줌
 	SessionManager::GetInstance()->Remove(ptr);			// 데이터까지 완전 종료되는 Remove를 호출
-	
 }
 
 BOOL WINAPI MainManager::CtrlHandler(DWORD _fdwCtrlType)
