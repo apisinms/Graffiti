@@ -1,5 +1,6 @@
 #pragma once
 #include "C_List.h"
+#include "C_Global.h"
 
 class C_ClientInfo;
 
@@ -20,14 +21,21 @@ struct Team
 // 방의 정보
 struct RoomInfo
 {
+	void* timerHandle;
+
+	ROOMSTATUS roomStatus;
 	Team* team1;
 	Team* team2;
 
 	RoomInfo(Team* _team1, Team* _team2)
 	{
+		timerHandle = NULL;
+
+		roomStatus = ROOMSTATUS::ROOM_NONE;	// 방 생성시 초기 상태는 아무 상태도아님
 		team1 = _team1;
 		team2 = _team2;
 	}
+
 };
 
 class RoomManager

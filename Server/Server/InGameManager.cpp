@@ -1,7 +1,7 @@
 #include "InGameManager.h"
 #include "LogManager.h"
+#include "RoomManager.h"
 #include "C_ClientInfo.h"
-
 
 InGameManager* InGameManager::instance;
 
@@ -123,7 +123,7 @@ bool InGameManager::ItemSelctProcess(C_ClientInfo* _ptr, char* _buf)
 	//UnPackPacket(_buf, mainW, subW);
 
 	// 프로토콜 세팅
-	protocol = SetProtocol(LOGIN_STATE, PROTOCOL_INGAME::ITEMSELECT_PROTOCOL, itemSelect);
+	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::WEAPON_PROTOCOL, itemSelect);
 
 	ZeroMemory(buf, sizeof(BUFSIZE));
 
@@ -149,8 +149,55 @@ bool InGameManager::CanIItemSelect(C_ClientInfo* _ptr)
 	PROTOCOL_INGAME protocol = GetBufferAndProtocol(_ptr, buf);
 
 	// 로비에서 Logout을 요청했다면, LoginList를 관리하는 LoginManager의 CanILogout()을 호출해서 검사받아야한다.
-	if (protocol == ITEMSELECT_PROTOCOL)
+	if (protocol == WEAPON_PROTOCOL)
 		return ItemSelctProcess(_ptr, buf);
 
 	return false;
+}
+
+unsigned long __stdcall InGameManager::TimerThread(void* _arg)
+{
+	C_ClientInfo* ptr = (C_ClientInfo*)_arg;
+	
+	LARGE_INTEGER frequency;
+	LARGE_INTEGER beginTime;
+	LARGE_INTEGER endTime;
+	__int64 elapsed;
+	double duringTime = 0.0;	// 실제로 경과된 시간을(초단위) 가지고 있을 double 변수
+
+	QueryPerformanceFrequency(&frequency);	// 최초 1회 주파수 얻음
+	QueryPerformanceCounter(&beginTime);	// 시작 시간 얻음
+	while (1)
+	{
+		QueryPerformanceCounter(&endTime);// 종료 시간 얻음
+		elapsed = endTime.QuadPart - beginTime.QuadPart;	// 경과된 시간 계산
+		
+		
+		duringTime = (double)elapsed / (double)frequency.QuadPart;	// 실제로 흐른 시간을 초 단위로 계산
+
+		// 만약 아이템 선택시간(상수)을 넘었다면 쓰레드 핸들 반납 후, 무한루프를 빠져나간다.
+		if (duringTime >= itemSelTime)
+		{
+			CloseHandle(ptr->GetRoom()->timerHandle);
+			ptr->GetRoom()->timerHandle = nullptr;
+
+
+			/// 여기에서 무기달라는 프로토콜을 보내면
+			/// 클라가 자신이 선택한 무기를 서버로 보내고
+			/// 서버는 이 무기 정보를 받아서 해당 클라 정보에 저장시켜둔다.
+			PROTOCOL_INGAME protocol = InGameManager::GetInstance()->SetProtocol(INGAME_STATE, PROTOCOL_INGAME::WEAPON_PROTOCOL, RESULT_INGAME::NODATA);
+			char buf[BUFSIZE] = { 0, };
+			int packetSize = 0;
+
+			// 같은 방에 있는 모든 플레이어에게 무기를 보내라고 프로토콜을 전송함.
+			ptr->GetRoom()->team1->player1->SendPacket(protocol, buf, packetSize);
+			ptr->GetRoom()->team1->player2->SendPacket(protocol, buf, packetSize);
+			ptr->GetRoom()->team2->player1->SendPacket(protocol, buf, packetSize);
+			ptr->GetRoom()->team2->player2->SendPacket(protocol, buf, packetSize);
+
+			break;
+		}
+	}
+
+	return 0;	// 그리고 쓰레드 종료
 }

@@ -5,7 +5,7 @@
 class C_LoginState : public C_State
 {
 private:
-	POSITION pos = LOGIN;
+	STATE state = STATE_LOGIN;
 public:
 	void Init()override {}
 	void End()override {}
@@ -14,17 +14,17 @@ public:
 	{
 		// 로그인을 할 수 있는지
 		if (LoginManager::GetInstance()->CanILogin(_ptr) == true)
-			pos = LOBBY;
+			state = STATE_LOBBY;
 
 		// 회원가입을 할 수 있는지
 		if (LoginManager::GetInstance()->CanIJoin(_ptr) == true)
-			pos = LOGIN;
+			state = STATE_LOGIN;
 	}
 
 	void Write(C_ClientInfo* _ptr) override
 	{
 		// 이동해야하는 곳이 어딘지보고 그 상태로 변경한다.
-		if (pos == LOBBY)
+		if (state == STATE_LOBBY)
 			_ptr->SetState(_ptr->GetLobbyState());
 
 		// 이전 상태로 돌아가는 코드

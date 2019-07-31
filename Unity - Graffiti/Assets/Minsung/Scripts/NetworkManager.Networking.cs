@@ -92,26 +92,25 @@ public partial class NetworkManager : MonoBehaviour
 				{
 					switch (protocol)
 					{
-						case PROTOCOL.START_PROTOCOL:
+						case PROTOCOL.GOTO_INGAME_PROTOCOL:
 							{
 								switch (result)
 								{
 									case RESULT.MATCH_SUCCESS:
 
-										// 클라가 매칭 성공을 수신했다라는 프로토콜 셋팅
-										PROTOCOL startProtocol = SetProtocol(
+										// 클라가 매칭 성공을 수신했고, 인게임 상태로 넘겨달라는(확인차원의) 프로토콜 셋팅
+										PROTOCOL gotoInGameProtocol = SetProtocol(
 												STATE_PROTOCOL.LOBBY_STATE,
-												PROTOCOL.START_PROTOCOL,
+												PROTOCOL.GOTO_INGAME_PROTOCOL,
 												RESULT.NODATA);
 
 										// 패킹 및 전송
 										int packetSize;
-										PackPacket(ref sendBuf, startProtocol, out packetSize);
+										PackPacket(ref sendBuf, gotoInGameProtocol, out packetSize);
 										bw.Write(sendBuf, 0, packetSize);
 
 
 										Debug.Log("매칭 성공!!");
-										isInGame = true;
 										break;
 
 									case RESULT.MATCH_FAIL:

@@ -5,6 +5,14 @@
 
 UtilityManager* UtilityManager::instance;         // 초기화
 
+void UtilityManager::Init()
+{
+}
+
+void UtilityManager::End()
+{
+}
+
 UtilityManager* UtilityManager::GetInstance()
 {
 	// 인스턴스가 없다면 인스턴스를 생성하고 리턴한다.

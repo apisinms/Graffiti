@@ -11,10 +11,14 @@ class C_ClientInfo;
 
 class InGameManager
 {
+	static const int itemSelTime = 10;	// 아이템 선택 시간(초 단위)
+	
+
 #ifdef __64BIT__
 	enum PROTOCOL_INGAME : __int64
 	{
-		ITEMSELECT_PROTOCOL = ((__int64)0x1 << 58),
+		//ITEMSELECT_PROTOCOL = ((__int64)0x1 << 58),
+		WEAPON_PROTOCOL     = ((__int64)0x1 << 58),
 	};
 
 	enum RESULT_INGAME : __int64
@@ -70,4 +74,6 @@ private:
 	bool ItemSelctProcess(C_ClientInfo* _ptr, char* _buf);
 public:
 	bool CanIItemSelect(C_ClientInfo* _ptr);	// 아이템 선택
+
+	static unsigned long __stdcall TimerThread(void* _arg);	// 아이템 선택 시간을 세는 타이머 쓰레드
 };

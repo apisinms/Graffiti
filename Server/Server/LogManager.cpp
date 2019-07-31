@@ -30,7 +30,10 @@ LogManager* LogManager::GetInstance()
 	return instance;
 }
 
-void LogManager::Init() {}
+void LogManager::Init() 
+{
+}
+
 void LogManager::End()
 {
 	fclose(errPtr);

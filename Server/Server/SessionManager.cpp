@@ -3,6 +3,16 @@
 #include "C_LoginState.h"
 
 SessionManager* SessionManager::instance;
+
+void SessionManager::Init()
+{
+}
+
+void SessionManager::End()
+{
+
+}
+
 SessionManager* SessionManager::GetInstance()
 {
 	// 인스턴스가 없다면 인스턴스를 생성하고 리턴한다.

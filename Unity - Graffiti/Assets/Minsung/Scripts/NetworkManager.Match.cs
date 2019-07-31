@@ -24,7 +24,8 @@ public partial class NetworkManager : MonoBehaviour
 
 	public bool CheckMatched()
 	{
-		if (protocol == PROTOCOL.START_PROTOCOL)
+		//if (state == STATE_PROTOCOL.INGAME_STATE)  //  -> 이건 만약 state를 바꿨을 경우에
+		if (protocol == PROTOCOL.GOTO_INGAME_PROTOCOL)
 			return true;
 
 		return false;
@@ -32,19 +33,19 @@ public partial class NetworkManager : MonoBehaviour
 
 	public bool CheckMatchSuccess()
 	{
-		if (result == RESULT.MATCH_SUCCESS)
+		if (state == STATE_PROTOCOL.INGAME_STATE && result == RESULT.MATCH_SUCCESS)
 			return true;
 
 		return false;
 	}
 
 
-	public void MayIItemSelect(sbyte mainW, sbyte subW)
+	public void MayISelectWeapon(sbyte mainW, sbyte subW)
 	{
 		// 프로토콜 셋팅
 		protocol = SetProtocol(
 				STATE_PROTOCOL.INGAME_STATE,
-				PROTOCOL.ITEMSELECT_PROTOCOL,
+				PROTOCOL.WEAPON_PROTOCOL,
 				RESULT.NODATA);
 
 		WeaponPacket weapon = new WeaponPacket();
