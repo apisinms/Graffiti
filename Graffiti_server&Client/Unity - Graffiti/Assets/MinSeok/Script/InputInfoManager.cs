@@ -92,21 +92,28 @@ public class InputInfoManager : MonoBehaviour
 
 	public void BtnEnterLogin() //로그인 정보 입력후 확인버튼
 	{
-		
-		Debug.Log("입력한 로그인 ID: " + inputField_login_id.text);
-		Debug.Log("입력한 로그인 PW: " + inputField_login_pw.text);
+        //공백이 없을시에만
+        if (inputField_login_id.text.Length == 0 || inputField_login_pw.text.Length == 0)
+        {
+            txt_login_result.text = "공백입력은 불가."; //예시로 해놓은거임
+        }
+        else
+        {
+            Debug.Log("입력한 로그인 ID: " + inputField_login_id.text);
+            Debug.Log("입력한 로그인 PW: " + inputField_login_pw.text);
 
-		networkManager.SysMsg = string.Empty;
 
-		// 우선 로그인이 가능한지 서버로 정보를 보낸다.
-		networkManager.MayILogin(
-			inputField_login_id.text, 
-			inputField_login_pw.text);
+            networkManager.SysMsg = string.Empty;
 
-		StartCoroutine(LoginCheck());	// 로그인 검사 코루틴 시작
+            // 우선 로그인이 가능한지 서버로 정보를 보낸다.
+            networkManager.MayILogin(
+                inputField_login_id.text,
+                inputField_login_pw.text);
 
-		inputField_login_id.Select();
-	}
+            StartCoroutine(LoginCheck());   // 로그인 검사 코루틴 시작         
+        }
+        inputField_login_id.Select();
+    }
 
 	private IEnumerator LoginCheck()
 	{
@@ -146,19 +153,27 @@ public class InputInfoManager : MonoBehaviour
 
 	public void BtnEnterJoin() //회원가입 정보 입력후 확인버튼
 	{
-		Debug.Log("입력한 회원가입 ID: " + inputField_join_id.text);
-		Debug.Log("입력한 회원가입 PW: " + inputField_join_pw.text);
-		Debug.Log("입력한 회원가입 NICKNAME: " + inputField_join_nick.text);
+        //공백이 없을시에만
+        if (inputField_join_id.text.Length == 0 || inputField_join_pw.text.Length == 0 || inputField_join_nick.text.Length == 0)
+        {
+            txt_join_result.text = "공백입력은 불가.";
+        }
+        else
+        {
+            Debug.Log("입력한 회원가입 ID: " + inputField_join_id.text);
+            Debug.Log("입력한 회원가입 PW: " + inputField_join_pw.text);
+            Debug.Log("입력한 회원가입 NICKNAME: " + inputField_join_nick.text);
 
-		networkManager.SysMsg = string.Empty;
+            networkManager.SysMsg = string.Empty;
 
-		// 회원가입이 가능한지 서버로 보낸다.
-		networkManager.MayIJoin(
-			inputField_join_id.text, 
-			inputField_join_pw.text, 
-			inputField_join_nick.text);
+            // 회원가입이 가능한지 서버로 보낸다.
+            networkManager.MayIJoin(
+                inputField_join_id.text,
+                inputField_join_pw.text,
+                inputField_join_nick.text);
 
-		StartCoroutine(JoinCheck());	// 회원가입 확인 코루틴 실행
+            StartCoroutine(JoinCheck());    // 회원가입 확인 코루틴 실행
+        }
 	}
 
 	private IEnumerator JoinCheck()

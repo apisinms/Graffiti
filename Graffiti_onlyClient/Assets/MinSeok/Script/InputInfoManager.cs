@@ -99,33 +99,47 @@ public class InputInfoManager : MonoBehaviour {
         Debug.Log("입력한 로그인 ID: " + inputField_login_id.text);
         Debug.Log("입력한 로그인 PW: " + inputField_login_pw.text);
 
-        //로그인정보가 틀렸다면 아래작성
-     //   txt_result.text = "로그인불가. 다시 입력 하시오"; //예시로 해놓은거임
+        if (inputField_login_id.text.Length == 0 || inputField_login_pw.text.Length == 0)
+        {
+            txt_login_result.text = "아이디와 패스워드를 입력하시오."; //예시로 해놓은거임
+        }
+        else
+        {
+            //로그인정보가 틀렸다면 아래작성
+            //   txt_result.text = "로그인불가. 다시 입력 하시오"; //예시로 해놓은거임
 
-     //   inputField_login_id.text = null;
-     //   inputField_login_pw.text = null;
-        inputField_login_id.Select();
+            //   inputField_login_id.text = null;
+            //   inputField_login_pw.text = null;
+            inputField_login_id.Select();
 
-        //로그인이 성공하면 아래작성
-        txt_login_result.text = "로그인성공";
-        SceneManager.LoadScene("MainMenu"); //메인타이틀로 입장
+            //로그인이 성공하면 아래작성
+            txt_login_result.text = "로그인성공";
+            SceneManager.LoadScene("MainMenu"); //메인타이틀로 입장
+        }
     }
 
     public void BtnEnterJoin() //회원가입 정보 입력후 확인버튼
     {
-        Debug.Log("입력한 회원가입 ID: " + inputField_join_id.text);
-        Debug.Log("입력한 회원가입 NICK: " + inputField_join_nick.text);
-        Debug.Log("입력한 회원가입 PW: " + inputField_join_pw.text);
+        if (inputField_join_id.text.Length == 0 || inputField_join_pw.text.Length == 0 || inputField_join_nick.text.Length == 0)
+        {
+            txt_join_result.text = "공백입력은 불가.";
+        }
+        else
+        {
+            Debug.Log("입력한 회원가입 ID: " + inputField_join_id.text);
+            Debug.Log("입력한 회원가입 NICK: " + inputField_join_nick.text);
+            Debug.Log("입력한 회원가입 PW: " + inputField_join_pw.text);
 
-        //회원가입 정보가 틀렸다면 아래작성
-        txt_join_result.text = "회원가입불가. 다시 입력 하시오"; //예시로 해놓은거임
-       // inputField_join_id.text = null;
-       // inputField_join_nick.text = null;
-       // inputField_join_pw.text = null;
+            //회원가입 정보가 틀렸다면 아래작성
 
-        //회원가입에 성공하면 아래작성
-        //txt_join_result.text = "회원가입에 성공하였습니다!";
+            txt_join_result.text = "회원가입성공. 다시 입력 하시오"; //예시로 해놓은거임
+                                                        // inputField_join_id.text = null;
+                                                        // inputField_join_nick.text = null;
+                                                        // inputField_join_pw.text = null;
 
+            //회원가입에 성공하면 아래작성
+            //txt_join_result.text = "회원가입에 성공하였습니다!";
+        }
         inputField_join_id.Select();
     }
 
