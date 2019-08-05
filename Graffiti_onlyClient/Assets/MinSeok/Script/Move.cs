@@ -11,8 +11,8 @@ public enum _TEAM
 
 public class Move : MonoBehaviour {
 
-    public GameObject[] redTeam = new GameObject[2];
-    public GameObject[] blueTeam = new GameObject[2];
+    //public GameObject[] redTeam = new GameObject[2];
+   // public GameObject[] blueTeam = new GameObject[2];
 
    // GameObject obj_me;
     Camera camera_main;
@@ -21,13 +21,13 @@ public class Move : MonoBehaviour {
     Animator am_run;
 
     public static _TEAM myTeam;
-    Move tmp = null;
+   // Move tmp = null;
 
     
 
     void Awake()
     {
-        tmp = redTeam[0].GetComponent<Move>();
+     //   tmp = redTeam[0].GetComponent<Move>();
         am_run = GetComponent<Animator>();
         myTeam = _TEAM.RED;
       
@@ -40,7 +40,6 @@ public class Move : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        
         float keyHorizontal = Input.GetAxisRaw("Horizontal");
         float keyVertical = Input.GetAxisRaw("Vertical");
        
@@ -53,8 +52,8 @@ public class Move : MonoBehaviour {
         }
         else
         {
+            ClientSectorManager.instance.ProcessWhereAmI(); //움직일때 위치계산
             am_run.SetBool("idle_to_run", true);
         }
-
     }
 }

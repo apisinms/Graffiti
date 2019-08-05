@@ -267,3 +267,7 @@ E:\Unity\Projects\Graffiti_multi\Graffiti\obj\Debug\Assembly-CSharp.csproj.CoreC
 E:\Unity\Projects\Graffiti_multi\Graffiti\obj\Debug\Assembly-CSharp.csproj.CopyComplete
 E:\Unity\Projects\Graffiti_multi\Graffiti\obj\Debug\Assembly-CSharp.dll
 E:\Unity\Projects\Graffiti_multi\Graffiti\obj\Debug\Assembly-CSharp.pdb
+E:\Unity\Projects\forGitHub\Graffiti\Graffiti_onlyClient\obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache
+E:\Unity\Projects\forGitHub\Graffiti\Graffiti_onlyClient\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache
+E:\Unity\Projects\forGitHub\Graffiti\Graffiti_onlyClient\obj\Debug\Assembly-CSharp.dll
+E:\Unity\Projects\forGitHub\Graffiti\Graffiti_onlyClient\obj\Debug\Assembly-CSharp.pdb

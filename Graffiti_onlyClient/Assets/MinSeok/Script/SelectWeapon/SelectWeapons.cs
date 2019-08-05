@@ -13,36 +13,72 @@ public enum _WEAPONS_TYPE
 }
 public enum _WEAPONS
 {
-    AR = 0,
+    NODATA = -1,
+
+    // main weapons
+    AR,
     SG,
     SMG,
+    MAIN_MAX_LENGTH,
+
+    // sub weapons
     TRAP,
     GRENADE,
+    SUB_MAX_LENGTH,
 }
+
 
 public class SelectWeapons : MonoBehaviour {
 
-    public GameObject panel_mainWeapon, panel_subWeapon; //스크롤될 패널 2개
+    public GameObject panel_mainWeapon, panel_subWeapon; //스크롤될 패널 2개;
+    public Image[] img_checkMark = new Image[2]; //선택무기 체크마크 주무기용, 보조무기용
+
     public Button[] btn_mainWeapons = new Button[3]; //주무기 버튼 3개
+    private Vector3[] vt_mainWeapons = new Vector3[3]; //주무기 버튼 3개의 포지션.
+
     public Button[] btn_subWeapons = new Button[2]; //보조무기 버튼 3개
+    private Vector3[] vt_subWeapons = new Vector3[2]; //보조무기 버튼3개의 포지션
+
     public Button btn_return; //돌아가기 버튼
+
     public Text txt_selectTime; float selectTime = 30.0f; //제한시간 텍스트
+
     private _WEAPONS myMainWeapon;
     private _WEAPONS mySubWeapon;
 
     void Awake()
     {
+        
+        //Vector형으로 각 무기 버튼들의 포지션을 저장해둠
+        for(int i=0; i< vt_mainWeapons.Length; i++)
+        {
+            vt_mainWeapons[i] = btn_mainWeapons[i].transform.localPosition;
+        }
+        for(int i=0; i< vt_subWeapons.Length; i++)
+        {
+            vt_subWeapons[i] = btn_subWeapons[i].transform.localPosition;
+        }
+        
         //주무기 버튼 등록
-        btn_mainWeapons[0].onClick.AddListener(() => BtnSelectWeapons(_WEAPONS_TYPE.MAIN, _WEAPONS.AR));
-        btn_mainWeapons[1].onClick.AddListener(() => BtnSelectWeapons(_WEAPONS_TYPE.MAIN, _WEAPONS.SG));
-        btn_mainWeapons[2].onClick.AddListener(() => BtnSelectWeapons(_WEAPONS_TYPE.MAIN, _WEAPONS.SMG));
+        btn_mainWeapons[0].onClick.AddListener(() => BtnSelectWeapons(_WEAPONS_TYPE.MAIN, _WEAPONS.AR,
+            vt_mainWeapons[0]));
+        btn_mainWeapons[1].onClick.AddListener(() => BtnSelectWeapons(_WEAPONS_TYPE.MAIN, _WEAPONS.SG,
+            vt_mainWeapons[1]));
+        btn_mainWeapons[2].onClick.AddListener(() => BtnSelectWeapons(_WEAPONS_TYPE.MAIN, _WEAPONS.SMG,
+            vt_mainWeapons[2]));
 
         //보조무기 버튼등록
-        btn_subWeapons[0].onClick.AddListener(() => BtnSelectWeapons(_WEAPONS_TYPE.SUB, _WEAPONS.TRAP));
-        btn_subWeapons[1].onClick.AddListener(() => BtnSelectWeapons(_WEAPONS_TYPE.SUB, _WEAPONS.GRENADE));
+        btn_subWeapons[0].onClick.AddListener(() => BtnSelectWeapons(_WEAPONS_TYPE.SUB, _WEAPONS.TRAP,
+            vt_subWeapons[0]));
+        btn_subWeapons[1].onClick.AddListener(() => BtnSelectWeapons(_WEAPONS_TYPE.SUB, _WEAPONS.GRENADE,
+            vt_subWeapons[1]));
 
         //돌아가기 버튼등록
-        btn_return.onClick.AddListener(() => BtnSelectWeapons(_WEAPONS_TYPE.NODATA, 0));
+        btn_return.onClick.AddListener(() => BtnSelectWeapons(_WEAPONS_TYPE.NODATA, 0, vt_subWeapons[0]));
+
+        //무기 노선택.
+        myMainWeapon = _WEAPONS.NODATA;
+        mySubWeapon = _WEAPONS.NODATA;
     }
 
     void Start()
@@ -52,7 +88,7 @@ public class SelectWeapons : MonoBehaviour {
     }
 
     void Update()
-    { 
+    {
         /*
         if (selectTime > 0)
         {
@@ -67,16 +103,22 @@ public class SelectWeapons : MonoBehaviour {
         if(selectTime <= 0) 
         {
             Debug.Log("무기선택 종료!!!");
-            CancelInvoke("SelectWeaponTimer");
-            //제한시간 종료시 아래 작성.
 
+            //주무기 보조무기 랜덤선택
+            myMainWeapon = (_WEAPONS)Random.RandomRange(0, (int)_WEAPONS.MAIN_MAX_LENGTH);
+            mySubWeapon = (_WEAPONS)Random.RandomRange((int)_WEAPONS.MAIN_MAX_LENGTH+1, (int)_WEAPONS.SUB_MAX_LENGTH);
+
+            SceneManager.LoadScene("MainGame"); //메인타이틀로 입장
+            CancelInvoke("SelectWeaponTimer");
+            //제한시간 종료시 아래 작성
 
         }
         txt_selectTime.text = ((int)selectTime).ToString() + "초";
         selectTime--; // (Time.smoothDeltaTime * 1.0f);
     }
 
-    public void BtnSelectWeapons(_WEAPONS_TYPE _type, _WEAPONS _name) //어떤무기를 선택했는가.
+    
+    public void BtnSelectWeapons(_WEAPONS_TYPE _type, _WEAPONS _name, Vector3 _checkMarkPos) //어떤무기를 선택했는가.
     {
         switch(_type)
         {
@@ -88,24 +130,27 @@ public class SelectWeapons : MonoBehaviour {
                 myMainWeapon = _name;
                 Debug.Log(myMainWeapon + "선택");
 
+                img_checkMark[0].fillAmount = 1.0f; 
+                img_checkMark[0].transform.localPosition = _checkMarkPos; //체크마크 표시
+
                 for (int i = 0; i < btn_mainWeapons.Length; i++)
                 {
-                    btn_mainWeapons[i].interactable = false; //버튼 비활성화
+                   btn_mainWeapons[i].interactable = false; //버튼 비활성화
                 }
                 StartCoroutine(AppearSubWeapon(false)); //보조무기 패널이 스크롤됨.
                 break;
             case _WEAPONS_TYPE.SUB:
                 mySubWeapon = _name;
                 Debug.Log(mySubWeapon + "선택");
-           
+
+                img_checkMark[1].fillAmount = 1.0f;
+                img_checkMark[1].transform.localPosition = _checkMarkPos;
+
                 for (int i = 0; i < btn_subWeapons.Length; i++)
                 {
                     btn_subWeapons[i].interactable = false;
                 }
                 btn_return.interactable = false;
-
-
-        
 
                 SceneManager.LoadScene("MainGame"); //메인타이틀로 입장
                 break;

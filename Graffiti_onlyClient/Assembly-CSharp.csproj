@@ -70,6 +70,7 @@
     <Compile Include="Assets\LOWPOLY CHARACTERS\Overview\Script\Customizable.cs" />
     <Compile Include="Assets\LOWPOLY CHARACTERS\Overview\Script\DragToRotate.cs" />
     <Compile Include="Assets\MinSeok\Script\Camera.cs" />
+    <Compile Include="Assets\MinSeok\Script\ClientSectorManager.cs" />
     <Compile Include="Assets\MinSeok\Script\InputInfoManager.cs" />
     <Compile Include="Assets\MinSeok\Script\JoystickManager.cs" />
     <Compile Include="Assets\MinSeok\Script\MainMenu\btn_option.cs" />

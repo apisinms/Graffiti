@@ -14,7 +14,7 @@ public class Camera : MonoBehaviour
     void Start()
     {
         //어느팀의 몇번인지에 따라서.
-        CameraPosition = redTeam[0].transform.position; //일단 레드팀 1번새기.
+        CameraPosition = redTeam[0].transform.position; //일단 레드팀 1번새기가 카메라에 포커싱.
     }
     void Update()
     {    
