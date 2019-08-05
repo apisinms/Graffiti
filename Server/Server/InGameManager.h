@@ -51,6 +51,7 @@ class InGameManager
 
 	struct Position
 	{
+		int playerNum;
 		float posX;
 		float posZ;
 

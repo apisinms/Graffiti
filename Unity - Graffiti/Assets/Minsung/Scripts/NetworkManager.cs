@@ -210,6 +210,9 @@ public partial class NetworkManager : MonoBehaviour
     [StructLayout(LayoutKind.Sequential)]
     struct PositionPacket
     {
+        [MarshalAs(UnmanagedType.I4)]
+        public int playerNum;
+
         [MarshalAs(UnmanagedType.R4)]
         public float posX;
 
@@ -237,7 +240,9 @@ public partial class NetworkManager : MonoBehaviour
             this = (PositionPacket)Marshal.PtrToStructure(gch.AddrOfPinnedObject(), typeof(PositionPacket));
             gch.Free();
         }
-    } PositionPacket position;
+    }
+
+    PositionPacket posPacket;
 
 
     STATE_PROTOCOL state;   // 클라 상태
@@ -260,6 +265,7 @@ public partial class NetworkManager : MonoBehaviour
 
 	private object key = new object();      // 동기화에 사용할 key이다.
 	private string sysMsg = string.Empty;	// 서버로부터 전달되는 메시지를 저장할 변수
+    private int myPlayerNum;
 
 	private Queue<C_Global.QueueInfo> queue;	// recv에 관한 패킷이 저장될 큐
 
@@ -272,14 +278,22 @@ public partial class NetworkManager : MonoBehaviour
 		get { return sysMsg; }
 		set { sysMsg = value; }
 	}
-
+    public int MyPlayerNum
+    {
+        get { return myPlayerNum; }
+        set { myPlayerNum = value; }
+    }
     public float GetPosX
     {
-        get { return position.posX; }
+        get { return posPacket.posX; }
     }
     public float GetPosZ
     {
-        get { return position.posZ; }
+        get { return posPacket.posZ; }
+    }
+    public float GetPosPlayerNum
+    {
+        get { return posPacket.playerNum; }
     }
 
     public static NetworkManager instance = null;

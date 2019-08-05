@@ -27,21 +27,15 @@ void LobbyManager::End()
 {
 }
 
-void LobbyManager::PackPacket(char* _setptr, TCHAR* _str1, int& _size)
+void LobbyManager::PackPacket(char* _setptr, int& _num, int& _size)
 {
 	char* ptr = _setptr;
-	int strsize1 = _tcslen(_str1) * sizeof(TCHAR);
 	_size = 0;
 
-	// 문자열 길이
-	memcpy(ptr, &strsize1, sizeof(strsize1));
-	ptr = ptr + sizeof(strsize1);
-	_size = _size + sizeof(strsize1);
-
 	// 문자열(유니코드)
-	memcpy(ptr, _str1, strsize1);
-	ptr = ptr + strsize1;
-	_size = _size + strsize1;
+	memcpy(ptr, &_num, sizeof(int));
+	ptr = ptr + sizeof(int);
+	_size = _size + sizeof(int);
 }
 void LobbyManager::UnPackPacket(char* _getBuf, TCHAR* _str1)
 {
@@ -107,6 +101,8 @@ bool LobbyManager::CanIMatch(C_ClientInfo* _ptr)
 	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
 	PROTOCOL_LOBBY protocol = GetBufferAndProtocol(_ptr, buf);
 
+
+
 	// 로비에서 매칭버튼을 눌렀다면, 매칭매니저에서 처리해야한다.
 	if (protocol == MATCH_PROTOCOL)
 	{
@@ -116,15 +112,12 @@ bool LobbyManager::CanIMatch(C_ClientInfo* _ptr)
 			// 모든 플레이어들에게 게임을 시작하라는 프로토콜을 보내서 인게임상태로 넘어감
 			protocol = SetProtocol(LOBBY_STATE, PROTOCOL_LOBBY::START_PROTOCOL, RESULT_LOBBY::MATCH_SUCCESS);
 			ZeroMemory(buf, sizeof(BUFSIZE));
-
+			int player1 = 1;
+			
 			// 패킹 및 전송(매칭이 완료되었고, 게임을 시작해도 좋음)
-			int packetSize = 0;
 
+			SendPacket_Room(_ptr, buf, protocol);
 			// 같은 방에 있는 모든 플레이어에게 시작 프로토콜을 전송함.
-			_ptr->GetRoom()->team1->player1->SendPacket(protocol, buf, packetSize);
-			_ptr->GetRoom()->team1->player2->SendPacket(protocol, buf, packetSize);
-			_ptr->GetRoom()->team2->player1->SendPacket(protocol, buf, packetSize);
-			_ptr->SendPacket(protocol, buf, packetSize);
 
 			//wprintf(L"1팀:%s, %s\n2팀:%s, %s\n"
 			//	,_ptr->GetRoom()->team1->player1->GetUserInfo()->id
@@ -163,4 +156,26 @@ bool LobbyManager::CanIStart(C_ClientInfo* _ptr)
 		return true;
 
 	return false;
+}
+
+void LobbyManager::SendPacket_Room(C_ClientInfo* _ptr, char* buf, PROTOCOL_LOBBY protocol)
+{
+	int packetSize = 0;
+
+	int player1 = 1;
+	int player2 = 2;
+	int player3 = 3;
+	int player4 = 4;
+
+	PackPacket(buf, player1, packetSize);
+	_ptr->GetRoom()->team1->player1->SendPacket(protocol, buf, packetSize);
+
+	PackPacket(buf, player2, packetSize);
+	_ptr->GetRoom()->team1->player2->SendPacket(protocol, buf, packetSize);
+
+	PackPacket(buf, player3, packetSize);
+	_ptr->GetRoom()->team2->player1->SendPacket(protocol, buf, packetSize);
+
+	PackPacket(buf, player4, packetSize);
+	_ptr->SendPacket(protocol, buf, packetSize);
 }

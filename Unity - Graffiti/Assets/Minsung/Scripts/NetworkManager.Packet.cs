@@ -394,7 +394,19 @@ public partial class NetworkManager : MonoBehaviour
         Buffer.BlockCopy(_buf, offset, posByte, 0, Marshal.SizeOf(_struct));
 
         
-        position.Deserialize(ref posByte);
+        posPacket.Deserialize(ref posByte);
+    }
+
+    private void UnPackPacket(byte[] _buf, out int _num)
+    {
+
+        int offset = sizeof(PROTOCOL);
+
+        byte[] Byte = new byte[sizeof(int)];
+        Buffer.BlockCopy(_buf, offset, Byte, 0, sizeof(int));
+
+
+        _num = BitConverter.ToInt32(Byte, 0);
     }
 
 

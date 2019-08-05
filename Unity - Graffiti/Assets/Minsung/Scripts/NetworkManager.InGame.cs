@@ -33,6 +33,7 @@ public partial class NetworkManager : MonoBehaviour
                 RESULT.NODATA);
 
         PositionPacket position = new PositionPacket();
+        position.playerNum = myPlayerNum;
         position.posX = posX;
         position.posZ = posZ;
 

@@ -173,7 +173,7 @@ bool InGameManager::MoveProcess(C_ClientInfo* _ptr, char* _buf)
 	UnPackPacket(_buf, position);
 	//UnPackPacket(_buf, posX, posZ);
 
-	printf("%f, %f\n", position.posX, position.posZ);
+	printf("%d ,%f, %f\n", position.playerNum, position.posX, position.posZ);
 
 	// 프로토콜 세팅
 	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::MOVE_PROTOCOL, move);
@@ -183,11 +183,11 @@ bool InGameManager::MoveProcess(C_ClientInfo* _ptr, char* _buf)
 	// 패킹 및 전송
 	PackPacket(buf, position, packetSize);
 
-	//_ptr->GetRoom()->team1->player1->SendPacket(protocol, buf, packetSize);
-	//_ptr->GetRoom()->team1->player2->SendPacket(protocol, buf, packetSize);
+	_ptr->GetRoom()->team1->player2->SendPacket(protocol, buf, packetSize);
 
-	//_ptr->GetRoom()->team2->player1->SendPacket(protocol, buf, packetSize);
-	_ptr->SendPacket(protocol, buf, packetSize);
+	_ptr->GetRoom()->team2->player1->SendPacket(protocol, buf, packetSize);
+	_ptr->GetRoom()->team2->player2->SendPacket(protocol, buf, packetSize);
+	//_ptr->SendPacket(protocol, buf, packetSize);
 
 
 	if (move == RESULT_INGAME::INGAME_SUCCESS)
@@ -201,7 +201,6 @@ bool InGameManager::CanIItemSelect(C_ClientInfo* _ptr)
 
 	//////////// 4명이 무기선택 다 해야 서버로 send가 됨
 	//////////// STATE 앞으로 2칸 밀리고 PROTOCOL 뒤로 1칸 밀림
-
 
 	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
 	PROTOCOL_INGAME protocol = GetBufferAndProtocol(_ptr, buf);

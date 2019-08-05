@@ -94,6 +94,10 @@ public partial class NetworkManager : MonoBehaviour
 								{
 									case RESULT.MATCH_SUCCESS:
 
+                                        UnPackPacket(info.packet, out myPlayerNum);
+
+                                        Debug.Log(myPlayerNum);
+
 										// 클라가 매칭 성공을 수신했다라는 프로토콜 셋팅
 										PROTOCOL startProtocol = SetProtocol(
 												STATE_PROTOCOL.LOBBY_STATE,
@@ -149,12 +153,8 @@ public partial class NetworkManager : MonoBehaviour
                                 {
                                     case RESULT.INGAME_SUCCESS:
                                         {
-                                            UnPackPacket(info.packet, position);
-                                            Debug.Log(position.posX);
-                                            Debug.Log(position.posZ);
-
-                                            Debug.Log(GetPosX);
-                                            Debug.Log(GetPosZ);
+                                            UnPackPacket(info.packet, posPacket);
+                                            Debug.Log(posPacket.posX);
                                         }
                                         break;
                                 }

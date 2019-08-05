@@ -3,6 +3,7 @@ ScriptsOnlyBuild:
     Assembly-CSharp.dll:
     - InputInfoManager
     - Move
+    - MoveManager
     - NetworkManager
     - SelectWeapons
     - btn_option
@@ -66,6 +67,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 9432}
     - Class: 114
       Script: {instanceID: 9896}
+    - Class: 114
+      Script: {instanceID: 10224}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -128,7 +131,7 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9874}
     - Class: 114
-      Script: {instanceID: 10478}
+      Script: {instanceID: 10482}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -932,6 +935,12 @@ ScriptsOnlyBuild:
     className: CharacterCustomizer
   - hash:
       serializedVersion: 2
+      Hash: a990ae22de3c070a16fc842167a2730b
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: MoveManager
+  - hash:
+      serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
@@ -996,5 +1005,5 @@ ScriptsOnlyBuild:
   - Assets/Scenes/MainGame.unity
   - Assets/Scenes/MainMenu.unity
   - Assets/Scenes/SelectWeapons.unity
-  playerPath: "C:/Users/kgl87/OneDrive/\uBC14\uD0D5 \uD654\uBA74/\uADF8\uB77C\uBE44\uD53C/New
+  playerPath: "C:/Users/kgl87/OneDrive/\uBC14\uD0D5 \uD654\uBA74/\uADF8\uB77C\uBE44\uD2D4/New
     Unity Project.exe"
