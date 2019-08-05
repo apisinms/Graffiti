@@ -25,6 +25,17 @@ void InGameManager::End()
 {
 }
 
+void InGameManager::PackPacket(char* _setptr, const int &_sec, int& _size)
+{
+	char* ptr = _setptr;
+	_size = 0;
+
+	// 초 셋팅
+	memcpy(ptr, &_sec, sizeof(_sec));
+	ptr = ptr + sizeof(_sec);
+	_size = _size + sizeof(_sec);
+}
+
 void InGameManager::PackPacket(char* _setptr, TCHAR* _str1, int& _size)
 {
 	char* ptr = _setptr;
@@ -42,26 +53,13 @@ void InGameManager::PackPacket(char* _setptr, TCHAR* _str1, int& _size)
 	_size = _size + strsize1;
 }
 
-void InGameManager::UnPackPacket(char* _getBuf, Weapon& _struct)
+void InGameManager::UnPackPacket(char* _getBuf, Weapon* &_weapon)
 {
 	char* ptr = _getBuf + sizeof(PROTOCOL_INGAME);
 
 	// 구조체 받음
-	memcpy(&_struct, ptr, sizeof(Weapon));
+	memcpy(_weapon, ptr, sizeof(Weapon));
 	ptr = ptr + sizeof(Weapon);
-
-}
-
-void InGameManager::UnPackPacket(char* _getBuf, int& _num1, int& _num2)
-{
-	char* ptr = _getBuf + sizeof(PROTOCOL_INGAME);
-
-	// 정수 1받음
-	memcpy(&_num1, ptr, sizeof(int));
-	ptr = ptr + sizeof(int);
-
-	memcpy(&_num2, ptr, sizeof(int));
-	ptr = ptr + sizeof(int);
 }
 
 void InGameManager::GetProtocol(PROTOCOL_INGAME& _protocol)
@@ -109,7 +107,7 @@ InGameManager::PROTOCOL_INGAME InGameManager::GetBufferAndProtocol(C_ClientInfo*
 }
 
 
-bool InGameManager::ItemSelctProcess(C_ClientInfo* _ptr, char* _buf)
+bool InGameManager::WeaponSelectProcess(C_ClientInfo* _ptr, char* _buf)
 {
 	TCHAR msg[MSGSIZE] = { 0, };
 	PROTOCOL_INGAME protocol;
@@ -117,13 +115,23 @@ bool InGameManager::ItemSelctProcess(C_ClientInfo* _ptr, char* _buf)
 	char buf[BUFSIZE];
 	int packetSize;
 
-	RESULT_INGAME itemSelect = RESULT_INGAME::INGAME_SUCCESS;
+	RESULT_INGAME itemSelect = RESULT_INGAME::INGAME_FAIL;
 
-	UnPackPacket(_buf, weapon);
-	//UnPackPacket(_buf, mainW, subW);
+	Weapon* tmpWeapon = new Weapon();
+	UnPackPacket(_buf, tmpWeapon);
+	
 
-	// 프로토콜 세팅
-	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::WEAPON_PROTOCOL, itemSelect);
+	// 클라가 보낸 무기정보 저장!
+	if (tmpWeapon != nullptr)
+	{
+		_ptr->SetWeapon(tmpWeapon);
+		itemSelect = RESULT_INGAME::INGAME_SUCCESS;
+
+		wprintf(L"%s 선택 무기 : %d, %d\n", _ptr->GetUserInfo()->id, _ptr->GetWeapon()->mainW, _ptr->GetWeapon()->subW);
+	}
+
+	// 프로토콜 세팅(인게임 상태로)
+	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::START_PROTOCOL, itemSelect);
 
 	ZeroMemory(buf, sizeof(BUFSIZE));
 
@@ -133,61 +141,62 @@ bool InGameManager::ItemSelctProcess(C_ClientInfo* _ptr, char* _buf)
 
 
 	if (itemSelect == RESULT_INGAME::INGAME_SUCCESS)
+	{
+		_ptr->GetRoom()->roomStatus = ROOMSTATUS::ROOM_GAME;	// 방이 게임으로 입장하였다.
 		return true;
+	}
 
 	return false;
 }
 
-bool InGameManager::CanIItemSelect(C_ClientInfo* _ptr)
+bool InGameManager::CanISelectWeapon(C_ClientInfo* _ptr)
 {
-
-	//////////// 4명이 무기선택 다 해야 서버로 send가 됨
-	//////////// STATE 앞으로 2칸 밀리고 PROTOCOL 뒤로 1칸 밀림
-
-
 	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
 	PROTOCOL_INGAME protocol = GetBufferAndProtocol(_ptr, buf);
 
-	// 로비에서 Logout을 요청했다면, LoginList를 관리하는 LoginManager의 CanILogout()을 호출해서 검사받아야한다.
 	if (protocol == WEAPON_PROTOCOL)
-		return ItemSelctProcess(_ptr, buf);
+		return WeaponSelectProcess(_ptr, buf);
 
 	return false;
 }
 
+// 무기 선택 타이머 쓰레드
 unsigned long __stdcall InGameManager::TimerThread(void* _arg)
 {
 	C_ClientInfo* ptr = (C_ClientInfo*)_arg;
+
+	PROTOCOL_INGAME protocol = (PROTOCOL_INGAME)0;
+	char buf[BUFSIZE] = { 0, };
+	int packetSize = 0;
 	
 	LARGE_INTEGER frequency;
 	LARGE_INTEGER beginTime;
 	LARGE_INTEGER endTime;
 	__int64 elapsed;
 	double duringTime = 0.0;	// 실제로 경과된 시간을(초단위) 가지고 있을 double 변수
+	int sec = 0;				// 초 단위
 
 	QueryPerformanceFrequency(&frequency);	// 최초 1회 주파수 얻음
 	QueryPerformanceCounter(&beginTime);	// 시작 시간 얻음
 	while (1)
 	{
-		QueryPerformanceCounter(&endTime);// 종료 시간 얻음
+		QueryPerformanceCounter(&endTime);					// 종료 시간 얻음
 		elapsed = endTime.QuadPart - beginTime.QuadPart;	// 경과된 시간 계산
 		
 		
 		duringTime = (double)elapsed / (double)frequency.QuadPart;	// 실제로 흐른 시간을 초 단위로 계산
-
+		
 		// 만약 아이템 선택시간(상수)을 넘었다면 쓰레드 핸들 반납 후, 무한루프를 빠져나간다.
-		if (duringTime >= itemSelTime)
+		if (duringTime >= WEAPON_SELTIME)
 		{
+			// 쓰레드 핸들 반납
 			CloseHandle(ptr->GetRoom()->timerHandle);
 			ptr->GetRoom()->timerHandle = nullptr;
 
-
-			/// 여기에서 무기달라는 프로토콜을 보내면
-			/// 클라가 자신이 선택한 무기를 서버로 보내고
-			/// 서버는 이 무기 정보를 받아서 해당 클라 정보에 저장시켜둔다.
-			PROTOCOL_INGAME protocol = InGameManager::GetInstance()->SetProtocol(INGAME_STATE, PROTOCOL_INGAME::WEAPON_PROTOCOL, RESULT_INGAME::NODATA);
-			char buf[BUFSIZE] = { 0, };
-			int packetSize = 0;
+			// 무기 정보를 얻어오기위한 프로토콜 조립
+			protocol = InGameManager::GetInstance()->SetProtocol(INGAME_STATE, PROTOCOL_INGAME::WEAPON_PROTOCOL, RESULT_INGAME::NODATA);
+			ZeroMemory(buf, BUFSIZE);
+			packetSize = 0;
 
 			// 같은 방에 있는 모든 플레이어에게 무기를 보내라고 프로토콜을 전송함.
 			ptr->GetRoom()->team1->player1->SendPacket(protocol, buf, packetSize);
@@ -196,6 +205,27 @@ unsigned long __stdcall InGameManager::TimerThread(void* _arg)
 			ptr->GetRoom()->team2->player2->SendPacket(protocol, buf, packetSize);
 
 			break;
+		}
+
+
+		// 1초마다 값이 변하면
+		if (sec < (int)duringTime)
+		{
+			sec = (int)duringTime;	// 새롭게 초 단위를 갱신시켜준다.(before sec의 역할)
+
+			// 1초에 한 번씩 시간을 알려주는 프로토콜을 보냄.
+			protocol = InGameManager::GetInstance()->SetProtocol(INGAME_STATE, PROTOCOL_INGAME::TIMER_PROTOCOL, RESULT_INGAME::NODATA);
+			ZeroMemory(buf, BUFSIZE);
+			packetSize = 0;
+
+			// 무기 선택종료까지 남은 시간 패킷 세팅
+			InGameManager::GetInstance()->PackPacket(buf, (WEAPON_SELTIME - sec), packetSize);
+
+			// 같은 방에 있는 모든 플레이어에게 현재 무기 선택종료까지 남은 시간을 보내줌
+			ptr->GetRoom()->team1->player1->SendPacket(protocol, buf, packetSize);
+			ptr->GetRoom()->team1->player2->SendPacket(protocol, buf, packetSize);
+			ptr->GetRoom()->team2->player1->SendPacket(protocol, buf, packetSize);
+			ptr->GetRoom()->team2->player2->SendPacket(protocol, buf, packetSize);
 		}
 	}
 

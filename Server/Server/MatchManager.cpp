@@ -29,7 +29,7 @@ void MatchManager::Destroy()
 void MatchManager::WaitListDelete(C_ClientInfo* _ptr)
 {
 	waitList.remove(_ptr);
-	printf("대기리스트 삭제 성공 : %d\n", waitList.size());
+	wprintf(L"대기리스트 삭제 성공 : %d\n", waitList.size());
 }
 
 bool MatchManager::MatchProcess(C_ClientInfo* _ptr)

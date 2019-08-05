@@ -11,12 +11,14 @@ using UnityEngine;
 /// </summary>
 public partial class NetworkManager : MonoBehaviour
 {
+	// 바이트 배열을 스트링으로
 	private string ByteToString(byte[] _byte)
 	{
 		string str = Encoding.Unicode.GetString(_byte);
 		return str;
 	}
 
+	// 스트링을 바이트 배열로
 	private byte[] StringToByte(string _str)
 	{
 		byte[] strByte = Encoding.Unicode.GetBytes(_str);
@@ -52,28 +54,50 @@ public partial class NetworkManager : MonoBehaviour
 		// 마스크를 통해 스테이트를 얻는다.
 		_state = (STATE_PROTOCOL)((Int64)wholeProtocol & mask);
 
+		mask = ((Int64)0x1f << (64 - 10));
+		_protocol = (PROTOCOL)((Int64)wholeProtocol & mask);  // 이제 state를 얻었으니 protocol을 얻어보자
+
+		mask = ((Int64)0x1f << (64 - 15));
+		_result = (RESULT)((Int64)wholeProtocol & mask);       // 이제 마지막으로 result
+
+
+
 		// state를 읽어서 protocol과 resul를 마스킹을 통해 구한다.
-		switch (_state)
-		{
-			case STATE_PROTOCOL.LOGIN_STATE:
-				mask = ((Int64)0x1f << (64 - 10));
-				_protocol = (PROTOCOL)((Int64)wholeProtocol & mask);  // 이제 state를 얻었으니 protocol을 얻어보자
+		//switch (_state)
+		//{
+		//	case STATE_PROTOCOL.LOGIN_STATE:
+		//		{
+		//			mask = ((Int64)0x1f << (64 - 10));
+		//			_protocol = (PROTOCOL)((Int64)wholeProtocol & mask);  // 이제 state를 얻었으니 protocol을 얻어보자
 
-				mask = ((Int64)0x1f << (64 - 15));
-				_result = (RESULT)((Int64)wholeProtocol & mask);     // 이제 마지막으로 result
-				break;
+		//			mask = ((Int64)0x1f << (64 - 15));
+		//			_result = (RESULT)((Int64)wholeProtocol & mask);     // 이제 마지막으로 result
+		//		}
+		//		break;
 
-			case STATE_PROTOCOL.LOBBY_STATE:
-				mask = ((Int64)0x1f << (64 - 10));
-				_protocol = (PROTOCOL)((Int64)wholeProtocol & mask);  // 이제 state를 얻었으니 protocol을 얻어보자
+		//	case STATE_PROTOCOL.LOBBY_STATE:
+		//		{
+		//			mask = ((Int64)0x1f << (64 - 10));
+		//			_protocol = (PROTOCOL)((Int64)wholeProtocol & mask);  // 이제 state를 얻었으니 protocol을 얻어보자
 
-				mask = ((Int64)0x1f << (64 - 15));
-				_result = (RESULT)((Int64)wholeProtocol & mask);       // 이제 마지막으로 result
-				break;
+		//			mask = ((Int64)0x1f << (64 - 15));
+		//			_result = (RESULT)((Int64)wholeProtocol & mask);       // 이제 마지막으로 result
+		//		}
+		//		break;
 
-			case STATE_PROTOCOL.CHAT_STATE:
-				break;
-		}
+		//	case STATE_PROTOCOL.INGAME_STATE:
+		//		{
+		//			mask = ((Int64)0x1f << (64 - 10));
+		//			_protocol = (PROTOCOL)((Int64)wholeProtocol & mask);  // 이제 state를 얻었으니 protocol을 얻어보자
+
+		//			mask = ((Int64)0x1f << (64 - 15));
+		//			_result = (RESULT)((Int64)wholeProtocol & mask);       // 이제 마지막으로 result
+		//		}
+		//		break;
+
+		//	//case STATE_PROTOCOL.CHAT_STATE:
+		//	//	break;
+		//}
 #endif
 
 #if __32BIT__
@@ -313,6 +337,20 @@ public partial class NetworkManager : MonoBehaviour
 
 		_size += sizeof(int);   // 총 보내야 할 바이트 수 저장한다.
 	}
+
+	private void UnPackPacket(byte[] _buf, out int _num)
+	{
+		byte[] arrNum = new byte[sizeof(int)];
+
+		int offset = sizeof(PROTOCOL);
+
+		// 일단 byte 배열로 받고
+		Buffer.BlockCopy(_buf, offset, arrNum, 0, sizeof(int));
+		offset += sizeof(int);
+
+		// 이제 다시 int로 변환
+		_num = BitConverter.ToInt32(arrNum, 0);
+	}
 	private void UnPackPacket(byte[] _buf, out string _str1)
 	{
 		byte[] arrStrsize1 = new byte[sizeof(int)];
@@ -332,58 +370,6 @@ public partial class NetworkManager : MonoBehaviour
 
 		// 이제 다시 string으로 변환
 		_str1 = ByteToString(arrStrByte);
-	}
-
-
-
-
-
-
-
-
-	/// 테스트용
-	private void PackPacket(ref byte[] _buf, PROTOCOL _protocol, sbyte _num1, sbyte _num2, out int _size)
-	{
-
-		// 암호화된 내용을 저장할 버퍼이다.
-		byte[] encryptBuf = new byte[C_Global.BUFSIZE];
-		byte[] buf = new byte[C_Global.BUFSIZE];
-
-		_size = 0;
-		int offset = 0;
-
-		// 프로토콜
-#if __64BIT__
-		Buffer.BlockCopy(BitConverter.GetBytes((Int64)_protocol), 0, buf, offset, sizeof(PROTOCOL));
-#endif
-#if __32BIT__
-		Buffer.BlockCopy(BitConverter.GetBytes((Int32)_protocol), 0, buf, offset, sizeof(PROTOCOL));
-#endif
-		offset += sizeof(PROTOCOL);
-		_size += sizeof(PROTOCOL);
-
-		// 정수 1
-		Buffer.BlockCopy(BitConverter.GetBytes(_num1), 0, buf, offset, sizeof(sbyte));
-		offset += sizeof(sbyte);
-		_size += sizeof(sbyte);
-
-		// 정수 2
-		Buffer.BlockCopy(BitConverter.GetBytes(_num2), 0, buf, offset, sizeof(sbyte));
-		offset += sizeof(sbyte);
-		_size += sizeof(sbyte);
-
-
-		// 암호화된 내용을 encryptBuf에 저장
-		C_Encrypt.instance.Encrypt(buf, encryptBuf, _size);
-
-		// 가장 앞에 size를 넣고, 그 뒤에 암호화했던 버퍼를 붙임.
-		offset = 0;
-		Buffer.BlockCopy(BitConverter.GetBytes(_size), 0, _buf, offset, sizeof(int));
-		offset += sizeof(int);
-		Buffer.BlockCopy(encryptBuf, 0, _buf, offset, _size);
-		offset += _size;
-
-		_size += sizeof(int);   // 총 보내야 할 바이트 수 저장한다.
 	}
 }
 

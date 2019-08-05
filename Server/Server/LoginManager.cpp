@@ -251,6 +251,7 @@ bool LoginManager::LoginProcess(C_ClientInfo* _ptr, char* _buf)
 
 		// 유저의 정보를 로그인 리스트에 추가.
 		loginList->Insert(_ptr->GetUserInfo());
+		wprintf(L"로그인 성공 유저정보 : %s, %s\n", _ptr->GetUserInfo()->id, _ptr->GetUserInfo()->pw);
 	}
 	break;
 	}

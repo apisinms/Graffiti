@@ -103,20 +103,23 @@ public partial class NetworkManager : MonoBehaviour
 								switch (result)
 								{
 									case RESULT.LOBBY_SUCCESS:
+										{
+											lock (key)
+											{
+												// 클라가 매칭 성공을 수신했고, 인게임 상태로 넘겨달라는(확인차원의) 프로토콜 셋팅
+												PROTOCOL gotoInGameProtocol = SetProtocol(
+														STATE_PROTOCOL.LOBBY_STATE,
+														PROTOCOL.GOTO_INGAME_PROTOCOL,
+														RESULT.NODATA);
 
-										// 클라가 매칭 성공을 수신했고, 인게임 상태로 넘겨달라는(확인차원의) 프로토콜 셋팅
-										PROTOCOL gotoInGameProtocol = SetProtocol(
-												STATE_PROTOCOL.LOBBY_STATE,
-												PROTOCOL.GOTO_INGAME_PROTOCOL,
-												RESULT.NODATA);
+												// 패킹 및 전송
+												int packetSize;
+												PackPacket(ref sendBuf, gotoInGameProtocol, out packetSize);
+												bw.Write(sendBuf, 0, packetSize);
 
-										// 패킹 및 전송
-										int packetSize;
-										PackPacket(ref sendBuf, gotoInGameProtocol, out packetSize);
-										bw.Write(sendBuf, 0, packetSize);
-
-
-										Debug.Log("매칭 성공!!");
+												Debug.Log("매칭 성공!!");
+											}
+										}
 										break;
 
 									case RESULT.LOBBY_FAIL:
@@ -139,6 +142,35 @@ public partial class NetworkManager : MonoBehaviour
 										break;
 								}
 							}
+							break;
+					}
+				}
+				break;
+
+			case STATE_PROTOCOL.INGAME_STATE:
+				{
+					switch(protocol)
+					{
+						// 타이머 프로토콜이 넘겨져오면
+						case PROTOCOL.TIMER_PROTOCOL:
+							{
+								// result 생략
+
+								// 넘겨온 초를 string으로 변환해서 sysMsg에 저장한다.
+								lock (key)
+								{
+									sysMsg = string.Empty;
+
+									int sec = 0;
+									UnPackPacket(info.packet, out sec);
+									sysMsg = sec.ToString() + "초";
+									Debug.Log(sysMsg);
+								}
+							}
+							break;
+
+						// 게임 시작 프로토콜
+						case PROTOCOL.START_PROTOCOL:
 							break;
 					}
 				}

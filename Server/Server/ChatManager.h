@@ -10,8 +10,7 @@ class ChatManager
 	enum PROTOCOL_CHAT : __int64
 	{
 		LEAVE_ROOM_PROTOCOL = ((__int64)0x1 << 58),
-		CHAT_PROTOCOL = ((__int64)0x1 << 57),
-
+		CHAT_PROTOCOL       = ((__int64)0x1 << 57),
 
 		DISCONNECT_PROTOCOL = ((__int64)0x1 << 54),
 	};
@@ -19,7 +18,7 @@ class ChatManager
 	enum RESULT_CHAT : __int64
 	{
 		LEAVE_ROOM_SUCCESS = ((__int64)0x1 << 53),
-		LEAVE_ROOM_FAIL = ((__int64)0x1 << 52),
+		LEAVE_ROOM_FAIL    = ((__int64)0x1 << 52),
 
 		NODATA = ((__int64)0x1 << 49)
 	};

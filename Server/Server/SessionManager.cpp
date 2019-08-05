@@ -33,8 +33,8 @@ void SessionManager::Destroy()
 // 받은 소켓, 주소정보로 클라이언트를 동적할당하는 함수
 bool SessionManager::AddSession(SOCKET _sock, SOCKADDR_IN _addr)
 {
-	C_LoginState* state = new C_LoginState();
-	C_ClientInfo* ptr = new C_ClientInfo(nullptr, state, _sock, _addr);
+	//C_LoginState* state = new C_LoginState();
+	C_ClientInfo* ptr = new C_ClientInfo(nullptr, _sock, _addr);
 	return clientList->Insert(ptr);
 }
 

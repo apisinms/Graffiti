@@ -34,6 +34,7 @@ public:
 		case STATE_LOBBY:
 			_ptr->SetState(_ptr->GetLobbyState());		// 로비 상태로 이동한다.
 			break;
+
 		default:
 			break;
 		}

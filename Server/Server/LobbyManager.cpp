@@ -126,13 +126,7 @@ bool LobbyManager::CanIMatch(C_ClientInfo* _ptr)
 			_ptr->GetRoom()->team1->player1->SendPacket(protocol, buf, packetSize);
 			_ptr->GetRoom()->team1->player2->SendPacket(protocol, buf, packetSize);
 			_ptr->GetRoom()->team2->player1->SendPacket(protocol, buf, packetSize);
-			_ptr->SendPacket(protocol, buf, packetSize);
-
-			//wprintf(L"1팀:%s, %s\n2팀:%s, %s\n"
-			//	,_ptr->GetRoom()->team1->player1->GetUserInfo()->id
-			//	,_ptr->GetRoom()->team1->player2->GetUserInfo()->id
-			//	,_ptr->GetRoom()->team2->player1->GetUserInfo()->id
-			//	,_ptr->GetRoom()->team2->player2->GetUserInfo()->id);
+			_ptr->GetRoom()->team2->player2->SendPacket(protocol, buf, packetSize);
 
 			return true;
 		}
@@ -168,7 +162,7 @@ bool LobbyManager::CanICancelMatch(C_ClientInfo* _ptr)
 		return true;	// 성공 리턴
 	}
 
-	return false;
+ 	return false;
 }
 
 bool LobbyManager::CanILeaveLobby(C_ClientInfo* _ptr)
@@ -193,16 +187,18 @@ bool LobbyManager::CanIGotoInGame(C_ClientInfo* _ptr)
 	if (protocol == GOTO_INGAME_PROTOCOL)
 	{
 		printf("4인 매칭성공\n");
-		//// 만약 타이머 쓰레드가 아직 생성이 안됐다면
-		//if (_ptr->GetRoom()->timerHandle == NULL)
-		//{
-		//	// InGameManager에게 타이머 쓰레드를 생성해 30초를 세도록 부탁한다.
-		//	_ptr->GetRoom()->timerHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)InGameManager::TimerThread, (void*)_ptr, 0, NULL);
-		//	if (_ptr->GetRoom()->timerHandle == NULL)
-		//		LogManager::GetInstance()->ErrorPrintf("_beginthreadex() in CanIStart()");
 
-		//	_ptr->GetRoom()->roomStatus = ROOMSTATUS::ROOM_ITELSEL;	// 이제 아이템 선택 상태로
-		//}
+		// 만약 방이 생성되고 아무런 진행도 하지 않았다면
+		if (_ptr->GetRoom()->roomStatus == ROOMSTATUS::ROOM_NONE)
+		{
+			// InGameManager에게 타이머 쓰레드를 생성해 30초를 세도록 부탁한다.
+			_ptr->GetRoom()->timerHandle = (HANDLE)_beginthreadex(nullptr, 0, (_beginthreadex_proc_type)InGameManager::TimerThread, (void*)_ptr, 0, NULL);
+			if (_ptr->GetRoom()->timerHandle == nullptr)
+				LogManager::GetInstance()->ErrorPrintf("_beginthreadex() in CanIStart()");
+
+			_ptr->GetRoom()->roomStatus = ROOMSTATUS::ROOM_ITEMSEL;	// 이제 아이템 선택 상태로
+		}
+
 		return true;
 	}
 

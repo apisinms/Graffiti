@@ -17,14 +17,33 @@ using namespace std;
 
 #define THREAD_END		-777
 
+struct Weapon
+{
+	char mainW;
+	char subW;
+
+public:
+	Weapon()
+	{
+		mainW = -1;
+		subW = -1;
+	}
+
+	Weapon(char _mainW, char _subW)
+	{
+		mainW = _mainW;
+		subW  = _subW;
+	}
+};
+
 enum STATE : int
 {
-	STATE_LOGIN = 1, STATE_LOBBY, STATE_MATCH, STATE_INGAME,
+	STATE_LOGIN = 1, STATE_LOBBY, STATE_INGAME,
 };
 
 enum ROOMSTATUS
 {
-	ROOM_NONE = -1, ROOM_ITELSEL = 1, ROOM_GAME
+	ROOM_NONE = -1, ROOM_ITEMSEL = 1, ROOM_GAME
 };
 
 #ifdef __64BIT__

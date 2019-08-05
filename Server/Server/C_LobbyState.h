@@ -15,7 +15,7 @@ public:
 	{
 		// 모두가 다같이 인게임으로 넘어가는 이 프로토콜을 받았을 때만이 INGAME으로 넘어가야된다.
 		if (LobbyManager::GetInstance()->CanIGotoInGame(_ptr) == true)
-			_ptr->SetState(_ptr->GetInGameState());		// 인게임 상태로 이동한다.
+			_ptr->SetState(_ptr->GetInGameState());		// 인게임 상태로 이동한다.(Send하는게 없으므로 Read에서 처리해줘야함)
 
 		// 매칭이 가능한지
 		if (LobbyManager::GetInstance()->CanIMatch(_ptr) == true)

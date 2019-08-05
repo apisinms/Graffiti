@@ -64,6 +64,22 @@ void MainManager::Init()
 	SetConsoleCtrlHandler((PHANDLER_ROUTINE)CtrlHandler, TRUE);	// 종료를 감지하는 핸들러 함수 등록
 }
 
+void MainManager::End()
+{
+	InGameManager::GetInstance()->End();
+	ChatManager::GetInstance()->End();
+	MatchManager::GetInstance()->End();
+	RoomManager::GetInstance()->End();
+	LobbyManager::GetInstance()->End();
+	LoginManager::GetInstance()->End();	// 로그인 매니저에서 초기화 해야하는 작업을 진행한다(예:회원가입 리스트 불러오기)
+	DatabaseManager::GetInstance()->End();	// DB매니저에서 초기화 하는 작업 수행
+	SessionManager::GetInstance()->End();
+	C_Encrypt::GetInstance()->End();
+	UtilityManager::GetInstance()->End();
+	LogManager::GetInstance()->End();
+	IOCP_End();
+}
+
 // 통신
 void MainManager::Run()
 {
@@ -106,6 +122,8 @@ void MainManager::Destroy()
 
 void MainManager::IOCP_Accept(void* _ptr)
 {
+	IC_CS cs;	// 동기화
+
 	C_ClientInfo* ptr = (C_ClientInfo*)_ptr;
 	
 	// accept가 되고나면 바로 비동기 Recv를 해준다.
@@ -113,6 +131,8 @@ void MainManager::IOCP_Accept(void* _ptr)
 }
 void MainManager::IOCP_Read(void* _ptr, int _len)
 {
+	IC_CS cs;	// 동기화 필수
+
 	C_ClientInfo* ptr = (C_ClientInfo*)_ptr;
 
 	int result = ptr->CompleteRecv(_len);
@@ -139,6 +159,8 @@ void MainManager::IOCP_Read(void* _ptr, int _len)
 }
 void MainManager::IOCP_Write(void* _ptr, int _len)
 {
+	IC_CS cs;		// 동기화 필수
+
 	C_ClientInfo* ptr = (C_ClientInfo*)_ptr;
 
 	int result = ptr->CompleteSend(_len);
@@ -157,25 +179,10 @@ void MainManager::IOCP_Write(void* _ptr, int _len)
 		break;
 	}
 }
-
-void MainManager::End()
-{
-	InGameManager::GetInstance()->End();
-	ChatManager::GetInstance()->End();
-	MatchManager::GetInstance()->End();
-	RoomManager::GetInstance()->End();
-	LobbyManager::GetInstance()->End();
-	LoginManager::GetInstance()->End();	// 로그인 매니저에서 초기화 해야하는 작업을 진행한다(예:회원가입 리스트 불러오기)
-	DatabaseManager::GetInstance()->End();	// DB매니저에서 초기화 하는 작업 수행
-	SessionManager::GetInstance()->End();
-	C_Encrypt::GetInstance()->End();
-	UtilityManager::GetInstance()->End();
-	LogManager::GetInstance()->End();
-	IOCP_End();
-}
-
 void MainManager::IOCP_Disconnected(void* _ptr)
 {
+	IC_CS cs;	// 동기화
+
 	C_ClientInfo* ptr = (C_ClientInfo*)_ptr;
 
 	// 접속 로그에 기록해줌

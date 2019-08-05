@@ -7,6 +7,7 @@ using UnityEngine;
 /// </summary>
 public partial class NetworkManager : MonoBehaviour
 {
+	// 로그인 정보 서버로 전송
 	public void MayILogin(string _id, string _pw)
 	{
 		// 프로토콜 셋팅
@@ -14,7 +15,6 @@ public partial class NetworkManager : MonoBehaviour
 				STATE_PROTOCOL.LOGIN_STATE,
 				PROTOCOL.LOGIN_PROTOCOL,
 				RESULT.NODATA);
-		Console.WriteLine((Int64)protocol);
 
 		// 패킹 및 전송
 		int packetSize;
@@ -22,6 +22,7 @@ public partial class NetworkManager : MonoBehaviour
 		bw.Write(sendBuf, 0, packetSize);
 	}
 
+	// 로그인 성공 조회
 	public bool CheckLoginSuccess()
 	{
 		if (state == STATE_PROTOCOL.LOGIN_STATE &&
@@ -32,6 +33,8 @@ public partial class NetworkManager : MonoBehaviour
 		else
 			return false;
 	}
+
+	// 로그인 아이디 없음 조회
 	public bool CheckLogin_IDError()
 	{
 		if (state == STATE_PROTOCOL.LOGIN_STATE &&
@@ -43,6 +46,7 @@ public partial class NetworkManager : MonoBehaviour
 			return false;
 	}
 
+	// 로그인 아이디 이미 로그인 조회
 	public bool CheckLogin_IDExist()
 	{
 		if (state == STATE_PROTOCOL.LOGIN_STATE &&
@@ -54,6 +58,7 @@ public partial class NetworkManager : MonoBehaviour
 			return false;
 	}
 
+	// 로그인 패스워드 에러 조회
 	public bool CheckLogin_PWError()
 	{
 		if (state == STATE_PROTOCOL.LOGIN_STATE &&
@@ -65,7 +70,7 @@ public partial class NetworkManager : MonoBehaviour
 			return false;
 	}
 
-
+	// 회원가입 정보(아이디, 패스워드, 닉네임) 전송
 	public void MayIJoin(string _id, string _pw, string _nickname)
 	{
 		// 프로토콜 셋팅
@@ -73,7 +78,6 @@ public partial class NetworkManager : MonoBehaviour
 				STATE_PROTOCOL.LOGIN_STATE,
 				PROTOCOL.JOIN_PROTOCOL,
 				RESULT.NODATA);
-		Console.WriteLine((Int64)protocol);
 
 		// 패킹 및 전송
 		int packetSize;
@@ -81,6 +85,7 @@ public partial class NetworkManager : MonoBehaviour
 		bw.Write(sendBuf, 0, packetSize);
 	}
 
+	// 회원가입 성공 조회
 	public bool CheckJoin_Success()
 	{
 		if (state == STATE_PROTOCOL.LOGIN_STATE &&
@@ -91,6 +96,8 @@ public partial class NetworkManager : MonoBehaviour
 		else
 			return false;
 	}
+
+	// 이미 있는 아이디 조회
 	public bool CheckJoin_IDExist()
 	{
 		if (state == STATE_PROTOCOL.LOGIN_STATE &&

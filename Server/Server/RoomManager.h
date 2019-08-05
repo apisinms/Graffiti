@@ -58,10 +58,6 @@ public:
 	void Init();
 	void End();
 
-
-private:
-	bool CheckInRoomPlayer(C_ClientInfo* _ptr);
-
 public:
 	bool CreateRoom(C_ClientInfo* _players[]);
 	bool CheckLeaveRoom(C_ClientInfo* _ptr);

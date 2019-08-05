@@ -61,7 +61,9 @@ public partial class NetworkManager : MonoBehaviour
 
 		// InGameState
 		//ITEMSELECT_PROTOCOL = ((Int64)0x1 << 58),
-		WEAPON_PROTOCOL		= ((Int64)0x1 << 58),
+		TIMER_PROTOCOL        = ((Int64)0x1 << 58),	// 타이머 프로토콜(1초씩 받음)
+		WEAPON_PROTOCOL       = ((Int64)0x1 << 57),	// 무기 전송 프로토콜
+		START_PROTOCOL       = ((Int64)0x1 << 56),	// 게임 시작 프로토콜
 		// 56
 		// 55
 		// 54
@@ -228,7 +230,6 @@ public partial class NetworkManager : MonoBehaviour
 	private object key = new object();      // 동기화에 사용할 key이다.
 	private string sysMsg = string.Empty;	// 서버로부터 전달되는 메시지를 저장할 변수
 
-
 	private Queue<C_Global.QueueInfo> queue;	// recv에 관한 패킷이 저장될 큐
 
 	public Queue<C_Global.QueueInfo> Queue { get { return queue; } }
@@ -242,5 +243,4 @@ public partial class NetworkManager : MonoBehaviour
 	}
 
 	public static NetworkManager instance = null;
-
 }

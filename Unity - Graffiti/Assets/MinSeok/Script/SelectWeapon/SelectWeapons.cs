@@ -30,9 +30,12 @@ public class SelectWeapons : MonoBehaviour
 	public Button[] btn_mainWeapons = new Button[3]; //주무기 버튼 3개
 	public Button[] btn_subWeapons = new Button[2]; //보조무기 버튼 3개
 	public Button btn_return; //돌아가기 버튼
-	public Text txt_selectTime; int selectTime = 30; //제한시간 텍스트
+	int selectTime = 30; //제한시간 텍스트
+	public Text txt_selectTime;
 	private _WEAPONS myMainWeapon;
 	private _WEAPONS mySubWeapon;
+
+	NetworkManager networkManager;
 
 	void Awake()
 	{
@@ -51,19 +54,18 @@ public class SelectWeapons : MonoBehaviour
 
 	void Start()
 	{
+		networkManager = NetworkManager.instance;
 		StartCoroutine(AppearMainWeapon());
-
-		InvokeRepeating("SelectWeaponTimer", 0.0f, 1.0f); //1초마다 시간을 깎는 인보크
 	}
 
 	void Update()
 	{
-		txt_selectTime.text = selectTime.ToString() + "초";
+		//txt_selectTime.text = selectTime.ToString() + "초";
 
-		if (Input.GetKeyDown(KeyCode.Tab))
-		{
-			selectTime--;
-		}
+		//if (Input.GetKeyDown(KeyCode.Tab))
+		//{
+		//	selectTime--;
+		//}
 	}
 	public void BtnSelectWeapons(_WEAPONS_TYPE _type, _WEAPONS _name) //어떤무기를 선택했는가.
 	{
@@ -94,24 +96,6 @@ public class SelectWeapons : MonoBehaviour
 					btn_subWeapons[i].interactable = false;
 				}
 				btn_return.interactable = false;
-
-
-
-				/// 테스트로 보내본다
-				NetworkManager.instance.MayISelectWeapon((sbyte)myMainWeapon, (sbyte)mySubWeapon);
-
-				if (NetworkManager.instance.CheckItemSelectSuccess() == true)
-				{
-					Debug.Log(myMainWeapon);
-					Debug.Log(mySubWeapon);
-					Debug.Log("itemselect 성공");
-
-					SceneManager.LoadScene("MainGame"); //메인타이틀로 입장
-				}
-
-				else
-					Debug.Log("itemselect 실패");
-
 				break;
 		}
 	}
@@ -140,6 +124,8 @@ public class SelectWeapons : MonoBehaviour
 			btn_mainWeapons[i].interactable = true; //버튼 활성화
 		}
 		Debug.Log("주무기 코루틴 탈출!");
+
+		StartCoroutine(SelectWeaponTimer());    // 여기에서 타이머 코루틴 시작
 		yield break;
 	}
 
@@ -206,39 +192,51 @@ public class SelectWeapons : MonoBehaviour
 		yield break;
 	}
 
-	public void SelectWeaponTimer() //30초 시간제한거는 인보크함수
+	IEnumerator SelectWeaponTimer()
 	{
-		if (selectTime <= 0)
+		while(true)
 		{
-			Debug.Log("무기선택 종료!!!");
-			CancelInvoke();
-			//제한시간 종료시 아래 작성.
+			// 타이머가 끝났다면
+			if (networkManager.CheckTimerEnd() == true)
+			{
+				// 선택한 무기를 서버로 보내고
+				networkManager.MayISelectWeapon((sbyte)myMainWeapon, (sbyte)mySubWeapon);
 
+				// 무기 보낸 결과 대기 코루틴 호출 후 코루틴 탈출
+				StartCoroutine(CheckWeaponSend());
+				yield break;
+			}
 
+			// 그게 아니면 서버가 보내온 시간으로 텍스트 설정.
+			if (networkManager.CheckTimer(txt_selectTime.text) == true)
+				txt_selectTime.text = networkManager.SysMsg;
+
+			yield return null;
 		}
-		txt_selectTime.text = ((int)selectTime).ToString() + "초";
-		selectTime--; // (Time.smoothDeltaTime * 1.0f);
+	}
+
+	// 서버로 보냈던 무기선택 결과를 대기한다.
+	IEnumerator CheckWeaponSend()
+	{
+		while (true)
+		{
+			if (networkManager.CheckWeaponSelectSuccess() == true)
+			{
+				Debug.Log(myMainWeapon);
+				Debug.Log(mySubWeapon);
+				Debug.Log("itemselect 성공");
+
+				SceneManager.LoadScene("MainGame"); //메인타이틀로 입장
+
+				yield break;
+			}
+
+			else
+			{
+				Debug.Log("itemselect 실패");
+				yield return null;
+			}
+		}
 	}
 
 }
-
-
-
-/// 무기선택시간 30초가 지났을 때 이 부분이 실행되면 됨
-
-//		 else //보조무기 선택시
-//        {
-//NetworkManager.GetInstance.MayIItemSelect(myWeapon[0], myWeapon[1]);
-
-
-//            if (NetworkManager.GetInstance.CheckItemSelectFail() == true)
-//                Debug.Log("itemselect 실패");
-
-//            if (NetworkManager.GetInstance.CheckItemSelectSuccess() == true)
-//            {
-//                Debug.Log(myWeapon[0]);
-//                Debug.Log(myWeapon[1]);
-//                Debug.Log("itemselect 성공");
-//            }
-
-//}

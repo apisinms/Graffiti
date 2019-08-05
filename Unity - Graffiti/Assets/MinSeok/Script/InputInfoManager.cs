@@ -96,6 +96,7 @@ public class InputInfoManager : MonoBehaviour
 		if (inputField_login_id.text.Length == 0 || inputField_login_pw.text.Length == 0)
 		{
 			txt_login_result.text = "공백입력은 불가."; //예시로 해놓은거임
+			return;
 		}
 
 		Debug.Log("입력한 로그인 ID: " + inputField_login_id.text);
@@ -108,6 +109,7 @@ public class InputInfoManager : MonoBehaviour
 			inputField_login_id.text, 
 			inputField_login_pw.text);
 
+		btn_login_enter.interactable = false;	// 버튼 비활성
 		StartCoroutine(LoginCheck());	// 로그인 검사 코루틴 시작
 
 		inputField_login_id.Select();
@@ -151,6 +153,7 @@ public class InputInfoManager : MonoBehaviour
 				else if (networkManager.CheckLoginSuccess() == true)
 					SceneManager.LoadScene("MainMenu"); //메인타이틀로 입장
 
+				btn_login_enter.interactable = true;	// 버튼 다시 원상 복구
 				yield break;
 			}
 		}
@@ -162,6 +165,7 @@ public class InputInfoManager : MonoBehaviour
 		if (inputField_join_id.text.Length == 0 || inputField_join_pw.text.Length == 0 || inputField_join_nick.text.Length == 0)
 		{
 			txt_join_result.text = "공백입력은 불가.";
+			return;
 		}
 
 		Debug.Log("입력한 회원가입 ID: " + inputField_join_id.text);
@@ -176,6 +180,8 @@ public class InputInfoManager : MonoBehaviour
 			inputField_join_pw.text, 
 			inputField_join_nick.text);
 
+
+		btn_join_enter.interactable = false;
 		StartCoroutine(JoinCheck());	// 회원가입 확인 코루틴 실행
 	}
 
@@ -205,9 +211,10 @@ public class InputInfoManager : MonoBehaviour
 				{
 					EnablePanel(2);
 					txt_login_result.text = retMsg;
-					inputField_join_id.Select();
+					inputField_login_id.Select();
 				}
 
+				btn_join_enter.interactable = true; // 버튼 원복
 				yield break;
 			}
 		}
