@@ -113,7 +113,7 @@ public class SelectWeapons : MonoBehaviour {
             //제한시간 종료시 아래 작성
 
         }
-        txt_selectTime.text = ((int)selectTime).ToString() + "초";
+        txt_selectTime.text = "게임시작까지 " + ((int)selectTime).ToString() + "초";
         selectTime--; // (Time.smoothDeltaTime * 1.0f);
     }
 
@@ -146,13 +146,15 @@ public class SelectWeapons : MonoBehaviour {
                 img_checkMark[1].fillAmount = 1.0f;
                 img_checkMark[1].transform.localPosition = _checkMarkPos;
 
+                /*
                 for (int i = 0; i < btn_subWeapons.Length; i++)
                 {
                     btn_subWeapons[i].interactable = false;
                 }
                 btn_return.interactable = false;
+                */
 
-                SceneManager.LoadScene("MainGame"); //메인타이틀로 입장
+            //    SceneManager.LoadScene("MainGame"); //메인타이틀로 입장
                 break;
         }
     }
