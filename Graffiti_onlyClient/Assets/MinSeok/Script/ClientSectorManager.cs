@@ -14,9 +14,18 @@ public class ClientSectorManager : MonoBehaviour
 
         public Vector3 min_row;  // i행 j열 셀의 위쪽 면 좌표
         public Vector3 max_row; //                아래쪽
+        public bool isVisiting;
     };
 
-    matrixDefine[,] matrix = new matrixDefine[10,10]; // 10x10
+    struct visitedMatrixIndex
+    {
+        public int col;
+        public int row;
+    };
+
+    matrixDefine[, ] matrix = new matrixDefine[10, 10]; // 10x10
+    visitedMatrixIndex visited; //행렬에서 이미 방문중인 셀을 거를것임.
+
 
     void Awake()
     {
@@ -44,12 +53,29 @@ public class ClientSectorManager : MonoBehaviour
         {
             for (int j = 0; j < 10; j++)
             {
-                //몇행 몇열의 셀안에 플레이어가 들어가있느냐.
-                if ((obj_player.transform.localPosition.x >= matrix[i , j].min_col.x && obj_player.transform.localPosition.x <= matrix[i, j].max_col.x) &&
-                    (obj_player.transform.localPosition.z <= matrix[i , j].min_row.z && obj_player.transform.localPosition.z >= matrix[i, j].max_row.z))
+                //i행 j열 셀과의 충돌체크
+                if ((obj_player.transform.localPosition.x >= matrix[i, j].min_col.x && obj_player.transform.localPosition.x <= matrix[i, j].max_col.x) &&
+                    (obj_player.transform.localPosition.z <= matrix[i, j].min_row.z && obj_player.transform.localPosition.z >= matrix[i, j].max_row.z))
                 {
-                    Debug.Log(i + "행" + " " + j + "열 진입");
-                    break;
+                    //현재 충돌된 셀과 바로직전에 충돌되었던 셀이 같은놈(이미 충돌중)이면 건너뛴다.
+                    if (matrix[visited.col, visited.row].isVisiting == true &&
+                        visited.col == i && visited.row == j)
+                    {
+                        //Debug.Log(i + "행" + " " + j + "열은 이미 방문중이다!");                       
+                    }
+                    else //새로운 셀과의 충돌시.
+                    {
+                        matrix[visited.col, visited.row].isVisiting = false;
+                        Debug.Log(visited.col + "행" + " " + visited.row + "열 탈출");
+
+                        //현재 충돌된 셀의 인덱스를 저장해둠
+                        visited.col = i;
+                        visited.row = j;
+
+                        matrix[i, j].isVisiting = true;
+                        Debug.Log(i + "행" + " " + j + "열 진입");                     
+                    }
+                    return;
                 }
             }
         }
