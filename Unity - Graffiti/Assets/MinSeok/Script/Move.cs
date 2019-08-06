@@ -6,9 +6,15 @@ public class Move : MonoBehaviour
 {
     private int localNum;
 	int speed = 7;
+    Animator am_move;
 
-	// Use this for initialization
-	void Start()
+
+    void Awake()
+    {
+        am_move = gameObject.GetComponent<Animator>();
+    }
+    // Use this for initialization
+    void Start()
 	{
         switch (this.gameObject.tag)
         {
@@ -32,20 +38,23 @@ public class Move : MonoBehaviour
 	{
 
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A)
-			|| Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
-		{
-			if (NetworkManager.instance.MyPlayerNum == localNum)
-			{
-				float keyHorizontal = Input.GetAxis("Horizontal");
+            || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
+        {
+            ClientSectorManager.instance.ProcessWhereAmI();
+            am_move.SetBool("idle_to_run", true);
+            //	if (NetworkManager.instance.MyPlayerNum == localNum)
+            //	{
+            float keyHorizontal = Input.GetAxis("Horizontal");
+            float keyVertical = Input.GetAxis("Vertical");
 
-				float keyVertical = Input.GetAxis("Vertical");
-
-				transform.Translate(Vector3.right * speed * Time.smoothDeltaTime * keyHorizontal, Space.World);
-
-				transform.Translate(Vector3.forward * speed * Time.smoothDeltaTime * keyVertical, Space.World);
-
-				NetworkManager.instance.MayIIMove(transform.position.x, transform.position.z);
-			}
-		}
-	}
+            transform.Translate(Vector3.right * speed * Time.smoothDeltaTime * keyHorizontal, Space.World);
+            transform.Translate(Vector3.forward * speed * Time.smoothDeltaTime * keyVertical, Space.World);
+            //		NetworkManager.instance.MayIIMove(transform.position.x, transform.position.z);
+            //	}
+        }
+        else
+        {
+            am_move.SetBool("idle_to_run", false);
+        }
+    }
 }

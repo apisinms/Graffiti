@@ -66,14 +66,14 @@ public class ClientSectorManager : MonoBehaviour
 					else //새로운 셀과의 충돌시.
 					{
 						matrix[visited.col, visited.row].isVisiting = false;
-						Debug.Log(visited.col + "행" + " " + visited.row + "열 탈출");
+				//		Debug.Log(visited.col + "행" + " " + visited.row + "열 탈출");
 
 						//현재 충돌된 셀의 인덱스를 저장해둠
 						visited.col = i;
 						visited.row = j;
 
 						matrix[i, j].isVisiting = true;
-						Debug.Log(i + "행" + " " + j + "열 진입");
+			//			Debug.Log(i + "행" + " " + j + "열 진입");
 					}
 					return;
 				}
