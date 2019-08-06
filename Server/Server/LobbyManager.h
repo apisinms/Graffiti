@@ -20,16 +20,18 @@ class LobbyManager
 #ifdef __64BIT__
 	enum PROTOCOL_LOBBY : __int64
 	{
-		MATCH_PROTOCOL = ((__int64)0x1 << 58),		// 매칭 프로토콜
-		START_PROTOCOL = ((__int64)0x1 << 57),		// 게임시작 프로토콜
+		MATCH_PROTOCOL        = ((__int64)0x1 << 58),
+		MATCH_CANCEL_PROTOCOL = ((__int64)0x1 << 57),
+		GOTO_INGAME_PROTOCOL  = ((__int64)0x1 << 56),      // 인게임 상태로 진입 프로토콜
+		LOGOUT_PROTOCOL       = ((__int64)0x1 << 55),
 
-		LOGOUT_PROTOCOL = ((__int64)0x1 << 56),			// LOGIN 매니저에서 사용되기 때문에
+		//LOGOUT_PROTOCOL = ((__int64)0x1 << 56),			// LOGIN 매니저에서 사용되기 때문에
 	};
 
 	enum RESULT_LOBBY : __int64
 	{
-		MATCH_SUCCESS = ((__int64)0x1 << 53),
-		MATCH_FAIL = ((__int64)0x1 << 52),
+		LOBBY_SUCCESS = ((__int64)0x1 << 53),		 // 로비에서 성공 처리
+		LOBBY_FAIL    = ((__int64)0x1 << 52),        // 로비에서 실패 처리
 
 		NODATA = ((__int64)0x1 << 49)
 	};
@@ -65,8 +67,8 @@ public:
 	static void Destroy();
 
 private:
-	void PackPacket(char* _setptr, int& _num, int& _size);	// 정수 1개를 Pack하는 함수
-
+	void PackPacket(char* _setptr, int _num, int& _size);		// 정수 1개를 Pack하는 함수
+	void PackPacket(char* _setptr, TCHAR* _str1, int& _size);	// 문자열 1개를 Pack하는 함수
 	void UnPackPacket(char* _getBuf, TCHAR* _str1);				// 문자열 1개를 UnPack하는 함수
 
 	void GetProtocol(PROTOCOL_LOBBY& _protocol);								// 프로토콜을 얻음
@@ -74,8 +76,10 @@ private:
 
 	PROTOCOL_LOBBY GetBufferAndProtocol(C_ClientInfo* _ptr, char* _buf);	// buf와 Protocol을 동시에 얻는 함수
 	void SendPacket_Room(C_ClientInfo* _ptr, char* buf, PROTOCOL_LOBBY protocol);
+
 public:
 	bool CanIMatch(C_ClientInfo* _ptr);			// 매칭을 할 수 있는가
+	bool CanICancelMatch(C_ClientInfo* _ptr);	// 매칭을 취소 할 수 있는가
 	bool CanILeaveLobby(C_ClientInfo* _ptr);	// 로그아웃 할 수 있는가
-	bool CanIStart(C_ClientInfo* _ptr);			// 시작 할 수 있는가
+	bool CanIGotoInGame(C_ClientInfo* _ptr);	// 인게임 상태로 갈 수 있는가
 };

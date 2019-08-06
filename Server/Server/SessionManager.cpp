@@ -3,6 +3,16 @@
 #include "C_LoginState.h"
 
 SessionManager* SessionManager::instance;
+
+void SessionManager::Init()
+{
+}
+
+void SessionManager::End()
+{
+
+}
+
 SessionManager* SessionManager::GetInstance()
 {
 	// 인스턴스가 없다면 인스턴스를 생성하고 리턴한다.
@@ -23,8 +33,8 @@ void SessionManager::Destroy()
 // 받은 소켓, 주소정보로 클라이언트를 동적할당하는 함수
 bool SessionManager::AddSession(SOCKET _sock, SOCKADDR_IN _addr)
 {
-	C_LoginState* state = new C_LoginState();
-	C_ClientInfo* ptr = new C_ClientInfo(nullptr, state, _sock, _addr);
+	//C_LoginState* state = new C_LoginState();
+	C_ClientInfo* ptr = new C_ClientInfo(nullptr, _sock, _addr);
 	return clientList->Insert(ptr);
 }
 
@@ -57,11 +67,6 @@ C_ClientInfo* SessionManager::FindWithSocket(SOCKET _sock)
 bool SessionManager::Insert(C_ClientInfo* _info)
 {
 	return clientList->Insert(_info);
-}
-
-bool SessionManager::Delete(C_ClientInfo* _info)
-{
-	return clientList->Delete(_info);
 }
 
 bool SessionManager::Remove(C_ClientInfo* _info)

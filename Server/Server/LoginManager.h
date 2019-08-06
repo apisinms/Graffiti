@@ -21,7 +21,7 @@ class LoginManager
 	{
 		JOIN_PROTOCOL = ((__int64)0x1 << 58),
 		LOGIN_PROTOCOL = ((__int64)0x1 << 57),
-		LOGOUT_PROTOCOL = ((__int64)0x1 << 56),
+		//LOGOUT_PROTOCOL = ((__int64)0x1 << 56),
 	};
 
 	// 64비트 프로토콜 확장 열거형 
@@ -32,10 +32,8 @@ class LoginManager
 		LOGOUT_SUCCESS = ((__int64)0x1 << 53),
 		LOGOUT_FAIL = ((__int64)0x1 << 52),	// Logout Fail
 
-		// Join Fail
+		// Join & Login result
 		ID_EXIST = ((__int64)0x1 << 52),
-
-		// Login Fail
 		ID_ERROR = ((__int64)0x1 << 51),
 		PW_ERROR = ((__int64)0x1 << 50),
 
@@ -96,7 +94,7 @@ private:
 
 	bool JoinProcess(C_ClientInfo* _ptr, char* buf);		// 회원가입 처리
 	bool LoginProcess(C_ClientInfo* _ptr, char* buf);		// 로그인 처리
-	bool LogoutProcess(C_ClientInfo* _ptr);					// 로그아웃 처리
+	//bool LogoutProcess(C_ClientInfo* _ptr);					// 로그아웃 처리
 
 public:
 	static LoginManager* GetInstance();
@@ -107,7 +105,7 @@ public:
 
 	bool CanIJoin(C_ClientInfo* _ptr);		// 회원가입이 되는지
 	bool CanILogin(C_ClientInfo* _ptr);		// 로그인이 되는지
-	bool CanILogout(C_ClientInfo* _ptr);	// 로그아웃이 되는지
+	//bool CanILogout(C_ClientInfo* _ptr);	// 로그아웃이 되는지
 
-	void LoginListDelete(C_ClientInfo* _ptr);	// 외부에서 호출하는, 로그인 목록에서 이 클라를 지워달라는 함수
+	bool LoginListDelete(C_ClientInfo* _ptr);	// 외부에서 호출하는, 로그인 목록에서 이 클라를 지워달라는 함수
 };

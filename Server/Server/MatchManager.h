@@ -1,10 +1,11 @@
 #pragma once
-#include <queue>
+#include <list>
 #include "C_ClientInfo.h"
+
 
 class MatchManager
 {
-	queue<C_ClientInfo*> waitQueue;
+	list<C_ClientInfo*> waitList;	// 매칭 대기중인 유저 리스트
 	
 private:
 	static MatchManager* instance;
@@ -19,4 +20,5 @@ public:
 
 public:
 	bool MatchProcess(C_ClientInfo* _ptr);
+	void WaitListDelete(C_ClientInfo* _ptr);
 };

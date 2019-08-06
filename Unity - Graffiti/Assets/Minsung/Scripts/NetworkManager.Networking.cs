@@ -48,30 +48,40 @@ public partial class NetworkManager : MonoBehaviour
 			RecvProcess();
 	}
 
+	//// 프로그램이 종료될 때
+	//private void OnApplicationQuit()
+	//{
+	//	Disconnect();
+	//}
+
 	private void RecvProcess()
 	{
 		// 큐에 저장된 패킷을 꺼내온다.
 		C_Global.QueueInfo info = queue.Dequeue();
-        Debug.Log("RECV");
-        // 얻어온 패킷으로 state, protocol, result를 각각 추출한다.
-        GetProtocol(info.packet, out state, out protocol, out result);
-        Debug.Log(protocol);
 
-        // 얻어온 정보를 switch하여 처리한다.
-        switch (state)
+		// 얻어온 패킷으로 state, protocol, result를 각각 추출한다.
+		GetProtocol(info.packet, out state, out protocol, out result);
+
+		// 얻어온 정보를 switch하여 처리한다.
+		switch (state)
 		{
 			// Login 상태일 때
 			case STATE_PROTOCOL.LOGIN_STATE:
 				{
 					// Login 상태에서 프로토콜은 제외했다.(같은 값이 존재해서)
+
+
 					switch (result)
 					{
 						case RESULT.LOGIN_SUCCESS:
+						//case RESULT.JOIN_SUCCESS:
+						//case RESULT.LOGOUT_SUCCESS:
 						case RESULT.ID_EXIST:
+						//case RESULT.LOGOUT_FAIL:
 						case RESULT.ID_ERROR:
 						case RESULT.PW_ERROR:
 							{
-                                lock (key)
+								lock (key)
 								{
 									sysMsg = string.Empty;
 									UnPackPacket(info.packet, out sysMsg);
@@ -82,40 +92,57 @@ public partial class NetworkManager : MonoBehaviour
 					}
 				}
 				break;
+
 			// Lobby 상태일 때
 			case STATE_PROTOCOL.LOBBY_STATE:
 				{
-                    Debug.Log("로비 스테이트");
-                    switch (protocol)
+					switch (protocol)
 					{
-                        case PROTOCOL.START_PROTOCOL:
+						case PROTOCOL.GOTO_INGAME_PROTOCOL:
 							{
 								switch (result)
 								{
-									case RESULT.MATCH_SUCCESS:
+									case RESULT.LOBBY_SUCCESS:
+										{
+											lock (key)
+											{
+												UnPackPacket(info.packet, out myPlayerNum);
 
-                                        UnPackPacket(info.packet, out myPlayerNum);
+												Debug.Log(myPlayerNum);
 
-                                        Debug.Log(myPlayerNum);
+												// 클라가 매칭 성공을 수신했다라는 프로토콜 셋팅
+												PROTOCOL startProtocol = SetProtocol(
+														STATE_PROTOCOL.LOBBY_STATE,
+														PROTOCOL.START_PROTOCOL,
+														RESULT.NODATA);
 
-										// 클라가 매칭 성공을 수신했다라는 프로토콜 셋팅
-										PROTOCOL startProtocol = SetProtocol(
-												STATE_PROTOCOL.LOBBY_STATE,
-												PROTOCOL.START_PROTOCOL,
-												RESULT.NODATA);
+												// 패킹 및 전송
+												int packetSize;
+												PackPacket(ref sendBuf, startProtocol, out packetSize);
+												bw.Write(sendBuf, 0, packetSize);
 
-										// 패킹 및 전송
-										int packetSize;
-										PackPacket(ref sendBuf, startProtocol, out packetSize);
-										bw.Write(sendBuf, 0, packetSize);
-
-
-										Debug.Log("매칭 성공!!");
-										isInGame = true;
+												Debug.Log("매칭 성공!!");
+											}
+										}
 										break;
 
-									case RESULT.MATCH_FAIL:
+									case RESULT.LOBBY_FAIL:
 										Debug.Log("매칭 실패!!");
+										break;
+								}
+							}
+							break;
+
+						case PROTOCOL.MATCH_CANCEL_PROTOCOL:
+							{
+								switch (result)
+								{
+									case RESULT.LOBBY_SUCCESS:
+										Debug.Log("매칭 취소 성공!");
+										break;
+
+									case RESULT.LOBBY_FAIL:
+										Debug.Log("매칭 취소 실패!");
 										break;
 								}
 							}
@@ -124,50 +151,58 @@ public partial class NetworkManager : MonoBehaviour
 				}
 				break;
 
-            case STATE_PROTOCOL.INGAME_STATE:
-                {
-                    Debug.Log("인게임 스테이트");
-                    Debug.Log(protocol);
+			case STATE_PROTOCOL.INGAME_STATE:
+				{
+					switch(protocol)
+					{
+						// 타이머 프로토콜이 넘겨져오면
+						case PROTOCOL.TIMER_PROTOCOL:
+							{
+								// result 생략
 
-                    switch (protocol)
-                    {
-                        case PROTOCOL.ITEMSELECT_PROTOCOL:
-                            {
-                                Debug.Log("아이템 선택");
-                                switch (result)
-                                {
-                                    case RESULT.INGAME_SUCCESS:
-                                        {
-                                            sysMsg = string.Empty;
-                                            UnPackPacket(info.packet, out sysMsg);
-                                            Debug.Log(sysMsg);
-                                        }
-                                        break;
-                                }
-                            }
-                            break;
-                        case PROTOCOL.MOVE_PROTOCOL:
-                            {
-                                Debug.Log("무브");
-                                switch (result)
-                                {
-                                    case RESULT.INGAME_SUCCESS:
-                                        {
-                                            UnPackPacket(info.packet, posPacket);
-                                            Debug.Log(posPacket.posX);
-                                        }
-                                        break;
-                                }
-                            }
-                            break;
-                    }
-                }
-                break;
+								// 넘겨온 초를 string으로 변환해서 sysMsg에 저장한다.
+								lock (key)
+								{
+									sysMsg = string.Empty;
+
+									int sec = 0;
+									UnPackPacket(info.packet, out sec);
+									sysMsg = sec.ToString() + "초";
+									Debug.Log(sysMsg);
+								}
+							}
+							break;
+
+						// 게임 시작 프로토콜
+						case PROTOCOL.START_PROTOCOL:
+							break;
+
+						case PROTOCOL.MOVE_PROTOCOL:
+							{
+								Debug.Log("무브");
+								switch (result)
+								{
+									case RESULT.INGAME_SUCCESS:
+										{
+											lock (key)
+											{
+												UnPackPacket(info.packet, posPacket);
+												Debug.Log(posPacket.posX);
+											}
+										}
+										break;
+								}
+							}
+							break;
+					}
+				}
+				break;
 		}
 	}
 
 	public void Disconnect()
 	{
+		// 뒷정리
 		bw.Close();
 		br.Close();
 		tcpClient.Close();

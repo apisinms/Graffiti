@@ -1,8 +1,10 @@
 #pragma once
 #include <tchar.h>
 using namespace std;
-	
+
+#define DEBUG
 #define __64BIT__
+//#define __32BIT__
 
 #define BUFSIZE			4096
 #define HALF_BUFSIZE	2048
@@ -16,9 +18,33 @@ using namespace std;
 
 #define THREAD_END		-777
 
-enum POSITION : int
+struct Weapon
 {
-	LOGIN, LOBBY, MATCH, INGAME,
+	char mainW;
+	char subW;
+
+public:
+	Weapon()
+	{
+		mainW = -1;
+		subW = -1;
+	}
+
+	Weapon(char _mainW, char _subW)
+	{
+		mainW = _mainW;
+		subW  = _subW;
+	}
+};
+
+enum STATE : int
+{
+	STATE_LOGIN = 1, STATE_LOBBY, STATE_INGAME,
+};
+
+enum ROOMSTATUS
+{
+	ROOM_NONE = -1, ROOM_ITEMSEL = 1, ROOM_GAME
 };
 
 #ifdef __64BIT__

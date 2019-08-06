@@ -13,6 +13,8 @@ private:
 public:
 	static C_Encrypt* GetInstance();
 	static void Destroy();
+	void Init();
+	void End();
 
 public:
 	bool Encrypt(char* _src, char* _dest, int _size);

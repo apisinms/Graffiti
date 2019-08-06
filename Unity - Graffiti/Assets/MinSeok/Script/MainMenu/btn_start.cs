@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class btn_start : MonoBehaviour
 {
-
 	public GameObject obj_loadingBar;
 	Animator am_loadingBar;
 	public Text txt_startBtn;
@@ -15,8 +14,6 @@ public class btn_start : MonoBehaviour
 	void Start()
 	{
 		am_loadingBar = obj_loadingBar.GetComponent<Animator>();
-
-		
 	}
 
 	public void BtnStart() //매칭버튼 눌렀을때.
@@ -32,43 +29,58 @@ public class btn_start : MonoBehaviour
 			// 매칭이 가능한지 서버로 전송한다.
 			NetworkManager.instance.MayIMatch();
 
-			InvokeRepeating("CheckMatch", 0.01f, 0.01f);
-
-			//DelayMatching();
-			//Invoke("DelayMatching", 3.0f); //3초뒤 무기선택으로 전환
+			// 코루틴을 돌려서 매칭이 잡힐때까지 반복한다.
+			StartCoroutine(CheckMatch());
 		}
-		else if(flag == 1) //3초전에 취소눌렀을경우 원상복구
+
+		else if (flag == 1) //3초전에 취소눌렀을경우 원상복구
 		{
-			CancelInvoke();
-			txt_startBtn.text = "매칭";
-			am_loadingBar.SetBool("isStart", false);
-			obj_loadingBar.SetActive(false);
+			NetworkManager.instance.MayICancelMatch();  // 매칭 취소가 가능한지 서버로 전송
+			StartCoroutine(CheckMatchCancel());			// 매칭 취소 결과 받을 때까지 코루틴 돌림
 		}
 	}
 
-	void CheckMatch()
+	private IEnumerator CheckMatch()
 	{
-		// 아직 매칭이 안됐으면 그냥 나온다.
-		if (NetworkManager.instance.CheckMatched() == false)
-			return;
-
-		// 매칭에 성공했다면 반복호출되던 Invoke를 취소하고 무기선택화면으로 넘어간다.
-		if (NetworkManager.instance.CheckMatchSuccess() == true)
-			SceneManager.LoadScene("SelectWeapons");
-
-		// 매칭에 실패했다면 원상복구한다.
-		else
+		while (true)
 		{
-			txt_startBtn.text = "매칭";
-			am_loadingBar.SetBool("isStart", false);
-			obj_loadingBar.SetActive(false);
-		}
+			// 만약 매칭이 캔슬 됐으면 이 코루틴을 빠져나온다.
+			if (NetworkManager.instance.CheckMatchCancel() == true)
+				yield break;
 
-		CancelInvoke("CheckMatch");
+			// 아직 매칭이 안됐으면 그냥 나온다.
+			if (NetworkManager.instance.CheckMatched() == false)
+				yield return null;
+
+			// 매칭에 성공했다면 씬을 로드하고
+			else
+			{
+				SceneManager.LoadScene("SelectWeapons");
+				yield break;    // 코루틴 종료
+			}
+
+		}
 	}
 
-	//void DelayMatching()
-	//{
-	//	SceneManager.LoadScene("SelectWeapons");
-	//}
+	private IEnumerator CheckMatchCancel()
+	{
+		while (true)
+		{
+			// 아직 매칭취소 프로토콜이 안왔으면 그냥 나온다.
+			if (NetworkManager.instance.CheckMatchCancel() == false)
+				yield return null;
+
+			// 매칭 취소 성공했다면
+			else
+			{
+				// UI바꾸고
+				txt_startBtn.text = "매칭";
+				am_loadingBar.SetBool("isStart", false);
+				obj_loadingBar.SetActive(false);
+
+				yield break;    // 코루틴 종료
+			}
+
+		}
+	}
 }
