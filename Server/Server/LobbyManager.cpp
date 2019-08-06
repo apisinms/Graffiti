@@ -29,7 +29,7 @@ void LobbyManager::End()
 {
 }
 
-void LobbyManager::PackPacket(char* _setptr, int& _num, int& _size)
+void LobbyManager::PackPacket(char* _setptr, int _num, int& _size)
 {
 	char* ptr = _setptr;
 	_size = 0;
@@ -208,24 +208,13 @@ bool LobbyManager::CanIGotoInGame(C_ClientInfo* _ptr)
 	return false;
 }
 
-void LobbyManager::SendPacket_Room(C_ClientInfo* _ptr, char* buf, PROTOCOL_LOBBY protocol)
+void LobbyManager::SendPacket_Room(C_ClientInfo* _ptr, char* _buf, PROTOCOL_LOBBY _protocol)
 {
 	int packetSize = 0;
 
-	int player1 = 1;
-	int player2 = 2;
-	int player3 = 3;
-	int player4 = 4;
-
-	PackPacket(buf, player1, packetSize);
-	_ptr->GetRoom()->team1->player1->SendPacket(protocol, buf, packetSize);
-
-	PackPacket(buf, player2, packetSize);
-	_ptr->GetRoom()->team1->player2->SendPacket(protocol, buf, packetSize);
-
-	PackPacket(buf, player3, packetSize);
-	_ptr->GetRoom()->team2->player1->SendPacket(protocol, buf, packetSize);
-
-	PackPacket(buf, player4, packetSize);
-	_ptr->SendPacket(protocol, buf, packetSize);
+	for (int i = 0; i < 4; i++)
+	{
+		PackPacket(_buf, (i + 1), packetSize);
+		_ptr->GetRoom()->playerList[i]->SendPacket(_protocol, _buf, packetSize);
+	}
 }

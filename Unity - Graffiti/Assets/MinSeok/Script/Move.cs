@@ -4,21 +4,37 @@ using UnityEngine;
 
 public class Move : MonoBehaviour
 {
-
+    private int localNum;
 	int speed = 7;
 
 	// Use this for initialization
 	void Start()
 	{
+        switch (this.gameObject.tag)
+        {
+            case "Player1":
+                localNum = 1;
+                break;
+            case "Player2":
+                localNum = 2;
+                break;
+            case "Player3":
+                localNum = 3;
+                break;
+            case "Player4":
+                localNum = 4;
+                break;
+        }
 	}
 
-	// Update is called once per frame
-	void Update()
+    // Update is called once per frame
+    void Update()
 	{
-		if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A)
+
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A)
 			|| Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
 		{
-			if (NetworkManager.instance.MyPlayerNum == 1)
+			if (NetworkManager.instance.MyPlayerNum == localNum)
 			{
 				float keyHorizontal = Input.GetAxis("Horizontal");
 

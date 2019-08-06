@@ -18,6 +18,7 @@ class C_ClientInfo : public C_Packet
 private:
 	Weapon* weapon;			// 선택한 무기 정보(인게임 시)
 	RoomInfo* room;			// 소속된 방 정보(매칭 잡혔을 시)
+
 	UserInfo* userInfo;		// 이 클라의 회원정보
 	C_State* state;			// 이 클라의 현재 상태
 	C_Stack<C_State*, STACK_SIZE>* stateStack;	// Undo 기능을 구현할 스택

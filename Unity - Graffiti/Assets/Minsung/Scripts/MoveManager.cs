@@ -4,21 +4,21 @@ using UnityEngine;
 
 public class MoveManager : MonoBehaviour
 {
-	public Transform player1;
-	public Transform player2;
-	public Transform player3;
-	public Transform player4;
+    public Transform[] players = new Transform[4];
+    private int index;
+
+    void Awake()
+    {
+        Application.targetFrameRate = 60;
+    }
 
 	void Update()
 	{
-		switch (NetworkManager.instance.GetPosPlayerNum)
-		{
-			case 1:
-				{
-					Vector3 vector = new Vector3(NetworkManager.instance.GetPosX, transform.position.y, NetworkManager.instance.GetPosZ);
-					player1.position = vector;
-				}
-				break;
-		}
+        index = NetworkManager.instance.GetPosPlayerNum -1;
+
+
+        Debug.Log(NetworkManager.instance.GetPosPlayerNum);
+        Vector3 vector = new Vector3(NetworkManager.instance.GetPosX, players[index].position.y, NetworkManager.instance.GetPosZ);
+        players[index].position = vector;
 	}
 }

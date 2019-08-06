@@ -195,11 +195,19 @@ bool InGameManager::MoveProcess(C_ClientInfo* _ptr, char* _buf)
 
 	/// ??? 본인인지 아닌지 어떻게 구별함??
 
-	_ptr->GetRoom()->team1->player2->SendPacket(protocol, buf, packetSize);
-	_ptr->GetRoom()->team2->player1->SendPacket(protocol, buf, packetSize);
-	_ptr->GetRoom()->team2->player2->SendPacket(protocol, buf, packetSize);
-	//_ptr->SendPacket(protocol, buf, packetSize);
+	//_ptr->GetRoom()->playerList[i]->SendPacket(_protocol, _buf, packetSize);
 
+	// 자신을 제외한 다른 클라들에게 자신의 위치를 전송해준다.
+	C_ClientInfo* ptr;
+	for (int i = 0; i < 4; i++)
+	{
+		ptr = _ptr->GetRoom()->playerList[i];
+
+		if (ptr == _ptr)
+			continue;
+
+		_ptr->GetRoom()->playerList[i]->SendPacket(protocol, buf, packetSize);
+	}
 
 	if (move == RESULT_INGAME::INGAME_SUCCESS)
 		return true;
@@ -270,14 +278,11 @@ unsigned long __stdcall InGameManager::TimerThread(void* _arg)
 			packetSize = 0;
 
 			// 같은 방에 있는 모든 플레이어에게 무기를 보내라고 프로토콜을 전송함.
-			ptr->GetRoom()->team1->player1->SendPacket(protocol, buf, packetSize);
-			ptr->GetRoom()->team1->player2->SendPacket(protocol, buf, packetSize);
-			ptr->GetRoom()->team2->player1->SendPacket(protocol, buf, packetSize);
-			ptr->GetRoom()->team2->player2->SendPacket(protocol, buf, packetSize);
+			for (int i = 0; i < 4; i++)
+				ptr->GetRoom()->playerList[i]->SendPacket(protocol, buf, packetSize);
 
 			break;
 		}
-
 
 		// 1초마다 값이 변하면
 		if (sec < (int)duringTime)
@@ -293,10 +298,8 @@ unsigned long __stdcall InGameManager::TimerThread(void* _arg)
 			InGameManager::GetInstance()->PackPacket(buf, (WEAPON_SELTIME - sec), packetSize);
 
 			// 같은 방에 있는 모든 플레이어에게 현재 무기 선택종료까지 남은 시간을 보내줌
-			ptr->GetRoom()->team1->player1->SendPacket(protocol, buf, packetSize);
-			ptr->GetRoom()->team1->player2->SendPacket(protocol, buf, packetSize);
-			ptr->GetRoom()->team2->player1->SendPacket(protocol, buf, packetSize);
-			ptr->GetRoom()->team2->player2->SendPacket(protocol, buf, packetSize);
+			for (int i = 0; i < 4; i++)
+				ptr->GetRoom()->playerList[i]->SendPacket(protocol, buf, packetSize);
 		}
 	}
 

@@ -253,6 +253,7 @@ public partial class NetworkManager : MonoBehaviour
 	RESULT result;          // 결과
 
 	// 서버 IP와 포트
+	//private static IPAddress serverIP = IPAddress.Parse("119.193.122.118");
 	private static IPAddress serverIP = IPAddress.Parse("127.0.0.1");
 	private static int serverPort = 9000;
 
@@ -294,7 +295,7 @@ public partial class NetworkManager : MonoBehaviour
 	{
 		get { return posPacket.posZ; }
 	}
-	public float GetPosPlayerNum
+	public int GetPosPlayerNum
 	{
 		get { return posPacket.playerNum; }
 	}

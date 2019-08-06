@@ -7,6 +7,7 @@ ScriptsOnlyBuild:
     - Customizable
     - InputInfoManager
     - Move
+    - MoveManager
     - NetworkManager
     - SelectWeapons
     - btn_option
@@ -73,11 +74,13 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9430}
     - Class: 114
-      Script: {instanceID: 9896}
+      Script: {instanceID: 9814}
     - Class: 114
-      Script: {instanceID: 9918}
+      Script: {instanceID: 9900}
     - Class: 114
-      Script: {instanceID: 10512}
+      Script: {instanceID: 9922}
+    - Class: 114
+      Script: {instanceID: 10516}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 136
@@ -138,9 +141,9 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9478}
     - Class: 114
-      Script: {instanceID: 9874}
+      Script: {instanceID: 9878}
     - Class: 114
-      Script: {instanceID: 10480}
+      Script: {instanceID: 10484}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -195,11 +198,11 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9432}
     - Class: 114
-      Script: {instanceID: 9792}
+      Script: {instanceID: 9794}
     - Class: 114
-      Script: {instanceID: 9920}
+      Script: {instanceID: 9924}
     - Class: 114
-      Script: {instanceID: 10082}
+      Script: {instanceID: 10086}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -254,7 +257,7 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9432}
     - Class: 114
-      Script: {instanceID: 9800}
+      Script: {instanceID: 9802}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -790,6 +793,12 @@ ScriptsOnlyBuild:
     className: SelectWeapons
   - hash:
       serializedVersion: 2
+      Hash: b37b6a49b160dc638215017e0dc19896
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: MoveManager
+  - hash:
+      serializedVersion: 2
       Hash: b3ab2106268377ffe25dd18ac23dca28
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
@@ -1016,12 +1025,6 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
-  - hash:
-      serializedVersion: 2
-      Hash: a990ae22de3c070a16fc842167a2730b
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: MoveManager
   platform: 19
   scenePathNames:
   - Assets/Scenes/SampleScene.unity

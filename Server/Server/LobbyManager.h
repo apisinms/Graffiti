@@ -67,7 +67,7 @@ public:
 	static void Destroy();
 
 private:
-	void PackPacket(char* _setptr, int& _num, int& _size);		// 정수 1개를 Pack하는 함수
+	void PackPacket(char* _setptr, int _num, int& _size);		// 정수 1개를 Pack하는 함수
 	void PackPacket(char* _setptr, TCHAR* _str1, int& _size);	// 문자열 1개를 Pack하는 함수
 	void UnPackPacket(char* _getBuf, TCHAR* _str1);				// 문자열 1개를 UnPack하는 함수
 
