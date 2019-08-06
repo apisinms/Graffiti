@@ -106,15 +106,19 @@ public partial class NetworkManager : MonoBehaviour
 										{
 											lock (key)
 											{
-												// 클라가 매칭 성공을 수신했고, 인게임 상태로 넘겨달라는(확인차원의) 프로토콜 셋팅
-												PROTOCOL gotoInGameProtocol = SetProtocol(
+												UnPackPacket(info.packet, out myPlayerNum);
+
+												Debug.Log(myPlayerNum);
+
+												// 클라가 매칭 성공을 수신했다라는 프로토콜 셋팅
+												PROTOCOL startProtocol = SetProtocol(
 														STATE_PROTOCOL.LOBBY_STATE,
-														PROTOCOL.GOTO_INGAME_PROTOCOL,
+														PROTOCOL.START_PROTOCOL,
 														RESULT.NODATA);
 
 												// 패킹 및 전송
 												int packetSize;
-												PackPacket(ref sendBuf, gotoInGameProtocol, out packetSize);
+												PackPacket(ref sendBuf, startProtocol, out packetSize);
 												bw.Write(sendBuf, 0, packetSize);
 
 												Debug.Log("매칭 성공!!");
@@ -171,6 +175,24 @@ public partial class NetworkManager : MonoBehaviour
 
 						// 게임 시작 프로토콜
 						case PROTOCOL.START_PROTOCOL:
+							break;
+
+						case PROTOCOL.MOVE_PROTOCOL:
+							{
+								Debug.Log("무브");
+								switch (result)
+								{
+									case RESULT.INGAME_SUCCESS:
+										{
+											lock (key)
+											{
+												UnPackPacket(info.packet, posPacket);
+												Debug.Log(posPacket.posX);
+											}
+										}
+										break;
+								}
+							}
 							break;
 					}
 				}

@@ -69,6 +69,8 @@
     <Compile Include="Assets\LOWPOLY CHARACTERS\AdvancedCustomizer\Scripts\SkinPart.cs" />
     <Compile Include="Assets\LOWPOLY CHARACTERS\Overview\Script\Customizable.cs" />
     <Compile Include="Assets\LOWPOLY CHARACTERS\Overview\Script\DragToRotate.cs" />
+    <Compile Include="Assets\MinSeok\Script\Camera.cs" />
+    <Compile Include="Assets\MinSeok\Script\ClientSectorManager.cs" />
     <Compile Include="Assets\MinSeok\Script\InputInfoManager.cs" />
     <Compile Include="Assets\MinSeok\Script\MainMenu\btn_option.cs" />
     <Compile Include="Assets\MinSeok\Script\MainMenu\btn_quit.cs" />
@@ -77,7 +79,9 @@
     <Compile Include="Assets\MinSeok\Script\SelectWeapon\SelectWeapons.cs" />
     <Compile Include="Assets\Minsung\Scripts\C_Encrypt.cs" />
     <Compile Include="Assets\Minsung\Scripts\C_Global.cs" />
+    <Compile Include="Assets\Minsung\Scripts\MoveManager.cs" />
     <Compile Include="Assets\Minsung\Scripts\NetworkManager.cs" />
+    <Compile Include="Assets\Minsung\Scripts\NetworkManager.InGame.cs" />
     <Compile Include="Assets\Minsung\Scripts\NetworkManager.Login.cs" />
     <Compile Include="Assets\Minsung\Scripts\NetworkManager.Match.cs" />
     <Compile Include="Assets\Minsung\Scripts\NetworkManager.Networking.cs" />

@@ -53,6 +53,17 @@ void InGameManager::PackPacket(char* _setptr, TCHAR* _str1, int& _size)
 	_size = _size + strsize1;
 }
 
+void InGameManager::PackPacket(char* _setptr, Position& _struct, int& _size)
+{
+	char* ptr = _setptr;
+	_size = 0;
+
+	// 문자열 길이
+	memcpy(ptr, &_struct, sizeof(Position));
+	ptr = ptr + sizeof(Position);
+	_size = _size + sizeof(Position);
+}
+
 void InGameManager::UnPackPacket(char* _getBuf, Weapon* &_weapon)
 {
 	char* ptr = _getBuf + sizeof(PROTOCOL_INGAME);
@@ -60,6 +71,15 @@ void InGameManager::UnPackPacket(char* _getBuf, Weapon* &_weapon)
 	// 구조체 받음
 	memcpy(_weapon, ptr, sizeof(Weapon));
 	ptr = ptr + sizeof(Weapon);
+}
+
+void InGameManager::UnPackPacket(char* _getBuf, Position& _struct)
+{
+	char* ptr = _getBuf + sizeof(PROTOCOL_INGAME);
+
+	// 구조체 받음
+	memcpy(&_struct, ptr, sizeof(Position));
+	ptr = ptr + sizeof(Position);
 }
 
 void InGameManager::GetProtocol(PROTOCOL_INGAME& _protocol)
@@ -149,6 +169,45 @@ bool InGameManager::WeaponSelectProcess(C_ClientInfo* _ptr, char* _buf)
 	return false;
 }
 
+bool InGameManager::MoveProcess(C_ClientInfo* _ptr, char* _buf)
+{
+	TCHAR msg[MSGSIZE] = { 0, };
+	PROTOCOL_INGAME protocol;
+	char buf[BUFSIZE];
+	int packetSize;
+
+	RESULT_INGAME move = RESULT_INGAME::INGAME_SUCCESS;
+
+
+	Position position;
+	UnPackPacket(_buf, position);
+	//UnPackPacket(_buf, posX, posZ);
+
+	printf("%d ,%f, %f\n", position.playerNum, position.posX, position.posZ);
+
+	// 프로토콜 세팅
+	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::MOVE_PROTOCOL, move);
+
+	ZeroMemory(buf, sizeof(BUFSIZE));
+
+	// 패킹 및 전송
+	PackPacket(buf, position, packetSize);
+
+	/// ??? 본인인지 아닌지 어떻게 구별함??
+
+	_ptr->GetRoom()->team1->player2->SendPacket(protocol, buf, packetSize);
+	_ptr->GetRoom()->team2->player1->SendPacket(protocol, buf, packetSize);
+	_ptr->GetRoom()->team2->player2->SendPacket(protocol, buf, packetSize);
+	//_ptr->SendPacket(protocol, buf, packetSize);
+
+
+	if (move == RESULT_INGAME::INGAME_SUCCESS)
+		return true;
+
+	return false;
+}
+
+
 bool InGameManager::CanISelectWeapon(C_ClientInfo* _ptr)
 {
 	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
@@ -156,6 +215,18 @@ bool InGameManager::CanISelectWeapon(C_ClientInfo* _ptr)
 
 	if (protocol == WEAPON_PROTOCOL)
 		return WeaponSelectProcess(_ptr, buf);
+
+	return false;
+}
+
+bool InGameManager::CanIIMove(C_ClientInfo* _ptr)
+{
+	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
+	PROTOCOL_INGAME protocol = GetBufferAndProtocol(_ptr, buf);
+
+	// 이동 프로토콜 들어왔을 시 이동 프로세스 수행
+	if (protocol == MOVE_PROTOCOL)
+		return MoveProcess(_ptr, buf);
 
 	return false;
 }

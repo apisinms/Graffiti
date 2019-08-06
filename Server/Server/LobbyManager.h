@@ -67,6 +67,7 @@ public:
 	static void Destroy();
 
 private:
+	void PackPacket(char* _setptr, int& _num, int& _size);		// 정수 1개를 Pack하는 함수
 	void PackPacket(char* _setptr, TCHAR* _str1, int& _size);	// 문자열 1개를 Pack하는 함수
 	void UnPackPacket(char* _getBuf, TCHAR* _str1);				// 문자열 1개를 UnPack하는 함수
 
@@ -74,6 +75,7 @@ private:
 	PROTOCOL_LOBBY SetProtocol(STATE_PROTOCOL _state, PROTOCOL_LOBBY _protocol, RESULT_LOBBY _result);	// 프로토콜 + result(있다면)을 설정함
 
 	PROTOCOL_LOBBY GetBufferAndProtocol(C_ClientInfo* _ptr, char* _buf);	// buf와 Protocol을 동시에 얻는 함수
+	void SendPacket_Room(C_ClientInfo* _ptr, char* buf, PROTOCOL_LOBBY protocol);
 
 public:
 	bool CanIMatch(C_ClientInfo* _ptr);			// 매칭을 할 수 있는가

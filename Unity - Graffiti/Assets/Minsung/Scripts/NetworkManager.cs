@@ -63,8 +63,8 @@ public partial class NetworkManager : MonoBehaviour
 		//ITEMSELECT_PROTOCOL = ((Int64)0x1 << 58),
 		TIMER_PROTOCOL        = ((Int64)0x1 << 58),	// 타이머 프로토콜(1초씩 받음)
 		WEAPON_PROTOCOL       = ((Int64)0x1 << 57),	// 무기 전송 프로토콜
-		START_PROTOCOL       = ((Int64)0x1 << 56),	// 게임 시작 프로토콜
-		// 56
+		START_PROTOCOL        = ((Int64)0x1 << 56),	// 게임 시작 프로토콜
+		MOVE_PROTOCOL         = ((Int64)0x1 << 55),	// 이동 프로토콜
 		// 55
 		// 54
 	};
@@ -209,6 +209,44 @@ public partial class NetworkManager : MonoBehaviour
 		}
 	}
 
+	[StructLayout(LayoutKind.Sequential)]
+	struct PositionPacket
+	{
+		[MarshalAs(UnmanagedType.I4)]
+		public int playerNum;
+
+		[MarshalAs(UnmanagedType.R4)]
+		public float posX;
+
+		[MarshalAs(UnmanagedType.R4)]
+		public float posZ;
+
+		public byte[] Serialize()
+		{
+			// allocate a byte array for the struct data
+			var buffer = new byte[Marshal.SizeOf(typeof(PositionPacket))];
+
+			// Allocate a GCHandle and get the array pointer
+			var gch = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+			var pBuffer = gch.AddrOfPinnedObject();
+
+			// copy data from struct to array and unpin the gc pointer
+			Marshal.StructureToPtr(this, pBuffer, false);
+			gch.Free();
+
+			return buffer;
+		}
+		public void Deserialize(ref byte[] data)
+		{
+			var gch = GCHandle.Alloc(data, GCHandleType.Pinned);
+			this = (PositionPacket)Marshal.PtrToStructure(gch.AddrOfPinnedObject(), typeof(PositionPacket));
+			gch.Free();
+		}
+	}
+
+	PositionPacket posPacket;
+
+
 
 	STATE_PROTOCOL state;   // 클라 상태
 	PROTOCOL protocol;      // 프로토콜
@@ -228,7 +266,8 @@ public partial class NetworkManager : MonoBehaviour
 	private BinaryWriter bw = null;
 
 	private object key = new object();      // 동기화에 사용할 key이다.
-	private string sysMsg = string.Empty;	// 서버로부터 전달되는 메시지를 저장할 변수
+	private string sysMsg = string.Empty;   // 서버로부터 전달되는 메시지를 저장할 변수
+	private int myPlayerNum;
 
 	private Queue<C_Global.QueueInfo> queue;	// recv에 관한 패킷이 저장될 큐
 
@@ -240,6 +279,24 @@ public partial class NetworkManager : MonoBehaviour
 	{
 		get { return sysMsg; }
 		set { sysMsg = value; }
+	}
+
+	public int MyPlayerNum
+	{
+		get { return myPlayerNum; }
+		set { myPlayerNum = value; }
+	}
+	public float GetPosX
+	{
+		get { return posPacket.posX; }
+	}
+	public float GetPosZ
+	{
+		get { return posPacket.posZ; }
+	}
+	public float GetPosPlayerNum
+	{
+		get { return posPacket.playerNum; }
 	}
 
 	public static NetworkManager instance = null;

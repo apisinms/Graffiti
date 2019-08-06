@@ -1,2 +1,30 @@
 ﻿  C_ClientInfo.cpp
+  C_IOCP.cpp
+  C_Packet.cpp
+  C_Socket.cpp
+  ChatManager.cpp
+c:\_programming_\19년 1학기\network game programming_심화학기\프로젝트\게임 포폴\graffiti\server\server\chatmanager.cpp(30): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  DatabaseManager.cpp
+  InGameManager.cpp
+c:\_programming_\19년 1학기\network game programming_심화학기\프로젝트\게임 포폴\graffiti\server\server\ingamemanager.cpp(42): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\_programming_\19년 1학기\network game programming_심화학기\프로젝트\게임 포폴\graffiti\server\server\ingamemanager.cpp(134): warning C4101: 'mainW' :참조되지 않은 지역 변수입니다.
+c:\_programming_\19년 1학기\network game programming_심화학기\프로젝트\게임 포폴\graffiti\server\server\ingamemanager.cpp(134): warning C4101: 'subW' :참조되지 않은 지역 변수입니다.
+  LobbyManager.cpp
+c:\_programming_\19년 1학기\network game programming_심화학기\프로젝트\게임 포폴\graffiti\server\server\lobbymanager.cpp(45): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  LogManager.cpp
+  LoginManager.cpp
+c:\_programming_\19년 1학기\network game programming_심화학기\프로젝트\게임 포폴\graffiti\server\server\loginmanager.cpp(40): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Main.cpp
+  MainManager.cpp
+  MatchManager.cpp
+c:\_programming_\19년 1학기\network game programming_심화학기\프로젝트\게임 포폴\graffiti\server\server\matchmanager.cpp(32): warning C4477: 'wprintf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'unsigned __int64'입니다.
+  c:\_programming_\19년 1학기\network game programming_심화학기\프로젝트\게임 포폴\graffiti\server\server\matchmanager.cpp(32): note: 서식 문자열에서 '%zd'을(를) 사용하는 것이 좋습니다.
+c:\_programming_\19년 1학기\network game programming_심화학기\프로젝트\게임 포폴\graffiti\server\server\matchmanager.cpp(40): warning C4477: 'printf' : 서식 문자열 '%d'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'unsigned __int64'입니다.
+  c:\_programming_\19년 1학기\network game programming_심화학기\프로젝트\게임 포폴\graffiti\server\server\matchmanager.cpp(40): note: 서식 문자열에서 '%zd'을(를) 사용하는 것이 좋습니다.
+  RoomManager.cpp
+  SessionManager.cpp
+  UtilityManager.cpp
+c:\_programming_\19년 1학기\network game programming_심화학기\프로젝트\게임 포폴\graffiti\server\server\utilitymanager.cpp(48): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\_programming_\19년 1학기\network game programming_심화학기\프로젝트\게임 포폴\graffiti\server\server\utilitymanager.cpp(49): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다...
   Server.vcxproj -> C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Server\x64\Debug\Server.exe

@@ -1,7 +1,8 @@
 #pragma once
 #include <tchar.h>
 using namespace std;
-	
+
+#define DEBUG
 #define __64BIT__
 //#define __32BIT__
 

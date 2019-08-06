@@ -14,6 +14,9 @@ public:
 	{
 		if (InGameManager::GetInstance()->CanISelectWeapon(_ptr) == true)
 			state = STATE_INGAME;
+
+		if (InGameManager::GetInstance()->CanIIMove(_ptr) == true)
+			state = STATE_INGAME;
 	}
 
 	void Write(C_ClientInfo* _ptr) override

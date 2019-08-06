@@ -29,6 +29,16 @@ void LobbyManager::End()
 {
 }
 
+void LobbyManager::PackPacket(char* _setptr, int& _num, int& _size)
+{
+	char* ptr = _setptr;
+	_size = 0;
+
+	// 문자열(유니코드)
+	memcpy(ptr, &_num, sizeof(int));
+	ptr = ptr + sizeof(int);
+	_size = _size + sizeof(int);
+}
 void LobbyManager::PackPacket(char* _setptr, TCHAR* _str1, int& _size)
 {
 	char* ptr = _setptr;
@@ -119,14 +129,7 @@ bool LobbyManager::CanIMatch(C_ClientInfo* _ptr)
 			protocol = SetProtocol(LOBBY_STATE, PROTOCOL_LOBBY::GOTO_INGAME_PROTOCOL, RESULT_LOBBY::LOBBY_SUCCESS);
 			ZeroMemory(buf, sizeof(BUFSIZE));
 
-			// 패킹 및 전송(매칭이 완료되었고, 게임을 시작해도 좋음)
-			int packetSize = 0;
-
-			// 같은 방에 있는 모든 플레이어에게 시작 프로토콜을 전송함.
-			_ptr->GetRoom()->team1->player1->SendPacket(protocol, buf, packetSize);
-			_ptr->GetRoom()->team1->player2->SendPacket(protocol, buf, packetSize);
-			_ptr->GetRoom()->team2->player1->SendPacket(protocol, buf, packetSize);
-			_ptr->GetRoom()->team2->player2->SendPacket(protocol, buf, packetSize);
+			SendPacket_Room(_ptr, buf, protocol);	// 시작프로토콜 + 몇번 플레이어인지 팩킹 및 전송
 
 			return true;
 		}
@@ -203,4 +206,26 @@ bool LobbyManager::CanIGotoInGame(C_ClientInfo* _ptr)
 	}
 
 	return false;
+}
+
+void LobbyManager::SendPacket_Room(C_ClientInfo* _ptr, char* buf, PROTOCOL_LOBBY protocol)
+{
+	int packetSize = 0;
+
+	int player1 = 1;
+	int player2 = 2;
+	int player3 = 3;
+	int player4 = 4;
+
+	PackPacket(buf, player1, packetSize);
+	_ptr->GetRoom()->team1->player1->SendPacket(protocol, buf, packetSize);
+
+	PackPacket(buf, player2, packetSize);
+	_ptr->GetRoom()->team1->player2->SendPacket(protocol, buf, packetSize);
+
+	PackPacket(buf, player3, packetSize);
+	_ptr->GetRoom()->team2->player1->SendPacket(protocol, buf, packetSize);
+
+	PackPacket(buf, player4, packetSize);
+	_ptr->SendPacket(protocol, buf, packetSize);
 }
