@@ -40,7 +40,7 @@ public class SelectWeapons : MonoBehaviour
 
     public Button btn_return; //돌아가기 버튼
 
-    public Text txt_selectTime; float selectTime = 30.0f; //제한시간 텍스트
+    public Text txt_selectTime; //제한시간 텍스트
 
     private _WEAPONS myMainWeapon;
     private _WEAPONS mySubWeapon;

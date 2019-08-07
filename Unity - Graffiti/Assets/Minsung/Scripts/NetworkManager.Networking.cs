@@ -177,9 +177,9 @@ public partial class NetworkManager : MonoBehaviour
 						case PROTOCOL.START_PROTOCOL:
 							break;
 
+							// 움직임 프로토콜
 						case PROTOCOL.MOVE_PROTOCOL:
 							{
-								Debug.Log("무브");
 								switch (result)
 								{
 									case RESULT.INGAME_SUCCESS:
@@ -194,12 +194,27 @@ public partial class NetworkManager : MonoBehaviour
 								}
 							}
 							break;
+
+							// 끊김 프로토콜
+						case PROTOCOL.DISCONNECT_PROTOCOL:
+							{
+								lock(key)
+								{
+									UnPackPacket(info.packet, out quitPlayerNum);
+								}
+							}
+							break;
 					}
 				}
 				break;
 		}
 	}
 
+
+	private void OnApplicationQuit()
+	{
+		Disconnect();
+	}
 	public void Disconnect()
 	{
 		// 뒷정리

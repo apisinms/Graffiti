@@ -1,4 +1,5 @@
 #include "RoomManager.h"
+#include "InGameManager.h"
 
 #include "C_ClientInfo.h"
 
@@ -46,7 +47,9 @@ bool RoomManager::CreateRoom(C_ClientInfo* _players[]/*, int _numOfPlayer 만약 3
 		_players[i]->SetRoom(room);
 
 	// 방 리스트에 추가
-	return roomList->Insert(room);
+	bool ret = roomList->Insert(room);
+	printf("[방생성] 갯수 : %d\n", roomList->GetCount());
+	return ret;
 }
 
 bool RoomManager::CheckLeaveRoom(C_ClientInfo* _ptr)
@@ -54,25 +57,33 @@ bool RoomManager::CheckLeaveRoom(C_ClientInfo* _ptr)
 	// 속한 방이 있다면
 	if (_ptr->GetRoom() != nullptr)
 	{
-		//// 먼저 자신을 제외한 모든 플레이어에게 종료 프로토콜 전송
-		//if (_ptr->GetRoom()->team1->player1 != _ptr)
-		//{
-		//	// SendProtocol
-		//}
-
-		// 방의 플레이어 리스트에서 지운다.
+		RoomInfo* room = _ptr->GetRoom();
+		// 방에 리스트를 뒤져서
 		for (int i = 0; i < 4; i++)
 		{
-			if (_ptr == _ptr->GetRoom()->playerList[i])
+			// 자신을 찾으면
+			if (_ptr == room->playerList[i])
 			{
-				_ptr->GetRoom()->playerList[i] = nullptr;
-				_ptr->SetRoom(nullptr);
+				// 다른 플레이어들에게 자신이 나간다고 알리고
+				if (InGameManager::GetInstance()->LeaveProcess(_ptr, (i + 1)) == true)
+				{
+					// 방 인원수를 감소하고, 자신의 흔적을 지운다.
+					room->curNumOfPlayer--;			// 방 인원수 감소
+					room->playerList[i] = nullptr;
+					_ptr->SetRoom(nullptr);
 
-				break;
+					break;
+				}
 			}
 		}
-
-		return true;
+		
+		/// 그리고 같은 팀 2명이 모두 나가면 그냥 게임 끝나야함
+		// 방금 나간사람이 마지막이었다면 방을 없앰
+		if (room->curNumOfPlayer == 0)
+		{
+			roomList->Delete(room);
+			printf("[방 소멸]사이즈:%d\n", roomList->GetCount());
+		}
 	}
 
 	else 

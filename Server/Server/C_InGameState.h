@@ -21,15 +21,15 @@ public:
 
 	void Write(C_ClientInfo* _ptr) override
 	{
-		switch (state)
-		{
+		//switch (state)
+		//{
 
-		case STATE_INGAME:
-			_ptr->SetState(_ptr->GetInGameState());		// 인게임 상태로 이동한다.
-			break;
+		//case STATE_INGAME:
+		//	_ptr->SetState(_ptr->GetInGameState());		// 인게임 상태로 이동한다.
+		//	break;
 
-		default:
-			break;
-		}
+		//default:
+		//	break;
+		//}
 	}
 };

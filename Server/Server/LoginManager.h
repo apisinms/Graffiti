@@ -15,60 +15,30 @@ class LoginManager
 {
 	// state + protocol + result 순서로 프로토콜이 저장된다.
 
-#ifdef __64BIT__
-	// 64비트 프로토콜 열거형
+	// 64비트 프로토콜 열거형	53~34
 	enum PROTOCOL_LOGIN : __int64
 	{
-		JOIN_PROTOCOL = ((__int64)0x1 << 58),
-		LOGIN_PROTOCOL = ((__int64)0x1 << 57),
+		JOIN_PROTOCOL  = ((__int64)0x1 << 53),
+		LOGIN_PROTOCOL = ((__int64)0x1 << 52),
 		//LOGOUT_PROTOCOL = ((__int64)0x1 << 56),
 	};
 
-	// 64비트 프로토콜 확장 열거형 
+	// 64비트 result 확장 열거형	33~24
 	enum RESULT_LOGIN : __int64
 	{
-		JOIN_SUCCESS = ((__int64)0x1 << 53),
-		LOGIN_SUCCESS = ((__int64)0x1 << 53),
-		LOGOUT_SUCCESS = ((__int64)0x1 << 53),
-		LOGOUT_FAIL = ((__int64)0x1 << 52),	// Logout Fail
+		JOIN_SUCCESS   = ((__int64)0x1 << 33),
+		LOGIN_SUCCESS  = ((__int64)0x1 << 33),
+		LOGOUT_SUCCESS = ((__int64)0x1 << 33),
+		LOGOUT_FAIL    = ((__int64)0x1 << 32),	// Logout Fail
 
 		// Join & Login result
-		ID_EXIST = ((__int64)0x1 << 52),
-		ID_ERROR = ((__int64)0x1 << 51),
-		PW_ERROR = ((__int64)0x1 << 50),
+		ID_EXIST = ((__int64)0x1 << 32),
+		ID_ERROR = ((__int64)0x1 << 31),
+		PW_ERROR = ((__int64)0x1 << 30),
 
 
-		NODATA = ((__int64)0x1 << 49)
+		NODATA = ((__int64)0x1 << 24)
 	};
-#endif
-
-#ifdef __32BIT__
-	enum PROTOCOL_LOGIN : int
-	{
-		JOIN_PROTOCOL = ((int)0x1 << 26),
-		LOGIN_PROTOCOL = ((int)0x1 << 25),
-		LOGOUT_PROTOCOL = ((int)0x1 << 24),
-	};
-
-	enum RESULT_LOGIN : int
-	{
-		JOIN_SUCCESS   = ((int)0x1 << 21),
-		LOGIN_SUCCESS  = ((int)0x1 << 21),
-		LOGOUT_SUCCESS = ((int)0x1 << 21),
-		LOGOUT_FAIL    = ((int)0x1 << 20),	// Logout Fail
-
-		// Join Fail
-		ID_EXIST = ((int)0x1 << 20),
-
-		// Login Fail
-		ID_ERROR = ((int)0x1 << 19),
-		PW_ERROR = ((int)0x1 << 18),
-
-
-		NODATA = ((int)0x1 << 17)
-	};
-#endif
-
 
 private:
 	LoginManager() {};

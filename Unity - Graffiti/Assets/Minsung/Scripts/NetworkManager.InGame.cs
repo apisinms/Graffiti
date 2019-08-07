@@ -64,7 +64,7 @@ public partial class NetworkManager : MonoBehaviour
 	}
 
 
-	public void MayIIMove(float posX, float posZ)
+	public void MayIMove(float _posX, float _posZ)
 	{
 		// 프로토콜 셋팅
 		protocol = SetProtocol(
@@ -74,8 +74,8 @@ public partial class NetworkManager : MonoBehaviour
 
 		PositionPacket position = new PositionPacket();
 		position.playerNum = myPlayerNum;
-		position.posX = posX;
-		position.posZ = posZ;
+		position.posX = _posX;
+		position.posZ = _posZ;
 
 		// 패킹 및 전송
 		int packetSize;
@@ -84,12 +84,36 @@ public partial class NetworkManager : MonoBehaviour
 		bw.Write(sendBuf, 0, packetSize);
 	}
 
-	public bool CheckInGameSuccess()
+	public bool CheckMove()
 	{
-		if (result == RESULT.INGAME_SUCCESS)
+		if (state == STATE_PROTOCOL.INGAME_STATE &&
+			protocol == PROTOCOL.MOVE_PROTOCOL &&
+			result == RESULT.INGAME_SUCCESS)
+		{
+			result = RESULT.NODATA;
 			return true;
+		}
 
 		else
 			return false;
+	}
+
+	// 게임을 나간 플레이어가 있는지 조회
+	public int CheckQuit()
+	{
+		// 나간 플레이어가 있을 시에
+		if (state == STATE_PROTOCOL.INGAME_STATE &&
+			protocol == PROTOCOL.DISCONNECT_PROTOCOL &&
+			result == RESULT.INGAME_SUCCESS)
+		{
+			// 해당 플레이어 넘버를 리턴하고, 다시 -1로 셋팅한다.
+			int ret = quitPlayerNum;
+			quitPlayerNum = -1;
+			return ret;
+		}
+
+		// 없으면 호출해도 음수 리턴
+		else
+			return -1;
 	}
 }

@@ -410,10 +410,15 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Player1
       objectReference: {fileID: 0}
+    - target: {fileID: 5858655771946511236, guid: f2336d9c3dc3cda448e72f4fba1dbba0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5858655771946809252, guid: f2336d9c3dc3cda448e72f4fba1dbba0,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.501
+      value: 4.5
       objectReference: {fileID: 0}
     - target: {fileID: 5858655771946809252, guid: f2336d9c3dc3cda448e72f4fba1dbba0,
         type: 3}
@@ -423,7 +428,7 @@ PrefabInstance:
     - target: {fileID: 5858655771946809252, guid: f2336d9c3dc3cda448e72f4fba1dbba0,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -9.499
+      value: -9.5
       objectReference: {fileID: 0}
     - target: {fileID: 5858655771946809252, guid: f2336d9c3dc3cda448e72f4fba1dbba0,
         type: 3}
@@ -696,7 +701,6 @@ GameObject:
   - component: {fileID: 560054155}
   - component: {fileID: 560054154}
   - component: {fileID: 560054153}
-  - component: {fileID: 560054152}
   - component: {fileID: 560054156}
   m_Layer: 0
   m_Name: blue_2
@@ -705,20 +709,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!136 &560054152
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 560054151}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &560054153
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1099,11 +1089,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4796a665c721c9478b813667f7128bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  players:
+  curPlayerPos:
   - {fileID: 1101583881}
   - {fileID: 2014823247}
   - {fileID: 1592194544}
   - {fileID: 560054155}
+  beforePlayerPos:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!4 &760909640
 Transform:
   m_ObjectHideFlags: 0

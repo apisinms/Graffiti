@@ -17,43 +17,25 @@ class C_ClientInfo;
 
 class LobbyManager
 {
-#ifdef __64BIT__
+	// 53~34
 	enum PROTOCOL_LOBBY : __int64
 	{
-		MATCH_PROTOCOL        = ((__int64)0x1 << 58),
-		MATCH_CANCEL_PROTOCOL = ((__int64)0x1 << 57),
-		GOTO_INGAME_PROTOCOL  = ((__int64)0x1 << 56),      // 인게임 상태로 진입 프로토콜
-		LOGOUT_PROTOCOL       = ((__int64)0x1 << 55),
+		MATCH_PROTOCOL        = ((__int64)0x1 << 53),
+		MATCH_CANCEL_PROTOCOL = ((__int64)0x1 << 52),
+		GOTO_INGAME_PROTOCOL  = ((__int64)0x1 << 51),      // 인게임 상태로 진입 프로토콜
+		LOGOUT_PROTOCOL       = ((__int64)0x1 << 50),
 
 		//LOGOUT_PROTOCOL = ((__int64)0x1 << 56),			// LOGIN 매니저에서 사용되기 때문에
 	};
 
+	// 33~24
 	enum RESULT_LOBBY : __int64
 	{
-		LOBBY_SUCCESS = ((__int64)0x1 << 53),		 // 로비에서 성공 처리
-		LOBBY_FAIL    = ((__int64)0x1 << 52),        // 로비에서 실패 처리
+		LOBBY_SUCCESS = ((__int64)0x1 << 33),		 // 로비에서 성공 처리
+		LOBBY_FAIL    = ((__int64)0x1 << 32),        // 로비에서 실패 처리
 
-		NODATA = ((__int64)0x1 << 49)
+		NODATA = ((__int64)0x1 << 24)
 	};
-#endif
-
-#ifdef __32BIT__
-	enum PROTOCOL_LOBBY : int
-	{
-		MATCH_PROTOCOL = ((int)0x1 << 26),		// 매칭 프로토콜
-		START_PROTOCOL = ((int)0x1 << 25),		// 게임시작 프로토콜
-
-		LOGOUT_PROTOCOL = ((int)0x1 << 24),			// LOGIN 매니저에서 사용되기 때문에
-	};
-
-	enum RESULT_LOBBY : int
-	{
-		MATCH_SUCCESS = ((int)0x1 << 21),
-		MATCH_FAIL    = ((int)0x1 << 20),
-
-		NODATA = ((int)0x1 << 17)
-	};
-#endif
 
 private:
 	LobbyManager() {}

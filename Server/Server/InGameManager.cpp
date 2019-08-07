@@ -85,13 +85,7 @@ void InGameManager::UnPackPacket(char* _getBuf, Position& _struct)
 void InGameManager::GetProtocol(PROTOCOL_INGAME& _protocol)
 {
 	// major state를 제외한(클라는 state를 안보내니까(혹시나 추후에 보내게되면 이부분을 수정)) protocol을 가져오기 위해서 상위 10비트 위치에 마스크를 만듦
-#ifdef __64BIT__
-	__int64 mask = ((__int64)0x1f << (64 - 10));
-#endif
-
-#ifdef __32BIT__
-	int mask = ((int)0x1f << (32 - 10));
-#endif
+	__int64 mask = ((__int64)PROTOCOL_OFFSET << (64 - PROTOCOL_MASK));
 
 	// 마스크에 걸러진 1개의 프로토콜이 저장된다. 
 	PROTOCOL_INGAME protocol = (PROTOCOL_INGAME)(_protocol & (PROTOCOL_INGAME)mask);
@@ -110,13 +104,7 @@ InGameManager::PROTOCOL_INGAME InGameManager::SetProtocol(STATE_PROTOCOL _state,
 
 InGameManager::PROTOCOL_INGAME InGameManager::GetBufferAndProtocol(C_ClientInfo* _ptr, char* _buf)
 {
-#ifdef __64BIT__
 	__int64 bitProtocol = 0;
-#endif
-
-#ifdef __32BIT__
-	int bitProtocol = 0;
-#endif
 	_ptr->GetPacket(bitProtocol, _buf);	// 우선 걸러지지않은 프로토콜을 가져온다.
 
 	// 진짜 프로토콜을 가져와 준다.(안에서 프로토콜 AND 검사)
@@ -181,7 +169,6 @@ bool InGameManager::MoveProcess(C_ClientInfo* _ptr, char* _buf)
 
 	Position position;
 	UnPackPacket(_buf, position);
-	//UnPackPacket(_buf, posX, posZ);
 
 	printf("%d ,%f, %f\n", position.playerNum, position.posX, position.posZ);
 
@@ -190,12 +177,8 @@ bool InGameManager::MoveProcess(C_ClientInfo* _ptr, char* _buf)
 
 	ZeroMemory(buf, sizeof(BUFSIZE));
 
-	// 패킹 및 전송
+	// 패킹
 	PackPacket(buf, position, packetSize);
-
-	/// ??? 본인인지 아닌지 어떻게 구별함??
-
-	//_ptr->GetRoom()->playerList[i]->SendPacket(_protocol, _buf, packetSize);
 
 	// 자신을 제외한 다른 클라들에게 자신의 위치를 전송해준다.
 	C_ClientInfo* ptr;
@@ -203,7 +186,8 @@ bool InGameManager::MoveProcess(C_ClientInfo* _ptr, char* _buf)
 	{
 		ptr = _ptr->GetRoom()->playerList[i];
 
-		if (ptr == _ptr)
+		if (ptr == _ptr ||
+			ptr == nullptr)
 			continue;
 
 		_ptr->GetRoom()->playerList[i]->SendPacket(protocol, buf, packetSize);
@@ -215,6 +199,40 @@ bool InGameManager::MoveProcess(C_ClientInfo* _ptr, char* _buf)
 	return false;
 }
 
+bool InGameManager::LeaveProcess(C_ClientInfo* _ptr, int _playerNum)
+{
+	TCHAR msg[MSGSIZE] = { 0, };
+	PROTOCOL_INGAME protocol;
+	char buf[BUFSIZE];
+	int packetSize;
+
+	// 끊김 프로토콜 세팅
+	protocol = SetProtocol(
+		STATE_PROTOCOL::INGAME_STATE, 
+		PROTOCOL_INGAME::DISCONNECT_PROTOCOL, 
+		RESULT_INGAME::INGAME_SUCCESS);
+
+	ZeroMemory(buf, sizeof(BUFSIZE));
+
+	// 패킹
+	PackPacket(buf, _playerNum, packetSize);
+
+	// 자신을 제외한 다른 클라들에게 자신이 나갔음을 알린다.
+	C_ClientInfo* ptr;
+	for (int i = 0; i < 4; i++)
+	{
+		ptr = _ptr->GetRoom()->playerList[i];
+
+		// 자기는 제외
+		if (_ptr == ptr ||
+			ptr == nullptr)
+			continue;
+
+		ptr->SendPacket(protocol, buf, packetSize);
+	}
+
+	return true;
+}
 
 bool InGameManager::CanISelectWeapon(C_ClientInfo* _ptr)
 {
@@ -238,6 +256,8 @@ bool InGameManager::CanIIMove(C_ClientInfo* _ptr)
 
 	return false;
 }
+
+
 
 // 무기 선택 타이머 쓰레드
 unsigned long __stdcall InGameManager::TimerThread(void* _arg)

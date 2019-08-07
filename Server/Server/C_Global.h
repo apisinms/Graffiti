@@ -3,8 +3,6 @@
 using namespace std;
 
 #define DEBUG
-#define __64BIT__
-//#define __32BIT__
 
 #define BUFSIZE			4096
 #define HALF_BUFSIZE	2048
@@ -17,6 +15,9 @@ using namespace std;
 #define MSGSIZE			512
 
 #define THREAD_END		-777
+
+#define PROTOCOL_OFFSET	0xFFFFF
+#define PROTOCOL_MASK	30
 
 struct Weapon
 {
@@ -47,31 +48,15 @@ enum ROOMSTATUS
 	ROOM_NONE = -1, ROOM_ITEMSEL = 1, ROOM_GAME
 };
 
-#ifdef __64BIT__
-// 상위 5비트 스테이트를 표현해주는 프로토콜
+// 상위 10비트 스테이트를 표현해주는 프로토콜	63 ~ 54
 enum STATE_PROTOCOL : __int64
 {
 	LOGIN_STATE  = ((__int64)0x1 << 63),
 	LOBBY_STATE  = ((__int64)0x1 << 62),
 	CHAT_STATE   = ((__int64)0x1 << 61),
 	INGAME_STATE = ((__int64)0x1 << 60),
-	//60
-	//59
+	// 59 ~ 54
 };
-#endif
-
-#ifdef __32BIT__
-// 상위 5비트 스테이트를 표현해주는 프로토콜
-enum STATE_PROTOCOL : int
-{
-	LOGIN_STATE  = ((int)0x1 << 31),
-	LOBBY_STATE  = ((int)0x1 << 30),
-	CHAT_STATE   = ((int)0x1 << 29),
-	INGAME_STATE = ((int)0x1 << 28),
-	//60
-	//59
-};
-#endif
 
 
 enum IO_TYPE
