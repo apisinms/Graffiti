@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+
 public class InputInfoManager : MonoBehaviour
 {
-
 	public GameObject panel_login, panel_join; //로그인창, 회원가입창
 
 	//로그인, 회원가입 입력필드
@@ -92,55 +92,87 @@ public class InputInfoManager : MonoBehaviour
 
 	public void BtnEnterLogin() //로그인 정보 입력후 확인버튼
 	{
+		//공백이 없을시에만
+		if (inputField_login_id.text.Length == 0 || inputField_login_pw.text.Length == 0)
+		{
+			txt_login_result.text = "공백입력은 불가."; //예시로 해놓은거임
+			return;
+		}
+
 		Debug.Log("입력한 로그인 ID: " + inputField_login_id.text);
 		Debug.Log("입력한 로그인 PW: " + inputField_login_pw.text);
+
+		networkManager.SysMsg = string.Empty;
 
 		// 우선 로그인이 가능한지 서버로 정보를 보낸다.
 		networkManager.MayILogin(
 			inputField_login_id.text, 
 			inputField_login_pw.text);
 
-		// 네트워크 매니저가 결과를 recv하여 처리가 완료됐는지 지속적으로 확인한다.
-		InvokeRepeating("LoginCheck", 0.05f, 0.05f);
+		btn_login_enter.interactable = false;	// 버튼 비활성
+		StartCoroutine(LoginCheck());	// 로그인 검사 코루틴 시작
 
 		inputField_login_id.Select();
 	}
 
-	private void LoginCheck()
+	private IEnumerator LoginCheck()
 	{
-		string retMsg = networkManager.SysMsg;
-		if (retMsg == "")
-			return;
-
-		Debug.Log("로그인 결과 : " + retMsg);
-
-		//로그인정보가 틀렸다면 아래작성
-		if (networkManager.CheckIDError() == true)
+		while (true)
 		{
-			inputField_login_id.text = null;
-			inputField_login_pw.text = null;
-			txt_login_result.text = retMsg;
+			if (networkManager.SysMsg == "")
+				yield return null;
+
+			else
+			{
+				string retMsg = networkManager.SysMsg;
+				Debug.Log("로그인 결과 : " + retMsg);
+
+				//로그인정보가 틀렸다면 아래작성
+				if (networkManager.CheckLogin_IDError() == true)
+				{
+					inputField_login_id.text = null;
+					inputField_login_pw.text = null;
+					txt_login_result.text = retMsg;
+				}
+
+				else if (networkManager.CheckLogin_PWError() == true)
+				{
+					inputField_login_id.text = null;
+					inputField_login_pw.text = null;
+					txt_login_result.text = retMsg;
+				}
+
+				else if (networkManager.CheckLogin_IDExist() == true)
+				{
+					inputField_login_id.text = null;
+					inputField_login_pw.text = null;
+					txt_login_result.text = retMsg;
+				}
+
+				//로그인이 성공하면 아래작성
+				else if (networkManager.CheckLoginSuccess() == true)
+					SceneManager.LoadScene("MainMenu"); //메인타이틀로 입장
+
+				btn_login_enter.interactable = true;	// 버튼 다시 원상 복구
+				yield break;
+			}
 		}
-
-		else if (networkManager.CheckPWError() == true)
-		{
-			inputField_login_id.text = null;
-			inputField_login_pw.text = null;
-			txt_login_result.text = retMsg;
-		}
-
-		//로그인이 성공하면 아래작성
-		else if (networkManager.CheckLoginSuccess() == true)
-			SceneManager.LoadScene("MainMenu"); //메인타이틀로 입장
-
-		CancelInvoke("LoginCheck");
 	}
 
 	public void BtnEnterJoin() //회원가입 정보 입력후 확인버튼
 	{
+		//공백이 없을시에만
+		if (inputField_join_id.text.Length == 0 || inputField_join_pw.text.Length == 0 || inputField_join_nick.text.Length == 0)
+		{
+			txt_join_result.text = "공백입력은 불가.";
+			return;
+		}
+
 		Debug.Log("입력한 회원가입 ID: " + inputField_join_id.text);
 		Debug.Log("입력한 회원가입 PW: " + inputField_join_pw.text);
 		Debug.Log("입력한 회원가입 NICKNAME: " + inputField_join_nick.text);
+
+		networkManager.SysMsg = string.Empty;
 
 		// 회원가입이 가능한지 서버로 보낸다.
 		networkManager.MayIJoin(
@@ -148,43 +180,44 @@ public class InputInfoManager : MonoBehaviour
 			inputField_join_pw.text, 
 			inputField_join_nick.text);
 
-		// 네트워크 매니저가 결과를 recv하여 처리가 완료됐는지 지속적으로 확인한다.
-		InvokeRepeating("JoinCheck", 0.05f, 0.05f);
+
+		btn_join_enter.interactable = false;
+		StartCoroutine(JoinCheck());	// 회원가입 확인 코루틴 실행
 	}
 
-	private void JoinCheck()
+	private IEnumerator JoinCheck()
 	{
-		string retMsg = networkManager.SysMsg;
-		if (retMsg == "")
-			return;
-
-		Debug.Log("회원가입 결과 : " + retMsg);
-
-		// 회원가입 정보가 틀렸다면 아래작성
-		if (networkManager.CheckIDExit() == true)
+		while (true)
 		{
-			inputField_join_id.text = null;
-			inputField_join_pw.text = null;
-			txt_join_result.text = retMsg;
-			inputField_join_id.Select();
-		}
+			if (networkManager.SysMsg == "")
+				yield return null;
 
-		else if (networkManager.CheckPWError() == true)
-		{
-			inputField_join_id.text = null;
-			inputField_join_pw.text = null;
-			txt_join_result.text = retMsg;
-			inputField_join_id.Select();
-		}
-		//회원가입에 성공하면 아래작성
-		else if (networkManager.CheckLoginSuccess() == true)
-		{
-			EnablePanel(2);
-			txt_login_result.text = retMsg;
-			inputField_login_id.Select();
-		}
+			else
+			{
+				string retMsg = networkManager.SysMsg;
+				Debug.Log("회원가입 결과 : " + retMsg);
 
-		CancelInvoke("JoinCheck");
+				// 회원가입 정보가 틀렸다면 아래작성
+				if (networkManager.CheckJoin_IDExist() == true)
+				{
+					inputField_join_id.text = null;
+					inputField_join_pw.text = null;
+					txt_join_result.text = retMsg;
+					inputField_join_id.Select();
+				}
+
+				//회원가입에 성공하면 아래작성
+				else if (networkManager.CheckJoin_Success() == true)
+				{
+					EnablePanel(2);
+					txt_login_result.text = retMsg;
+					inputField_login_id.Select();
+				}
+
+				btn_join_enter.interactable = true; // 버튼 원복
+				yield break;
+			}
+		}
 	}
 
 	public void BtnQuit() //로그인 패널에서 종료를 누르면

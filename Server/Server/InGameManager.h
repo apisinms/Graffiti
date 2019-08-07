@@ -11,43 +11,31 @@ class C_ClientInfo;
 
 class InGameManager
 {
-#ifdef __64BIT__
+#ifdef DEBUG
+	static const int WEAPON_SELTIME = 1 + 1;	// 무기 선택 시간(초 단위)
+#else
+	static const int WEAPON_SELTIME = 30 + 1;	// 무기 선택 시간(초 단위)
+#endif
+	
+
+	// 53~34
 	enum PROTOCOL_INGAME : __int64
 	{
-		ITEMSELECT_PROTOCOL = ((__int64)0x1 << 58),
-		MOVE_PROTOCOL = ((__int64)0x1 << 57),
+		TIMER_PROTOCOL        = ((__int64)0x1 << 53),	// 1초마다 보내는 타이머
+		WEAPON_PROTOCOL       = ((__int64)0x1 << 52),	// 서버측:무기선택받아옴, 클라측:무기선택보내옴
+		START_PROTOCOL        = ((__int64)0x1 << 51),	// 게임 시작 프로토콜
+		MOVE_PROTOCOL		  = ((__int64)0x1 << 50),	// 이동 프로토콜
+		DISCONNECT_PROTOCOL   = ((__int64)0x1 << 49),	// 접속 끊김 프로토콜
 	};
 
+	// 33~24
 	enum RESULT_INGAME : __int64
 	{
-		INGAME_SUCCESS = ((__int64)0x1 << 53),
-		INGAME_FAIL    = ((__int64)0x1 << 52),
+		INGAME_SUCCESS = ((__int64)0x1 << 33),
+		INGAME_FAIL    = ((__int64)0x1 << 32),
 
-		NODATA = ((__int64)0x1 << 49)
+		NODATA = ((__int64)0x1 << 24)
 	};
-#endif
-
-#ifdef __32BIT__
-	enum PROTOCOL_INGAME : int
-	{
-		ITEMSELECT_PROTOCOL = ((int)0x1 << 26),
-	};
-
-	enum RESULT_INGAME : int
-	{
-		INGAME_SUCCESS = ((int)0x1 << 21),
-		INGAME_FAIL    = ((int)0x1 << 20),
-
-		NODATA = ((int)0x1 << 17)
-	};
-#endif
-
-	struct Weapon
-	{
-		char mainW;
-		char subW;
-
-	}weapon;
 
 	struct Position
 	{
@@ -55,7 +43,7 @@ class InGameManager
 		float posX;
 		float posZ;
 
-	}position;
+	};
 
 private:
 	InGameManager() {}
@@ -69,19 +57,23 @@ public:
 	static void Destroy();
 
 private:
+	void PackPacket(char* _setptr, const int &_sec, int& _size);
+	void PackPacket(char* _setptr, TCHAR* _str1, int& _size);				// 문자열 1개를 Pack하는 함수
 	void PackPacket(char* _setptr, Position& _struct, int& _size);
-	void PackPacket(char* _setptr, TCHAR* _str1, int& _size);	// 문자열 1개를 Pack하는 함수
 	void UnPackPacket(char* _getBuf, Position& _struct);
-	void UnPackPacket(char* _getBuf, Weapon& _struct);
-	void UnPackPacket(char* _getBuf, int& _num1, int& _num2);				// 문자열 1개를 UnPack하는 함수
+	void UnPackPacket(char* _getBuf, Weapon* &_weapon);
 
 	void GetProtocol(PROTOCOL_INGAME& _protocol);								// 프로토콜을 얻음
 	PROTOCOL_INGAME SetProtocol(STATE_PROTOCOL _state, PROTOCOL_INGAME _protocol, RESULT_INGAME _result);	// 프로토콜 + result(있다면)을 설정함
 
 	PROTOCOL_INGAME GetBufferAndProtocol(C_ClientInfo* _ptr, char* _buf);	// buf와 Protocol을 동시에 얻는 함수
-	bool ItemSelctProcess(C_ClientInfo* _ptr, char* _buf);
+	bool WeaponSelectProcess(C_ClientInfo* _ptr, char* _buf);
 	bool MoveProcess(C_ClientInfo* _ptr, char* _buf);
+
 public:
-	bool CanIItemSelect(C_ClientInfo* _ptr);	// 아이템 선택
-	bool CanIIMove(C_ClientInfo* _ptr);	// 아이템 선택
+	bool CanISelectWeapon(C_ClientInfo* _ptr);	// 무기 선택
+	bool CanIIMove(C_ClientInfo* _ptr);			// 이동
+	bool LeaveProcess(C_ClientInfo* _ptr, int _playerIndex);		// 종료 프로세스
+
+	static unsigned long __stdcall TimerThread(void* _arg);	// 아이템 선택 시간을 세는 타이머 쓰레드
 };

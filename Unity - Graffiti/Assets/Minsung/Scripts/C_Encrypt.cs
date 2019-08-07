@@ -2,24 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class C_Encrypt : ScriptableObject
+public class C_Encrypt : MonoBehaviour
 {
-	private static C_Encrypt instance = null;
-
-	public static C_Encrypt GetInstance
-	{
-		get
-		{
-			if (instance == null)
-				instance = CreateInstance<C_Encrypt>();
-
-			return instance;
-		}
-	}
 
 	const int C1 = 52845;
 	const int C2 = 22719;
 	const int KEY = 78695;
+
+
+	public static C_Encrypt instance = null;
+
+	private void Start()
+	{
+		if (instance == null)
+			instance = this;
+
+		else
+			Destroy(gameObject);
+
+		DontDestroyOnLoad(gameObject);
+	}
+
 
 	public bool Encrypt(byte[] _src, byte[] _dest, int _size)
 	{

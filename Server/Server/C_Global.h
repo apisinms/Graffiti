@@ -1,8 +1,8 @@
 #pragma once
 #include <tchar.h>
 using namespace std;
-	
-#define __64BIT__
+
+#define DEBUG
 
 #define BUFSIZE			4096
 #define HALF_BUFSIZE	2048
@@ -16,36 +16,47 @@ using namespace std;
 
 #define THREAD_END		-777
 
-enum POSITION : int
+#define PROTOCOL_OFFSET	0xFFFFF
+#define PROTOCOL_MASK	30
+
+struct Weapon
 {
-	LOGIN, LOBBY, MATCH, INGAME,
+	char mainW;
+	char subW;
+
+public:
+	Weapon()
+	{
+		mainW = -1;
+		subW = -1;
+	}
+
+	Weapon(char _mainW, char _subW)
+	{
+		mainW = _mainW;
+		subW  = _subW;
+	}
 };
 
-#ifdef __64BIT__
-// 상위 5비트 스테이트를 표현해주는 프로토콜
+enum STATE : int
+{
+	STATE_LOGIN = 1, STATE_LOBBY, STATE_INGAME,
+};
+
+enum ROOMSTATUS
+{
+	ROOM_NONE = -1, ROOM_ITEMSEL = 1, ROOM_GAME
+};
+
+// 상위 10비트 스테이트를 표현해주는 프로토콜	63 ~ 54
 enum STATE_PROTOCOL : __int64
 {
 	LOGIN_STATE  = ((__int64)0x1 << 63),
 	LOBBY_STATE  = ((__int64)0x1 << 62),
 	CHAT_STATE   = ((__int64)0x1 << 61),
 	INGAME_STATE = ((__int64)0x1 << 60),
-	//60
-	//59
+	// 59 ~ 54
 };
-#endif
-
-#ifdef __32BIT__
-// 상위 5비트 스테이트를 표현해주는 프로토콜
-enum STATE_PROTOCOL : int
-{
-	LOGIN_STATE  = ((int)0x1 << 31),
-	LOBBY_STATE  = ((int)0x1 << 30),
-	CHAT_STATE   = ((int)0x1 << 29),
-	INGAME_STATE = ((int)0x1 << 28),
-	//60
-	//59
-};
-#endif
 
 
 enum IO_TYPE

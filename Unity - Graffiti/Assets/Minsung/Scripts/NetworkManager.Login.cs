@@ -7,6 +7,7 @@ using UnityEngine;
 /// </summary>
 public partial class NetworkManager : MonoBehaviour
 {
+	// 로그인 정보 서버로 전송
 	public void MayILogin(string _id, string _pw)
 	{
 		// 프로토콜 셋팅
@@ -14,7 +15,6 @@ public partial class NetworkManager : MonoBehaviour
 				STATE_PROTOCOL.LOGIN_STATE,
 				PROTOCOL.LOGIN_PROTOCOL,
 				RESULT.NODATA);
-		Console.WriteLine((Int64)protocol);
 
 		// 패킹 및 전송
 		int packetSize;
@@ -22,29 +22,55 @@ public partial class NetworkManager : MonoBehaviour
 		bw.Write(sendBuf, 0, packetSize);
 	}
 
+	// 로그인 성공 조회
 	public bool CheckLoginSuccess()
 	{
-		if (result == RESULT.LOGIN_SUCCESS)
+		if (state == STATE_PROTOCOL.LOGIN_STATE &&
+			protocol == PROTOCOL.LOGIN_PROTOCOL &&
+			result == RESULT.LOGIN_SUCCESS)
 			return true;
-		else
-			return false;
-	}
-	public bool CheckIDError()
-	{
-		if (result == RESULT.ID_ERROR)
-			return true;
-		else
-			return false;
-	}
-	public bool CheckPWError()
-	{
-		if (result == RESULT.PW_ERROR)
-			return true;
+
 		else
 			return false;
 	}
 
+	// 로그인 아이디 없음 조회
+	public bool CheckLogin_IDError()
+	{
+		if (state == STATE_PROTOCOL.LOGIN_STATE &&
+			protocol == PROTOCOL.LOGIN_PROTOCOL &&
+			result == RESULT.ID_ERROR)
+			return true;
 
+		else
+			return false;
+	}
+
+	// 로그인 아이디 이미 로그인 조회
+	public bool CheckLogin_IDExist()
+	{
+		if (state == STATE_PROTOCOL.LOGIN_STATE &&
+			protocol == PROTOCOL.LOGIN_PROTOCOL &&
+			result == RESULT.ID_EXIST)
+			return true;
+
+		else
+			return false;
+	}
+
+	// 로그인 패스워드 에러 조회
+	public bool CheckLogin_PWError()
+	{
+		if (state == STATE_PROTOCOL.LOGIN_STATE &&
+			protocol == PROTOCOL.LOGIN_PROTOCOL &&
+			result == RESULT.PW_ERROR)
+			return true;
+
+		else
+			return false;
+	}
+
+	// 회원가입 정보(아이디, 패스워드, 닉네임) 전송
 	public void MayIJoin(string _id, string _pw, string _nickname)
 	{
 		// 프로토콜 셋팅
@@ -52,7 +78,6 @@ public partial class NetworkManager : MonoBehaviour
 				STATE_PROTOCOL.LOGIN_STATE,
 				PROTOCOL.JOIN_PROTOCOL,
 				RESULT.NODATA);
-		Console.WriteLine((Int64)protocol);
 
 		// 패킹 및 전송
 		int packetSize;
@@ -60,17 +85,26 @@ public partial class NetworkManager : MonoBehaviour
 		bw.Write(sendBuf, 0, packetSize);
 	}
 
-	public bool CheckJoinSuccess()
+	// 회원가입 성공 조회
+	public bool CheckJoin_Success()
 	{
-		if (result == RESULT.JOIN_SUCCESS)
+		if (state == STATE_PROTOCOL.LOGIN_STATE &&
+			protocol == PROTOCOL.JOIN_PROTOCOL &&
+			result == RESULT.JOIN_SUCCESS)
 			return true;
+
 		else
 			return false;
 	}
-	public bool CheckIDExit()
+
+	// 이미 있는 아이디 조회
+	public bool CheckJoin_IDExist()
 	{
-		if (result == RESULT.ID_EXIST)
+		if (state == STATE_PROTOCOL.LOGIN_STATE &&
+			protocol == PROTOCOL.JOIN_PROTOCOL &&
+			result == RESULT.ID_EXIST)
 			return true;
+
 		else
 			return false;
 	}

@@ -1,6 +1,10 @@
 ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
+    - C_Encrypt
+    - Camera
+    - ClientSectorManager
+    - Customizable
     - InputInfoManager
     - Move
     - MoveManager
@@ -47,9 +51,15 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 65
       Script: {instanceID: 0}
-    - Class: 81
+    - Class: 74
       Script: {instanceID: 0}
     - Class: 89
+      Script: {instanceID: 0}
+    - Class: 90
+      Script: {instanceID: 0}
+    - Class: 91
+      Script: {instanceID: 0}
+    - Class: 95
       Script: {instanceID: 0}
     - Class: 104
       Script: {instanceID: 0}
@@ -64,26 +74,28 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9430}
     - Class: 114
-      Script: {instanceID: 9432}
+      Script: {instanceID: 9814}
     - Class: 114
-      Script: {instanceID: 9896}
+      Script: {instanceID: 9900}
     - Class: 114
-      Script: {instanceID: 10224}
+      Script: {instanceID: 9922}
+    - Class: 114
+      Script: {instanceID: 10518}
     - Class: 115
-      Script: {instanceID: 0}
-    - Class: 128
       Script: {instanceID: 0}
     - Class: 136
       Script: {instanceID: 0}
-    - Class: 157
+    - Class: 137
       Script: {instanceID: 0}
-    - Class: 222
+    - Class: 157
       Script: {instanceID: 0}
     - Class: 223
       Script: {instanceID: 0}
     - Class: 224
       Script: {instanceID: 0}
     - Class: 258
+      Script: {instanceID: 0}
+    - Class: 156049354
       Script: {instanceID: 0}
     Assets/Scenes/MainMenu.unity:
     - Class: 1
@@ -129,9 +141,9 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9478}
     - Class: 114
-      Script: {instanceID: 9874}
+      Script: {instanceID: 9878}
     - Class: 114
-      Script: {instanceID: 10482}
+      Script: {instanceID: 10486}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -186,9 +198,11 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9432}
     - Class: 114
-      Script: {instanceID: 9918}
+      Script: {instanceID: 9794}
     - Class: 114
-      Script: {instanceID: 10080}
+      Script: {instanceID: 9924}
+    - Class: 114
+      Script: {instanceID: 10088}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -243,7 +257,7 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9432}
     - Class: 114
-      Script: {instanceID: 9800}
+      Script: {instanceID: 9802}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -773,10 +787,16 @@ ScriptsOnlyBuild:
     className: C_Encrypt
   - hash:
       serializedVersion: 2
-      Hash: 1490da0b34871590db009fe2d53d6a46
+      Hash: 3b248f5f34434ff5cdbe1be3c30339bd
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: SelectWeapons
+  - hash:
+      serializedVersion: 2
+      Hash: d9f3a092f536544d161dca9c21b5e1e6
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: MoveManager
   - hash:
       serializedVersion: 2
       Hash: b3ab2106268377ffe25dd18ac23dca28
@@ -819,6 +839,12 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Move
+  - hash:
+      serializedVersion: 2
+      Hash: e584ab334401e382bad13469962262ab
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: ClientSectorManager
   - hash:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
@@ -935,12 +961,6 @@ ScriptsOnlyBuild:
     className: CharacterCustomizer
   - hash:
       serializedVersion: 2
-      Hash: a990ae22de3c070a16fc842167a2730b
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: MoveManager
-  - hash:
-      serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
@@ -989,6 +1009,12 @@ ScriptsOnlyBuild:
     className: TMP_SubMesh
   - hash:
       serializedVersion: 2
+      Hash: b42dea23d4e77a6fd5dcb73a3bf9137c
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Camera
+  - hash:
+      serializedVersion: 2
       Hash: 8220b46879dc5e37db1b940c938f5744
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
@@ -1005,5 +1031,4 @@ ScriptsOnlyBuild:
   - Assets/Scenes/MainGame.unity
   - Assets/Scenes/MainMenu.unity
   - Assets/Scenes/SelectWeapons.unity
-  playerPath: "C:/Users/kgl87/OneDrive/\uBC14\uD0D5 \uD654\uBA74/\uADF8\uB77C\uBE44\uD2D4/New
-    Unity Project.exe"
+  playerPath: "C:/Users/kgl87/OneDrive/\uBC14\uD0D5 \uD654\uBA74/\uADF8\uB77C\uBE44TTi/Graffiti.exe"

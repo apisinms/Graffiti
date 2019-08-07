@@ -63,7 +63,7 @@ public class ThreadManager
 				recvBuf = br.ReadBytes(readSize);
 				
 				// 복호화 진행
-				C_Encrypt.GetInstance.Decrypt(recvBuf, recvBuf, readSize);
+				C_Encrypt.instance.Decrypt(recvBuf, recvBuf, readSize);
 
 				// 복호화된 패킷을 그 사이즈만큼 새롭게 생성해서 저장하고
 				byte[] packet = new byte[readSize];

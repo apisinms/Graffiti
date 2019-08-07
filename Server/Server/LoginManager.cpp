@@ -17,8 +17,8 @@ LoginManager* LoginManager::GetInstance()
 
 void LoginManager::Init()
 {
-	instance->loginList = new C_List<UserInfo*>();
-	instance->joinList = new C_List<UserInfo*>();
+	loginList = new C_List<UserInfo*>();
+	joinList = new C_List<UserInfo*>();
 
 	UserInfo* ptr;
 	while ((ptr = DatabaseManager::GetInstance()->LoadData()) != nullptr)
@@ -106,13 +106,7 @@ void LoginManager::UnPackPacket(char* _getBuf, TCHAR* _str1, TCHAR* _str2)
 void LoginManager::GetProtocol(PROTOCOL_LOGIN& _protocol)
 {
 	// major state를 제외한(클라는 state를 안보내니까(혹시나 추후에 보내게되면 이부분을 수정)) protocol을 가져오기 위해서 상위 10비트 위치에 마스크를 만듦
-#ifdef __64BIT__
-	__int64 mask = ((__int64)0x1f << (64 - 10));
-#endif
-
-#ifdef __32BIT__
-	int mask = ((int)0x1f << (32 - 10));
-#endif
+	__int64 mask = ((__int64)PROTOCOL_OFFSET << (64 - PROTOCOL_MASK));
 
 	// 마스크에 걸러진 1개의 프로토콜이 저장된다. 
 	PROTOCOL_LOGIN protocol = (PROTOCOL_LOGIN)(_protocol & (PROTOCOL_LOGIN)mask);
@@ -139,14 +133,7 @@ LoginManager::PROTOCOL_LOGIN LoginManager::SetProtocol(STATE_PROTOCOL _state, PR
 
 LoginManager::PROTOCOL_LOGIN LoginManager::GetBufferAndProtocol(C_ClientInfo* _ptr, char* _buf)
 {
-#ifdef __64BIT__
 	__int64 bitProtocol = 0;
-#endif
-
-#ifdef __32BIT__
-	int bitProtocol = 0;
-#endif
-
 	_ptr->GetPacket(bitProtocol, _buf);	// 우선 걸러지지않은 프로토콜을 가져온다.
 
 	// 진짜 프로토콜을 가져와 준다.(안에서 프로토콜 AND 검사)
@@ -232,12 +219,13 @@ bool LoginManager::LoginProcess(C_ClientInfo* _ptr, char* _buf)
 
 	switch (loginResult)
 	{
-	case RESULT_LOGIN::ID_ERROR:
-		_tcscpy_s(msg, MSGSIZE, ID_ERROR_MSG);
-		break;
 
 	case RESULT_LOGIN::ID_EXIST:
 		_tcscpy_s(msg, MSGSIZE, ALREADY_LOGIN_MSG);
+		break;
+
+	case RESULT_LOGIN::ID_ERROR:
+		_tcscpy_s(msg, MSGSIZE, ID_ERROR_MSG);
 		break;
 
 	case RESULT_LOGIN::PW_ERROR:
@@ -250,6 +238,7 @@ bool LoginManager::LoginProcess(C_ClientInfo* _ptr, char* _buf)
 
 		// 유저의 정보를 로그인 리스트에 추가.
 		loginList->Insert(_ptr->GetUserInfo());
+		wprintf(L"로그인 성공 유저정보 : %s, %s\n", _ptr->GetUserInfo()->id, _ptr->GetUserInfo()->pw);
 	}
 	break;
 	}
@@ -268,46 +257,46 @@ bool LoginManager::LoginProcess(C_ClientInfo* _ptr, char* _buf)
 
 	return false;
 }
-bool LoginManager::LogoutProcess(C_ClientInfo* _ptr)
-{
-	TCHAR msg[MSGSIZE] = { 0, };
-	PROTOCOL_LOGIN protocol;
-	char buf[BUFSIZE];
-	int packetSize;
-
-	RESULT_LOGIN logoutResult = RESULT_LOGIN::NODATA;
-
-	// 삭제에 성공했다면 로그아웃 성공
-	if (loginList->Delete(_ptr->GetUserInfo()) == true)
-	{
-		_ptr->SetUserInfo(nullptr);
-		_tcscpy_s(msg, MSGSIZE, LOGOUT_SUCCESS_MSG);
-		logoutResult = RESULT_LOGIN::LOGOUT_SUCCESS;
-	}
-
-	// 아니면 로그아웃 실패
-	else
-	{
-		_tcscpy_s(msg, MSGSIZE, LOGOUT_FAIL_MSG);
-		logoutResult = RESULT_LOGIN::LOGOUT_FAIL;
-	}
-
-
-	// 프로토콜 세팅
-	protocol = SetProtocol(LOGIN_STATE, PROTOCOL_LOGIN::LOGOUT_PROTOCOL, logoutResult);
-
-	ZeroMemory(buf, sizeof(BUFSIZE));
-
-	// 패킹 및 전송
-	PackPacket(buf, msg, packetSize);
-	_ptr->SendPacket(protocol, buf, packetSize);
-
-
-	if (logoutResult == RESULT_LOGIN::LOGOUT_SUCCESS)
-		return true;
-
-	return false;
-}
+//bool LoginManager::LogoutProcess(C_ClientInfo* _ptr)
+//{
+//	TCHAR msg[MSGSIZE] = { 0, };
+//	PROTOCOL_LOGIN protocol;
+//	char buf[BUFSIZE];
+//	int packetSize;
+//
+//	RESULT_LOGIN logoutResult = RESULT_LOGIN::NODATA;
+//
+//	// 삭제에 성공했다면 로그아웃 성공
+//	if (loginList->Delete(_ptr->GetUserInfo()) == true)
+//	{
+//		_ptr->SetUserInfo(nullptr);
+//		_tcscpy_s(msg, MSGSIZE, LOGOUT_SUCCESS_MSG);
+//		logoutResult = RESULT_LOGIN::LOGOUT_SUCCESS;
+//	}
+//
+//	// 아니면 로그아웃 실패
+//	else
+//	{
+//		_tcscpy_s(msg, MSGSIZE, LOGOUT_FAIL_MSG);
+//		logoutResult = RESULT_LOGIN::LOGOUT_FAIL;
+//	}
+//
+//
+//	// 프로토콜 세팅
+//	protocol = SetProtocol(LOGIN_STATE, PROTOCOL_LOGIN::LOGOUT_PROTOCOL, logoutResult);
+//
+//	ZeroMemory(buf, sizeof(BUFSIZE));
+//
+//	// 패킹 및 전송
+//	PackPacket(buf, msg, packetSize);
+//	_ptr->SendPacket(protocol, buf, packetSize);
+//
+//
+//	if (logoutResult == RESULT_LOGIN::LOGOUT_SUCCESS)
+//		return true;
+//
+//	return false;
+//}
 
 bool LoginManager::CanIJoin(C_ClientInfo* _ptr)
 {
@@ -329,15 +318,15 @@ bool LoginManager::CanILogin(C_ClientInfo* _ptr)
 
 	return false;
 }
-bool LoginManager::CanILogout(C_ClientInfo* _ptr)
-{
-	// 외부에서 이 CanILogout()을 호출할 때에는, 이미 Protocol을 받아서 걸러내어 호출하는 것이므로 검사할 필요없이 바로 LogoutProcess를 호출하면 된다.
-
-	if (LogoutProcess(_ptr) == true)
-		return true;
-
-	return false;
-}
+//bool LoginManager::CanILogout(C_ClientInfo* _ptr)
+//{
+//	// 외부에서 이 CanILogout()을 호출할 때에는, 이미 Protocol을 받아서 걸러내어 호출하는 것이므로 검사할 필요없이 바로 LogoutProcess를 호출하면 된다.
+//
+//	if (LogoutProcess(_ptr) == true)
+//		return true;
+//
+//	return false;
+//}
 
 LoginManager::RESULT_LOGIN LoginManager::CheckJoin(C_ClientInfo* _ptr)
 {
@@ -477,7 +466,7 @@ LoginManager::RESULT_LOGIN LoginManager::CheckLogin(C_ClientInfo* _ptr)
 }
 
 
-void LoginManager::LoginListDelete(C_ClientInfo* _ptr)
+bool LoginManager::LoginListDelete(C_ClientInfo* _ptr)
 {
-	loginList->Delete(_ptr->GetUserInfo());
+	return loginList->Delete(_ptr->GetUserInfo());
 }
