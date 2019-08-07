@@ -14,6 +14,9 @@ public class Camera : MonoBehaviour
     Vector3 cameraPos;
     Vector3 tmpPlayerPos;
 
+
+    public GameObject test;
+
     void Start()
     {
         /*
@@ -42,31 +45,45 @@ public class Camera : MonoBehaviour
         tmpPlayerPos = obj_player.transform.position;
 
     }
-    void Update()
+
+    void LateUpdate()
     {
+
+        cameraPos.x = obj_player.transform.position.x;
+        cameraPos.y = obj_player.transform.position.y + 5.45f;
+        cameraPos.z = obj_player.transform.position.z - 3.0f;
+
+        transform.position = cameraPos; // Vector3.MoveTowards(transform.position, cameraPos, Time.smoothDeltaTime * 8.0f);
+
+     
+
+
+        /*
         if (tmpPlayerPos.x - 3.0f > obj_player.transform.position.x ||
             tmpPlayerPos.x + 3.0f < obj_player.transform.position.x ||
-            tmpPlayerPos.z - 3.0f > obj_player.transform.position.z ||
-            tmpPlayerPos.z + 3.0f < obj_player.transform.position.z)
+            tmpPlayerPos.z - 1.5f > obj_player.transform.position.z ||
+            tmpPlayerPos.z + 1.5f < obj_player.transform.position.z)
         {
-
+            transform.position = Vector3.Lerp(transform.position, cameraPos, Time.smoothDeltaTime * 5.0f);
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A)
              || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
             {
-                Debug.Log("참");
+                // Debug.Log("참");
                 // 카메라 위치 조정
                 cameraPos.x = obj_player.transform.position.x;
-                cameraPos.y = obj_player.transform.position.y + 10.0f;
+                cameraPos.y = obj_player.transform.position.y + 5.5f;
                 cameraPos.z = obj_player.transform.position.z - 3.5f;
 
-                transform.position = Vector3.Lerp(transform.position, cameraPos, Time.smoothDeltaTime * 5.0f);
+                // transform.position = Vector3.Lerp(transform.position, cameraPos, Time.smoothDeltaTime * 5.0f);
             }
             else
             {
-                Debug.Log("거짓");
+                //Debug.Log("거짓");
                 tmpPlayerPos = obj_player.transform.position;
             }
-        }
+            */
 
     }
+
 }
+
