@@ -120,12 +120,9 @@ C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝�
 C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Temp\bin\Debug\Unity.Analytics.Editor.dll
 C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Temp\bin\Debug\Unity.Analytics.StandardEvents.dll
 C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Temp\bin\Debug\Unity.Analytics.Tracker.dll
-C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Temp\bin\Debug\Unity.CollabProxy.Editor.dll
 C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Temp\bin\Debug\Unity.Locator.dll
 C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Temp\bin\Debug\Unity.TextMeshPro.dll
-C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Temp\bin\Debug\Unity.TextMeshPro.Editor.dll
 C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Temp\bin\Debug\Unity.Timeline.dll
-C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Temp\bin\Debug\Unity.Timeline.Editor.dll
 C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEditor.dll
 C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEngine.AccessibilityModule.dll
 C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEngine.AIModule.dll
@@ -267,7 +264,6 @@ C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝�
 C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\obj\Debug\Assembly-CSharp.csproj.CopyComplete
 C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\obj\Debug\Assembly-CSharp.dll
 C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\obj\Debug\Assembly-CSharp.pdb
-C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Temp\bin\Debug\Assembly-CSharp.dll.CodeAnalysisLog.xml
-C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Temp\bin\Debug\Boo.Lang.dll
-C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEditor.UI.dll
-C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEditor.UI.xml
+C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Temp\bin\Debug\Unity.CollabProxy.Editor.dll
+C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Temp\bin\Debug\Unity.TextMeshPro.Editor.dll
+C:\_PROGRAMMING_\19년 1학기\Network Game Programming_심화학기\프로젝트\게임 포폴\Graffiti\Unity - Graffiti\Temp\bin\Debug\Unity.Timeline.Editor.dll

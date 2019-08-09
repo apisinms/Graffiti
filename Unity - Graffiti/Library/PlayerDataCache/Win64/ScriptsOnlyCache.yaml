@@ -1031,4 +1031,4 @@ ScriptsOnlyBuild:
   - Assets/Scenes/MainGame.unity
   - Assets/Scenes/MainMenu.unity
   - Assets/Scenes/SelectWeapons.unity
-  playerPath: "C:/Users/kgl87/OneDrive/\uBC14\uD0D5 \uD654\uBA74/\uADF8\uB77C\uBE44TTi/Graffiti.exe"
+  playerPath: C:/Users/Kimtler/Desktop/aaa/Graffiti.exe

@@ -186,8 +186,9 @@ public partial class NetworkManager : MonoBehaviour
 										{
 											lock (key)
 											{
-												UnPackPacket(info.packet, posPacket);
-												Debug.Log(posPacket.posX);
+												PositionPacket tmpPosPacket = new PositionPacket();
+												UnPackPacket(info.packet, ref tmpPosPacket);
+												posPacket[tmpPosPacket.playerNum - 1] = tmpPosPacket;	// 해당 플레이어 위치에 저장
 											}
 										}
 										break;

@@ -182,15 +182,18 @@ public partial class NetworkManager : MonoBehaviour
 		}
 	}
 
-	PositionPacket posPacket;
+	PositionPacket []posPacket = new PositionPacket[4];
+
+
 
 	STATE_PROTOCOL state;   // 클라 상태
 	PROTOCOL protocol;      // 프로토콜
 	RESULT result;          // 결과
 
 	// 서버 IP와 포트
-	private static IPAddress serverIP = IPAddress.Parse("127.0.0.1"); // 119.193.122.118
-    private static int serverPort = 9000;
+	//private static IPAddress serverIP = IPAddress.Parse("119.193.122.118");
+	private static IPAddress serverIP = IPAddress.Parse("121.164.149.204");
+	private static int serverPort = 9000;
 
 	// 버퍼
 	private byte[] sendBuf = new byte[C_Global.BUFSIZE];				// 송신 버퍼
@@ -223,17 +226,30 @@ public partial class NetworkManager : MonoBehaviour
 		get { return myPlayerNum; }
 		set { myPlayerNum = value; }
 	}
-	public float GetPosX
+	public float GetPosX(int _idx)
 	{
-		get { return posPacket.posX; }
+		return posPacket[_idx].posX;
 	}
-	public float GetPosZ
+	public float GetPosZ(int _idx)
 	{
-		get { return posPacket.posZ; }
+		return posPacket[_idx].posZ;
 	}
-	public int GetPosPlayerNum
+	public int GetPosPlayerNum(int _idx)
 	{
-		get { return posPacket.playerNum; }
+		return posPacket[_idx].playerNum;
+	}
+
+	public void SetPosX(int _idx, float _posX)
+	{
+		this.posPacket[_idx].posX = _posX;
+	}
+	public void SetPosZ(int _idx, float _posZ)
+	{
+		this.posPacket[_idx].posZ = _posZ;
+	}
+	public void SetPosPlayerNum(int _idx, int _num)
+	{
+		this.posPacket[_idx].playerNum = _num;
 	}
 
 	public static NetworkManager instance = null;

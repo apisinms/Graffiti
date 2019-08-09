@@ -36,9 +36,12 @@ public class Camera : MonoBehaviour
     {    
         // 카메라 위치 조정
         CameraPosition.x = player.transform.position.x;
-        CameraPosition.y = player.transform.position.y + 10.0f;
-        CameraPosition.z = player.transform.position.z - 3.5f;
+		CameraPosition.y = player.transform.position.y + 10.0f;
+		CameraPosition.z = player.transform.position.z - 3.5f;
 
-        transform.position = Vector3.Lerp(transform.position, CameraPosition, Time.smoothDeltaTime * 10f);
+		//CameraPosition.y = player.transform.position.y + 4.0f;
+		//      CameraPosition.z = player.transform.position.z - 1.5f;
+
+		transform.position = Vector3.Lerp(transform.position, CameraPosition, Time.smoothDeltaTime * 10f);
     }
 }

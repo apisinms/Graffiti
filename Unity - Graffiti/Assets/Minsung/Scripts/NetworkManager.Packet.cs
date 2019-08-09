@@ -268,7 +268,7 @@ public partial class NetworkManager : MonoBehaviour
 		_size += sizeof(int);   // 총 보내야 할 바이트 수 저장한다.
 	}
 
-	private void UnPackPacket(byte[] _buf, PositionPacket _struct)
+	private void UnPackPacket(byte[] _buf, ref PositionPacket _struct)
 	{
 
 		int offset = sizeof(PROTOCOL);
@@ -279,8 +279,8 @@ public partial class NetworkManager : MonoBehaviour
 		byte[] posByte = new byte[Marshal.SizeOf(_struct)];
 		Buffer.BlockCopy(_buf, offset, posByte, 0, Marshal.SizeOf(_struct));
 
-
-		posPacket.Deserialize(ref posByte);
+		//posPacket[_struct.playerNum - 1].Deserialize(ref posByte);
+		_struct.Deserialize(ref posByte);
 	}
 	private void UnPackPacket(byte[] _buf, out int _num)
 	{

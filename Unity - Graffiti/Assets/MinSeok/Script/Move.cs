@@ -5,12 +5,14 @@ using UnityEngine;
 public class Move : MonoBehaviour
 {
 	private int localNum;
-	int speed = 7;
+	float speed = 2.0f;
 
 	Animator am_move;
 	Vector3 beforePos;
 	float keyHorizontal;
 	float keyVertical;
+
+	//bool keyUpFlag;
 
 	void Awake()
 	{
@@ -43,6 +45,7 @@ public class Move : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		// 키 눌렀을 때
 		if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A)
 			|| Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
 		{
@@ -53,6 +56,16 @@ public class Move : MonoBehaviour
 
 				transform.Translate(Vector3.right * speed * Time.smoothDeltaTime * keyHorizontal, Space.World);
 				transform.Translate(Vector3.forward * speed * Time.smoothDeltaTime * keyVertical, Space.World);
+			}
+		}
+
+		// 키 뗄 때 플래그 참(근데 만약 키를 엄청빨리 눌렀다 떼면 그것도 문제발생)
+		if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.A)
+			|| Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.D))
+		{
+			if (NetworkManager.instance.MyPlayerNum == localNum)
+			{
+				NetworkManager.instance.MayIMove(transform.position.x, transform.position.z);
 			}
 		}
 	}
@@ -69,7 +82,8 @@ public class Move : MonoBehaviour
 					NetworkManager.instance.MayIMove(transform.position.x, transform.position.z);
 				}
 			}
-			yield return YieldInstructionCache.WaitForSeconds(0.08f);
+
+			yield return YieldInstructionCache.WaitForSeconds(0.16f);
 		}
 	}
 }
