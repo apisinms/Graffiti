@@ -4,110 +4,104 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class JoystickManager : AnimatorManager, IDragHandler, IPointerUpHandler, IPointerDownHandler
+public class JoystickManager : MonoBehaviour
 {
-    public Image img_joystickBgrd;
-    public Image img_joystickThumb;
-    public GameObject player2;
+    public AnimatorManager animator { get; set; }
+    public Image img_joystick_back;
+    public Image img_joystick_stick;
 
-    [HideInInspector]
-    public Vector3 inputDirection = new Vector3(0, 0, 0);
+    public GameObject player;
 
-    bool start = false;
-    Vector3 direction = Vector3.zero;
-    float keyHorizontal;
-    float keyVertical;
-    // Start is called before the first frame update
-    protected override void Awake()
+
+    private Transform tf_player;
+    private float maxMoveArea;           // 스틱이 움직일수 있는 범위.
+    private Vector3 stickDir, playerDir;         // 조이스틱의 벡터(방향), 플레이어의 방향
+    private Vector3 stickFirstPos; //스틱의 초기좌표 
+    private bool moveFlag;
+
+    void Awake()
     {
-        base.Awake();
+        tf_player = GameObject.FindGameObjectWithTag(PlayerAttribute.instance.playerTag[0]).transform;
+        animator = GameObject.FindGameObjectWithTag(PlayerAttribute.instance.playerTag[0]).GetComponent<AnimatorManager>();
     }
-
-
-    void Update()
+    void Start()
     {
+        maxMoveArea = img_joystick_back.rectTransform.sizeDelta.y * 0.4f; //스틱이 움직일수있는 수평범위. ( * 0.5f면 정확히 조이스틱배경의 반지름만큼)
+        stickFirstPos = img_joystick_stick.rectTransform.position; //스틱의 초기좌표.
 
-        //       if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A)
-        //           || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
-        //       {
-        //  ClientSectorManager.instance.ProcessWhereAmI();
-        //    am_playerMovement.SetBool("idle_to_run", true);
-
-        //	if (NetworkManager.instance.MyPlayerNum == localNum)
-        //	{
-        //      keyHorizontal = direction.x = Input.GetAxis("Horizontal");
-        //      keyVertical = direction.z = Input.GetAxis("Vertical");
-
-        if (start == true)
-        {
-            am_playerMovement.SetBool("idle_to_run", true);
-            //direction이 Input.GetAxis의 반환값을 대신함. 겟액시스를 쓰지않음.
-            if (direction.magnitude > 1)
-                direction.Normalize();
-
-            if (inputDirection != Vector3.zero)
-                direction = inputDirection;
-
-            //   player2.transform.LookAt(new Vector3(0, direction.z, 0));
-            //  player2.transform.Rotate(new Vector3(0, direction.z, 0), Space.World);
-            player2.transform.Translate(Vector3.right * (PlayerAttribute.instance.speed - 3.5f) * Time.smoothDeltaTime * direction.x, Space.World);
-            player2.transform.Translate(Vector3.forward * PlayerAttribute.instance.speed * Time.smoothDeltaTime * direction.z, Space.World);
-        }
-        else
-        {
-            am_playerMovement.SetBool("idle_to_run", false);
-        }
-        //		NetworkManager.instance.MayIIMove(transform.position.x, transform.position.z);
-        //	}
-        //       }
-        //       else
-        //        {
-        //           am_playerMovement.SetBool("idle_to_run", false);
-        //        }
-
-
-    }
-
-    public void OnDrag(PointerEventData _eventData)
-    {
-        Vector2 pos = new Vector2(0, 0);
-        //버튼의 rect좌표와 터치한부분의 스크린좌표, ui를 쪼고있는 카메라오브젝트를 넣어서 
-        //터치부분의 스크린포인트를 로컬좌표로 반환해줌.
-        bool isSuccess = RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            img_joystickBgrd.rectTransform, _eventData.position, _eventData.pressEventCamera, out pos);
-    
-        if(isSuccess == true)
-        {
-            pos.x = (pos.x / img_joystickBgrd.rectTransform.sizeDelta.x);
-            pos.y = (pos.y / img_joystickBgrd.rectTransform.sizeDelta.y);
-
-            float x = (img_joystickBgrd.rectTransform.pivot.x == 1) ? pos.x * 2 + 1 : pos.x * 2 - 1;
-            float y = (img_joystickBgrd.rectTransform.pivot.y == 1) ? pos.y * 2 + 1 : pos.y * 2 - 1;
-
-            inputDirection = new Vector3(x, 0, y);
-            inputDirection = (inputDirection.magnitude > 1) ? inputDirection.normalized : inputDirection; 
-
-            img_joystickThumb.rectTransform.anchoredPosition =
-                new Vector3(inputDirection.x * (img_joystickBgrd.rectTransform.sizeDelta.x / 3.0f),
-                inputDirection.z * (img_joystickThumb.rectTransform.sizeDelta.y / 1.8f));
-
-            player2.transform.eulerAngles = new Vector3(0, Mathf.Atan2(pos.x, pos.y) * Mathf.Rad2Deg, 0);
-        }
+        // 캔버스 크기에대한 반지름 조절.
+      //  float can = transform.parent.GetComponent<RectTransform>().localScale.x;
+     //   moveArea *= can;
 
        
-       // Player2.eulerAngles = new Vector3(0, Mathf.Atan2(JoyVec.x, JoyVec.y) * Mathf.Rad2Deg, 0);
+        moveFlag = false;
+    }
+    void Update()
+    {
+        Vector3 pos = Camera.main.WorldToViewportPoint(player.transform.position);
+
+        if (pos.x < 0f) pos.x = 0f;
+
+        if (pos.x > 1f) pos.x = 1f;
+
+        if (pos.y < 0f) pos.y = 0f;
+
+        if (pos.y > 1f) pos.y = 1f;
+
+        player.transform.position = Camera.main.ViewportToWorldPoint(pos);
+
+
+        if (moveFlag == true)
+        {          
+            animator.am_playerMovement.SetBool("idle_to_run", true);
+            tf_player.transform.Translate(playerDir * PlayerAttribute.instance.speed * Time.smoothDeltaTime, Space.World);
+        }
+        else
+            animator.am_playerMovement.SetBool("idle_to_run", false);
     }
 
-    public void OnPointerDown(PointerEventData _eventData)
+
+    // 드래그
+    public void Drag(BaseEventData _Data)
     {
-        start = true;
+        moveFlag = true;
+
+        PointerEventData data = _Data as PointerEventData;
+        Vector3 pos = data.position; //드래그 한곳의 위치.
+
+        // 스틱 이동방향 추출 .(오른쪽,왼쪽,위,아래)
+        stickDir = (pos - stickFirstPos).normalized;
+       // playerDir = (stickDir.x * Vector3.right) + (stickDir.y * Vector3.forward); //동시에 플레이어의 이동방향결정
+        playerDir = new Vector3(stickDir.x, 0, stickDir.y);
+
+        // 스틱의 처음 위치와 드래그중인 위치의 거리차를 구함
+        float distance = Vector3.Distance(pos, stickFirstPos);
+
+        // 이동가능범위 보다 작을때만 스틱의 이동. 아니면 최대범위만큼에서 고정.
+        if (distance < maxMoveArea)
+            img_joystick_stick.rectTransform.position = stickFirstPos + (stickDir * distance);
+        else
+            img_joystick_stick.rectTransform.position = stickFirstPos + (stickDir * maxMoveArea);
+
+        //tf_player.transform.localRotation = Quaternion.Euler(0, Mathf.Atan2(stickDir.x, stickDir.y) * Mathf.Rad2Deg, 0);
+         tf_player.transform.localRotation = Quaternion.LookRotation(playerDir);
+        //tf_player.eulerAngles = new Vector3(0, Mathf.Atan2(playerDir.x, playerDir.y) * Mathf.Rad2Deg, 0); //플레이어의 방향을 바꿔줌.
     }
 
-    public void OnPointerUp(PointerEventData _eventData)
+    // 드래그 끝.
+    public void DragStart()
     {
-        start = false;
-        //조이스틱 땔떼 위치 원상복구
-        direction = inputDirection = Vector3.zero;
-        img_joystickThumb.rectTransform.anchoredPosition = Vector3.zero;
+
+        Debug.Log("드래그 스타트.");
     }
+
+    // 드래그 끝.
+    public void DragEnd()
+    {
+        img_joystick_stick.transform.position = stickFirstPos;
+        stickDir = Vector3.zero; // 방향을 0으로.
+
+        moveFlag = false;
+    }
+
 }

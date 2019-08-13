@@ -70,9 +70,10 @@
     <Compile Include="Assets\LOWPOLY CHARACTERS\Overview\Script\Customizable.cs" />
     <Compile Include="Assets\LOWPOLY CHARACTERS\Overview\Script\DragToRotate.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\AnimatorManager.cs" />
-    <Compile Include="Assets\MinSeok\Script\Ingame\Camera.cs" />
+    <Compile Include="Assets\MinSeok\Script\Ingame\CameraControl.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\ClientSectorManager.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\JoystickManager.cs" />
+    <Compile Include="Assets\MinSeok\Script\Ingame\JoystickManager2.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\MovementManager.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\PlayerAttribute.cs" />
     <Compile Include="Assets\MinSeok\Script\Login_Join\InputInfoManager.cs" />

@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovementManager : AnimatorManager
+public class MovementManager : MonoBehaviour
 {
     Vector3 direction3 = Vector3.zero;
-    protected override void Awake()
+
+    void Awake()
     {
-        base.Awake();
+      
     }
 
     // Use this for initialization

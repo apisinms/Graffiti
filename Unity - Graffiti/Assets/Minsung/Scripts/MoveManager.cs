@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class MoveManager : MonoBehaviour
 {
-    public Transform[] players = new Transform[4];
+    private Transform[] players = new Transform[4];
     private int index;
 
     void Awake()
     {
+        for(int i=0; i<players.Length; i++)
+        {
+            players[i] = GameObject.FindGameObjectWithTag(PlayerAttribute.instance.playerTag[i]).transform;
+        }
         Application.targetFrameRate = 60;
     }
 

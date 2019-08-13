@@ -5,9 +5,10 @@ using UnityEngine;
 public class ClientSectorManager : MonoBehaviour
 {
 	public static ClientSectorManager instance; //싱글톤
-	public GameObject obj_player;
+    private GameObject obj_player;
+    public GameObject plane;
 
-	struct matrixDefine //맵을 행렬로 나눔
+    struct matrixDefine //맵을 행렬로 나눔
 	{
 		public Vector3 min_col;   // i행 j열 셀의 왼쪽 면 좌표
 		public Vector3 max_col;  //                오른쪽
@@ -33,8 +34,9 @@ public class ClientSectorManager : MonoBehaviour
 	{
 		instance = this;
 
-		//모든 셀들의 영역을 계산해놓음.
-		for (int i = 0; i < 4; i++)
+        obj_player = GameObject.FindGameObjectWithTag(PlayerAttribute.instance.playerTag[0]);
+        //모든 셀들의 영역을 계산해놓음.
+        for (int i = 0; i < 4; i++)
 		{
 			for (int j = 0; j < 4; j++)
 			{
@@ -57,7 +59,11 @@ public class ClientSectorManager : MonoBehaviour
         }
 	}
 
-	public void ProcessWhereAmI() //플레이어 영역을 구함
+    private void Update()
+    {
+       
+    }
+    public void ProcessWhereAmI() //플레이어 영역을 구함
 	{
 		for (int i = 0; i < 4; i++)
 		{

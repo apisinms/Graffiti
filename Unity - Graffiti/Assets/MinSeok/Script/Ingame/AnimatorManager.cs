@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class AnimatorManager : MonoBehaviour
 {
-    public GameObject player;
-    protected Animator am_playerMovement;
+    private GameObject player;
+    public Animator am_playerMovement { get; set; }
 
-    protected virtual void Awake()
+    void Awake()
     {
+        player = GameObject.FindGameObjectWithTag(PlayerAttribute.instance.playerTag[0]);
         am_playerMovement = player.GetComponent<Animator>();
     }
 }
