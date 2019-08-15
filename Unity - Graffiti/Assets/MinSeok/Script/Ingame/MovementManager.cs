@@ -17,16 +17,16 @@ public class MovementManager : MonoBehaviour
         switch (this.gameObject.tag)
         {
             case "Player1":
-                PlayerAttribute.instance.myLocalNum = 1;
+                PlayerManager.instance.myLocalNum = 1;
                 break;
             case "Player2":
-                PlayerAttribute.instance.myLocalNum = 2;
+                PlayerManager.instance.myLocalNum = 2;
                 break;
             case "Player3":
-                PlayerAttribute.instance.myLocalNum = 3;
+                PlayerManager.instance.myLocalNum = 3;
                 break;
             case "Player4":
-                PlayerAttribute.instance.myLocalNum = 4;
+                PlayerManager.instance.myLocalNum = 4;
                 break;
         }
     }

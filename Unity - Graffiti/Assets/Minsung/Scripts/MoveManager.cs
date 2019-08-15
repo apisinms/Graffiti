@@ -11,7 +11,7 @@ public class MoveManager : MonoBehaviour
     {
         for(int i=0; i<players.Length; i++)
         {
-            players[i] = GameObject.FindGameObjectWithTag(PlayerAttribute.instance.playerTag[i]).transform;
+            players[i] = GameObject.FindGameObjectWithTag(PlayerManager.instance.playerTag[i]).transform;
         }
         Application.targetFrameRate = 60;
     }

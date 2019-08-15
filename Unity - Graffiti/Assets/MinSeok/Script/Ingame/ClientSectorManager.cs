@@ -8,7 +8,7 @@ public class ClientSectorManager : MonoBehaviour
     private GameObject obj_player;
     public GameObject plane;
 
-    struct matrixDefine //맵을 행렬로 나눔
+    struct _MatrixDefine //맵을 행렬로 나눔
 	{
 		public Vector3 min_col;   // i행 j열 셀의 왼쪽 면 좌표
 		public Vector3 max_col;  //                오른쪽
@@ -18,14 +18,14 @@ public class ClientSectorManager : MonoBehaviour
 		public bool isVisiting;
 	};
 
-	struct visitedMatrixIndex
+	struct _Visited_MatrixIndex
 	{
 		public int col;
 		public int row;
 	};
 
-	matrixDefine[,] matrix = new matrixDefine[4, 4]; // 10x10
-	visitedMatrixIndex visited; //행렬에서 이미 방문중인 셀을 거를것임.
+	_MatrixDefine[,] matrix = new _MatrixDefine[4, 4]; // 10x10
+	_Visited_MatrixIndex visited; //행렬에서 이미 방문중인 셀을 거를것임.
 
     float x1 = 0;
     float x2 = 0;
@@ -34,7 +34,7 @@ public class ClientSectorManager : MonoBehaviour
 	{
 		instance = this;
 
-        obj_player = GameObject.FindGameObjectWithTag(PlayerAttribute.instance.playerTag[0]);
+        obj_player = GameObject.FindGameObjectWithTag(PlayerManager.instance.playerTag[0]);
         //모든 셀들의 영역을 계산해놓음.
         for (int i = 0; i < 4; i++)
 		{
