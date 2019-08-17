@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class btn_option : MonoBehaviour {
+public class btn_option : UnityEngine.MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

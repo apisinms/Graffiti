@@ -20,7 +20,7 @@ using UnityEngine;
 /// NetworkManager_Main.cs파일
 /// 주로 상수, 프로토콜, 멤버변수, 프로퍼티 같은 선언이 있다.
 /// </summary>
-public partial class NetworkManager : MonoBehaviour
+public partial class NetworkManager : UnityEngine.MonoBehaviour
 {
 	const int IDSIZE = 255;
 	const int PWSIZE = 255;

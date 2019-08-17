@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveManager : MonoBehaviour
+public class MoveManager : UnityEngine.MonoBehaviour
 {
     private Transform[] players = new Transform[4];
     private int index;

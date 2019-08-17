@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterCustomizer : MonoBehaviour
+public class CharacterCustomizer : UnityEngine.MonoBehaviour
 {
     [Header("Character gender")]
     public CharacterGender gender;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraControl : MonoBehaviour
+public class CameraControl : UnityEngine.MonoBehaviour
 {
     //블루팀 레드팀 애들을 일단 전부 등록시켜놓고
     private GameObject[] obj_redTeam = new GameObject[2];
@@ -56,7 +56,8 @@ public class CameraControl : MonoBehaviour
 
     void LateUpdate()
     {
-        if (PlayerManager.instance.moveFlag == true)
+        if (PlayerManager.instance.myAttributeState == _ATTRIBUTE_STATE.ALIVE &&
+            PlayerManager.instance.myActionState != _ACTION_STATE.IDLE)
         {
             cameraPos.x = obj_player.transform.position.x;
             cameraPos.y = obj_player.transform.position.y + 8f;

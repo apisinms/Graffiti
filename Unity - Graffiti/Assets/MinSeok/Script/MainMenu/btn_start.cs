@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class btn_start : MonoBehaviour
+public class btn_start : UnityEngine.MonoBehaviour
 {
 	public GameObject obj_loadingBar;
 	Animator am_loadingBar;

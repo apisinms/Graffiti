@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkinPart : MonoBehaviour
+public class SkinPart : UnityEngine.MonoBehaviour
 {
 
     public GameObject currentClothes;

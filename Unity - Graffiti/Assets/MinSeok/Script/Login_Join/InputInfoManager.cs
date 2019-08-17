@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 
-public class InputInfoManager : MonoBehaviour
+public class InputInfoManager : UnityEngine.MonoBehaviour
 {
 	public GameObject panel_login, panel_join; //로그인창, 회원가입창
 

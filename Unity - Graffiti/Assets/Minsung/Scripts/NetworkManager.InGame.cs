@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public partial class NetworkManager : MonoBehaviour
+public partial class NetworkManager : UnityEngine.MonoBehaviour
 {
 	// 무기 선택 정보를 서버로 전송(30초 후)
 	public void MayISelectWeapon(sbyte mainW, sbyte subW)

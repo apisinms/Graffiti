@@ -9,7 +9,7 @@ using UnityEngine;
 /// NetworkManager_Packet.cs파일
 /// 패킷, 프로토콜에 관한 내용이 있다.
 /// </summary>
-public partial class NetworkManager : MonoBehaviour
+public partial class NetworkManager : UnityEngine.MonoBehaviour
 {
 	// 바이트 배열을 스트링으로
 	private string ByteToString(byte[] _byte)

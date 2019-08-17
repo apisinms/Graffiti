@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClientSectorManager : MonoBehaviour
+public class ClientSectorManager : UnityEngine.MonoBehaviour
 {
 	public static ClientSectorManager instance; //싱글톤
     private GameObject obj_player;

@@ -10,7 +10,7 @@ using UnityEngine;
 /// NetworkManager_Networking.cs파일
 /// 주로 네트워킹에 관련된 내용이 있다.
 /// </summary>
-public partial class NetworkManager : MonoBehaviour
+public partial class NetworkManager : UnityEngine.MonoBehaviour
 {
 	private void Awake()
 	{

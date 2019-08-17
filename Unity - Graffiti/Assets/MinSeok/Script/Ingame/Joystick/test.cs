@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class test : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerDownHandler
+public class test : UnityEngine.MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerDownHandler
 {
     public Image img_joystickBgrd;
     public Image img_joystickThumb;
@@ -41,7 +41,7 @@ public class test : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerDown
         if (start == true)
         {
 
-            PlayerManager.instance.am_playerMovement.SetBool("idle_to_run", true);
+            PlayerManager.instance.animePlayer.SetBool("idle_to_run", true);
             //direction이 Input.GetAxis의 반환값을 대신함. 겟액시스를 쓰지않음.
             if (direction.magnitude > 1)
                 direction.Normalize();
@@ -57,7 +57,7 @@ public class test : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerDown
         }
         else
         {
-            PlayerManager.instance.am_playerMovement.SetBool("idle_to_run", false);
+            PlayerManager.instance.animePlayer.SetBool("idle_to_run", false);
         }
         //		NetworkManager.instance.MayIIMove(transform.position.x, transform.position.z);
         //	}

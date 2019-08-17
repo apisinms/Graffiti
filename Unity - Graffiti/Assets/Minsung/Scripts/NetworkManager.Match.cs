@@ -5,7 +5,7 @@ using UnityEngine;
 /// NetworkManager_Match.cs파일
 /// 매칭에 관련된 내용이 있다.
 /// </summary>
-public partial class NetworkManager : MonoBehaviour
+public partial class NetworkManager : UnityEngine.MonoBehaviour
 {
 	// 매칭을 원한다고 서버로 전송
 	public void MayIMatch()

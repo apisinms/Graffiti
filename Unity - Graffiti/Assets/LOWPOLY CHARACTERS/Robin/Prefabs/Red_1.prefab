@@ -7591,8 +7591,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7248235133012816969}
   - component: {fileID: 7248235133003291633}
+  - component: {fileID: 3431429968267363329}
   m_Layer: 0
-  m_Name: Robin
+  m_Name: Red_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7641,6 +7642,20 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!136 &3431429968267363329
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7248235133012781161}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2.2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.05, z: 0}
 --- !u!1 &7248235133012781163
 GameObject:
   m_ObjectHideFlags: 0
