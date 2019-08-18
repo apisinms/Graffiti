@@ -14,6 +14,7 @@ public class MovementManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        /*
         switch (this.gameObject.tag)
         {
             case "Player1":
@@ -29,6 +30,7 @@ public class MovementManager : MonoBehaviour
                 PlayerManager.instance.myLocalNum = 4;
                 break;
         }
+        */
     }
 
     // Update is called once per frame

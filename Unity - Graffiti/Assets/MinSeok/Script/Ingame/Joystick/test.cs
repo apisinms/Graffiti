@@ -52,8 +52,8 @@ public class test : UnityEngine.MonoBehaviour, IDragHandler, IPointerUpHandler, 
           //  Debug.Log(direction);
             //   player2.transform.LookAt(new Vector3(0, direction.z, 0));
             //  player2.transform.Rotate(new Vector3(0, direction.z, 0), Space.World);
-            player2.transform.Translate(Vector3.right * 0.5f * (PlayerManager.instance.speed) * Time.smoothDeltaTime * direction.x, Space.World);
-            player2.transform.Translate(Vector3.forward * PlayerManager.instance.speed * Time.smoothDeltaTime * direction.z, Space.World);
+            player2.transform.Translate(Vector3.right * 0.5f * (PlayerManager.instance.mySpeed) * Time.smoothDeltaTime * direction.x, Space.World);
+            player2.transform.Translate(Vector3.forward * PlayerManager.instance.mySpeed * Time.smoothDeltaTime * direction.z, Space.World);
         }
         else
         {

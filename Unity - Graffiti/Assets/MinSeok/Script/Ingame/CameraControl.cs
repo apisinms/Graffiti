@@ -4,54 +4,18 @@ using UnityEngine;
 
 public class CameraControl : UnityEngine.MonoBehaviour
 {
-    //블루팀 레드팀 애들을 일단 전부 등록시켜놓고
-    private GameObject[] obj_redTeam = new GameObject[2];
-    private GameObject[] obj_blueTeam = new GameObject[2];
     private GameObject obj_player;
+    private Vector3 cameraPos;
+    private Vector3 tmpPlayerPos;
 
-    Vector3 cameraPos;
-    Vector3 tmpPlayerPos;
-
-    
     void Awake()
-    {  
-        obj_player = obj_redTeam[0] = GameObject.FindGameObjectWithTag(PlayerManager.instance.playerTag[0]);
-        obj_redTeam[1] = GameObject.FindGameObjectWithTag(PlayerManager.instance.playerTag[1]);
-        obj_blueTeam[0] = GameObject.FindGameObjectWithTag(PlayerManager.instance.playerTag[2]);
-        obj_blueTeam[1] = GameObject.FindGameObjectWithTag(PlayerManager.instance.playerTag[3]);      
-    }
-    void Start()
     {
-       
-        /*
-        switch (NetworkManager.instance.MyPlayerNum)
-        {
-            case 1:
-                PlayerAttribute.instance.myNetworkNum = 1;
-                obj_player = obj_redTeam[0];
-                CameraPosition = player.transform.position; 
-                break;
-            case 2:
-            PlayerAttribute.instance.myNetworkNum = 2;
-                obj_player = obj_redTeam[1];
-                CameraPosition = player.transform.position;
-                break;
-            case 3:
-            PlayerAttribute.instance.myNetworkNum = 3;
-                obj_player = obj_blueTeam[0];
-                CameraPosition = player.transform.position;
-                break;
-            case 4:
-            PlayerAttribute.instance.myNetworkNum = 4;
-                obj_player = obj_blueTeam[1];
-                CameraPosition = player.transform.position;
-                break;
-        }
-        */
+        obj_player = GameObject.FindGameObjectWithTag(ClientNetworkManager.instance.myTag);
+    }
 
-
+    void Start()
+    { 
       tmpPlayerPos = obj_player.transform.position;
-
     }
 
     void LateUpdate()

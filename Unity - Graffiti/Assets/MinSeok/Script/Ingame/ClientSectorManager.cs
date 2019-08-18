@@ -32,9 +32,11 @@ public class ClientSectorManager : UnityEngine.MonoBehaviour
 
 	void Awake()
 	{
-		instance = this;
+        if(instance == null)
+            instance = this;
 
-        obj_player = GameObject.FindGameObjectWithTag(PlayerManager.instance.playerTag[0]);
+        obj_player = GameObject.FindGameObjectWithTag(ClientNetworkManager.instance.myTag);
+
         //모든 셀들의 영역을 계산해놓음.
         for (int i = 0; i < 4; i++)
 		{
@@ -59,10 +61,6 @@ public class ClientSectorManager : UnityEngine.MonoBehaviour
         }
 	}
 
-    private void Update()
-    {
-       
-    }
     public void ProcessWhereAmI() //플레이어 영역을 구함
 	{
 		for (int i = 0; i < 4; i++)
@@ -82,14 +80,14 @@ public class ClientSectorManager : UnityEngine.MonoBehaviour
 					else //새로운 셀과의 충돌시.
 					{
 						matrix[visited.col, visited.row].isVisiting = false;
-			//			Debug.Log(visited.col + "행" + " " + visited.row + "열 탈출");
+						Debug.Log(visited.col + "행" + " " + visited.row + "열 탈출");
 
 						//현재 충돌된 셀의 인덱스를 저장해둠
 						visited.col = i;
 						visited.row = j;
 
 						matrix[i, j].isVisiting = true;
-		//				Debug.Log(i + "행" + " " + j + "열 진입");
+						Debug.Log(i + "행" + " " + j + "열 진입");
 					}
 					return;
 				}

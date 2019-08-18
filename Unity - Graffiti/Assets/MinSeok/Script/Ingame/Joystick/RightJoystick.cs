@@ -44,7 +44,6 @@ public class RightJoystick : UnityEngine.MonoBehaviour, JoystickControll
 
         PlayerManager.instance.myDirection = new Vector3(right_joystick.stickDir.x, 0, right_joystick.stickDir.y);
 
-
         // 스틱의 처음 위치와 드래그중인 위치의 거리차를 구함
         float distance = Vector3.Distance(pos, right_joystick.stickFirstPos);
 
