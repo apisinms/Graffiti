@@ -116,8 +116,6 @@ public class SelectWeapons : UnityEngine.MonoBehaviour
 
                 img_checkMark[1].fillAmount = 1.0f;
                 img_checkMark[1].transform.localPosition = _checkMarkPos;
-
-                SceneManager.LoadScene("MainGame"); //메인타이틀로 입장
                 break;
 		}
 	}
@@ -147,7 +145,7 @@ public class SelectWeapons : UnityEngine.MonoBehaviour
 		}
 		Debug.Log("주무기 코루틴 탈출!");
 
-		//StartCoroutine(SelectWeaponTimer());    // 여기에서 타이머 코루틴 시작
+		StartCoroutine(SelectWeaponTimer());    // 여기에서 타이머 코루틴 시작
 		yield break;
 	}
 
