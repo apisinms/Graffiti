@@ -26,17 +26,29 @@ public partial class PlayerManager : MonoBehaviour
         Anime_Idle();
     }
 
-    public void Action_Circuit() //노말 움직임일때. 순회.
+    public void Action_CircuitNormal() //노말 움직임일때. 순회.
     {
         Anime_Circuit();
         transform.localRotation = Quaternion.LookRotation(myDirection);
         transform.Translate(myDirection * mySpeed * Time.smoothDeltaTime, Space.World);
     }
 
-    public void Action_Aiming() //제자리 조준또는 순회와 조준동시.
+    public void Action_AimingNormal() //제자리 조준또는 순회와 조준동시.
     {
-        transform.localRotation = Quaternion.LookRotation(myDirection);
+        Anime_Idle();
+        transform.localRotation = Quaternion.LookRotation(myDirection2);
     }
 
+    public void Action_CircuitWithAiming() 
+    {
+        //Anime_Circuit();
+        transform.Translate(myDirection * (mySpeed * 0.3f) * Time.smoothDeltaTime, Space.World);
+    }
+
+    public void Action_AimingWithCircuit() 
+    {
+        Anime_Idle();
+        transform.localRotation = Quaternion.LookRotation(myDirection2);
+    }
 
 }

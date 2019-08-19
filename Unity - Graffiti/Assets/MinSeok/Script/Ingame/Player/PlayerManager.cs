@@ -22,6 +22,7 @@ public partial class PlayerManager : MonoBehaviour
     public float mySpeed { get; set; }
     public float myHp { get; set; }
     public Vector3 myDirection { get; set; } //플레이어의 방향
+    public Vector3 myDirection2 { get; set; }
 
     void Awake()
     {

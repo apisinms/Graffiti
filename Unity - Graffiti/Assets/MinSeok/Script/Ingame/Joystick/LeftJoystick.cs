@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 
-public class LeftJoystick : UnityEngine.MonoBehaviour, JoystickControll
+public class LeftJoystick : MonoBehaviour, JoystickControll
 {
     public Image img_joystick_back;
     public Image img_joystick_stick;
@@ -23,10 +23,10 @@ public class LeftJoystick : UnityEngine.MonoBehaviour, JoystickControll
     {
         left_joystick.maxMoveArea = img_joystick_back.rectTransform.sizeDelta.y * 0.4f; //스틱이 움직일수있는 수평범위. ( * 0.5f면 정확히 조이스틱배경의 반지름만큼)
         left_joystick.stickFirstPos = img_joystick_stick.rectTransform.position;
-        // 캔버스 크기에대한 반지름 조절.
-        //  float can = transform.parent.GetComponent<RectTransform>().localScale.x;
-        //   moveArea *= can;
 
+          // 캔버스 크기에대한 반지름 조절.
+        float can = transform.parent.GetComponent<RectTransform>().localScale.x;
+        left_joystick.maxMoveArea *= can; 
     }
 
     public void DragStart()

@@ -14,8 +14,12 @@ public class CameraControl : UnityEngine.MonoBehaviour
     }
 
     void Start()
-    { 
-      tmpPlayerPos = obj_player.transform.position;
+    {
+        //tmpPlayerPos = obj_player.transform.position;
+        cameraPos.x = obj_player.transform.position.x;
+        cameraPos.y = obj_player.transform.position.y + 8f;
+        cameraPos.z = obj_player.transform.position.z - 5.5f;
+        transform.position = cameraPos;
     }
 
     void LateUpdate()

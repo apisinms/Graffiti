@@ -17,6 +17,8 @@ public class JoystickManager : MonoBehaviour
     {
         //    if (Input.GetKeyDown(KeyCode.Space))
 
+        Debug.Log(PlayerManager.instance.myActionState);
+
         switch (PlayerManager.instance.myActionState)
         {
             case _ACTION_STATE.IDLE:
@@ -24,10 +26,14 @@ public class JoystickManager : MonoBehaviour
                 break;
             case _ACTION_STATE.CIRCUIT:
                 //ClientSectorManager.instance.ProcessWhereAmI();
-                PlayerManager.instance.Action_Circuit();
+                PlayerManager.instance.Action_CircuitNormal();
                 break;
             case _ACTION_STATE.AIMING:
-                PlayerManager.instance.Action_Aiming();
+                PlayerManager.instance.Action_AimingNormal();
+                break;
+            case _ACTION_STATE.CIRCUIT_AND_AIMING:
+                PlayerManager.instance.Action_CircuitWithAiming();
+                PlayerManager.instance.Action_AimingWithCircuit();
                 break;
         }
     }
