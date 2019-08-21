@@ -27,7 +27,7 @@ public enum _WEAPONS : sbyte
     SUB_MAX_LENGTH,
 }
 
-public class SelectWeapons : MonoBehaviour
+public class SelectWeapons : UnityEngine.MonoBehaviour
 {
     public GameObject panel_mainWeapon, panel_subWeapon; //스크롤될 패널 2개;
     public Image[] img_checkMark = new Image[2]; //선택무기 체크마크 주무기용, 보조무기용
@@ -40,7 +40,7 @@ public class SelectWeapons : MonoBehaviour
 
     public Button btn_return; //돌아가기 버튼
 
-    public Text txt_selectTime; //제한시간 텍스트
+    public Text txt_selectTime; float selectTime = 30.0f; //제한시간 텍스트
 
     private _WEAPONS myMainWeapon;
     private _WEAPONS mySubWeapon;

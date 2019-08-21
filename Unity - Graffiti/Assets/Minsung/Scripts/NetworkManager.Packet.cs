@@ -26,9 +26,9 @@ public partial class NetworkManager : MonoBehaviour
 
 	private void GetProtocol(byte[] _buf, out STATE_PROTOCOL _state, out PROTOCOL _protocol, out RESULT _result)
 	{
-		_state    = 0;
+		_state = 0;
 		_protocol = 0;
-		_result   = 0;
+		_result = 0;
 
 		int offset = 0;
 
@@ -66,7 +66,7 @@ public partial class NetworkManager : MonoBehaviour
 
 	private void PackPacket(ref byte[] _sendBuf, PROTOCOL _protocol, out int _size)
 	{
-		Array.Clear(_sendBuf, 0, C_Global.BUFSIZE);	// 송신 버퍼 초기화
+		Array.Clear(_sendBuf, 0, C_Global.BUFSIZE); // 송신 버퍼 초기화
 
 		// 임시 저장 버퍼 + 암호화 시킬 버퍼
 		byte[] tmpBuf = new byte[C_Global.BUFSIZE];
@@ -165,7 +165,7 @@ public partial class NetworkManager : MonoBehaviour
 
 		// 암호화된 내용을 저장할 버퍼이다.
 		byte[] encryptBuf = new byte[C_Global.BUFSIZE];
-		byte[] buf        = new byte[C_Global.BUFSIZE];
+		byte[] buf = new byte[C_Global.BUFSIZE];
 
 		_size = 0;
 		int offset = 0;
@@ -173,7 +173,7 @@ public partial class NetworkManager : MonoBehaviour
 		// 프로토콜
 		Buffer.BlockCopy(BitConverter.GetBytes((Int64)_protocol), 0, buf, offset, sizeof(PROTOCOL));
 		offset += sizeof(PROTOCOL);
-		_size  += sizeof(PROTOCOL);
+		_size += sizeof(PROTOCOL);
 
 		// 문자열1 길이
 		Buffer.BlockCopy(BitConverter.GetBytes(strsize1), 0, buf, offset, sizeof(int));

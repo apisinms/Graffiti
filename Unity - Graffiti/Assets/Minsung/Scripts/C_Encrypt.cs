@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class C_Encrypt : MonoBehaviour
+public class C_Encrypt : UnityEngine.MonoBehaviour
 {
 
 	const int C1 = 52845;

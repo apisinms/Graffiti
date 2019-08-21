@@ -982,9 +982,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '
-
-'
+  m_Text: "30\uCD08\n"
 --- !u!222 &574125585
 CanvasRenderer:
   m_ObjectHideFlags: 0

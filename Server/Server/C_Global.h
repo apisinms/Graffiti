@@ -7,7 +7,7 @@ using namespace std;
 #define BUFSIZE			4096
 #define HALF_BUFSIZE	2048
 
-#define SERVERPORT		9000
+#define SERVERPORT		10823
 
 #define IDSIZE			255
 #define PWSIZE			255

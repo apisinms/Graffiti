@@ -25,9 +25,9 @@ public partial class NetworkManager : MonoBehaviour
 	// 매칭이 잡혔는지 조회
 	public bool CheckMatched()
 	{
-		if (state    == STATE_PROTOCOL.LOBBY_STATE &&
+		if (state == STATE_PROTOCOL.LOBBY_STATE &&
 			protocol == PROTOCOL.GOTO_INGAME_PROTOCOL &&
-			result   == RESULT.LOBBY_SUCCESS)
+			result == RESULT.LOBBY_SUCCESS)
 			return true;
 
 		else

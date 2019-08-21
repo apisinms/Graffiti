@@ -26,14 +26,14 @@ public partial class NetworkManager : MonoBehaviour
 	readonly static int NICKNAMESIZE = 255;
 
 
-	readonly static int STATE_PROTOCOL_OFFSET = 10;						// 10
-	readonly static int PROTOCOL_OFFSET       = STATE_PROTOCOL_OFFSET + 20;	// 30
-	readonly static int RESULT_OFFSET         = PROTOCOL_OFFSET + 10;         // 40
+	readonly static int STATE_PROTOCOL_OFFSET = 10;                     // 10
+	readonly static int PROTOCOL_OFFSET = STATE_PROTOCOL_OFFSET + 20;   // 30
+	readonly static int RESULT_OFFSET = PROTOCOL_OFFSET + 10;         // 40
 
 	readonly static int STATE_PROTOCOL_MASK = 0x3FF;
-	readonly static int PROTOCOL_MASK       = 0xFFFFF;
-	readonly static int RESULT_MASK         = 0x3FF;
-	
+	readonly static int PROTOCOL_MASK = 0xFFFFF;
+	readonly static int RESULT_MASK = 0x3FF;
+
 	/// <summary>
 	/// 10(STATE_PROTOCOL) + 20(PROTOCOL) + 10(RESULT) + 24(그외)
 	/// </summary>
@@ -41,9 +41,9 @@ public partial class NetworkManager : MonoBehaviour
 	enum STATE_PROTOCOL : Int64
 	{
 		// 상위 5비트 스테이트를 표현해주는 프로토콜
-		LOGIN_STATE  = ((Int64)0x1 << 63),
-		LOBBY_STATE  = ((Int64)0x1 << 62),
-		CHAT_STATE   = ((Int64)0x1 << 61),
+		LOGIN_STATE = ((Int64)0x1 << 63),
+		LOBBY_STATE = ((Int64)0x1 << 62),
+		CHAT_STATE = ((Int64)0x1 << 61),
 		INGAME_STATE = ((Int64)0x1 << 60),
 
 		//59 ~ 54
@@ -53,25 +53,25 @@ public partial class NetworkManager : MonoBehaviour
 	enum PROTOCOL : Int64
 	{
 		// LoginState
-		JOIN_PROTOCOL  = ((Int64)0x1 << 53),
+		JOIN_PROTOCOL = ((Int64)0x1 << 53),
 		LOGIN_PROTOCOL = ((Int64)0x1 << 52),
 
 		// LobbyState
-		MATCH_PROTOCOL               = ((Int64)0x1 << 53),
-		MATCH_CANCEL_PROTOCOL        = ((Int64)0x1 << 52),
-		GOTO_INGAME_PROTOCOL         = ((Int64)0x1 << 51),      // 인게임 상태로 진입 프로토콜
-		LOGOUT_PROTOCOL              = ((Int64)0x1 << 50),
+		MATCH_PROTOCOL = ((Int64)0x1 << 53),
+		MATCH_CANCEL_PROTOCOL = ((Int64)0x1 << 52),
+		GOTO_INGAME_PROTOCOL = ((Int64)0x1 << 51),      // 인게임 상태로 진입 프로토콜
+		LOGOUT_PROTOCOL = ((Int64)0x1 << 50),
 
 		// ChatState
 		LEAVE_ROOM_PROTOCOL = ((Int64)0x1 << 53),
-		CHAT_PROTOCOL       = ((Int64)0x1 << 52),
+		CHAT_PROTOCOL = ((Int64)0x1 << 52),
 
 		// InGameState
-		TIMER_PROTOCOL        = ((Int64)0x1 << 53),	// 타이머 프로토콜(1초씩 받음)
-		WEAPON_PROTOCOL       = ((Int64)0x1 << 52),	// 무기 전송 프로토콜
-		START_PROTOCOL        = ((Int64)0x1 << 51),	// 게임 시작 프로토콜
-		MOVE_PROTOCOL         = ((Int64)0x1 << 50),	// 이동 프로토콜
-		DISCONNECT_PROTOCOL   = ((Int64)0x1 << 49), // 접속 끊김 프로토콜
+		TIMER_PROTOCOL = ((Int64)0x1 << 53),    // 타이머 프로토콜(1초씩 받음)
+		WEAPON_PROTOCOL = ((Int64)0x1 << 52),   // 무기 전송 프로토콜
+		START_PROTOCOL = ((Int64)0x1 << 51),    // 게임 시작 프로토콜
+		MOVE_PROTOCOL = ((Int64)0x1 << 50), // 이동 프로토콜
+		DISCONNECT_PROTOCOL = ((Int64)0x1 << 49), // 접속 끊김 프로토콜
 
 		// 48 ~ 34
 	};
@@ -80,10 +80,10 @@ public partial class NetworkManager : MonoBehaviour
 	enum RESULT : Int64
 	{
 		//LoginState
-		JOIN_SUCCESS   = ((Int64)0x1 << 33),
-		LOGIN_SUCCESS  = ((Int64)0x1 << 33),
+		JOIN_SUCCESS = ((Int64)0x1 << 33),
+		LOGIN_SUCCESS = ((Int64)0x1 << 33),
 		LOGOUT_SUCCESS = ((Int64)0x1 << 33),
-		LOGOUT_FAIL    = ((Int64)0x1 << 32),
+		LOGOUT_FAIL = ((Int64)0x1 << 32),
 
 		// Join & Login result
 		ID_EXIST = ((Int64)0x1 << 32),
@@ -91,16 +91,16 @@ public partial class NetworkManager : MonoBehaviour
 		PW_ERROR = ((Int64)0x1 << 30),
 
 		// LobbyState
-		LOBBY_SUCCESS = ((Int64)0x1 << 33),		// 로비에서 성공 처리
-		LOBBY_FAIL    = ((Int64)0x1 << 32),        // 로비에서 실패 처리
+		LOBBY_SUCCESS = ((Int64)0x1 << 33),     // 로비에서 성공 처리
+		LOBBY_FAIL = ((Int64)0x1 << 32),        // 로비에서 실패 처리
 
 		// ChatState
 		LEAVE_ROOM_SUCCESS = ((Int64)0x1 << 33),
-		LEAVE_ROOM_FAIL    = ((Int64)0x1 << 32),
+		LEAVE_ROOM_FAIL = ((Int64)0x1 << 32),
 
 		// InGameState
 		INGAME_SUCCESS = ((Int64)0x1 << 33),
-		INGAME_FAIL    = ((Int64)0x1 << 32),
+		INGAME_FAIL = ((Int64)0x1 << 32),
 
 		// ~ 25
 
@@ -182,7 +182,7 @@ public partial class NetworkManager : MonoBehaviour
 		}
 	}
 
-	PositionPacket []posPacket = new PositionPacket[4];
+	PositionPacket[] posPacket = new PositionPacket[4];
 
 
 
@@ -191,13 +191,12 @@ public partial class NetworkManager : MonoBehaviour
 	RESULT result;          // 결과
 
 	// 서버 IP와 포트
-	//private static IPAddress serverIP = IPAddress.Parse("119.193.122.118");
-	private static IPAddress serverIP = IPAddress.Parse("121.164.149.204");
-	private static int serverPort = 9000;
+	private static IPAddress serverIP = IPAddress.Parse("119.193.122.103");
+	private static int serverPort = 10823;
 
 	// 버퍼
-	private byte[] sendBuf = new byte[C_Global.BUFSIZE];				// 송신 버퍼
-	//private byte[] recvBuf = new byte[C_Global.BUFSIZE];				// 수신 버퍼
+	private byte[] sendBuf = new byte[C_Global.BUFSIZE];                // 송신 버퍼
+																		//private byte[] recvBuf = new byte[C_Global.BUFSIZE];				// 수신 버퍼
 
 	// TCP 클라, 바이너리 리더, 라이터
 	private static TcpClient tcpClient = new TcpClient();
@@ -207,12 +206,12 @@ public partial class NetworkManager : MonoBehaviour
 	private object key = new object();      // 동기화에 사용할 key이다.
 	private string sysMsg = string.Empty;   // 서버로부터 전달되는 메시지를 저장할 변수
 	private int myPlayerNum;
-	private int quitPlayerNum;				// 게임에서 나간 플레이어 번호
+	private int quitPlayerNum;              // 게임에서 나간 플레이어 번호
 
-	private Queue<C_Global.QueueInfo> queue;	// recv에 관한 패킷이 저장될 큐
+	private Queue<C_Global.QueueInfo> queue;    // recv에 관한 패킷이 저장될 큐
 
 	public Queue<C_Global.QueueInfo> Queue { get { return queue; } }
-	public BinaryReader	BinaryReader { get { return br; } }
+	public BinaryReader BinaryReader { get { return br; } }
 	public BinaryWriter BinaryWriter { get { return bw; } }
 
 	public string SysMsg

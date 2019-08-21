@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Clothes : MonoBehaviour {
+public class Clothes : UnityEngine.MonoBehaviour {
 
     public ClothesType type;
     public bool hide;
