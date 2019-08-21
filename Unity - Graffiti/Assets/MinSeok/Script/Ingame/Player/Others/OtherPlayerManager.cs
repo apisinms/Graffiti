@@ -12,9 +12,9 @@ public partial class OtherPlayerManager : MonoBehaviour
     public _ATTRIBUTE_STATE[] attributeState { get; set; }
     public float[] speed { get; set; }
     public float[] hp { get; set; }
-    public float[] eulerAngle;
+    public float[] eulerAngle { get; set; }
+    public float[] eulerAngle2 { get; set; }
     public Vector3[] direction { get; set; }
-    public Vector3[] direction2 { get; set; }
 
     void Awake()
     {
@@ -34,25 +34,26 @@ public partial class OtherPlayerManager : MonoBehaviour
         speed = new float[NUM];
         hp = new float[NUM];
         eulerAngle = new float[NUM];
+        eulerAngle2 = new float[NUM];
         direction = new Vector3[NUM];
-        direction2 = new Vector3[NUM];
         attributeState = new _ATTRIBUTE_STATE[NUM];
         actionState = new _ACTION_STATE[NUM];
 
-        // 자기번호를 제외한 플레이어 오브젝트에 나머지 3명을 등록.
         int j = 0;
-        for (int i = 0; i < GameManager.instance.playersTag.Length; i++)
-        {
-            if (GameManager.instance.playersTag[i].Equals(GameManager.instance.myTag) == false)
+        for (int i = 0; i < GameManager.instance.obj_players.Length; i++)
+        {         
+            if (GameManager.instance.myIndex != i)
             {
-                obj_otherPlayers[j] = GameObject.FindGameObjectWithTag(GameManager.instance.playersTag[i]);
+                obj_otherPlayers[j] = GameManager.instance.obj_players[i];
+                animePlayer[j] = GameManager.instance.obj_players[i].GetComponent<Animator>();
                 j++;
             }
         }
 
+        /*
         for (int i = 0; i < animePlayer.Length; i++)
             animePlayer[i] = obj_otherPlayers[i].GetComponent<Animator>();
-
+            */
         //이것도 서버에서 받아온 데이터로 초기화해야함.
         /* for(int i=0; i<NUM; i++)
         {
@@ -61,4 +62,11 @@ public partial class OtherPlayerManager : MonoBehaviour
         } */
     }
 
+    private void Start()
+    {
+        
+      // for (int i = 0; i < animePlayer.Length; i++)
+          //  Debug.Log(animePlayer[i].name); 
+
+    }
 }

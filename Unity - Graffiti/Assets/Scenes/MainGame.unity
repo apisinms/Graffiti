@@ -360,7 +360,6 @@ GameObject:
   m_Component:
   - component: {fileID: 344815355}
   - component: {fileID: 344815356}
-  - component: {fileID: 344815357}
   m_Layer: 0
   m_Name: OtherPlayerManager
   m_TagString: Untagged
@@ -394,23 +393,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c6b23226c54a0a4b9ae068e2e24260c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &344815357
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 344815354}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4796a665c721c9478b813667f7128bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  curPlayerPos:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!1 &370767708
 GameObject:
   m_ObjectHideFlags: 0

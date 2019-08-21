@@ -24,7 +24,7 @@ public partial class MyPlayerManager : MonoBehaviour
         if (instance == null)
             instance = this;
 
-        obj_myPlayer = GameObject.FindGameObjectWithTag(GameManager.instance.myTag); //내 태그번호에맞는 로빈과합체
+        obj_myPlayer = GameManager.instance.obj_players[GameManager.instance.myIndex];
         animePlayer = obj_myPlayer.GetComponent<Animator>();
 
         //전부 서버에서 받아온 데이터로
@@ -34,4 +34,8 @@ public partial class MyPlayerManager : MonoBehaviour
         myHp = 100.0f; 
     }
 
+    private void Start()
+    {
+        //Debug.Log(obj_myPlayer + "은또다른 내플레이어다.");
+    }
 }
