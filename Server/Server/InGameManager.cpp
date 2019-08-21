@@ -170,7 +170,7 @@ bool InGameManager::MoveProcess(C_ClientInfo* _ptr, char* _buf)
 	Position position;
 	UnPackPacket(_buf, position);
 
-	printf("%d ,%f, %f\n", position.playerNum, position.posX, position.posZ);
+	printf("%d ,%f, %f, %f\n", position.playerNum, position.posX, position.posZ, position.rotY);
 
 	// 프로토콜 세팅
 	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::MOVE_PROTOCOL, move);

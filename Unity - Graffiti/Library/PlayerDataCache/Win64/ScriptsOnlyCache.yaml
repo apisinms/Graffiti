@@ -2,13 +2,18 @@ ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
     - C_Encrypt
-    - Camera
+    - CameraControl
     - ClientSectorManager
     - Customizable
+    - GameManager
     - InputInfoManager
-    - Move
+    - JoystickManager
+    - LeftJoystick
     - MoveManager
+    - MyPlayerManager
     - NetworkManager
+    - OtherPlayerManager
+    - RightJoystick
     - SelectWeapons
     - btn_option
     - btn_quit
@@ -17,6 +22,7 @@ ScriptsOnlyBuild:
     - UnityEditor.TestTools.TestRunner.TestListCacheData
     UnityEngine.UI.dll:
     - UnityEngine.EventSystems.EventSystem
+    - UnityEngine.EventSystems.EventTrigger
     - UnityEngine.EventSystems.StandaloneInputModule
     - UnityEngine.UI.Button
     - UnityEngine.UI.CanvasScaler
@@ -66,21 +72,35 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 9374}
+      Script: {instanceID: 9376}
     - Class: 114
-      Script: {instanceID: 9380}
+      Script: {instanceID: 9382}
     - Class: 114
-      Script: {instanceID: 9386}
+      Script: {instanceID: 9384}
     - Class: 114
-      Script: {instanceID: 9430}
+      Script: {instanceID: 9388}
     - Class: 114
-      Script: {instanceID: 9814}
+      Script: {instanceID: 9396}
     - Class: 114
-      Script: {instanceID: 9900}
+      Script: {instanceID: 9432}
     - Class: 114
-      Script: {instanceID: 9922}
+      Script: {instanceID: 9468}
     - Class: 114
-      Script: {instanceID: 10518}
+      Script: {instanceID: 9596}
+    - Class: 114
+      Script: {instanceID: 9642}
+    - Class: 114
+      Script: {instanceID: 9796}
+    - Class: 114
+      Script: {instanceID: 9828}
+    - Class: 114
+      Script: {instanceID: 9934}
+    - Class: 114
+      Script: {instanceID: 10148}
+    - Class: 114
+      Script: {instanceID: 10346}
+    - Class: 114
+      Script: {instanceID: 10538}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 136
@@ -88,6 +108,10 @@ ScriptsOnlyBuild:
     - Class: 137
       Script: {instanceID: 0}
     - Class: 157
+      Script: {instanceID: 0}
+    - Class: 213
+      Script: {instanceID: 0}
+    - Class: 222
       Script: {instanceID: 0}
     - Class: 223
       Script: {instanceID: 0}
@@ -125,25 +149,25 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 9372}
-    - Class: 114
       Script: {instanceID: 9374}
     - Class: 114
-      Script: {instanceID: 9380}
+      Script: {instanceID: 9376}
     - Class: 114
-      Script: {instanceID: 9386}
+      Script: {instanceID: 9382}
     - Class: 114
-      Script: {instanceID: 9394}
+      Script: {instanceID: 9388}
     - Class: 114
-      Script: {instanceID: 9430}
+      Script: {instanceID: 9396}
     - Class: 114
       Script: {instanceID: 9432}
     - Class: 114
-      Script: {instanceID: 9478}
+      Script: {instanceID: 9434}
     - Class: 114
-      Script: {instanceID: 9878}
+      Script: {instanceID: 9482}
     - Class: 114
-      Script: {instanceID: 10486}
+      Script: {instanceID: 9892}
+    - Class: 114
+      Script: {instanceID: 10506}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -182,27 +206,27 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 9372}
-    - Class: 114
       Script: {instanceID: 9374}
     - Class: 114
-      Script: {instanceID: 9380}
+      Script: {instanceID: 9376}
     - Class: 114
-      Script: {instanceID: 9386}
+      Script: {instanceID: 9382}
     - Class: 114
-      Script: {instanceID: 9394}
+      Script: {instanceID: 9388}
     - Class: 114
       Script: {instanceID: 9396}
     - Class: 114
-      Script: {instanceID: 9430}
+      Script: {instanceID: 9398}
     - Class: 114
       Script: {instanceID: 9432}
     - Class: 114
-      Script: {instanceID: 9794}
+      Script: {instanceID: 9434}
     - Class: 114
-      Script: {instanceID: 9924}
+      Script: {instanceID: 9808}
     - Class: 114
-      Script: {instanceID: 10088}
+      Script: {instanceID: 9936}
+    - Class: 114
+      Script: {instanceID: 10098}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -241,23 +265,23 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 9372}
-    - Class: 114
       Script: {instanceID: 9374}
     - Class: 114
-      Script: {instanceID: 9380}
+      Script: {instanceID: 9376}
     - Class: 114
-      Script: {instanceID: 9386}
+      Script: {instanceID: 9382}
     - Class: 114
-      Script: {instanceID: 9390}
+      Script: {instanceID: 9388}
     - Class: 114
-      Script: {instanceID: 9394}
+      Script: {instanceID: 9392}
     - Class: 114
-      Script: {instanceID: 9430}
+      Script: {instanceID: 9396}
     - Class: 114
       Script: {instanceID: 9432}
     - Class: 114
-      Script: {instanceID: 9802}
+      Script: {instanceID: 9434}
+    - Class: 114
+      Script: {instanceID: 9816}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -520,6 +544,12 @@ ScriptsOnlyBuild:
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
+    className: OtherPlayerManager
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
     className: btn_quit
   - hash:
       serializedVersion: 2
@@ -727,10 +757,22 @@ ScriptsOnlyBuild:
     className: SignalAsset
   - hash:
       serializedVersion: 2
+      Hash: 1df184a1376e23f565b7d7c11bef593b
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: RightJoystick
+  - hash:
+      serializedVersion: 2
       Hash: f08a111e17bb701f9c9ec57bb78d9920
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: AnimationTrack
+  - hash:
+      serializedVersion: 2
+      Hash: 1df184a1376e23f565b7d7c11bef593b
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: LeftJoystick
   - hash:
       serializedVersion: 2
       Hash: 00274a21279f5cb831ce20f895049e38
@@ -769,6 +811,12 @@ ScriptsOnlyBuild:
     className: ControlPlayableAsset
   - hash:
       serializedVersion: 2
+      Hash: 78365fd03b6314041fe896ee9718267c
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: test
+  - hash:
+      serializedVersion: 2
       Hash: b8a5e8091ab0b8861d2add371082c5e0
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
@@ -779,6 +827,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: ControlTrack
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: MyPlayerManager
   - hash:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
@@ -835,13 +889,7 @@ ScriptsOnlyBuild:
     className: TMP_SpriteAnimator
   - hash:
       serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: Move
-  - hash:
-      serializedVersion: 2
-      Hash: e584ab334401e382bad13469962262ab
+      Hash: a9b040d2c76a922b2bae102612481407
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: ClientSectorManager
@@ -931,6 +979,12 @@ ScriptsOnlyBuild:
     className: TimelineAsset
   - hash:
       serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: JoystickManager
+  - hash:
+      serializedVersion: 2
       Hash: 58e68364412c67eae2bdb4954be2dcc2
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
@@ -965,6 +1019,12 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: DragToRotate
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: GameManager
   - hash:
       serializedVersion: 2
       Hash: c3d3430df9e3ea95e3e3d587961390fb
@@ -1009,10 +1069,10 @@ ScriptsOnlyBuild:
     className: TMP_SubMesh
   - hash:
       serializedVersion: 2
-      Hash: b42dea23d4e77a6fd5dcb73a3bf9137c
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: Camera
+    className: CameraControl
   - hash:
       serializedVersion: 2
       Hash: 8220b46879dc5e37db1b940c938f5744

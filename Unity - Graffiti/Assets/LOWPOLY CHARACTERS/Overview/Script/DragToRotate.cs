@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class DragToRotate : MonoBehaviour
+public class DragToRotate : UnityEngine.MonoBehaviour
 {
     const float Sensitivity = .4f;
 

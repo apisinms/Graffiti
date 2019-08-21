@@ -4,43 +4,58 @@ using UnityEngine;
 
 public class MoveManager : MonoBehaviour
 {
-    public Transform[] curPlayerPos = new Transform[4];
-	private int index;
+	[SerializeField]
+	private Transform[] curPlayerPos = new Transform[4];
+	private float speed = 2.0f;
 
 	NetworkManager networkManager;
 	Vector3 pos;
-
-	float startTime;
-	Vector3 destLength;
-	float distCovered;
-	float fracJourney;
-
 	void Awake()
-    {
+	{
 		Application.targetFrameRate = 60;
 		networkManager = NetworkManager.instance;
 		pos = new Vector3();
+
+		// 초기값 설정
+		for (int i = 0; i < 4; i++)
+		{
+			networkManager.SetPosX(i, curPlayerPos[i].position.x);
+			networkManager.SetPosZ(i, curPlayerPos[i].position.z);
+			networkManager.SetPosPlayerNum(i, i + 1);
+		}
+
 		StartCoroutine(this.CheckQuit());
 	}
-	void Start()
-	{
-	}
+
+
+	// 플레이어를 뒤져봐서 위치가 다르면 업데이트
 	void Update()
 	{
-        // 인덱스 이므로 -1 해줘야 한다.
-        index = networkManager.GetPosPlayerNum - 1;
+		for (int i = 0; i < 4; i++)
+		{
+			// 자기 제외하고
+			if ((networkManager.MyPlayerNum - 1) == i)
+				continue;
 
-        pos.x = networkManager.GetPosX;
-        pos.y = curPlayerPos[index].position.y;
-        pos.z = networkManager.GetPosZ;
+            // 자기전 위치와 현 위치가 같으면 움직이지 않음 
+			if (networkManager.GetPosX(i) != curPlayerPos[i].position.x ||
+				networkManager.GetPosZ(i) != curPlayerPos[i].position.z)
+			{
+				pos.x = networkManager.GetPosX(i);
+				pos.y = curPlayerPos[i].position.y;
+				pos.z = networkManager.GetPosZ(i);
 
-        curPlayerPos[index].position = Vector3.Lerp(
-            curPlayerPos[index].position,
-            pos,
-            Time.deltaTime * 10.0f);
+                curPlayerPos[i].transform.localEulerAngles = new Vector3(0, networkManager.GetRotY(i), 0);
 
-    }
-    IEnumerator CheckQuit()
+                curPlayerPos[i].position = Vector3.Lerp(
+					curPlayerPos[i].position,
+					pos,
+					Time.smoothDeltaTime * (speed * 3));
+            }
+		}
+	}
+
+	IEnumerator CheckQuit()
 	{
 		while (true)
 		{

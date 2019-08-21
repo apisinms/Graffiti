@@ -153,7 +153,7 @@ public partial class NetworkManager : MonoBehaviour
 
 			case STATE_PROTOCOL.INGAME_STATE:
 				{
-					switch(protocol)
+					switch (protocol)
 					{
 						// 타이머 프로토콜이 넘겨져오면
 						case PROTOCOL.TIMER_PROTOCOL:
@@ -177,7 +177,7 @@ public partial class NetworkManager : MonoBehaviour
 						case PROTOCOL.START_PROTOCOL:
 							break;
 
-							// 움직임 프로토콜
+						// 움직임 프로토콜
 						case PROTOCOL.MOVE_PROTOCOL:
 							{
 								switch (result)
@@ -186,8 +186,10 @@ public partial class NetworkManager : MonoBehaviour
 										{
 											lock (key)
 											{
-												UnPackPacket(info.packet, posPacket);
-												Debug.Log(posPacket.posX);
+												PositionPacket tmpPosPacket = new PositionPacket();
+                                                UnPackPacket(info.packet, ref tmpPosPacket);
+                                                Debug.Log(tmpPosPacket.rotY);
+                                                posPacket[tmpPosPacket.playerNum - 1] = tmpPosPacket;   // 해당 플레이어 위치에 저장
 											}
 										}
 										break;
@@ -195,10 +197,10 @@ public partial class NetworkManager : MonoBehaviour
 							}
 							break;
 
-							// 끊김 프로토콜
+						// 끊김 프로토콜
 						case PROTOCOL.DISCONNECT_PROTOCOL:
 							{
-								lock(key)
+								lock (key)
 								{
 									UnPackPacket(info.packet, out quitPlayerNum);
 								}

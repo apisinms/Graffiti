@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class btn_start : MonoBehaviour
+public class btn_start : UnityEngine.MonoBehaviour
 {
 	public GameObject obj_loadingBar;
 	Animator am_loadingBar;
@@ -26,12 +26,12 @@ public class btn_start : MonoBehaviour
 			obj_loadingBar.SetActive(true);
 			am_loadingBar.SetBool("isStart", true);
 
-			// 매칭이 가능한지 서버로 전송한다.
-			NetworkManager.instance.MayIMatch();
+            // 매칭이 가능한지 서버로 전송한다.
+            NetworkManager.instance.MayIMatch();
 
-			// 코루틴을 돌려서 매칭이 잡힐때까지 반복한다.
-			StartCoroutine(CheckMatch());
-		}
+            // 코루틴을 돌려서 매칭이 잡힐때까지 반복한다.
+            StartCoroutine(CheckMatch());
+        }
 
 		else if (flag == 1) //3초전에 취소눌렀을경우 원상복구
 		{

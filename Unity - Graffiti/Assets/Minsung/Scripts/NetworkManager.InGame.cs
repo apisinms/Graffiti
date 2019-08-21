@@ -64,7 +64,7 @@ public partial class NetworkManager : MonoBehaviour
 	}
 
 
-	public void MayIMove(float _posX, float _posZ)
+	public void MayIMove(float _posX, float _posZ, float _rotY)
 	{
 		// 프로토콜 셋팅
 		protocol = SetProtocol(
@@ -76,6 +76,7 @@ public partial class NetworkManager : MonoBehaviour
 		position.playerNum = myPlayerNum;
 		position.posX = _posX;
 		position.posZ = _posZ;
+        position.rotY = _rotY;
 
 		// 패킹 및 전송
 		int packetSize;

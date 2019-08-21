@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class Customizable : MonoBehaviour {
+public class Customizable : UnityEngine.MonoBehaviour {
 
     public Button Next;
     public Button Previous;
