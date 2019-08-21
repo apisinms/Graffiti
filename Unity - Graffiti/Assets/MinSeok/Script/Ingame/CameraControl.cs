@@ -10,7 +10,7 @@ public class CameraControl : UnityEngine.MonoBehaviour
 
     void Awake()
     {
-        obj_player = GameObject.FindGameObjectWithTag(ClientNetworkManager.instance.myTag);
+        obj_player = GameObject.FindGameObjectWithTag(GameManager.instance.myTag);
     }
 
     void Start()
@@ -24,8 +24,8 @@ public class CameraControl : UnityEngine.MonoBehaviour
 
     void LateUpdate()
     {
-        if (PlayerManager.instance.myAttributeState == _ATTRIBUTE_STATE.ALIVE &&
-            PlayerManager.instance.myActionState != _ACTION_STATE.IDLE)
+        if (MyPlayerManager.instance.myAttributeState == _ATTRIBUTE_STATE.ALIVE &&
+            MyPlayerManager.instance.myActionState != _ACTION_STATE.IDLE)
         {
             cameraPos.x = obj_player.transform.position.x;
             cameraPos.y = obj_player.transform.position.y + 8f;

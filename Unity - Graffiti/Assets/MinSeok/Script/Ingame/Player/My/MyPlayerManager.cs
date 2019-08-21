@@ -7,16 +7,11 @@ using UnityEngine;
  * 분할된 클래스 내 필드들의 Awake는 여기서 한번에 이루어진다.
  */
 
-public enum _ATTRIBUTE_STATE
+public partial class MyPlayerManager : MonoBehaviour
 {
-    //속성상태 
-    DEAD = 0,
-    ALIVE = 1
-}
+    public static MyPlayerManager instance;
 
-public partial class PlayerManager : MonoBehaviour
-{
-    public static PlayerManager instance;
+    public GameObject obj_myPlayer { get; set; }
 
     public _ATTRIBUTE_STATE myAttributeState { get; set; }
     public float mySpeed { get; set; }
@@ -29,10 +24,14 @@ public partial class PlayerManager : MonoBehaviour
         if (instance == null)
             instance = this;
 
-        animePlayer = gameObject.GetComponent<Animator>();
+        obj_myPlayer = GameObject.FindGameObjectWithTag(GameManager.instance.myTag); //내 태그번호에맞는 로빈과합체
+        animePlayer = obj_myPlayer.GetComponent<Animator>();
+
+        //전부 서버에서 받아온 데이터로
         myAttributeState = _ATTRIBUTE_STATE.ALIVE;
         myActionState = _ACTION_STATE.IDLE;
-        mySpeed = 4.0f;
-        myHp = 100.0f;
+        mySpeed = 4.0f; 
+        myHp = 100.0f; 
     }
+
 }

@@ -7,7 +7,7 @@ using UnityEngine;
  * 플레이어 애니메이션 재생/정지 함수가 들어있다.
  */
 
-public partial class PlayerManager : MonoBehaviour
+public partial class MyPlayerManager : MonoBehaviour
 {
     public Animator animePlayer { get; set; }
 

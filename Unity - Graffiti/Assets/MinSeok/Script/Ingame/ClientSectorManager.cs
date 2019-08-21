@@ -35,7 +35,7 @@ public class ClientSectorManager : UnityEngine.MonoBehaviour
         if(instance == null)
             instance = this;
 
-        obj_player = GameObject.FindGameObjectWithTag(ClientNetworkManager.instance.myTag);
+        obj_player = GameObject.FindGameObjectWithTag(GameManager.instance.myTag);
 
         //모든 셀들의 영역을 계산해놓음.
         for (int i = 0; i < 4; i++)
