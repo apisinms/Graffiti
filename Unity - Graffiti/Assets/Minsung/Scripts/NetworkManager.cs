@@ -4,7 +4,6 @@
  NetworkManager.Packet.cs
  */
 
-#define __64BIT__
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -20,154 +19,93 @@ using UnityEngine;
 /// NetworkManager_Main.cs파일
 /// 주로 상수, 프로토콜, 멤버변수, 프로퍼티 같은 선언이 있다.
 /// </summary>
-public partial class NetworkManager : UnityEngine.MonoBehaviour
+public partial class NetworkManager : MonoBehaviour
 {
-	const int IDSIZE = 255;
-	const int PWSIZE = 255;
-	const int NICKNAMESIZE = 255;
+	readonly static int IDSIZE = 255;
+	readonly static int PWSIZE = 255;
+	readonly static int NICKNAMESIZE = 255;
 
-#if __64BIT__
-	// 63 ~ 59 
+
+	readonly static int STATE_PROTOCOL_OFFSET = 10;                     // 10
+	readonly static int PROTOCOL_OFFSET = STATE_PROTOCOL_OFFSET + 20;   // 30
+	readonly static int RESULT_OFFSET = PROTOCOL_OFFSET + 10;         // 40
+
+	readonly static int STATE_PROTOCOL_MASK = 0x3FF;
+	readonly static int PROTOCOL_MASK = 0xFFFFF;
+	readonly static int RESULT_MASK = 0x3FF;
+
+	/// <summary>
+	/// 10(STATE_PROTOCOL) + 20(PROTOCOL) + 10(RESULT) + 24(그외)
+	/// </summary>
+	// 63 ~ 54
 	enum STATE_PROTOCOL : Int64
 	{
 		// 상위 5비트 스테이트를 표현해주는 프로토콜
-		LOGIN_STATE  = ((Int64)0x1 << 63),
-		LOBBY_STATE  = ((Int64)0x1 << 62),
-		CHAT_STATE   = ((Int64)0x1 << 61),
+		LOGIN_STATE = ((Int64)0x1 << 63),
+		LOBBY_STATE = ((Int64)0x1 << 62),
+		CHAT_STATE = ((Int64)0x1 << 61),
 		INGAME_STATE = ((Int64)0x1 << 60),
-		//60
-		//59
+
+		//59 ~ 54
 	};
 
-	//58 ~ 54
+	//53 ~ 34
 	enum PROTOCOL : Int64
 	{
 		// LoginState
-		JOIN_PROTOCOL = ((Int64)0x1 << 58),
-		LOGIN_PROTOCOL = ((Int64)0x1 << 57),
-		// 56
-		// 55
-		// 54
+		JOIN_PROTOCOL = ((Int64)0x1 << 53),
+		LOGIN_PROTOCOL = ((Int64)0x1 << 52),
 
 		// LobbyState
-		MATCH_PROTOCOL               = ((Int64)0x1 << 58),
-		MATCH_CANCEL_PROTOCOL        = ((Int64)0x1 << 57),
-		GOTO_INGAME_PROTOCOL         = ((Int64)0x1 << 56),      // 인게임 상태로 진입 프로토콜
-		LOGOUT_PROTOCOL              = ((Int64)0x1 << 55),
+		MATCH_PROTOCOL = ((Int64)0x1 << 53),
+		MATCH_CANCEL_PROTOCOL = ((Int64)0x1 << 52),
+		GOTO_INGAME_PROTOCOL = ((Int64)0x1 << 51),      // 인게임 상태로 진입 프로토콜
+		LOGOUT_PROTOCOL = ((Int64)0x1 << 50),
 
 		// ChatState
-		LEAVE_ROOM_PROTOCOL = ((Int64)0x1 << 58),
-		CHAT_PROTOCOL       = ((Int64)0x1 << 57),
+		LEAVE_ROOM_PROTOCOL = ((Int64)0x1 << 53),
+		CHAT_PROTOCOL = ((Int64)0x1 << 52),
 
 		// InGameState
-		//ITEMSELECT_PROTOCOL = ((Int64)0x1 << 58),
-		TIMER_PROTOCOL        = ((Int64)0x1 << 58),	// 타이머 프로토콜(1초씩 받음)
-		WEAPON_PROTOCOL       = ((Int64)0x1 << 57),	// 무기 전송 프로토콜
-		START_PROTOCOL        = ((Int64)0x1 << 56),	// 게임 시작 프로토콜
-		MOVE_PROTOCOL         = ((Int64)0x1 << 55),	// 이동 프로토콜
-		// 55
-		// 54
+		TIMER_PROTOCOL = ((Int64)0x1 << 53),    // 타이머 프로토콜(1초씩 받음)
+		WEAPON_PROTOCOL = ((Int64)0x1 << 52),   // 무기 전송 프로토콜
+		START_PROTOCOL = ((Int64)0x1 << 51),    // 게임 시작 프로토콜
+		MOVE_PROTOCOL = ((Int64)0x1 << 50), // 이동 프로토콜
+		DISCONNECT_PROTOCOL = ((Int64)0x1 << 49), // 접속 끊김 프로토콜
+
+		// 48 ~ 34
 	};
 
-	// 53 ~ 49
+	// 33 ~ 24
 	enum RESULT : Int64
 	{
 		//LoginState
-		JOIN_SUCCESS = ((Int64)0x1 << 53),
-		LOGIN_SUCCESS = ((Int64)0x1 << 53),
-		LOGOUT_SUCCESS = ((Int64)0x1 << 53),
-		LOGOUT_FAIL = ((Int64)0x1 << 52),
+		JOIN_SUCCESS = ((Int64)0x1 << 33),
+		LOGIN_SUCCESS = ((Int64)0x1 << 33),
+		LOGOUT_SUCCESS = ((Int64)0x1 << 33),
+		LOGOUT_FAIL = ((Int64)0x1 << 32),
 
 		// Join & Login result
-		ID_EXIST = ((Int64)0x1 << 52),
-		ID_ERROR = ((Int64)0x1 << 51),
-		PW_ERROR = ((Int64)0x1 << 50),
+		ID_EXIST = ((Int64)0x1 << 32),
+		ID_ERROR = ((Int64)0x1 << 31),
+		PW_ERROR = ((Int64)0x1 << 30),
 
 		// LobbyState
-		LOBBY_SUCCESS = ((Int64)0x1 << 53),		// 로비에서 성공 처리
-		LOBBY_FAIL = ((Int64)0x1 << 52),        // 로비에서 실패 처리
+		LOBBY_SUCCESS = ((Int64)0x1 << 33),     // 로비에서 성공 처리
+		LOBBY_FAIL = ((Int64)0x1 << 32),        // 로비에서 실패 처리
 
 		// ChatState
-		LEAVE_ROOM_SUCCESS = ((Int64)0x1 << 53),
-		LEAVE_ROOM_FAIL = ((Int64)0x1 << 52),
+		LEAVE_ROOM_SUCCESS = ((Int64)0x1 << 33),
+		LEAVE_ROOM_FAIL = ((Int64)0x1 << 32),
 
 		// InGameState
-		INGAME_SUCCESS = ((Int64)0x1 << 53),
-		INGAME_FAIL = ((Int64)0x1 << 52),
+		INGAME_SUCCESS = ((Int64)0x1 << 33),
+		INGAME_FAIL = ((Int64)0x1 << 32),
 
+		// ~ 25
 
-		NODATA = ((Int64)0x1 << 49)
+		NODATA = ((Int64)0x1 << 24)
 	};
-#endif
-
-#if __32BIT__
-	// 31~27
-	enum STATE_PROTOCOL : int
-	{
-		// 상위 5비트 스테이트를 표현해주는 프로토콜
-		LOGIN_STATE = ((int)0x1 << 31),
-		LOBBY_STATE = ((int)0x1 << 30),
-		CHAT_STATE = ((int)0x1 << 29),
-		INGAME_STATE = ((int)0x1 << 28),
-		//27
-	};
-
-	// 26 ~ 22
-	enum PROTOCOL : int
-	{
-		// LoginState
-		JOIN_PROTOCOL = ((int)0x1 << 26),
-		LOGIN_PROTOCOL = ((int)0x1 << 25),
-		// 56
-		// 55
-		// 54
-
-		// LobbyState
-		MATCH_PROTOCOL = ((int)0x1 << 26),
-		START_PROTOCOL = ((int)0x1 << 25),      // 게임시작 프로토콜
-		LOGOUT_PROTOCOL = ((int)0x1 << 24),
-
-		// ChatState
-		LEAVE_ROOM_PROTOCOL = ((int)0x1 << 26),
-		CHAT_PROTOCOL = ((int)0x1 << 25),
-
-		// InGameState
-		ITEMSELECT_PROTOCOL = ((int)0x1 << 26),
-		// 56
-		// 55
-		// 54
-	};
-
-	// 21 ~ 17
-	enum RESULT : int
-	{
-		//LoginState
-		JOIN_SUCCESS   = ((int)0x1 << 21),
-		LOGIN_SUCCESS  = ((int)0x1 << 21),
-		LOGOUT_SUCCESS = ((int)0x1 << 21),
-		LOGOUT_FAIL    = ((int)0x1 << 20),
-
-		// Join & Login result
-		ID_EXIST = ((int)0x1 << 20),
-		ID_ERROR = ((int)0x1 << 19),
-		PW_ERROR = ((int)0x1 << 18),
-
-		// LobbyState
-		MATCH_SUCCESS = ((int)0x1 << 21),     // 매칭 성공
-		MATCH_FAIL    = ((int)0x1 << 20),        // 매칭 성공
-
-		// ChatState
-		LEAVE_ROOM_SUCCESS = ((int)0x1 << 21),
-		LEAVE_ROOM_FAIL    = ((int)0x1 << 20),
-
-		// InGameState
-		INGAME_SUCCESS = ((int)0x1 << 21),
-		INGAME_FAIL    = ((int)0x1 << 20),
-
-
-		NODATA = ((int)0x1 << 17)
-	};
-#endif
 
 	struct _User_Info
 	{
@@ -244,7 +182,7 @@ public partial class NetworkManager : UnityEngine.MonoBehaviour
 		}
 	}
 
-	PositionPacket posPacket;
+	PositionPacket[] posPacket = new PositionPacket[4];
 
 
 
@@ -253,12 +191,12 @@ public partial class NetworkManager : UnityEngine.MonoBehaviour
 	RESULT result;          // 결과
 
 	// 서버 IP와 포트
-	private static IPAddress serverIP = IPAddress.Parse("119.193.122.118");
-	private static int serverPort = 9000;
+	private static IPAddress serverIP = IPAddress.Parse("119.193.122.103");
+	private static int serverPort = 10823;
 
 	// 버퍼
-	private byte[] sendBuf = new byte[C_Global.BUFSIZE];				// 송신 버퍼
-	//private byte[] recvBuf = new byte[C_Global.BUFSIZE];				// 수신 버퍼
+	private byte[] sendBuf = new byte[C_Global.BUFSIZE];                // 송신 버퍼
+																		//private byte[] recvBuf = new byte[C_Global.BUFSIZE];				// 수신 버퍼
 
 	// TCP 클라, 바이너리 리더, 라이터
 	private static TcpClient tcpClient = new TcpClient();
@@ -268,11 +206,12 @@ public partial class NetworkManager : UnityEngine.MonoBehaviour
 	private object key = new object();      // 동기화에 사용할 key이다.
 	private string sysMsg = string.Empty;   // 서버로부터 전달되는 메시지를 저장할 변수
 	private int myPlayerNum;
+	private int quitPlayerNum;              // 게임에서 나간 플레이어 번호
 
-	private Queue<C_Global.QueueInfo> queue;	// recv에 관한 패킷이 저장될 큐
+	private Queue<C_Global.QueueInfo> queue;    // recv에 관한 패킷이 저장될 큐
 
 	public Queue<C_Global.QueueInfo> Queue { get { return queue; } }
-	public BinaryReader	BinaryReader { get { return br; } }
+	public BinaryReader BinaryReader { get { return br; } }
 	public BinaryWriter BinaryWriter { get { return bw; } }
 
 	public string SysMsg
@@ -286,18 +225,32 @@ public partial class NetworkManager : UnityEngine.MonoBehaviour
 		get { return myPlayerNum; }
 		set { myPlayerNum = value; }
 	}
-	public float GetPosX
+	public float GetPosX(int _idx)
 	{
-		get { return posPacket.posX; }
+		return posPacket[_idx].posX;
 	}
-	public float GetPosZ
+	public float GetPosZ(int _idx)
 	{
-		get { return posPacket.posZ; }
+		return posPacket[_idx].posZ;
 	}
-	public int GetPosPlayerNum
+	public int GetPosPlayerNum(int _idx)
 	{
-		get { return posPacket.playerNum; }
+		return posPacket[_idx].playerNum;
+	}
+
+	public void SetPosX(int _idx, float _posX)
+	{
+		this.posPacket[_idx].posX = _posX;
+	}
+	public void SetPosZ(int _idx, float _posZ)
+	{
+		this.posPacket[_idx].posZ = _posZ;
+	}
+	public void SetPosPlayerNum(int _idx, int _num)
+	{
+		this.posPacket[_idx].playerNum = _num;
 	}
 
 	public static NetworkManager instance = null;
+
 }

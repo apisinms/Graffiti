@@ -15,13 +15,23 @@ public class ClientNetworkManager : MonoBehaviour
 
     void Awake()
     {
-        if (instance == null)
-            instance = this;
+		if (instance == null)
+		{
+			instance = this;
 
-        playersTag[0] = "Player1"; playersTag[1] = "Player2";
-        playersTag[2] = "Player3"; playersTag[3] = "Player4";
+			// 스크린 가로모드 고정
+			Screen.orientation = ScreenOrientation.AutoRotation;
+			Screen.autorotateToPortrait = false;
+			Screen.autorotateToPortraitUpsideDown = false;
+			Screen.autorotateToLandscapeLeft = true;
+			Screen.autorotateToLandscapeRight = true;
+		}
 
-        myNetworkNum = 4; //예시로 번호부여함.  서버에서 샌드된번호로 해야함.
+			playersTag[0] = "Player1"; playersTag[1] = "Player2";
+			playersTag[2] = "Player3"; playersTag[3] = "Player4";
+
+        //myNetworkNum = NetworkManager.instance.MyPlayerNum; //예시로 번호부여함.  서버에서 샌드된번호로 해야함.
+        myNetworkNum = 1; //예시로 번호부여함.  서버에서 샌드된번호로 해야함.
 
         switch (myNetworkNum) //서버로부터 받은 번호에따라서 
         {

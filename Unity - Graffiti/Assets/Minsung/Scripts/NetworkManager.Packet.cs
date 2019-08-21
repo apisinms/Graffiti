@@ -1,5 +1,4 @@
-﻿#define __64BIT__
-using System;
+﻿using System;
 using System.Text;
 using System.Runtime.InteropServices;
 using UnityEngine;
@@ -9,7 +8,7 @@ using UnityEngine;
 /// NetworkManager_Packet.cs파일
 /// 패킷, 프로토콜에 관한 내용이 있다.
 /// </summary>
-public partial class NetworkManager : UnityEngine.MonoBehaviour
+public partial class NetworkManager : MonoBehaviour
 {
 	// 바이트 배열을 스트링으로
 	private string ByteToString(byte[] _byte)
@@ -38,117 +37,36 @@ public partial class NetworkManager : UnityEngine.MonoBehaviour
 		byte[] byteProtocol = new byte[sizeof(PROTOCOL)];   // 1. byte형식으로 얻어올 배열
 		PROTOCOL wholeProtocol = 0;                         // 2. 64비트로 가지고있을 Protocol 자체
 		Buffer.BlockCopy(_buf, offset, byteProtocol, 0, sizeof(PROTOCOL));  // 1. 우선 byte형식으로 얻음
-#if __64BIT__
+
 		wholeProtocol = (PROTOCOL)BitConverter.ToInt64(byteProtocol, 0);    // 2. 위에서 얻은 배열로 Int64를 만들어 Protocol에 저장
-#endif
-#if __32BIT__
-		wholeProtocol = (PROTOCOL)BitConverter.ToInt32(byteProtocol, 0);
-#endif
 		offset += sizeof(PROTOCOL);         // 오프셋 증가
 
 
-#if __64BIT__
-		// 상위 5비트를 걸러줄 마스크를 생성하고
-		Int64 mask = ((Int64)0x1f << (64 - 5));
+		// STATE를 걸러줄 마스크를 생성하고
+		Int64 mask = ((Int64)STATE_PROTOCOL_MASK << (64 - STATE_PROTOCOL_OFFSET));
 
 		// 마스크를 통해 스테이트를 얻는다.
 		_state = (STATE_PROTOCOL)((Int64)wholeProtocol & mask);
 
-		mask = ((Int64)0x1f << (64 - 10));
+		mask = ((Int64)PROTOCOL_MASK << (64 - PROTOCOL_OFFSET));
 		_protocol = (PROTOCOL)((Int64)wholeProtocol & mask);  // 이제 state를 얻었으니 protocol을 얻어보자
 
-		mask = ((Int64)0x1f << (64 - 15));
+		mask = ((Int64)RESULT_MASK << (64 - RESULT_OFFSET));
 		_result = (RESULT)((Int64)wholeProtocol & mask);       // 이제 마지막으로 result
 
-
-
-		// state를 읽어서 protocol과 resul를 마스킹을 통해 구한다.
-		//switch (_state)
-		//{
-		//	case STATE_PROTOCOL.LOGIN_STATE:
-		//		{
-		//			mask = ((Int64)0x1f << (64 - 10));
-		//			_protocol = (PROTOCOL)((Int64)wholeProtocol & mask);  // 이제 state를 얻었으니 protocol을 얻어보자
-
-		//			mask = ((Int64)0x1f << (64 - 15));
-		//			_result = (RESULT)((Int64)wholeProtocol & mask);     // 이제 마지막으로 result
-		//		}
-		//		break;
-
-		//	case STATE_PROTOCOL.LOBBY_STATE:
-		//		{
-		//			mask = ((Int64)0x1f << (64 - 10));
-		//			_protocol = (PROTOCOL)((Int64)wholeProtocol & mask);  // 이제 state를 얻었으니 protocol을 얻어보자
-
-		//			mask = ((Int64)0x1f << (64 - 15));
-		//			_result = (RESULT)((Int64)wholeProtocol & mask);       // 이제 마지막으로 result
-		//		}
-		//		break;
-
-		//	case STATE_PROTOCOL.INGAME_STATE:
-		//		{
-		//			mask = ((Int64)0x1f << (64 - 10));
-		//			_protocol = (PROTOCOL)((Int64)wholeProtocol & mask);  // 이제 state를 얻었으니 protocol을 얻어보자
-
-		//			mask = ((Int64)0x1f << (64 - 15));
-		//			_result = (RESULT)((Int64)wholeProtocol & mask);       // 이제 마지막으로 result
-		//		}
-		//		break;
-
-		//	//case STATE_PROTOCOL.CHAT_STATE:
-		//	//	break;
-		//}
-#endif
-
-#if __32BIT__
-		// 상위 5비트를 걸러줄 마스크를 생성하고
-		Int32 mask = ((Int32)0x1f << (32 - 5));
-
-		// 마스크를 통해 스테이트를 얻는다.
-		_state = (STATE_PROTOCOL)((Int32)wholeProtocol & mask);
-
-		// state를 읽어서 protocol과 resul를 마스킹을 통해 구한다.
-		switch (_state)
-		{
-			case STATE_PROTOCOL.LOGIN_STATE:
-				mask = ((Int32)0x1f << (32 - 10));
-				_protocol = (PROTOCOL)((Int64)wholeProtocol & mask);  // 이제 state를 얻었으니 protocol을 얻어보자
-
-				mask = ((Int32)0x1f << (32 - 15));
-				_result = (RESULT)((Int64)wholeProtocol & mask);     // 이제 마지막으로 result
-				break;
-
-			case STATE_PROTOCOL.LOBBY_STATE:
-				mask = ((Int32)0x1f << (32 - 10));
-				_protocol = (PROTOCOL)((Int64)wholeProtocol & mask);  // 이제 state를 얻었으니 protocol을 얻어보자
-
-				mask = ((Int32)0x1f << (32 - 15));
-				_result = (RESULT)((Int64)wholeProtocol & mask);       // 이제 마지막으로 result
-				break;
-
-			case STATE_PROTOCOL.CHAT_STATE:
-				break;
-		}
-#endif
-
+		/// 그 뒤는 부가정보
 	}
 
 	private PROTOCOL SetProtocol(STATE_PROTOCOL _state, PROTOCOL _protocol, RESULT _result)
 	{
 		PROTOCOL protocol = (PROTOCOL)0;
-#if __64BIT__
 		protocol = (PROTOCOL)((Int64)_state | (Int64)_protocol | (Int64)_result);
-#endif
-
-#if __32BIT__
-		protocol = (PROTOCOL)((Int32)_state | (Int32)_protocol | (Int32)_result);
-#endif
 		return protocol;
 	}
 
 	private void PackPacket(ref byte[] _sendBuf, PROTOCOL _protocol, out int _size)
 	{
-		Array.Clear(_sendBuf, 0, C_Global.BUFSIZE);	// 송신 버퍼 초기화
+		Array.Clear(_sendBuf, 0, C_Global.BUFSIZE); // 송신 버퍼 초기화
 
 		// 임시 저장 버퍼 + 암호화 시킬 버퍼
 		byte[] tmpBuf = new byte[C_Global.BUFSIZE];
@@ -157,13 +75,7 @@ public partial class NetworkManager : UnityEngine.MonoBehaviour
 		int offset = 0;
 
 		// 프로토콜
-#if __64BIT__
 		Buffer.BlockCopy(BitConverter.GetBytes((Int64)_protocol), 0, tmpBuf, offset, sizeof(PROTOCOL));
-#endif
-#if __32BIT__
-		Buffer.BlockCopy(BitConverter.GetBytes((Int32)_protocol), 0, buf, offset, sizeof(PROTOCOL));
-#endif
-
 		offset += sizeof(PROTOCOL);
 		_size += sizeof(PROTOCOL);
 
@@ -191,12 +103,7 @@ public partial class NetworkManager : UnityEngine.MonoBehaviour
 		int offset = 0;
 
 		// 프로토콜
-#if __64BIT__
 		Buffer.BlockCopy(BitConverter.GetBytes((Int64)_protocol), 0, buf, offset, sizeof(PROTOCOL));
-#endif
-#if __32BIT__
-		Buffer.BlockCopy(BitConverter.GetBytes((Int32)_protocol), 0, buf, offset, sizeof(PROTOCOL));
-#endif
 		offset += sizeof(PROTOCOL);
 		_size += sizeof(PROTOCOL);
 
@@ -229,16 +136,11 @@ public partial class NetworkManager : UnityEngine.MonoBehaviour
 		int offset = 0;
 
 		// 프로토콜
-#if __64BIT__
 		Buffer.BlockCopy(BitConverter.GetBytes((Int64)_protocol), 0, buf, offset, sizeof(PROTOCOL));
-#endif
-#if __32BIT__
-		Buffer.BlockCopy(BitConverter.GetBytes((Int32)_protocol), 0, buf, offset, sizeof(PROTOCOL));
-#endif
 		offset += sizeof(PROTOCOL);
 		_size += sizeof(PROTOCOL);
 
-		// 프로토콜
+		// 위치
 		Buffer.BlockCopy(_position.Serialize(), 0, buf, offset, Marshal.SizeOf(_position));
 		offset += Marshal.SizeOf(_position);
 		_size += Marshal.SizeOf(_position);
@@ -263,20 +165,15 @@ public partial class NetworkManager : UnityEngine.MonoBehaviour
 
 		// 암호화된 내용을 저장할 버퍼이다.
 		byte[] encryptBuf = new byte[C_Global.BUFSIZE];
-		byte[] buf        = new byte[C_Global.BUFSIZE];
+		byte[] buf = new byte[C_Global.BUFSIZE];
 
 		_size = 0;
 		int offset = 0;
 
 		// 프로토콜
-#if __64BIT__
 		Buffer.BlockCopy(BitConverter.GetBytes((Int64)_protocol), 0, buf, offset, sizeof(PROTOCOL));
-#endif
-#if __32BIT__
-		Buffer.BlockCopy(BitConverter.GetBytes((Int32)_protocol), 0, buf, offset, sizeof(PROTOCOL));
-#endif
 		offset += sizeof(PROTOCOL);
-		_size  += sizeof(PROTOCOL);
+		_size += sizeof(PROTOCOL);
 
 		// 문자열1 길이
 		Buffer.BlockCopy(BitConverter.GetBytes(strsize1), 0, buf, offset, sizeof(int));
@@ -324,12 +221,7 @@ public partial class NetworkManager : UnityEngine.MonoBehaviour
 		int offset = 0;
 
 		// 프로토콜
-#if __64BIT__
 		Buffer.BlockCopy(BitConverter.GetBytes((Int64)_protocol), 0, buf, offset, sizeof(PROTOCOL));
-#endif
-#if __32BIT__
-		Buffer.BlockCopy(BitConverter.GetBytes((Int32)_protocol), 0, buf, offset, sizeof(PROTOCOL));
-#endif
 		offset += sizeof(PROTOCOL);
 		_size += sizeof(PROTOCOL);
 
@@ -376,7 +268,7 @@ public partial class NetworkManager : UnityEngine.MonoBehaviour
 		_size += sizeof(int);   // 총 보내야 할 바이트 수 저장한다.
 	}
 
-	private void UnPackPacket(byte[] _buf, PositionPacket _struct)
+	private void UnPackPacket(byte[] _buf, ref PositionPacket _struct)
 	{
 
 		int offset = sizeof(PROTOCOL);
@@ -387,8 +279,8 @@ public partial class NetworkManager : UnityEngine.MonoBehaviour
 		byte[] posByte = new byte[Marshal.SizeOf(_struct)];
 		Buffer.BlockCopy(_buf, offset, posByte, 0, Marshal.SizeOf(_struct));
 
-
-		posPacket.Deserialize(ref posByte);
+		//posPacket[_struct.playerNum - 1].Deserialize(ref posByte);
+		_struct.Deserialize(ref posByte);
 	}
 	private void UnPackPacket(byte[] _buf, out int _num)
 	{
@@ -423,8 +315,6 @@ public partial class NetworkManager : UnityEngine.MonoBehaviour
 		// 이제 다시 string으로 변환
 		_str1 = ByteToString(arrStrByte);
 	}
-
-
 }
 
 

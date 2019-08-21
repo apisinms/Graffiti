@@ -29,6 +29,8 @@ public partial class PlayerManager : MonoBehaviour
     public void Action_CircuitNormal() //노말 움직임일때. 순회.
     {
         Anime_Circuit();
+
+		// 이걸 서버로 전송
         transform.localRotation = Quaternion.LookRotation(myDirection);
         transform.Translate(myDirection * mySpeed * Time.smoothDeltaTime, Space.World);
     }

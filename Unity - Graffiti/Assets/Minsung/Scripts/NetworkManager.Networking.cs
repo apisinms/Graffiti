@@ -10,7 +10,7 @@ using UnityEngine;
 /// NetworkManager_Networking.cs파일
 /// 주로 네트워킹에 관련된 내용이 있다.
 /// </summary>
-public partial class NetworkManager : UnityEngine.MonoBehaviour
+public partial class NetworkManager : MonoBehaviour
 {
 	private void Awake()
 	{
@@ -153,7 +153,7 @@ public partial class NetworkManager : UnityEngine.MonoBehaviour
 
 			case STATE_PROTOCOL.INGAME_STATE:
 				{
-					switch(protocol)
+					switch (protocol)
 					{
 						// 타이머 프로토콜이 넘겨져오면
 						case PROTOCOL.TIMER_PROTOCOL:
@@ -177,20 +177,31 @@ public partial class NetworkManager : UnityEngine.MonoBehaviour
 						case PROTOCOL.START_PROTOCOL:
 							break;
 
+						// 움직임 프로토콜
 						case PROTOCOL.MOVE_PROTOCOL:
 							{
-								Debug.Log("무브");
 								switch (result)
 								{
 									case RESULT.INGAME_SUCCESS:
 										{
 											lock (key)
 											{
-												UnPackPacket(info.packet, posPacket);
-												Debug.Log(posPacket.posX);
+												PositionPacket tmpPosPacket = new PositionPacket();
+												UnPackPacket(info.packet, ref tmpPosPacket);
+												posPacket[tmpPosPacket.playerNum - 1] = tmpPosPacket;   // 해당 플레이어 위치에 저장
 											}
 										}
 										break;
+								}
+							}
+							break;
+
+						// 끊김 프로토콜
+						case PROTOCOL.DISCONNECT_PROTOCOL:
+							{
+								lock (key)
+								{
+									UnPackPacket(info.packet, out quitPlayerNum);
 								}
 							}
 							break;
@@ -200,6 +211,11 @@ public partial class NetworkManager : UnityEngine.MonoBehaviour
 		}
 	}
 
+
+	private void OnApplicationQuit()
+	{
+		Disconnect();
+	}
 	public void Disconnect()
 	{
 		// 뒷정리

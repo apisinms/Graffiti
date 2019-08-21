@@ -5,7 +5,7 @@ using UnityEngine;
 /// NetworkManager_Match.cs파일
 /// 매칭에 관련된 내용이 있다.
 /// </summary>
-public partial class NetworkManager : UnityEngine.MonoBehaviour
+public partial class NetworkManager : MonoBehaviour
 {
 	// 매칭을 원한다고 서버로 전송
 	public void MayIMatch()
@@ -25,9 +25,9 @@ public partial class NetworkManager : UnityEngine.MonoBehaviour
 	// 매칭이 잡혔는지 조회
 	public bool CheckMatched()
 	{
-		if (state    == STATE_PROTOCOL.LOBBY_STATE &&
+		if (state == STATE_PROTOCOL.LOBBY_STATE &&
 			protocol == PROTOCOL.GOTO_INGAME_PROTOCOL &&
-			result   == RESULT.LOBBY_SUCCESS)
+			result == RESULT.LOBBY_SUCCESS)
 			return true;
 
 		else

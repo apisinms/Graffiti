@@ -5,7 +5,7 @@ using UnityEngine;
 /// NetworkManager_Login.cs파일
 /// 로그인, 회원가입에 관련된 내용이 있다.
 /// </summary>
-public partial class NetworkManager : UnityEngine.MonoBehaviour
+public partial class NetworkManager : MonoBehaviour
 {
 	// 로그인 정보 서버로 전송
 	public void MayILogin(string _id, string _pw)

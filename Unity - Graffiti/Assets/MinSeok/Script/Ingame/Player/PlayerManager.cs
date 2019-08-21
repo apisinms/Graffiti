@@ -35,6 +35,4 @@ public partial class PlayerManager : MonoBehaviour
         mySpeed = 4.0f;
         myHp = 100.0f;
     }
-
-
 }
