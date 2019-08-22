@@ -5,8 +5,6 @@ using UnityEngine;
 public class MoveManager : MonoBehaviour
 {
     public  Transform[] curPlayerPos { get; set; }
-    private float speed = 2.0f;
-
     NetworkManager networkManager;
     Vector3 pos;
 
@@ -18,7 +16,7 @@ public class MoveManager : MonoBehaviour
         curPlayerPos = new Transform[4];
 
         for(int i=0; i<curPlayerPos.Length; i++)
-            curPlayerPos[i] = GameManager.instance.obj_players[i].transform;
+            curPlayerPos[i] = PlayersManager.instance.obj_players[i].transform;
 
         pos = new Vector3();
 
@@ -37,7 +35,6 @@ public class MoveManager : MonoBehaviour
     // 플레이어를 뒤져봐서 위치가 다르면 업데이트
     void Update()
     {
-        int j = 0;
         for (int i = 0; i < curPlayerPos.Length; i++)
         {
             // 자기 제외하고
@@ -52,18 +49,18 @@ public class MoveManager : MonoBehaviour
                 pos.y = curPlayerPos[i].position.y;
                 pos.z = networkManager.GetPosZ(i);
 
-              //  curPlayerPos[i].transform.localEulerAngles = new Vector3(0, networkManager.GetRotY(i), 0);
+                PlayersManager.instance.Action_CircuitNormal(i, pos);
+                //  curPlayerPos[i].transform.localEulerAngles = new Vector3(0, networkManager.GetRotY(i), 0);
 
-                curPlayerPos[i].position = Vector3.Lerp(curPlayerPos[i].position, pos,
-                    Time.smoothDeltaTime * (OtherPlayerManager.instance.speed[j] * 3));
+               // curPlayerPos[i].position = Vector3.Lerp(curPlayerPos[i].position, pos,
+                //    Time.smoothDeltaTime * (PlayersManager.instance.speed[i] * 3));
 
-                OtherPlayerManager.instance.Anime_Circuit(j);
+                //PlayersManager.instance.Anime_Circuit(i);
             }
             else // 위치가 바뀌지 않았다면 
             {
-                OtherPlayerManager.instance.Anime_Idle(j);
+                PlayersManager.instance.Action_Idle(i);
             }
-            j++;
         }
     }
 

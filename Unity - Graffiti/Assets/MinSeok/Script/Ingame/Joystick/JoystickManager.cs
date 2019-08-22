@@ -22,20 +22,20 @@ public class JoystickManager : MonoBehaviour
         //       new Vector3(Mathf.Cos(MyPlayerManager.instance.obj_myPlayer.transform.localEulerAngles.y),
         //       0.0f, Mathf.Sin(MyPlayerManager.instance.obj_myPlayer.transform.localEulerAngles.y)));
 
-        switch (MyPlayerManager.instance.myActionState)
+        switch (PlayersManager.instance.actionState[PlayersManager.instance.myIndex])
         {
             case _ACTION_STATE.IDLE:
-                MyPlayerManager.instance.Action_Idle();
+                PlayersManager.instance.Action_Idle();
                 break;
             case _ACTION_STATE.CIRCUIT:
                 //ClientSectorManager.instance.ProcessWhereAmI();
-                MyPlayerManager.instance.Action_CircuitNormal();
+                PlayersManager.instance.Action_CircuitNormal();
                 break;
             case _ACTION_STATE.AIMING:
-                MyPlayerManager.instance.Action_AimingNormal();
+                PlayersManager.instance.Action_AimingNormal();
                 break;
             case _ACTION_STATE.CIRCUIT_AND_AIMING:
-                MyPlayerManager.instance.Action_AimingWithCircuit();
+                PlayersManager.instance.Action_AimingWithCircuit();
                 break;
         }
     }
