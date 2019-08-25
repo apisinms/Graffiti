@@ -51,7 +51,7 @@ public class MoveManager : MonoBehaviour
 
                 PlayersManager.instance.Action_CircuitNormal(i, pos);
                 //  curPlayerPos[i].transform.localEulerAngles = new Vector3(0, networkManager.GetRotY(i), 0);
-
+                 
                // curPlayerPos[i].position = Vector3.Lerp(curPlayerPos[i].position, pos,
                 //    Time.smoothDeltaTime * (PlayersManager.instance.speed[i] * 3));
 
@@ -60,6 +60,7 @@ public class MoveManager : MonoBehaviour
             else // 위치가 바뀌지 않았다면 
             {
                 PlayersManager.instance.Action_Idle(i);
+                //PlayersManager.instance.Anime_Idle(i);
             }
         }
     }
