@@ -21,15 +21,23 @@ public class JoystickManager : MonoBehaviour
         //    Debug.Log(MyPlayerManager.instance.myDirection + "         " +
         //       new Vector3(Mathf.Cos(MyPlayerManager.instance.obj_myPlayer.transform.localEulerAngles.y),
         //       0.0f, Mathf.Sin(MyPlayerManager.instance.obj_myPlayer.transform.localEulerAngles.y)));
-        ClientSectorManager.instance.GetMyArea();
+        //ClientSectorManager.instance.GetMyArea();
+        //  Debug.Log(PlayersManager.instance.direction[PlayersManager.instance.myIndex]);
+        //Debug.Log(PlayersManager.instance.direction2[PlayersManager.instance.myIndex]);
+
+        //Debug.Log(PlayersManager.instance.actionState[PlayersManager.instance.myIndex]);
+
+      //  Debug.Log(new Vector3(0, Mathf.Atan2(PlayersManager.instance.direction[PlayersManager.instance.myIndex].x,
+        //    PlayersManager.instance.direction[PlayersManager.instance.myIndex].z) * Mathf.Rad2Deg, 0));
+        //Debug.Log(PlayersManager.instance.obj_players[PlayersManager.instance.myIndex].transform.);
+       // Debug.Log(PlayersManager.instance.obj_players[PlayersManager.instance.myIndex].transform.eulerAngles.y);
 
         switch (PlayersManager.instance.actionState[PlayersManager.instance.myIndex])
         {
             case _ACTION_STATE.IDLE:
                 PlayersManager.instance.Action_Idle();
                 break;
-            case _ACTION_STATE.CIRCUIT:
-                
+            case _ACTION_STATE.CIRCUIT:          
                 PlayersManager.instance.Action_CircuitNormal();
                 break;
             case _ACTION_STATE.AIMING:

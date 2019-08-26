@@ -21,6 +21,7 @@ public partial class PlayersManager : MonoBehaviour
 
     #region PLAYERS_ANIMATOR
     public Animator[] am_animePlayer { get; set; }
+    public AnimationClip tmp;
     #endregion
 
     #region PLAYERS_STATE

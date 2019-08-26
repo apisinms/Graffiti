@@ -63,7 +63,7 @@ public class ClientSectorManager : UnityEngine.MonoBehaviour
 
     private void Update()
     {
-        GetMyArea(tf_cube);
+        //GetMyArea(tf_cube);
     }
 
     public void CheckOthersEntryMyArea(Transform _pos) //다른오브젝트(플레이어)가 내 시야에 들어왔는지 검사.

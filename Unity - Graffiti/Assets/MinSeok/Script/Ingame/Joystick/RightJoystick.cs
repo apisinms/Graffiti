@@ -44,7 +44,8 @@ public class RightJoystick : MonoBehaviour, JoystickControll
         right_joystick.stickDir = (pos - right_joystick.stickFirstPos).normalized;
 
         PlayersManager.instance.direction2[PlayersManager.instance.myIndex] = new Vector3(right_joystick.stickDir.x, 0, right_joystick.stickDir.y);
-
+        //Debug.Log(Quaternion.ToEulerAngles(Quaternion.LookRotation(PlayersManager.instance.direction2[PlayersManager.instance.myIndex]))) ;
+        
         // 스틱의 처음 위치와 드래그중인 위치의 거리차를 구함
         float distance = Vector3.Distance(pos, right_joystick.stickFirstPos);
 
