@@ -1,17 +1,14 @@
+#include "stdafx.h"
 #include "MainManager.h"
-#include "C_Encrypt.h"
 #include "DatabaseManager.h"
-#include "LogManager.h"
-#include "SessionManager.h"
 #include "LoginManager.h"
 #include "LobbyManager.h"
 #include "ChatManager.h"
 #include "C_ClientInfo.h"
-#include "UtilityManager.h"
 #include "RoomManager.h"
 #include "MatchManager.h"
 #include "InGameManager.h"
-#include <locale.h>
+//#include <locale.h>
 
 // 초기화
 MainManager* MainManager::instance;			// 싱글톤을 위한 정적 포인터

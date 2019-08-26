@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "LobbyManager.h"
 #include "ChatManager.h"
 #include "C_ClientInfo.h"

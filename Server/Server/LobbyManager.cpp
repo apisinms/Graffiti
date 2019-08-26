@@ -1,11 +1,10 @@
+#include "stdafx.h"
 #include "LobbyManager.h"
 #include "LoginManager.h"
-#include "LogManager.h"
 #include "MatchManager.h"
 #include "RoomManager.h"
 #include "C_ClientInfo.h"
 #include "InGameManager.h"
-#include <process.h>
 
 LobbyManager* LobbyManager::instance;
 
@@ -181,9 +180,9 @@ bool LobbyManager::CanIGotoInGame(C_ClientInfo* _ptr)
 		// 만약 방이 생성되고 아무런 진행도 하지 않았다면
 		if (_ptr->GetRoom()->roomStatus == ROOMSTATUS::ROOM_NONE)
 		{
-			// InGameManager에게 타이머 쓰레드를 생성해 30초를 세도록 부탁한다.
-			_ptr->GetRoom()->timerHandle = (HANDLE)_beginthreadex(nullptr, 0, (_beginthreadex_proc_type)InGameManager::TimerThread, (void*)_ptr, 0, NULL);
-			if (_ptr->GetRoom()->timerHandle == nullptr)
+			// InGameManager에게 무기타이머 쓰레드를 생성해 30초를 세도록 부탁한다.
+			_ptr->GetRoom()->weaponTimerHandle = (HANDLE)_beginthreadex(nullptr, 0, (_beginthreadex_proc_type)InGameManager::TimerThread, (void*)_ptr, 0, NULL);
+			if (_ptr->GetRoom()->weaponTimerHandle == nullptr)
 				LogManager::GetInstance()->ErrorPrintf("_beginthreadex() in CanIStart()");
 
 			_ptr->GetRoom()->roomStatus = ROOMSTATUS::ROOM_ITEMSEL;	// 이제 아이템 선택 상태로

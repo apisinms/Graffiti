@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "C_ClientInfo.h"
 
 #include "C_LoginState.h"

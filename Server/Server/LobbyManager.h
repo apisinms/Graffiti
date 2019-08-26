@@ -1,7 +1,5 @@
 #pragma once
-#include "C_List.h"
 #include "C_Global.h"
-#include <tchar.h>
 
 #define ENTER_ROOM_SUCCESS_MSG		TEXT("방 입장에 성공하였습니다.\n")
 #define ENTER_ROOM_FAIL_MSG			TEXT("방 입장에 실패하였습니다.\n")

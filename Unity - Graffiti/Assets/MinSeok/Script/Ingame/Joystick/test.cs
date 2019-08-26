@@ -41,7 +41,7 @@ public class test : UnityEngine.MonoBehaviour, IDragHandler, IPointerUpHandler, 
         if (start == true)
         {
 
-            PlayerManager.instance.animePlayer.SetBool("idle_to_run", true);
+            PlayersManager.instance.am_animePlayer[PlayersManager.instance.myIndex].SetBool("idle_to_run", true);
             //direction이 Input.GetAxis의 반환값을 대신함. 겟액시스를 쓰지않음.
             if (direction.magnitude > 1)
                 direction.Normalize();
@@ -52,12 +52,12 @@ public class test : UnityEngine.MonoBehaviour, IDragHandler, IPointerUpHandler, 
           //  Debug.Log(direction);
             //   player2.transform.LookAt(new Vector3(0, direction.z, 0));
             //  player2.transform.Rotate(new Vector3(0, direction.z, 0), Space.World);
-            player2.transform.Translate(Vector3.right * 0.5f * (PlayerManager.instance.mySpeed) * Time.smoothDeltaTime * direction.x, Space.World);
-            player2.transform.Translate(Vector3.forward * PlayerManager.instance.mySpeed * Time.smoothDeltaTime * direction.z, Space.World);
+            player2.transform.Translate(Vector3.right * 0.5f * (PlayersManager.instance.speed[PlayersManager.instance.myIndex]) * Time.smoothDeltaTime * direction.x, Space.World);
+            player2.transform.Translate(Vector3.forward * PlayersManager.instance.speed[PlayersManager.instance.myIndex] * Time.smoothDeltaTime * direction.z, Space.World);
         }
         else
         {
-            PlayerManager.instance.animePlayer.SetBool("idle_to_run", false);
+            PlayersManager.instance.am_animePlayer[PlayersManager.instance.myIndex].SetBool("idle_to_run", false);
         }
         //		NetworkManager.instance.MayIIMove(transform.position.x, transform.position.z);
         //	}

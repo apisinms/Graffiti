@@ -1,7 +1,5 @@
-#include "UtilityManager.h"
+#include "stdafx.h"
 #include "C_Global.h"
-#include <Windows.h>
-#include <atlstr.h>
 
 UtilityManager* UtilityManager::instance;         // √ ±‚»≠
 

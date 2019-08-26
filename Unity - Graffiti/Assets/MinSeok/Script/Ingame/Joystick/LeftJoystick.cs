@@ -31,7 +31,7 @@ public class LeftJoystick : MonoBehaviour, JoystickControll
 
     public void DragStart()
     {
-        PlayerManager.instance.myActionState += (int)_ACTION_STATE.CIRCUIT;
+        PlayersManager.instance.actionState[PlayersManager.instance.myIndex] += (int)_ACTION_STATE.CIRCUIT;
     }
 
     public  void Drag(BaseEventData _Data)
@@ -43,7 +43,7 @@ public class LeftJoystick : MonoBehaviour, JoystickControll
         left_joystick.stickDir = (pos - left_joystick.stickFirstPos).normalized;
 
         // playerDir = (stickDir.x * Vector3.right) + (stickDir.y * Vector3.forward); //동시에 플레이어의 이동방향결정
-        PlayerManager.instance.myDirection = new Vector3(left_joystick.stickDir.x, 0, left_joystick.stickDir.y);
+        PlayersManager.instance.direction[PlayersManager.instance.myIndex] = new Vector3(left_joystick.stickDir.x, 0, left_joystick.stickDir.y);
 
         // 스틱의 처음 위치와 드래그중인 위치의 거리차를 구함
         float distance = Vector3.Distance(pos, left_joystick.stickFirstPos);
@@ -54,10 +54,10 @@ public class LeftJoystick : MonoBehaviour, JoystickControll
         else
             img_joystick_stick.rectTransform.position = left_joystick.stickFirstPos + (left_joystick.stickDir * left_joystick.maxMoveArea);
 
-       // PlayerManager.instance.tmp = joystick[0].stickDir;
+        // PlayerManager.instance.tmp = joystick[0].stickDir;
 
         //tf_player.transform.localRotation = Quaternion.Euler(0, Mathf.Atan2(stickDir.x, stickDir.y) * Mathf.Rad2Deg, 0);
-
+        //obj_myPlayer.transform.localRotation = Quaternion.LookRotation(myDirection);
         //tf_player.eulerAngles = new Vector3(0, Mathf.Atan2(playerDir.x, playerDir.y) * Mathf.Rad2Deg, 0); //플레이어의 방향을 바꿔줌.
     }
 
@@ -65,6 +65,6 @@ public class LeftJoystick : MonoBehaviour, JoystickControll
     {
         img_joystick_stick.transform.position = left_joystick.stickFirstPos;
         left_joystick.stickDir = Vector3.zero; // 방향을 0으로.
-        PlayerManager.instance.myActionState -= (int)_ACTION_STATE.CIRCUIT;
+        PlayersManager.instance.actionState[PlayersManager.instance.myIndex] -= (int)_ACTION_STATE.CIRCUIT;
     }
 }

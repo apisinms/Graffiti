@@ -14,10 +14,19 @@ using namespace std;
 #define NICKNAMESIZE	255
 #define MSGSIZE			512
 
+#define MAX_PLAYER		4
+
 #define THREAD_END		-777
 
 #define PROTOCOL_OFFSET	0xFFFFF
 #define PROTOCOL_MASK	30
+
+struct Position
+{
+	int playerNum;
+	float posX;
+	float posZ;
+};
 
 struct Weapon
 {
@@ -35,6 +44,30 @@ public:
 	{
 		mainW = _mainW;
 		subW  = _subW;
+	}
+};
+
+struct PlayerInfo
+{
+	Position position;
+	Weapon weapon;
+	float health;
+	float speed;
+	int bullet;
+
+	PlayerInfo()
+	{
+		position.playerNum = 0;
+		position.posX = 0.0f;
+		position.posZ = 0.0f;
+
+		// 일단 샷건으로 생각하고 설정
+		weapon.mainW = 1;
+		weapon.subW = 1;
+		bullet = 5;
+
+		health = 100.0f;
+		speed = 4.0f;
 	}
 };
 

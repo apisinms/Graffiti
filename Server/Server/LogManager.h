@@ -1,6 +1,4 @@
 #pragma once
-#include <stdio.h>
-#include <time.h>
 #include "C_Global.h"
 
 #define ERR_FILE_NAME		"errLog.log"

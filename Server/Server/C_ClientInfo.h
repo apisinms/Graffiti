@@ -16,7 +16,8 @@ struct RoomInfo;
 class C_ClientInfo : public C_Packet
 {
 private:
-	Weapon* weapon;			// 선택한 무기 정보(인게임 시)
+	//Weapon* weapon;			// 선택한 무기 정보(인게임 시)
+	PlayerInfo* playerInfo;	// 인게임에서 사용하는 플레이어 정보
 	RoomInfo* room;			// 소속된 방 정보(매칭 잡혔을 시)
 
 	UserInfo* userInfo;		// 이 클라의 회원정보

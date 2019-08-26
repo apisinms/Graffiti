@@ -1,7 +1,5 @@
 #pragma once
-#include <list>
 #include "C_ClientInfo.h"
-
 
 class MatchManager
 {

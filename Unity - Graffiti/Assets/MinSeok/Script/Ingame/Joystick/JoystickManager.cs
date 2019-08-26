@@ -17,23 +17,26 @@ public class JoystickManager : MonoBehaviour
     {
         //    if (Input.GetKeyDown(KeyCode.Space))
 
-        Debug.Log(PlayerManager.instance.myActionState);
+        //Debug.Log(MyPlayerManager.instance.myActionState);
+        //    Debug.Log(MyPlayerManager.instance.myDirection + "         " +
+        //       new Vector3(Mathf.Cos(MyPlayerManager.instance.obj_myPlayer.transform.localEulerAngles.y),
+        //       0.0f, Mathf.Sin(MyPlayerManager.instance.obj_myPlayer.transform.localEulerAngles.y)));
+        ClientSectorManager.instance.GetMyArea();
 
-        switch (PlayerManager.instance.myActionState)
+        switch (PlayersManager.instance.actionState[PlayersManager.instance.myIndex])
         {
             case _ACTION_STATE.IDLE:
-                PlayerManager.instance.Action_Idle();
+                PlayersManager.instance.Action_Idle();
                 break;
             case _ACTION_STATE.CIRCUIT:
-                //ClientSectorManager.instance.ProcessWhereAmI();
-                PlayerManager.instance.Action_CircuitNormal();
+                
+                PlayersManager.instance.Action_CircuitNormal();
                 break;
             case _ACTION_STATE.AIMING:
-                PlayerManager.instance.Action_AimingNormal();
+                PlayersManager.instance.Action_AimingNormal();
                 break;
             case _ACTION_STATE.CIRCUIT_AND_AIMING:
-                PlayerManager.instance.Action_CircuitWithAiming();
-                PlayerManager.instance.Action_AimingWithCircuit();
+                PlayersManager.instance.Action_AimingWithCircuit();
                 break;
         }
     }

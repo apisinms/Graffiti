@@ -1,8 +1,6 @@
+#include "stdafx.h"
 #include "C_ClientInfo.h"
 #include "LoginManager.h"
-#include "LogManager.h"
-#include "C_List.h"
-#include "UtilityManager.h"
 
 LoginManager* LoginManager::instance;			// √ ±‚»≠
 

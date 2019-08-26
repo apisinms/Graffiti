@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "InGameManager.h"
-#include "LogManager.h"
 #include "RoomManager.h"
 #include "C_ClientInfo.h"
 
@@ -289,8 +289,8 @@ unsigned long __stdcall InGameManager::TimerThread(void* _arg)
 		if (duringTime >= WEAPON_SELTIME)
 		{
 			// 쓰레드 핸들 반납
-			CloseHandle(ptr->GetRoom()->timerHandle);
-			ptr->GetRoom()->timerHandle = nullptr;
+			CloseHandle(ptr->GetRoom()->weaponTimerHandle);
+			ptr->GetRoom()->weaponTimerHandle = nullptr;
 
 			// 무기 정보를 얻어오기위한 프로토콜 조립
 			protocol = InGameManager::GetInstance()->SetProtocol(INGAME_STATE, PROTOCOL_INGAME::WEAPON_PROTOCOL, RESULT_INGAME::NODATA);

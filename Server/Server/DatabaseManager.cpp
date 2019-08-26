@@ -1,7 +1,5 @@
+#include "stdafx.h"	// DB매니저를 PCH에 넣을지 일단 아직 애매함
 #include "DatabaseManager.h"
-#include "LogManager.h"
-#include "UtilityManager.h"
-#include "C_List.h"
 
 DatabaseManager* DatabaseManager::instance;
 

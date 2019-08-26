@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "MatchManager.h"
 #include "RoomManager.h"
 #include "C_ClientInfo.h"
@@ -41,18 +42,18 @@ bool MatchManager::MatchProcess(C_ClientInfo* _ptr)
 
 
 	// 4인이상이 됐다면 
-	if (waitList.size() >= 4)
+	if (waitList.size() >= MAX_PLAYER)
 	{
 		// 마지막으로 매칭을 누른 플레이어들 순서로 정보를 얻어서 배열에 저장한다.
-		C_ClientInfo* players[4];
-		for (int i = 0; i < 4; i++)
+		C_ClientInfo* players[MAX_PLAYER];
+		for (int i = 0; i < MAX_PLAYER; i++)
 		{
 			players[i] = waitList.back();
 			waitList.pop_back();
 		}
 		
 		//나랑 내 앞에를 한 팀, 그리고 남은 2명을 한 팀으로 만들어서 방을 만들고
-		RoomManager::GetInstance()->CreateRoom(players);
+		RoomManager::GetInstance()->CreateRoom(players, MAX_PLAYER);
 
 		return true;
 	}

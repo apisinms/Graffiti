@@ -1,7 +1,5 @@
 #pragma once
-#include "C_List.h"
 #include "C_Global.h"
-#include <tchar.h>
 
 #define MAX_ROOM_SIZE	200
 #define ROOM_TITLE_LEN	255
@@ -35,14 +33,6 @@ class InGameManager
 		INGAME_FAIL    = ((__int64)0x1 << 32),
 
 		NODATA = ((__int64)0x1 << 24)
-	};
-
-	struct Position
-	{
-		int playerNum;
-		float posX;
-		float posZ;
-
 	};
 
 private:
