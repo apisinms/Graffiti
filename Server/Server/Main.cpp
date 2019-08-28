@@ -10,8 +10,6 @@ void myPrint(const char* _msg)
 int main()
 {
 	MainManager* manager = MainManager::GetInstance();
-	
-	C_Sector* sectorManager = new C_Sector();
 
 	manager->Init();
 	manager->Run();

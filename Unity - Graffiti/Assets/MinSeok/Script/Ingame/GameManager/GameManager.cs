@@ -24,7 +24,7 @@ public enum _ACTION_STATE //액션(움직임)의 상태
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    public readonly string[] playersTag = new string[4];
+    public readonly string[] playersTag = new string[C_Global.MAX_PLAYER];
     public int myNetworkNum { get; set; }
     public int myIndex { get; set; }
     public string myTag { get; set; }
@@ -47,8 +47,8 @@ public class GameManager : MonoBehaviour
 	    playersTag[0] = "Player1"; playersTag[1] = "Player2";
 	    playersTag[2] = "Player3"; playersTag[3] = "Player4";
 
-        //myNetworkNum = NetworkManager.instance.MyPlayerNum; //예시로 번호부여함.  서버에서 샌드된번호로 해야함.
-        myNetworkNum = 1; //예시로 번호부여함.  서버에서 샌드된번호로 해야함.
+        myNetworkNum = NetworkManager.instance.MyPlayerNum;
+        //myNetworkNum = 1; //예시로 번호부여함.  서버에서 샌드된번호로 해야함.
         myIndex = myNetworkNum - 1;
 
         myTag = playersTag[myIndex]; //내 태그등록

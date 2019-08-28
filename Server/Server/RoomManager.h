@@ -22,69 +22,34 @@ class C_ClientInfo;
 struct RoomInfo
 {
 	// 여기도 private으로 바꿔야할듯
+private:
+	list<C_ClientInfo*>::iterator curIter;	// 현재 반복자 위치
+
 	void* weaponTimerHandle;		// 무기 선택 타이머 핸들
 	int numOfPlayer;				// 현재 방에 있는 플레이어 수
 	ROOMSTATUS roomStatus;			// 방의 상태
 	list<C_ClientInfo*>playerList;	// 유저들을 리스트에 저장
 	C_Sector* sector;
 
+public:
+	RoomInfo(C_ClientInfo** _playerList, int _numOfPlayer);
 
-	RoomInfo(C_ClientInfo** _playerList, int _numOfPlayer)
-	{
-		weaponTimerHandle = NULL;
+	bool LeaveRoom(C_ClientInfo* _player);
 
-		roomStatus = ROOMSTATUS::ROOM_NONE;	// 방 생성시 초기 상태는 아무 상태도아님
+	bool GetPlayer(C_ClientInfo* &_ptr);	// 리스트에 있는 플레이어를 담아보냄
 
-		numOfPlayer = _numOfPlayer;
+	bool IsPlayerListEmpty() { return playerList.empty(); }
 
-		// 방 플레이어 리스트에 추가
-		for (int i = 0; i < numOfPlayer; i++)
-			playerList.emplace_front(_playerList[i]);
+	int GetPlayerListSize() { return (int)playerList.size(); }
 
-		sector = new C_Sector();	// 섹터관리자 생성
-	}
+	void SetWeaponTimerHandle(void* _handle) { weaponTimerHandle = _handle; }
+	void* GetWeaponTimerHandle() { return weaponTimerHandle; }
 
-	bool LeaveRoom(C_ClientInfo* _player)
-	{
-		// 리스트를 순회하며
-		for (list<C_ClientInfo*>::iterator iter = playerList.begin();
-			iter != playerList.end(); ++iter)
-		{
-			// 자신을 찾은 경우
-			if (*iter == _player)
-			{
+	void SetNumOfPlayer(int _numOfPlayer) { numOfPlayer = _numOfPlayer; }
+	int GetNumOfPlayer() { return numOfPlayer; }
 
-				/// 여기 방 소멸 부분에서 다시 해야함
-
-				// 다른 플레이어들에게 자신이 나간다고 알리고
-				if (InGameManager::GetInstance()->LeaveProcess(_player, (i + 1)) == true)
-				{
-					// 방 인원수를 감소하고, 자신의 흔적을 지운다.
-					room->curNumOfPlayer--;			// 방 인원수 감소
-					room->playerList[i] = nullptr;
-					_ptr->SetRoom(nullptr);
-
-					/// 그리고 같은 팀 2명이 모두 나가면 그냥 게임 끝나야함
-					// 방금 나간사람이 마지막이었다면 방을 없앰
-					if (room->curNumOfPlayer == 0)
-					{
-						roomList->Delete(room);
-						printf("[방 소멸]사이즈:%d\n", roomList->GetCount());
-					}
-
-					return true;
-				}
-			}
-		}
-
-
-	}
-
-	bool IsPlayerListEmpty()
-	{
-		return playerList.empty();
-	}
-
+	void SetRoomStatus(ROOMSTATUS _roomStatus) { roomStatus = _roomStatus; }
+	ROOMSTATUS GetRoomStatus() { return roomStatus; }
 };
 
 class RoomManager
@@ -104,5 +69,6 @@ public:
 
 public:
 	bool CreateRoom(C_ClientInfo* _players[], int _numOfPlayer);
+	bool DeleteRoom(RoomInfo* _room);
 	bool CheckLeaveRoom(C_ClientInfo* _ptr);
 };

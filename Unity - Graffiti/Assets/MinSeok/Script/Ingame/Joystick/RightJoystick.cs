@@ -32,6 +32,7 @@ public class RightJoystick : MonoBehaviour, JoystickControll
 
     public void DragStart()
     {
+        PlayersManager.instance.StartMoveCoroutine();
         PlayersManager.instance.actionState[PlayersManager.instance.myIndex] += (int)_ACTION_STATE.AIMING;
     }
 
@@ -44,7 +45,8 @@ public class RightJoystick : MonoBehaviour, JoystickControll
         right_joystick.stickDir = (pos - right_joystick.stickFirstPos).normalized;
 
         PlayersManager.instance.direction2[PlayersManager.instance.myIndex] = new Vector3(right_joystick.stickDir.x, 0, right_joystick.stickDir.y);
-
+        //Debug.Log(Quaternion.ToEulerAngles(Quaternion.LookRotation(PlayersManager.instance.direction2[PlayersManager.instance.myIndex]))) ;
+        
         // 스틱의 처음 위치와 드래그중인 위치의 거리차를 구함
         float distance = Vector3.Distance(pos, right_joystick.stickFirstPos);
 
@@ -58,6 +60,7 @@ public class RightJoystick : MonoBehaviour, JoystickControll
 
     public void DragEnd()
     {
+        PlayersManager.instance.StopMoveCoroutine();
         img_joystick_stick.transform.position = right_joystick.stickFirstPos;
         right_joystick.stickDir = Vector3.zero; // 방향을 0으로.
         PlayersManager.instance.actionState[PlayersManager.instance.myIndex] -= _ACTION_STATE.AIMING;

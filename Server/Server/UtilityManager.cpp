@@ -43,8 +43,8 @@ void UtilityManager::UnicodeToUTF8(wchar_t* _strUnicode, char* _strUTF8)
 void UtilityManager::UTF8ToUnicode(char* _strUTF8, wchar_t* _strUnicode)
 {
 	//_strUnicode = CA2W(_strUTF8, CP_UTF8);
-	int nLen = MultiByteToWideChar(CP_UTF8, 0, _strUTF8, strlen(_strUTF8), NULL, NULL);
-	MultiByteToWideChar(CP_UTF8, 0, _strUTF8, strlen(_strUTF8), _strUnicode, nLen);
+	int nLen = MultiByteToWideChar(CP_UTF8, 0, _strUTF8, (int)strlen(_strUTF8), NULL, NULL);
+	MultiByteToWideChar(CP_UTF8, 0, _strUTF8, (int)strlen(_strUTF8), _strUnicode, nLen);
 }
 
 //{

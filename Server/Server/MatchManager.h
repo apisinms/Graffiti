@@ -18,5 +18,5 @@ public:
 
 public:
 	bool MatchProcess(C_ClientInfo* _ptr);
-	void WaitListDelete(C_ClientInfo* _ptr);
+	void WaitListRemove(C_ClientInfo* _ptr);
 };

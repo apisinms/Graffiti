@@ -13,22 +13,22 @@ public class MoveManager : MonoBehaviour
         Application.targetFrameRate = 60;
         networkManager = NetworkManager.instance;
 
-        curPlayerPos = new Transform[4];
+		curPlayerPos = new Transform[C_Global.MAX_PLAYER];
 
-        for(int i=0; i<curPlayerPos.Length; i++)
-            curPlayerPos[i] = PlayersManager.instance.obj_players[i].transform;
+		for (int i = 0; i < curPlayerPos.Length; i++)
+			curPlayerPos[i] = PlayersManager.instance.obj_players[i].transform;
 
-        pos = new Vector3();
+		pos = new Vector3();
 
-        // 초기값 설정 //일단 내꺼까지다 넣어논것?
-        for (int i = 0; i < 4; i++)
-        {
-            networkManager.SetPosX(i, curPlayerPos[i].position.x);
-            networkManager.SetPosZ(i, curPlayerPos[i].position.z);
-            networkManager.SetPosPlayerNum(i, i + 1);
-        }
+		// 초기값 설정 //일단 내꺼까지다 넣어논것?
+		for (int i = 0; i < C_Global.MAX_PLAYER; i++)
+		{
+			networkManager.SetPosX(i, curPlayerPos[i].localPosition.x);
+			networkManager.SetPosZ(i, curPlayerPos[i].localPosition.z);
+			networkManager.SetPosPlayerNum(i, i + 1);
+		}
 
-        StartCoroutine(this.CheckQuit());
+		StartCoroutine(this.CheckQuit());
     }
 
 
@@ -41,27 +41,26 @@ public class MoveManager : MonoBehaviour
             if (GameManager.instance.myIndex == i)
                 continue;
 
-            //위치가 바뀐애가 있으면
-            if (networkManager.GetPosX(i) != curPlayerPos[i].position.x ||
-               networkManager.GetPosZ(i) != curPlayerPos[i].position.z)
-            {
-                pos.x = networkManager.GetPosX(i);
-                pos.y = curPlayerPos[i].position.y;
-                pos.z = networkManager.GetPosZ(i);
+			//위치가 바뀐애가 있으면
+			if (networkManager.GetPosX(i) != curPlayerPos[i].localPosition.x ||
+			   networkManager.GetPosZ(i) != curPlayerPos[i].localPosition.z)
+			{
+				pos.x = networkManager.GetPosX(i);
+				pos.y = curPlayerPos[i].localPosition.y;
+				pos.z = networkManager.GetPosZ(i);
 
-                PlayersManager.instance.Action_CircuitNormal(i, pos);
-                //  curPlayerPos[i].transform.localEulerAngles = new Vector3(0, networkManager.GetRotY(i), 0);
-                 
-               // curPlayerPos[i].position = Vector3.Lerp(curPlayerPos[i].position, pos,
-                //    Time.smoothDeltaTime * (PlayersManager.instance.speed[i] * 3));
+				//curPlayerPos[i].transform.localEulerAngles = new Vector3(0, networkManager.GetRotY(i), 0);
 
-                //PlayersManager.instance.Anime_Circuit(i);
-            }
-            else // 위치가 바뀌지 않았다면 
-            {
-                PlayersManager.instance.Action_Idle(i);
-                //PlayersManager.instance.Anime_Idle(i);
-            }
+				//curPlayerPos[i].position = Vector3.Lerp(curPlayerPos[i].position, pos,
+				//Time.smoothDeltaTime * (PlayersManager.instance.speed[i] * 3));
+
+				PlayersManager.instance.Action_CircuitNormal(i, pos, networkManager.GetRotY(i));
+			}
+			else // 위치가 바뀌지 않았다면 
+			{
+				PlayersManager.instance.Action_Idle(i);
+				//PlayersManager.instance.Anime_Idle(i);
+			}
         }
     }
 
@@ -72,20 +71,20 @@ public class MoveManager : MonoBehaviour
             switch (networkManager.CheckQuit())
             {
                 case 1:
-                    Destroy(GameObject.Find("red_1"));
+					Destroy(GameObject.FindGameObjectWithTag("Player1"));
                     break;
 
                 case 2:
-                    Destroy(GameObject.Find("red_2"));
-                    break;
+					Destroy(GameObject.FindGameObjectWithTag("Player2"));
+					break;
 
                 case 3:
-                    Destroy(GameObject.Find("blue_1"));
-                    break;
+					Destroy(GameObject.FindGameObjectWithTag("Player3"));
+					break;
 
                 case 4:
-                    Destroy(GameObject.Find("blue_2"));
-                    break;
+					Destroy(GameObject.FindGameObjectWithTag("Player4"));
+					break;
 
                 default:
                     break;

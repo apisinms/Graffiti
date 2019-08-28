@@ -14,18 +14,19 @@ using namespace std;
 #define NICKNAMESIZE	255
 #define MSGSIZE			512
 
-#define MAX_PLAYER		4
+#define MAX_PLAYER		2
 
 #define THREAD_END		-777
 
 #define PROTOCOL_OFFSET	0xFFFFF
 #define PROTOCOL_MASK	30
 
-struct Position
+struct PositionPacket
 {
 	int playerNum;
 	float posX;
 	float posZ;
+	float rotY;
 };
 
 struct Weapon
@@ -34,11 +35,7 @@ struct Weapon
 	char subW;
 
 public:
-	Weapon()
-	{
-		mainW = -1;
-		subW = -1;
-	}
+	Weapon() {}
 
 	Weapon(char _mainW, char _subW)
 	{
@@ -49,26 +46,37 @@ public:
 
 struct PlayerInfo
 {
-	Position position;
-	Weapon weapon;
+private:
+	PositionPacket* position;
+	Weapon* weapon;
 	float health;
 	float speed;
 	int bullet;
 
+public:
 	PlayerInfo()
 	{
-		position.playerNum = 0;
-		position.posX = 0.0f;
-		position.posZ = 0.0f;
+		position = new PositionPacket();
+		weapon   = new Weapon();
 
-		// 일단 샷건으로 생각하고 설정
-		weapon.mainW = 1;
-		weapon.subW = 1;
-		bullet = 5;
-
-		health = 100.0f;
-		speed = 4.0f;
+		health = speed = 0.0f;
+		bullet = 0;
 	}
+
+	PositionPacket* GetPosition() { return position; }
+	void SetPosition(PositionPacket* _position) { position = _position; }
+
+	Weapon* GetWeapon() { return weapon; }
+	void SetWeapon(Weapon* _weapon) { weapon = _weapon; }
+
+	float GetHealth() { return health; }
+	void SetHealth(float _health) { health = _health; }
+
+	float GetSpeed() { return speed; }
+	void SetSpeed(float _speed) { speed = _speed; }
+
+	int GetBullet() { return bullet; }
+	void SetBullet(int _bullet) { bullet = _bullet; }
 };
 
 enum STATE : int

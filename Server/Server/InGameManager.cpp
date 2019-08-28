@@ -39,7 +39,7 @@ void InGameManager::PackPacket(char* _setptr, const int &_sec, int& _size)
 void InGameManager::PackPacket(char* _setptr, TCHAR* _str1, int& _size)
 {
 	char* ptr = _setptr;
-	int strsize1 = _tcslen(_str1) * sizeof(TCHAR);
+	int strsize1 = (int)_tcslen(_str1) * sizeof(TCHAR);
 	_size = 0;
 
 	// 문자열 길이
@@ -53,15 +53,24 @@ void InGameManager::PackPacket(char* _setptr, TCHAR* _str1, int& _size)
 	_size = _size + strsize1;
 }
 
-void InGameManager::PackPacket(char* _setptr, Position& _struct, int& _size)
+void InGameManager::UnPackPacket(char* _getBuf, PositionPacket& _struct)
+{
+	char* ptr = _getBuf + sizeof(PROTOCOL_INGAME);
+
+	// 구조체 받음
+	memcpy(&_struct, ptr, sizeof(PositionPacket));
+	ptr = ptr + sizeof(PositionPacket);
+}
+
+void InGameManager::PackPacket(char* _setptr, PositionPacket& _struct, int& _size)
 {
 	char* ptr = _setptr;
 	_size = 0;
 
 	// 문자열 길이
-	memcpy(ptr, &_struct, sizeof(Position));
-	ptr = ptr + sizeof(Position);
-	_size = _size + sizeof(Position);
+	memcpy(ptr, &_struct, sizeof(PositionPacket));
+	ptr = ptr + sizeof(PositionPacket);
+	_size = _size + sizeof(PositionPacket);
 }
 
 void InGameManager::UnPackPacket(char* _getBuf, Weapon* &_weapon)
@@ -71,15 +80,6 @@ void InGameManager::UnPackPacket(char* _getBuf, Weapon* &_weapon)
 	// 구조체 받음
 	memcpy(_weapon, ptr, sizeof(Weapon));
 	ptr = ptr + sizeof(Weapon);
-}
-
-void InGameManager::UnPackPacket(char* _getBuf, Position& _struct)
-{
-	char* ptr = _getBuf + sizeof(PROTOCOL_INGAME);
-
-	// 구조체 받음
-	memcpy(&_struct, ptr, sizeof(Position));
-	ptr = ptr + sizeof(Position);
 }
 
 void InGameManager::GetProtocol(PROTOCOL_INGAME& _protocol)
@@ -119,7 +119,6 @@ bool InGameManager::WeaponSelectProcess(C_ClientInfo* _ptr, char* _buf)
 {
 	TCHAR msg[MSGSIZE] = { 0, };
 	PROTOCOL_INGAME protocol;
-	int mainW, subW;
 	char buf[BUFSIZE];
 	int packetSize;
 
@@ -144,13 +143,13 @@ bool InGameManager::WeaponSelectProcess(C_ClientInfo* _ptr, char* _buf)
 	ZeroMemory(buf, sizeof(BUFSIZE));
 
 	// 패킹 및 전송
-	PackPacket(buf, msg, packetSize);
+	PackPacket(buf, msg, packetSize);	/// msg없는데 굳이 보낼필요없음
 	_ptr->SendPacket(protocol, buf, packetSize);
 
 
 	if (itemSelect == RESULT_INGAME::INGAME_SUCCESS)
 	{
-		_ptr->GetRoom()->roomStatus = ROOMSTATUS::ROOM_GAME;	// 방이 게임으로 입장하였다.
+		_ptr->GetRoom()->SetRoomStatus(ROOMSTATUS::ROOM_GAME);	// 방이 게임으로 입장하였다.
 		return true;
 	}
 
@@ -167,10 +166,10 @@ bool InGameManager::MoveProcess(C_ClientInfo* _ptr, char* _buf)
 	RESULT_INGAME move = RESULT_INGAME::INGAME_SUCCESS;
 
 
-	Position position;
+	PositionPacket position;
 	UnPackPacket(_buf, position);
 
-	printf("%d ,%f, %f\n", position.playerNum, position.posX, position.posZ);
+	printf("%d ,%f, %f, %f\n", position.playerNum, position.posX, position.posZ, position.rotY);
 
 	// 프로토콜 세팅
 	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::MOVE_PROTOCOL, move);
@@ -180,17 +179,15 @@ bool InGameManager::MoveProcess(C_ClientInfo* _ptr, char* _buf)
 	// 패킹
 	PackPacket(buf, position, packetSize);
 
-	// 자신을 제외한 다른 클라들에게 자신의 위치를 전송해준다.
-	C_ClientInfo* ptr;
-	for (int i = 0; i < 4; i++)
+	// 방에 있는 자신을 제외한 다른 클라들에게 자신의 위치를 전송해준다.
+	C_ClientInfo* player = nullptr;
+	while (_ptr->GetRoom()->GetPlayer(player) == true)
 	{
-		ptr = _ptr->GetRoom()->playerList[i];
-
-		if (ptr == _ptr ||
-			ptr == nullptr)
+		// 자기는 제외
+		if (_ptr == player)
 			continue;
 
-		_ptr->GetRoom()->playerList[i]->SendPacket(protocol, buf, packetSize);
+		player->SendPacket(protocol, buf, packetSize);
 	}
 
 	if (move == RESULT_INGAME::INGAME_SUCCESS)
@@ -218,17 +215,14 @@ bool InGameManager::LeaveProcess(C_ClientInfo* _ptr, int _playerNum)
 	PackPacket(buf, _playerNum, packetSize);
 
 	// 자신을 제외한 다른 클라들에게 자신이 나갔음을 알린다.
-	C_ClientInfo* ptr;
-	for (int i = 0; i < 4; i++)
+	C_ClientInfo* player = nullptr;
+	while (_ptr->GetRoom()->GetPlayer(player) == true)
 	{
-		ptr = _ptr->GetRoom()->playerList[i];
-
 		// 자기는 제외
-		if (_ptr == ptr ||
-			ptr == nullptr)
+		if (_ptr == player)
 			continue;
 
-		ptr->SendPacket(protocol, buf, packetSize);
+		player->SendPacket(protocol, buf, packetSize);
 	}
 
 	return true;
@@ -256,7 +250,6 @@ bool InGameManager::CanIIMove(C_ClientInfo* _ptr)
 
 	return false;
 }
-
 
 
 // 무기 선택 타이머 쓰레드
@@ -289,17 +282,18 @@ unsigned long __stdcall InGameManager::TimerThread(void* _arg)
 		if (duringTime >= WEAPON_SELTIME)
 		{
 			// 쓰레드 핸들 반납
-			CloseHandle(ptr->GetRoom()->weaponTimerHandle);
-			ptr->GetRoom()->weaponTimerHandle = nullptr;
+			CloseHandle(ptr->GetRoom()->GetWeaponTimerHandle());
+			ptr->GetRoom()->SetWeaponTimerHandle(nullptr);
 
 			// 무기 정보를 얻어오기위한 프로토콜 조립
 			protocol = InGameManager::GetInstance()->SetProtocol(INGAME_STATE, PROTOCOL_INGAME::WEAPON_PROTOCOL, RESULT_INGAME::NODATA);
 			ZeroMemory(buf, BUFSIZE);
 			packetSize = 0;
 
-			// 같은 방에 있는 모든 플레이어에게 무기를 보내라고 프로토콜을 전송함.
-			for (int i = 0; i < 4; i++)
-				ptr->GetRoom()->playerList[i]->SendPacket(protocol, buf, packetSize);
+			// 같은 방에 있는 "모든" 플레이어에게 무기를 보내라고 프로토콜을 전송함.
+			C_ClientInfo* player = nullptr;
+			while (ptr->GetRoom()->GetPlayer(player) == true)
+				player->SendPacket(protocol, buf, packetSize);
 
 			break;
 		}
@@ -317,9 +311,10 @@ unsigned long __stdcall InGameManager::TimerThread(void* _arg)
 			// 무기 선택종료까지 남은 시간 패킷 세팅
 			InGameManager::GetInstance()->PackPacket(buf, (WEAPON_SELTIME - sec), packetSize);
 
-			// 같은 방에 있는 모든 플레이어에게 현재 무기 선택종료까지 남은 시간을 보내줌
-			for (int i = 0; i < 4; i++)
-				ptr->GetRoom()->playerList[i]->SendPacket(protocol, buf, packetSize);
+			// 같은 방에 있는 "모든" 플레이어에게 현재 무기 선택종료까지 남은 시간을 보내줌
+			C_ClientInfo* player = nullptr;
+			while (ptr->GetRoom()->GetPlayer(player) == true)
+				player->SendPacket(protocol, buf, packetSize);
 		}
 	}
 

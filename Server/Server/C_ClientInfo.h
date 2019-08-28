@@ -16,7 +16,6 @@ struct RoomInfo;
 class C_ClientInfo : public C_Packet
 {
 private:
-	//Weapon* weapon;			// 선택한 무기 정보(인게임 시)
 	PlayerInfo* playerInfo;	// 인게임에서 사용하는 플레이어 정보
 	RoomInfo* room;			// 소속된 방 정보(매칭 잡혔을 시)
 
@@ -48,6 +47,21 @@ public:
 	void SetRoom(RoomInfo* _room);
 	RoomInfo* GetRoom();
 
+	void SetPlayerInfo(PlayerInfo* _playerInfo);
+	PlayerInfo* GetPlayerInfo();
+
+	PositionPacket* GetPosition();
+	void SetPosition(PositionPacket* _position);
+
 	Weapon* GetWeapon();
 	void SetWeapon(Weapon* _weapon);
+
+	float GetHealth();
+	void SetHealth(float _health);
+
+	float GetSpeed();
+	void SetSpeed(float _speed);
+
+	int GetBullet();
+	void SetBullet(int _bullet);
 };

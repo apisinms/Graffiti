@@ -9,10 +9,14 @@ using UnityEngine;
 public partial class PlayersManager : MonoBehaviour
 {
 
-    public void Action_Idle() { Anime_Idle(myIndex); } //서있을때
+    public void Action_Idle()
+    {
+        Anime_Idle(myIndex);
+    } //서있을때
 
     public void Action_CircuitNormal() //노말 움직임일때. 순회.
     {
+
         Anime_Circuit(myIndex);
 
         // 이걸 서버로 전송
@@ -22,13 +26,19 @@ public partial class PlayersManager : MonoBehaviour
 
     public void Action_AimingNormal() //제자리 조준
     {
-        Anime_Idle(myIndex);
+
+        Anime_Aiming_Idle(myIndex);
         obj_players[myIndex].transform.localRotation = Quaternion.LookRotation(direction2[myIndex]);
     }
 
     public void Action_AimingWithCircuit()  // 순회와 조준동시
     {
-        Anime_Idle(myIndex);
+
+        if (obj_players[myIndex].transform.eulerAngles.y > 340.0f && obj_players[myIndex].transform.eulerAngles.y < 20.0f)
+        {
+
+        }
+        Anime_Aiming_Left(myIndex);
         obj_players[myIndex].transform.localRotation = Quaternion.LookRotation(direction2[myIndex]);
         obj_players[myIndex].transform.Translate(direction[myIndex] * (speed[myIndex] * 0.3f) * Time.smoothDeltaTime, Space.World);
     }

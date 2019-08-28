@@ -9,6 +9,25 @@ using UnityEngine;
 
 public partial class PlayersManager : MonoBehaviour
 {
-    public void Anime_Idle(int _index) { am_animePlayer[_index].SetTrigger("Idle"); }
-    public void Anime_Circuit(int _index) { am_animePlayer[_index].SetTrigger("Curcuit"); }
+    public void Anime_Idle(int _index)
+    {
+        am_animePlayer[_index].SetBool("Aiming", false);
+        am_animePlayer[_index].SetTrigger("Idle");
+    }
+    public void Anime_Circuit(int _index)
+    {
+        am_animePlayer[_index].SetBool("Aiming", false);
+        am_animePlayer[_index].SetTrigger("Curcuit");
+    }
+    public void Anime_Aiming_Idle(int _index)
+    {
+        am_animePlayer[_index].SetBool("Aiming", true);
+        am_animePlayer[_index].SetTrigger("Aiming_Idle");
+    }
+    public void Anime_Aiming_Left(int _index)
+    {
+      //  if(am_animePlayer[_index].GetBool("Aiming") == false)
+        am_animePlayer[_index].SetBool("Aiming", true);
+        am_animePlayer[_index].SetTrigger("Aiming_Left");
+    }
 }
