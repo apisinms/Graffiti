@@ -1,3 +1,4 @@
+#include "stdafx.h"
 ////#include "C_Select.h"
 ////#include "SessionManager.h"
 //

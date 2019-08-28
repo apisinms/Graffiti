@@ -1,11 +1,10 @@
+#include "stdafx.h"
 #include "LobbyManager.h"
 #include "LoginManager.h"
-#include "LogManager.h"
 #include "MatchManager.h"
 #include "RoomManager.h"
 #include "C_ClientInfo.h"
 #include "InGameManager.h"
-#include <process.h>
 
 LobbyManager* LobbyManager::instance;
 
@@ -42,7 +41,7 @@ void LobbyManager::PackPacket(char* _setptr, int _num, int& _size)
 void LobbyManager::PackPacket(char* _setptr, TCHAR* _str1, int& _size)
 {
 	char* ptr = _setptr;
-	int strsize1 = _tcslen(_str1) * sizeof(TCHAR);
+	int strsize1 = (int)_tcslen(_str1) * sizeof(TCHAR);
 	_size = 0;
 
 	// 문자열 길이
@@ -111,7 +110,6 @@ bool LobbyManager::CanIMatch(C_ClientInfo* _ptr)
 	{
 		if (MatchManager::GetInstance()->MatchProcess(_ptr) == true)
 		{
-
 			// 모든 플레이어들에게 인게임 상태로 진입하라는 프로토콜을 보내버림
 			protocol = SetProtocol(LOBBY_STATE, PROTOCOL_LOBBY::GOTO_INGAME_PROTOCOL, RESULT_LOBBY::LOBBY_SUCCESS);
 			ZeroMemory(buf, sizeof(BUFSIZE));
@@ -136,7 +134,7 @@ bool LobbyManager::CanICancelMatch(C_ClientInfo* _ptr)
 	if (protocol == MATCH_CANCEL_PROTOCOL)
 	{
 		// 이 클라 정보를 대기리스트에서 삭제하고
-		MatchManager::GetInstance()->WaitListDelete(_ptr);
+		MatchManager::GetInstance()->WaitListRemove(_ptr);
 
 
 		// 매칭 취소 성공 프로토콜 조립
@@ -152,7 +150,7 @@ bool LobbyManager::CanICancelMatch(C_ClientInfo* _ptr)
 		return true;	// 성공 리턴
 	}
 
- 	return false;
+	return false;
 }
 
 bool LobbyManager::CanILeaveLobby(C_ClientInfo* _ptr)
@@ -179,14 +177,15 @@ bool LobbyManager::CanIGotoInGame(C_ClientInfo* _ptr)
 		printf("4인 매칭성공\n");
 
 		// 만약 방이 생성되고 아무런 진행도 하지 않았다면
-		if (_ptr->GetRoom()->roomStatus == ROOMSTATUS::ROOM_NONE)
+		if (_ptr->GetRoom()->GetRoomStatus() == ROOMSTATUS::ROOM_NONE)
 		{
-			// InGameManager에게 타이머 쓰레드를 생성해 30초를 세도록 부탁한다.
-			_ptr->GetRoom()->timerHandle = (HANDLE)_beginthreadex(nullptr, 0, (_beginthreadex_proc_type)InGameManager::TimerThread, (void*)_ptr, 0, NULL);
-			if (_ptr->GetRoom()->timerHandle == nullptr)
+			// InGameManager에게 무기타이머 쓰레드를 생성해 30초를 세도록 부탁한다.
+			_ptr->GetRoom()->SetWeaponTimerHandle((HANDLE)_beginthreadex(nullptr, 0, (_beginthreadex_proc_type)InGameManager::TimerThread, (void*)_ptr, 0, NULL));
+
+			if (_ptr->GetRoom()->GetWeaponTimerHandle() == nullptr)
 				LogManager::GetInstance()->ErrorPrintf("_beginthreadex() in CanIStart()");
 
-			_ptr->GetRoom()->roomStatus = ROOMSTATUS::ROOM_ITEMSEL;	// 이제 아이템 선택 상태로
+			_ptr->GetRoom()->SetRoomStatus(ROOMSTATUS::ROOM_ITEMSEL);	// 이제 아이템 선택 상태로
 		}
 
 		return true;
@@ -198,10 +197,13 @@ bool LobbyManager::CanIGotoInGame(C_ClientInfo* _ptr)
 void LobbyManager::SendPacket_Room(C_ClientInfo* _ptr, char* _buf, PROTOCOL_LOBBY _protocol)
 {
 	int packetSize = 0;
+	int i = 1;
 
-	for (int i = 0; i < 4; i++)
+	// 같은 방에 있는 모든 플레이어에게 현재 무기 선택종료까지 남은 시간을 보내줌
+	C_ClientInfo* player = nullptr;
+	while (_ptr->GetRoom()->GetPlayer(player) == true)
 	{
-		PackPacket(_buf, (i + 1), packetSize);
-		_ptr->GetRoom()->playerList[i]->SendPacket(_protocol, _buf, packetSize);
+		PackPacket(_buf, i++, packetSize);
+		player->SendPacket(_protocol, _buf, packetSize);
 	}
 }

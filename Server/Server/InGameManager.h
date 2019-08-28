@@ -1,18 +1,12 @@
 #pragma once
-#include "C_List.h"
 #include "C_Global.h"
-#include <tchar.h>
-
-#define MAX_ROOM_SIZE	200
-#define ROOM_TITLE_LEN	255
-#define ROOM_NUM_LEN	20
 
 class C_ClientInfo;
 
 class InGameManager
 {
 #ifdef DEBUG
-	static const int WEAPON_SELTIME = 5 + 1;	// 무기 선택 시간(초 단위)
+	static const int WEAPON_SELTIME = 3 + 1;	// 무기 선택 시간(초 단위)
 #else
 	static const int WEAPON_SELTIME = 30 + 1;	// 무기 선택 시간(초 단위)
 #endif
@@ -37,14 +31,6 @@ class InGameManager
 		NODATA = ((__int64)0x1 << 24)
 	};
 
-	struct Position
-	{
-		int playerNum;
-		float posX;
-		float posZ;
-		float rotY;
-	};
-
 private:
 	InGameManager() {}
 	~InGameManager() {}
@@ -59,8 +45,8 @@ public:
 private:
 	void PackPacket(char* _setptr, const int &_sec, int& _size);
 	void PackPacket(char* _setptr, TCHAR* _str1, int& _size);				// 문자열 1개를 Pack하는 함수
-	void PackPacket(char* _setptr, Position& _struct, int& _size);
-	void UnPackPacket(char* _getBuf, Position& _struct);
+	void PackPacket(char* _setptr, PositionPacket& _struct, int& _size);
+	void UnPackPacket(char* _getBuf, PositionPacket& _struct);
 	void UnPackPacket(char* _getBuf, Weapon* &_weapon);
 
 	void GetProtocol(PROTOCOL_INGAME& _protocol);								// 프로토콜을 얻음

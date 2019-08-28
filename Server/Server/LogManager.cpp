@@ -1,5 +1,4 @@
-#include <tchar.h>
-#include "LogManager.h"
+#include "stdafx.h"
 #include "C_ClientInfo.h"
 
 LogManager* LogManager::instance;	// √ ±‚»≠

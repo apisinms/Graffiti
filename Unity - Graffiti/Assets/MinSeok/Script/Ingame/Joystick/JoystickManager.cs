@@ -21,21 +21,30 @@ public class JoystickManager : MonoBehaviour
         //    Debug.Log(MyPlayerManager.instance.myDirection + "         " +
         //       new Vector3(Mathf.Cos(MyPlayerManager.instance.obj_myPlayer.transform.localEulerAngles.y),
         //       0.0f, Mathf.Sin(MyPlayerManager.instance.obj_myPlayer.transform.localEulerAngles.y)));
+        //ClientSectorManager.instance.GetMyArea();
+        //  Debug.Log(PlayersManager.instance.direction[PlayersManager.instance.myIndex]);
+        //Debug.Log(PlayersManager.instance.direction2[PlayersManager.instance.myIndex]);
 
-        switch (MyPlayerManager.instance.myActionState)
+        //Debug.Log(PlayersManager.instance.actionState[PlayersManager.instance.myIndex]);
+
+      //  Debug.Log(new Vector3(0, Mathf.Atan2(PlayersManager.instance.direction[PlayersManager.instance.myIndex].x,
+        //    PlayersManager.instance.direction[PlayersManager.instance.myIndex].z) * Mathf.Rad2Deg, 0));
+        //Debug.Log(PlayersManager.instance.obj_players[PlayersManager.instance.myIndex].transform.);
+       // Debug.Log(PlayersManager.instance.obj_players[PlayersManager.instance.myIndex].transform.eulerAngles.y);
+
+        switch (PlayersManager.instance.actionState[PlayersManager.instance.myIndex])
         {
             case _ACTION_STATE.IDLE:
-                MyPlayerManager.instance.Action_Idle();
+                PlayersManager.instance.Action_Idle();
                 break;
-            case _ACTION_STATE.CIRCUIT:
-                //ClientSectorManager.instance.ProcessWhereAmI();
-                MyPlayerManager.instance.Action_CircuitNormal();
+            case _ACTION_STATE.CIRCUIT:          
+                PlayersManager.instance.Action_CircuitNormal();
                 break;
             case _ACTION_STATE.AIMING:
-                MyPlayerManager.instance.Action_AimingNormal();
+                PlayersManager.instance.Action_AimingNormal();
                 break;
             case _ACTION_STATE.CIRCUIT_AND_AIMING:
-                MyPlayerManager.instance.Action_AimingWithCircuit();
+                PlayersManager.instance.Action_AimingWithCircuit();
                 break;
         }
     }

@@ -55,6 +55,18 @@
     <Filter Include="헤더 파일\ETC">
       <UniqueIdentifier>{c64b77b5-20bc-4ed1-ac0a-4dbb28d8c55c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\PCH">
+      <UniqueIdentifier>{fecde3eb-98d8-47d4-8a9e-d0165459b588}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\PCH">
+      <UniqueIdentifier>{59432846-2b5b-4d9e-abfe-cb38ec5bfde1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Sector">
+      <UniqueIdentifier>{7f262f15-30b3-460c-a197-199beed5b2e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Sector">
+      <UniqueIdentifier>{fb1fd5d8-0b0f-41f2-af5b-69481107e68a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UtilityManager.h">
@@ -144,6 +156,12 @@
     <ClInclude Include="InGameManager.h">
       <Filter>헤더 파일\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>헤더 파일\PCH</Filter>
+    </ClInclude>
+    <ClInclude Include="C_Sector.h">
+      <Filter>헤더 파일\Sector</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -199,6 +217,12 @@
     </ClCompile>
     <ClCompile Include="InGameManager.cpp">
       <Filter>소스 파일\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="C_Sector.cpp">
+      <Filter>소스 파일\Sector</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>소스 파일\PCH</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

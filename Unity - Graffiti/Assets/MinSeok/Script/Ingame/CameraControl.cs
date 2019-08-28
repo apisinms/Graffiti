@@ -17,19 +17,19 @@ public class CameraControl : UnityEngine.MonoBehaviour
     {
         //tmpPlayerPos = obj_player.transform.position;
         cameraPos.x = obj_player.transform.position.x;
-        cameraPos.y = obj_player.transform.position.y + 8f;
-        cameraPos.z = obj_player.transform.position.z - 5.5f;
+        cameraPos.y = obj_player.transform.position.y + 7f;
+        cameraPos.z = obj_player.transform.position.z - 5.3f;
         transform.position = cameraPos;
     }
 
     void LateUpdate()
     {
-        if (MyPlayerManager.instance.myAttributeState == _ATTRIBUTE_STATE.ALIVE &&
-            MyPlayerManager.instance.myActionState != _ACTION_STATE.IDLE)
+        if (PlayersManager.instance.attributeState[PlayersManager.instance.myIndex] == _ATTRIBUTE_STATE.ALIVE &&
+            PlayersManager.instance.actionState[PlayersManager.instance.myIndex] != _ACTION_STATE.IDLE)
         {
             cameraPos.x = obj_player.transform.position.x;
-            cameraPos.y = obj_player.transform.position.y + 8f;
-            cameraPos.z = obj_player.transform.position.z - 5.5f;
+            cameraPos.y = obj_player.transform.position.y + 7f;
+            cameraPos.z = obj_player.transform.position.z - 5.3f;
 
 
 

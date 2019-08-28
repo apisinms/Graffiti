@@ -1,5 +1,4 @@
 #pragma once
-#include <vector>
 #include "C_Socket.h"
 
 class C_IOCP : public C_SyncCS<C_IOCP>

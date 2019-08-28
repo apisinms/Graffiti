@@ -1,4 +1,4 @@
-#include "C_Encrypt.h"
+#include "stdafx.h"
 
 C_Encrypt* C_Encrypt::instance;
 

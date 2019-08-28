@@ -24,9 +24,9 @@ public enum _ACTION_STATE //액션(움직임)의 상태
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    public readonly string[] playersTag = new string[4];
-
+    public readonly string[] playersTag = new string[C_Global.MAX_PLAYER];
     public int myNetworkNum { get; set; }
+    public int myIndex { get; set; }
     public string myTag { get; set; }
 
     void Awake()
@@ -43,30 +43,14 @@ public class GameManager : MonoBehaviour
 			Screen.autorotateToLandscapeRight = true;
 		}
 
+        //obj_players = new GameObject[4];
 	    playersTag[0] = "Player1"; playersTag[1] = "Player2";
 	    playersTag[2] = "Player3"; playersTag[3] = "Player4";
-        
-        // 서버에서 받은 번호를 부여 
+
         myNetworkNum = NetworkManager.instance.MyPlayerNum;
+        //myNetworkNum = 1; //예시로 번호부여함.  서버에서 샌드된번호로 해야함.
+        myIndex = myNetworkNum - 1;
 
-        switch (myNetworkNum) //서버로부터 받은 번호에따라서 
-        {
-            case 1:
-                myTag = "Player1";
-                break;
-            case 2:
-                myTag = "Player2";
-                break;
-            case 3:
-                myTag = "Player3";
-                break;
-            case 4:
-                myTag = "Player4";
-                break;
-        }
-        //GameObject.FindGameObjectWithTag(MyPlayerManager.instance.myTag).AddComponent<MyPlayerManager>(); //내가 부여받은 번호의 로빈과 합체.
+        myTag = playersTag[myIndex]; //내 태그등록
     }
-
-
-
 }

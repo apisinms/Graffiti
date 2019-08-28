@@ -1,4 +1,6 @@
+#include "stdafx.h"
 #include "MainManager.h"
+#include "C_Sector.h"
 
 void myPrint(const char* _msg)
 {
