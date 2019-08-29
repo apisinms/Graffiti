@@ -64,27 +64,29 @@ public partial class NetworkManager : MonoBehaviour
 	}
 
 
-	public void MayIMove(float _posX, float _posZ)
-	{
-		// 프로토콜 셋팅
-		protocol = SetProtocol(
-				STATE_PROTOCOL.INGAME_STATE,
-				PROTOCOL.MOVE_PROTOCOL,
-				RESULT.NODATA);
+    public void MayIMove(float _posX, float _posZ, float _rotY, _ACTION_STATE _action)
+    {
+        // 프로토콜 셋팅
+        protocol = SetProtocol(
+                STATE_PROTOCOL.INGAME_STATE,
+                PROTOCOL.MOVE_PROTOCOL,
+                RESULT.NODATA);
 
-		PositionPacket position = new PositionPacket();
-		position.playerNum = myPlayerNum;
-		position.posX = _posX;
-		position.posZ = _posZ;
+        PositionPacket position = new PositionPacket();
+        position.playerNum = myPlayerNum;
+        position.posX = _posX;
+        position.posZ = _posZ;
+        position.rotY = _rotY;
+        position.action = (int)_action;
 
-		// 패킹 및 전송
-		int packetSize;
-		PackPacket(ref sendBuf, protocol, position, out packetSize);
+        // 패킹 및 전송
+        int packetSize;
+        PackPacket(ref sendBuf, protocol, position, out packetSize);
 
-		bw.Write(sendBuf, 0, packetSize);
-	}
+        bw.Write(sendBuf, 0, packetSize);
+    }
 
-	public bool CheckMove()
+    public bool CheckMove()
 	{
 		if (state == STATE_PROTOCOL.INGAME_STATE &&
 			protocol == PROTOCOL.MOVE_PROTOCOL &&

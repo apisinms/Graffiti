@@ -1,5 +1,4 @@
 #pragma once
-#include <queue>
 #include "C_SyncCS.h"
 #include "C_Global.h"
 

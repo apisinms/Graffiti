@@ -1,17 +1,14 @@
+#include "stdafx.h"
 #include "MainManager.h"
-#include "C_Encrypt.h"
 #include "DatabaseManager.h"
-#include "LogManager.h"
-#include "SessionManager.h"
 #include "LoginManager.h"
 #include "LobbyManager.h"
 #include "ChatManager.h"
 #include "C_ClientInfo.h"
-#include "UtilityManager.h"
 #include "RoomManager.h"
 #include "MatchManager.h"
 #include "InGameManager.h"
-#include <locale.h>
+//#include <locale.h>
 
 // 초기화
 MainManager* MainManager::instance;			// 싱글톤을 위한 정적 포인터
@@ -200,7 +197,7 @@ void MainManager::IOCP_Disconnected(void* _ptr)
 
 
 	LoginManager::GetInstance()->LoginListDelete(ptr);	// 로그인 목록에 있다면 지워준다.
-	MatchManager::GetInstance()->WaitListDelete(ptr);	// 매칭 대기 목록에 있다면 지워준다.
+	MatchManager::GetInstance()->WaitListRemove(ptr);	// 매칭 대기 목록에 있다면 지워준다.
 	RoomManager::GetInstance()->CheckLeaveRoom(ptr);	// 방에 있다면 방 정보에서 지워줌
 	SessionManager::GetInstance()->Remove(ptr);			// 데이터까지 완전 종료되는 Remove를 호출
 }

@@ -1,7 +1,6 @@
+#include "stdafx.h"
 #include "C_Packet.h"
-#include "C_Encrypt.h"
 #include "C_Global.h"
-#include "LogManager.h"
 
 void C_Packet::GetPacket(__int64& _protocol, char* _getBuf)
 {

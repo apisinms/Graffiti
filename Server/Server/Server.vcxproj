@@ -95,6 +95,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>_WINSOCK_DEPRECATED_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libmysql.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -144,6 +145,7 @@
     <ClInclude Include="C_LoginState.h" />
     <ClInclude Include="C_Node.h" />
     <ClInclude Include="C_Packet.h" />
+    <ClInclude Include="C_Sector.h" />
     <ClInclude Include="C_Select.h" />
     <ClInclude Include="C_Socket.h" />
     <ClInclude Include="C_Stack.h" />
@@ -158,6 +160,7 @@
     <ClInclude Include="MatchManager.h" />
     <ClInclude Include="RoomManager.h" />
     <ClInclude Include="SessionManager.h" />
+    <ClInclude Include="stdafx.h" />
     <ClInclude Include="UtilityManager.h" />
   </ItemGroup>
   <ItemGroup>
@@ -166,6 +169,7 @@
     <ClCompile Include="C_Encrypt.cpp" />
     <ClCompile Include="C_IOCP.cpp" />
     <ClCompile Include="C_Packet.cpp" />
+    <ClCompile Include="C_Sector.cpp" />
     <ClCompile Include="C_Select.cpp" />
     <ClCompile Include="C_Socket.cpp" />
     <ClCompile Include="DatabaseManager.cpp" />
@@ -178,6 +182,9 @@
     <ClCompile Include="MatchManager.cpp" />
     <ClCompile Include="RoomManager.cpp" />
     <ClCompile Include="SessionManager.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="UtilityManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,10 +1,4 @@
-﻿/*
- 프로토콜 32, 64비트 관여 파일
- NetworkManager.cs
- NetworkManager.Packet.cs
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -159,7 +153,13 @@ public partial class NetworkManager : MonoBehaviour
 		[MarshalAs(UnmanagedType.R4)]
 		public float posZ;
 
-		public byte[] Serialize()
+		[MarshalAs(UnmanagedType.R4)]
+		public float rotY;
+
+        [MarshalAs(UnmanagedType.I4)]
+        public int action;
+
+        public byte[] Serialize()
 		{
 			// allocate a byte array for the struct data
 			var buffer = new byte[Marshal.SizeOf(typeof(PositionPacket))];
@@ -182,7 +182,7 @@ public partial class NetworkManager : MonoBehaviour
 		}
 	}
 
-	PositionPacket[] posPacket = new PositionPacket[4];
+	PositionPacket[] posPacket = new PositionPacket[C_Global.MAX_PLAYER];
 
 
 
@@ -191,7 +191,7 @@ public partial class NetworkManager : MonoBehaviour
 	RESULT result;          // 결과
 
 	// 서버 IP와 포트
-	private static IPAddress serverIP = IPAddress.Parse("119.193.122.103");
+	private static IPAddress serverIP = IPAddress.Parse("127.0.0.1");
 	private static int serverPort = 10823;
 
 	// 버퍼
@@ -233,7 +233,16 @@ public partial class NetworkManager : MonoBehaviour
 	{
 		return posPacket[_idx].posZ;
 	}
-	public int GetPosPlayerNum(int _idx)
+	public float GetRotY(int _idx)
+	{
+		return posPacket[_idx].rotY;
+	}
+    public float GetActionState(int _idx)
+    {
+        return posPacket[_idx].action;
+    }
+
+    public int GetPosPlayerNum(int _idx)
 	{
 		return posPacket[_idx].playerNum;
 	}
@@ -246,7 +255,15 @@ public partial class NetworkManager : MonoBehaviour
 	{
 		this.posPacket[_idx].posZ = _posZ;
 	}
-	public void SetPosPlayerNum(int _idx, int _num)
+	public void SetRotY(int _idx, float _rotY)
+	{
+		this.posPacket[_idx].rotY = _rotY;
+	}
+    public void SetActionState(int _idx, int _action)
+    {
+        this.posPacket[_idx].action = _action;
+    }
+    public void SetPosPlayerNum(int _idx, int _num)
 	{
 		this.posPacket[_idx].playerNum = _num;
 	}

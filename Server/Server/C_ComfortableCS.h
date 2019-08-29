@@ -1,7 +1,8 @@
 #pragma once
-#pragma comment(lib, "ws2_32")
-#include <WinSock2.h>
-#include <Windows.h>
+#include "stdafx.h"
+//#pragma comment(lib, "ws2_32")
+//#include <WinSock2.h>
+//#include <Windows.h>
 
 class C_ComfortableCS
 {

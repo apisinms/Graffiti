@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "C_ClientInfo.h"
 
 #include "C_LoginState.h"
@@ -37,7 +38,8 @@ C_ClientInfo::C_ClientInfo(UserInfo* _userInfo, SOCKET _sock, SOCKADDR_IN _addr)
 	//chatState = new C_ChatState();
 	inGameState = new C_InGameState();
 
-	weapon = new Weapon();	// -1로 초기화
+	playerInfo = new PlayerInfo();	// 플레이어 정보 생성
+	//weapon = new Weapon();	// -1로 초기화
 
 	state = loginState;	// 초기 상태는 로그인 상태
 }
@@ -71,5 +73,21 @@ C_State* C_ClientInfo::PopState()
 
 void C_ClientInfo::SetRoom(RoomInfo* _room) { room = _room; }
 RoomInfo* C_ClientInfo::GetRoom() { return room; }
-Weapon* C_ClientInfo::GetWeapon() { return weapon; }
-void C_ClientInfo::SetWeapon(Weapon* _weapon) { weapon = _weapon; }
+
+void C_ClientInfo::SetPlayerInfo(PlayerInfo* _playerInfo){ playerInfo = _playerInfo; }
+PlayerInfo* C_ClientInfo::GetPlayerInfo() {return playerInfo;}
+
+PositionPacket* C_ClientInfo::GetPosition() { return playerInfo->GetPosition(); }
+void C_ClientInfo::SetPosition(PositionPacket* _position) { playerInfo->SetPosition(_position); }
+
+Weapon* C_ClientInfo::GetWeapon() { return playerInfo->GetWeapon(); }
+void C_ClientInfo::SetWeapon(Weapon* _weapon) { playerInfo->SetWeapon(_weapon); }
+
+float C_ClientInfo::GetHealth() { return playerInfo->GetHealth(); }
+void C_ClientInfo::SetHealth(float _health) { playerInfo->SetHealth(_health); }
+
+float C_ClientInfo::GetSpeed() { return playerInfo->GetSpeed(); }
+void C_ClientInfo::SetSpeed(float _speed) { playerInfo->SetSpeed(_speed); }
+
+int C_ClientInfo::GetBullet() { return playerInfo->GetBullet(); }
+void C_ClientInfo::SetBullet(int _bullet) { playerInfo->SetBullet(_bullet); }

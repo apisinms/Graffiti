@@ -1,8 +1,6 @@
+#include "stdafx.h"
 #include "C_ClientInfo.h"
 #include "LoginManager.h"
-#include "LogManager.h"
-#include "C_List.h"
-#include "UtilityManager.h"
 
 LoginManager* LoginManager::instance;			// 초기화
 
@@ -37,7 +35,7 @@ void LoginManager::Destroy()
 void LoginManager::PackPacket(char* _setptr, TCHAR* _str1, int& _size)
 {
 	char* ptr = _setptr;
-	int strsize1 = _tcslen(_str1) * sizeof(TCHAR);
+	int strsize1 = (int)_tcslen(_str1) * sizeof(TCHAR);
 	_size = 0;
 
 	// 문자열 길이

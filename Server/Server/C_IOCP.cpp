@@ -1,6 +1,4 @@
-#include "C_IOCP.h"
-#include "LogManager.h"
-#include <process.h>
+#include "stdafx.h"
 
 void C_IOCP::IOCP_Init()
 {

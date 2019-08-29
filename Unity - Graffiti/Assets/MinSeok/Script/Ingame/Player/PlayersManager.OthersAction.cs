@@ -12,47 +12,55 @@ public partial class PlayersManager : MonoBehaviour
         Anime_Idle(_index);
     } 
 
-    public void Action_CircuitNormal(int _index, Vector3 _pos) //노말 움직임일때. 순회.
+    public void Action_CircuitNormal(int _index, Vector3 _pos, float _roty) //노말 움직임일때. 순회.
     {
         if (myIndex == _index)
             return;
 
         Anime_Circuit(_index);
-        //obj_players[_index].transform.localRotation = Quaternion.LookRotation(서버에서받은 _index애의 디렉션백터]);
+
         obj_players[_index].transform.localPosition = Vector3.Lerp(obj_players[_index].transform.localPosition, _pos,
-            Time.smoothDeltaTime * (speed[_index] * 3));
+            Time.smoothDeltaTime * (speed[_index]));
 
+        //서버로부터 받은 플레이어 오일러각도를 다시 방향벡터로 바꿔서 저장해둠.
+        Vector3 angleToDirection = Quaternion.AngleAxis(_roty, Vector3.forward) * Vector3.right;
+        direction[_index] = new Vector3(angleToDirection.y, 0, angleToDirection.x);
 
-        //    obj_players[_index].transform.localRotation = Quaternion.LookRotation(direction[_index]);
-        //   obj_players[_index].transform.Translate(direction[_index] * speed[_index] * Time.smoothDeltaTime, Space.World);
-
-
-        //서버로부터 받은 플레이어 오일러각도를 다시 방향벡터로 바꿔서 저장해둠. 나중에 방향쓸일이 있을수도있으므로.
-        //Vector3 angleToDirection = Quaternion.AngleAxis(eulerAngle[_index], Vector3.forward) * Vector3.right;
-        //direction[_index] = new Vector3(angleToDirection.y, 0, angleToDirection.x);
-
-        // 이걸 서버로 전송.  해당 플레이어 로빈의 오일러각도를넣고 그각도로 다시계산한 방향벡터로 캐릭터움직임.
-        //obj_players[_index].transform.localEulerAngles = new Vector3(0, eulerAngle[_index], 0);
-        //obj_players[_index].transform.Translate(direction[_index] * speed[_index] * Time.smoothDeltaTime, Space.World);
+        // lerp보간작업
+        obj_players[_index].transform.localRotation = Quaternion.Lerp(obj_players[_index].transform.localRotation, 
+            Quaternion.LookRotation(direction[_index]), Time.smoothDeltaTime * 15);
     }
 
-    public void Action_AimingNormal(int _index) //제자리 조준또는 순회와 조준동시.
+    public void Action_AimingNormal(int _index, float _roty) //제자리 조준
     {
         if (myIndex == _index)
             return;
 
-        Anime_Idle(_index);
-        obj_players[_index].transform.localRotation = Quaternion.LookRotation(direction2[_index]);
+        Anime_Aiming_Idle(_index);
+
+        Vector3 angleToDirection = Quaternion.AngleAxis(_roty, Vector3.forward) * Vector3.right;
+        direction2[_index] = new Vector3(angleToDirection.y, 0, angleToDirection.x);
+
+        obj_players[_index].transform.localRotation = Quaternion.Lerp(obj_players[_index].transform.localRotation,
+    Quaternion.LookRotation(direction2[_index]), Time.smoothDeltaTime * 15);
     }
 
-    public void Action_AimingWithCircuit(int _index)
+    public void Action_AimingWithCircuit(int _index, Vector3 _pos, float _roty )
     {
         if (myIndex == _index)
             return;
 
-        Anime_Idle(_index);
-        obj_players[_index].transform.localRotation = Quaternion.LookRotation(direction2[_index]);
-        obj_players[_index].transform.Translate(direction[_index] * speed[_index] * Time.smoothDeltaTime, Space.World);
+        Anime_Aiming_Left(_index);
+
+        obj_players[_index].transform.localPosition = Vector3.Lerp(obj_players[_index].transform.localPosition, _pos,
+    Time.smoothDeltaTime * (speed[_index]));
+
+        Vector3 angleToDirection = Quaternion.AngleAxis(_roty, Vector3.forward) * Vector3.right;
+        direction2[_index] = new Vector3(angleToDirection.y, 0, angleToDirection.x);
+
+        obj_players[_index].transform.localRotation = Quaternion.Lerp(obj_players[_index].transform.localRotation,
+    Quaternion.LookRotation(direction2[_index]), Time.smoothDeltaTime * 15);
+
         //서버로부터 받은 플레이어 오일러각도를 다시 방향벡터로 바꿔서 저장해둠. 나중에 방향쓸일이 있을수도있으므로.
         //Vector3 angleToDirection = Quaternion.AngleAxis(eulerAngle[_index], Vector3.forward) * Vector3.right;
         //direction[_index] = new Vector3(angleToDirection.y, 0, angleToDirection.x);

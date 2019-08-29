@@ -1,6 +1,5 @@
+#include "stdafx.h"
 #include "C_Socket.h"
-#include "LogManager.h"
-#include "SessionManager.h"
 
 void C_Socket::SetSocket(SOCKET _sock)
 {

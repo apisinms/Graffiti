@@ -1,5 +1,4 @@
 #pragma once
-#include "C_List.h"
 #include "C_ClientInfo.h"
 
 class SessionManager

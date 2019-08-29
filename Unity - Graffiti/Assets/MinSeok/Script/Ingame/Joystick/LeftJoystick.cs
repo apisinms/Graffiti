@@ -31,7 +31,11 @@ public class LeftJoystick : MonoBehaviour, JoystickControll
 
     public void DragStart()
     {
+        // 왼쪽 조이스틱 버튼을 누르면 코루틴 시작
         PlayersManager.instance.actionState[PlayersManager.instance.myIndex] += (int)_ACTION_STATE.CIRCUIT;
+
+        // 모든 설정 을 끝낸 뒤에 와야함 
+      //  PlayersManager.instance.StartMoveCoroutine();
     }
 
     public  void Drag(BaseEventData _Data)
@@ -42,7 +46,7 @@ public class LeftJoystick : MonoBehaviour, JoystickControll
         // 스틱 이동방향 추출 .(오른쪽,왼쪽,위,아래)
         left_joystick.stickDir = (pos - left_joystick.stickFirstPos).normalized;
 
-        Debug.Log(PlayersManager.instance.obj_players[PlayersManager.instance.myIndex].transform.eulerAngles.y);
+        //Debug.Log(PlayersManager.instance.obj_players[PlayersManager.instance.myIndex].transform.eulerAngles.y);
 
         // playerDir = (stickDir.x * Vector3.right) + (stickDir.y * Vector3.forward); //동시에 플레이어의 이동방향결정
         PlayersManager.instance.direction[PlayersManager.instance.myIndex] = new Vector3(left_joystick.stickDir.x, 0, left_joystick.stickDir.y);
@@ -68,5 +72,8 @@ public class LeftJoystick : MonoBehaviour, JoystickControll
         img_joystick_stick.transform.position = left_joystick.stickFirstPos;
         left_joystick.stickDir = Vector3.zero; // 방향을 0으로.
         PlayersManager.instance.actionState[PlayersManager.instance.myIndex] -= (int)_ACTION_STATE.CIRCUIT;
+
+        // 마지막에 와야함
+      //  PlayersManager.instance.StopMoveCoroutine();
     }
 }

@@ -186,10 +186,11 @@ public partial class NetworkManager : MonoBehaviour
 										{
 											lock (key)
 											{
-												PositionPacket tmpPosPacket = new PositionPacket();
-												UnPackPacket(info.packet, ref tmpPosPacket);
-												posPacket[tmpPosPacket.playerNum - 1] = tmpPosPacket;   // 해당 플레이어 위치에 저장
-											}
+                                                PositionPacket tmpPosPacket = new PositionPacket();
+                                                UnPackPacket(info.packet, ref tmpPosPacket);
+                                                Debug.Log(tmpPosPacket.rotY);
+                                                posPacket[tmpPosPacket.playerNum - 1] = tmpPosPacket;   // 해당 플레이어 위치에 저장
+                                            }
 										}
 										break;
 								}

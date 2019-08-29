@@ -33,6 +33,7 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
 				inputField_login_pw.Select();
 			}
 		}
+
 		else if (inputField_login_pw.isFocused == true) //포커스가 pw입력창이면, 탭키로 확인으로 바꿈
 		{
 			if (Input.GetKeyDown(KeyCode.Tab))

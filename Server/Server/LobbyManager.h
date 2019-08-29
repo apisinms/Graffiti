@@ -1,17 +1,15 @@
 #pragma once
-#include "C_List.h"
 #include "C_Global.h"
-#include <tchar.h>
 
-#define ENTER_ROOM_SUCCESS_MSG		TEXT("방 입장에 성공하였습니다.\n")
-#define ENTER_ROOM_FAIL_MSG			TEXT("방 입장에 실패하였습니다.\n")
-#define CREATE_ROOM_SUCCESS_MSG		TEXT("방을 생성하였습니다.\n")
-#define CREATE_ROOM_FAIL_MSG		TEXT("더이상 방을 생성할 수 없습니다.\n")
-#define ROOMLIST_NOEXIST_MSG		TEXT("개설된 방이 없습니다.\n")
-
-#define MAX_ROOM_SIZE	200
-#define ROOM_TITLE_LEN	255
-#define ROOM_NUM_LEN	20
+//#define ENTER_ROOM_SUCCESS_MSG		TEXT("방 입장에 성공하였습니다.\n")
+//#define ENTER_ROOM_FAIL_MSG			TEXT("방 입장에 실패하였습니다.\n")
+//#define CREATE_ROOM_SUCCESS_MSG		TEXT("방을 생성하였습니다.\n")
+//#define CREATE_ROOM_FAIL_MSG		TEXT("더이상 방을 생성할 수 없습니다.\n")
+//#define ROOMLIST_NOEXIST_MSG		TEXT("개설된 방이 없습니다.\n")
+//
+//#define MAX_ROOM_SIZE	200
+//#define ROOM_TITLE_LEN	255
+//#define ROOM_NUM_LEN	20
 
 class C_ClientInfo;
 
