@@ -15,7 +15,10 @@ public:
 		if (InGameManager::GetInstance()->CanISelectWeapon(_ptr) == true)
 			state = STATE_INGAME;
 
-		if (InGameManager::GetInstance()->CanIIMove(_ptr) == true)
+		if (InGameManager::GetInstance()->CanIStart(_ptr) == true)
+			state = STATE_INGAME;
+
+		if (InGameManager::GetInstance()->CanIMove(_ptr) == true)
 			state = STATE_INGAME;
 	}
 

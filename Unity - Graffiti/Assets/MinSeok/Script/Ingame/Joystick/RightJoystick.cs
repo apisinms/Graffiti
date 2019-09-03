@@ -32,8 +32,10 @@ public class RightJoystick : MonoBehaviour, JoystickControll
 
     public void DragStart()
     {
-        PlayersManager.instance.StartMoveCoroutine();
         PlayersManager.instance.actionState[PlayersManager.instance.myIndex] += (int)_ACTION_STATE.AIMING;
+
+		//////////////////////////////////////네트워크 코드/////////////////////////////////
+		PlayersManager.instance.StartMoveCoroutine();
     }
 
     public void Drag(BaseEventData _Data)
@@ -60,10 +62,12 @@ public class RightJoystick : MonoBehaviour, JoystickControll
 
     public void DragEnd()
     {
-        PlayersManager.instance.StopMoveCoroutine();
         img_joystick_stick.transform.position = right_joystick.stickFirstPos;
         right_joystick.stickDir = Vector3.zero; // 방향을 0으로.
         PlayersManager.instance.actionState[PlayersManager.instance.myIndex] -= _ACTION_STATE.AIMING;
-    }
+
+///////////////////////////////// 네트워크 코드 ////////////////////////////////////////
+		PlayersManager.instance.StopMoveCoroutine();
+	}
 
 }

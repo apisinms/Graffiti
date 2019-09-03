@@ -12,6 +12,9 @@ using UnityEngine;
 /// </summary>
 public partial class NetworkManager : MonoBehaviour
 {
+	////////// 테스트용!!
+	GameObject[] playerObjects;
+
 	private void Awake()
 	{
 		if (instance == null)
@@ -30,6 +33,9 @@ public partial class NetworkManager : MonoBehaviour
 				instance.bw = new BinaryWriter(tcpClient.GetStream());
 
 				queue = new Queue<C_Global.QueueInfo>();    // 처리되야할 작업들을 담을 큐 생성
+
+				/////// 테스트용
+				playerObjects = new GameObject[C_Global.MAX_PLAYER];
 
 				ThreadManager.GetInstance.Init();
 			}
@@ -186,11 +192,34 @@ public partial class NetworkManager : MonoBehaviour
 										{
 											lock (key)
 											{
-                                                PositionPacket tmpPosPacket = new PositionPacket();
-                                                UnPackPacket(info.packet, ref tmpPosPacket);
-                                                Debug.Log(tmpPosPacket.rotY);
+												if (playerObjects[0] == null)
+												{
+													//////// 테스트용(최초 1번 얻음)
+													playerObjects[0] = GameObject.FindGameObjectWithTag("Player1");
+													playerObjects[1] = GameObject.FindGameObjectWithTag("Player2");
+													playerObjects[2] = GameObject.FindGameObjectWithTag("Player3");
+													playerObjects[3] = GameObject.FindGameObjectWithTag("Player4");
+												}
+
+
+												PositionPacket tmpPosPacket = new PositionPacket();
+												byte playerBit;
+                                                UnPackPacket(info.packet, ref tmpPosPacket, out playerBit);
                                                 posPacket[tmpPosPacket.playerNum - 1] = tmpPosPacket;   // 해당 플레이어 위치에 저장
-                                            }
+
+												// 마스크 만들어서 어떤 플레이어가 같은 섹터에 있는지 확인하고, 오브젝트를 켜고 끔
+												byte bitMask = (byte)PLAYER_BIT.PLAYER_1;
+												for (int i = 0; i < C_Global.MAX_PLAYER; i++, bitMask >>= 1)
+												{
+													// 오브젝트를 켜준다.
+													if((playerBit & bitMask) > 0)
+														playerObjects[i].SetActive(true);
+
+													// 오브젝트를 꺼준다.
+													else
+														playerObjects[i].SetActive(false);
+												}
+											}
 										}
 										break;
 								}

@@ -20,7 +20,7 @@ public class MoveManager : MonoBehaviour
 
 		pos = new Vector3();
 
-		// 초기값 설정 //일단 내꺼까지다 넣어논것?
+		// 초기값 설정 
 		for (int i = 0; i < C_Global.MAX_PLAYER; i++)
 		{
 			networkManager.SetPosX(i, curPlayerPos[i].localPosition.x);
@@ -41,26 +41,35 @@ public class MoveManager : MonoBehaviour
             if (GameManager.instance.myIndex == i)
                 continue;
 
-			//위치가 바뀐애가 있으면
-			if (networkManager.GetPosX(i) != curPlayerPos[i].localPosition.x ||
-			   networkManager.GetPosZ(i) != curPlayerPos[i].localPosition.z)
-			{
-				pos.x = networkManager.GetPosX(i);
-				pos.y = curPlayerPos[i].localPosition.y;
-				pos.z = networkManager.GetPosZ(i);
+            switch ((_ACTION_STATE)NetworkManager.instance.GetActionState(i))
+            {
+                case _ACTION_STATE.IDLE:
+                    PlayersManager.instance.Action_Idle(i);
+                    break;
+                case _ACTION_STATE.CIRCUIT:
+                    {
+                        pos.x = networkManager.GetPosX(i);
+                        pos.y = curPlayerPos[i].localPosition.y;
+                        pos.z = networkManager.GetPosZ(i);
 
-				//curPlayerPos[i].transform.localEulerAngles = new Vector3(0, networkManager.GetRotY(i), 0);
+                        PlayersManager.instance.Action_CircuitNormal(i, pos, networkManager.GetRotY(i));
+                    }
+                    break;
+                case _ACTION_STATE.AIMING:
+                    {
+                        PlayersManager.instance.Action_AimingNormal(i, networkManager.GetRotY(i));
+                    }
+                    break;
+                case _ACTION_STATE.CIRCUIT_AND_AIMING:
+                    {
+                        pos.x = networkManager.GetPosX(i);
+                        pos.y = curPlayerPos[i].localPosition.y;
+                        pos.z = networkManager.GetPosZ(i);
 
-				//curPlayerPos[i].position = Vector3.Lerp(curPlayerPos[i].position, pos,
-				//Time.smoothDeltaTime * (PlayersManager.instance.speed[i] * 3));
-
-				PlayersManager.instance.Action_CircuitNormal(i, pos, networkManager.GetRotY(i));
-			}
-			else // 위치가 바뀌지 않았다면 
-			{
-				PlayersManager.instance.Action_Idle(i);
-				//PlayersManager.instance.Anime_Idle(i);
-			}
+                        PlayersManager.instance.Action_AimingWithCircuit(i, pos, networkManager.GetRotY(i));
+                    }
+                    break;
+            }
         }
     }
 

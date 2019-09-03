@@ -18,7 +18,7 @@ public class JoystickManager : MonoBehaviour
         //    if (Input.GetKeyDown(KeyCode.Space))
 
         //Debug.Log(MyPlayerManager.instance.myActionState);
-        //    Debug.Log(MyPlayerManager.instance.myDirection + "         " +
+        //Debug.Log(PlayersManager.instance.direction[PlayersManager.instance.myIndex]);
         //       new Vector3(Mathf.Cos(MyPlayerManager.instance.obj_myPlayer.transform.localEulerAngles.y),
         //       0.0f, Mathf.Sin(MyPlayerManager.instance.obj_myPlayer.transform.localEulerAngles.y)));
         //ClientSectorManager.instance.GetMyArea();
@@ -27,10 +27,20 @@ public class JoystickManager : MonoBehaviour
 
         //Debug.Log(PlayersManager.instance.actionState[PlayersManager.instance.myIndex]);
 
-      //  Debug.Log(new Vector3(0, Mathf.Atan2(PlayersManager.instance.direction[PlayersManager.instance.myIndex].x,
+        //  Debug.Log(new Vector3(0, Mathf.Atan2(PlayersManager.instance.direction[PlayersManager.instance.myIndex].x,
         //    PlayersManager.instance.direction[PlayersManager.instance.myIndex].z) * Mathf.Rad2Deg, 0));
         //Debug.Log(PlayersManager.instance.obj_players[PlayersManager.instance.myIndex].transform.);
-       // Debug.Log(PlayersManager.instance.obj_players[PlayersManager.instance.myIndex].transform.eulerAngles.y);
+        //Debug.Log(PlayersManager.instance.obj_players[PlayersManager.instance.myIndex].transform.localEulerAngles.y);
+
+        //tf_player.eulerAngles = new Vector3(0, Mathf.Atan2(playerDir.x, playerDir.y) * Mathf.Rad2Deg, 0); /
+        /*
+        Debug.Log(
+
+            new Vector3(0, Mathf.Atan2(PlayersManager.instance.direction[PlayersManager.instance.myIndex].x,
+            PlayersManager.instance.direction[PlayersManager.instance.myIndex].z) * Mathf.Rad2Deg, 0)
+           
+            );
+          */  
 
         switch (PlayersManager.instance.actionState[PlayersManager.instance.myIndex])
         {

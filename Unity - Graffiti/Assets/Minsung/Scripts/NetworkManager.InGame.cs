@@ -63,20 +63,34 @@ public partial class NetworkManager : MonoBehaviour
 			return false;
 	}
 
-
-    public void MayIMove(float _posX, float _posZ, float _rotY)
+	// 마지막 인수가 true이면 초기 1회 위치보내는 용도이다.
+    public void SendPosition(float _posX, float _posZ, float _rotY, _ACTION_STATE _action, bool _isInit = false)
     {
-        // 프로토콜 셋팅
-        protocol = SetProtocol(
-                STATE_PROTOCOL.INGAME_STATE,
-                PROTOCOL.MOVE_PROTOCOL,
-                RESULT.NODATA);
+		// 초기 위치 보낼 때
+		if (_isInit == true)
+		{
+			// 시작 프로토콜 셋팅
+			protocol = SetProtocol(
+					STATE_PROTOCOL.INGAME_STATE,
+					PROTOCOL.START_PROTOCOL,
+					RESULT.NODATA);
+		}
+
+		else
+		{
+			// MOVE 프로토콜 셋팅
+			protocol = SetProtocol(
+					STATE_PROTOCOL.INGAME_STATE,
+					PROTOCOL.MOVE_PROTOCOL,
+					RESULT.NODATA);
+		}
 
         PositionPacket position = new PositionPacket();
         position.playerNum = myPlayerNum;
         position.posX = _posX;
         position.posZ = _posZ;
         position.rotY = _rotY;
+        position.action = (int)_action;
 
         // 패킹 및 전송
         int packetSize;
@@ -85,7 +99,7 @@ public partial class NetworkManager : MonoBehaviour
         bw.Write(sendBuf, 0, packetSize);
     }
 
-    public bool CheckMove()
+	public bool CheckMove()
 	{
 		if (state == STATE_PROTOCOL.INGAME_STATE &&
 			protocol == PROTOCOL.MOVE_PROTOCOL &&

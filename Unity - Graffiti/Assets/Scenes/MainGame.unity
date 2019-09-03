@@ -326,7 +326,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.08614111, b: 0, a: 0.627451}
+  m_Color: {r: 1, g: 0.08614111, b: 0, a: 0.39215687}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -468,7 +468,7 @@ RectTransform:
   m_GameObject: {fileID: 370767708}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 1.8, y: 1.8, z: 1.8}
   m_Children:
   - {fileID: 1237300620}
   m_Father: {fileID: 1691429875}
@@ -476,7 +476,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -747, y: -327}
+  m_AnchoredPosition: {x: -747, y: -289}
   m_SizeDelta: {x: 180, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &370767711
@@ -492,7 +492,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.627451}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.39215687}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1248,7 +1248,7 @@ PrefabInstance:
     - target: {fileID: 3702448961887537769, guid: c7ed9be51c92fb24190bb7fe1ef5a20e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -8.75
+      value: -6.25
       objectReference: {fileID: 0}
     - target: {fileID: 3702448961887537769, guid: c7ed9be51c92fb24190bb7fe1ef5a20e,
         type: 3}
@@ -1375,7 +1375,7 @@ PrefabInstance:
     - target: {fileID: 7248235133012816969, guid: 70c337ffdfeb36d4c9eef1274518cc7d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5
+      value: 6.25
       objectReference: {fileID: 0}
     - target: {fileID: 7248235133012816969, guid: 70c337ffdfeb36d4c9eef1274518cc7d,
         type: 3}
@@ -1385,7 +1385,7 @@ PrefabInstance:
     - target: {fileID: 7248235133012816969, guid: 70c337ffdfeb36d4c9eef1274518cc7d,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -9.4
+      value: -8.75
       objectReference: {fileID: 0}
     - target: {fileID: 7248235133012816969, guid: 70c337ffdfeb36d4c9eef1274518cc7d,
         type: 3}
@@ -1611,7 +1611,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.627451}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.39215687}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1751,7 +1751,7 @@ PrefabInstance:
     - target: {fileID: 6841356498905192729, guid: dd0235b1b471dc6409c8c54b5e055e69,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.253
+      value: 6.25
       objectReference: {fileID: 0}
     - target: {fileID: 6841356498905192729, guid: dd0235b1b471dc6409c8c54b5e055e69,
         type: 3}
@@ -1761,7 +1761,7 @@ PrefabInstance:
     - target: {fileID: 6841356498905192729, guid: dd0235b1b471dc6409c8c54b5e055e69,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -8.75
+      value: -6.25
       objectReference: {fileID: 0}
     - target: {fileID: 6841356498905192729, guid: dd0235b1b471dc6409c8c54b5e055e69,
         type: 3}
@@ -2028,7 +2028,7 @@ RectTransform:
   m_GameObject: {fileID: 1357969070}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 1.8, y: 1.8, z: 1.8}
   m_Children:
   - {fileID: 125902259}
   m_Father: {fileID: 1755082701}
@@ -2036,7 +2036,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -847, y: -327}
+  m_AnchoredPosition: {x: -847, y: -289}
   m_SizeDelta: {x: 180, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1357969072
@@ -2052,7 +2052,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.49056602, g: 0.11034254, b: 0, a: 0.627451}
+  m_Color: {r: 0.49056602, g: 0.11034254, b: 0, a: 0.39215687}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2221,7 +2221,7 @@ PrefabInstance:
     - target: {fileID: 6484822909158297989, guid: 1f2c2dcbf8540244cadfa636ea5498df,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.004
+      value: 3.75
       objectReference: {fileID: 0}
     - target: {fileID: 6484822909158297989, guid: 1f2c2dcbf8540244cadfa636ea5498df,
         type: 3}
@@ -2231,7 +2231,7 @@ PrefabInstance:
     - target: {fileID: 6484822909158297989, guid: 1f2c2dcbf8540244cadfa636ea5498df,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -8.732
+      value: -8.75
       objectReference: {fileID: 0}
     - target: {fileID: 6484822909158297989, guid: 1f2c2dcbf8540244cadfa636ea5498df,
         type: 3}

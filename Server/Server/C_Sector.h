@@ -3,21 +3,17 @@
 // 개별로 존재하는 섹터 인스턴스
 struct SectorInstance
 {
-public:
-	struct POINT
-	{
-		double x;
-		double z;
-	};
+	friend class C_Sector;
+private:
+	COORD_DOUBLE leftTop;				// 좌상 좌표
+	COORD_DOUBLE rightBottom;			// 우하 좌표
 
-	SectorInstance::POINT leftTop;				// 좌상 좌표
-	SectorInstance::POINT rightBottom;			// 우하 좌표
+	vector<SectorInstance*> adjacencySector;	// 인접 섹터 목록
 
 	list<C_ClientInfo*>playerList;				// 섹터에 존재하는 플레이어 리스트
 	//list<C_Item*>itemList;					// 섹터에 존재하는 아이템 리스트(추가해야함)
 	//list<C_Bullet*>bulletList;				// 섹터에 존재하는 총알 리스트(추가할지 애매함)
 
-	vector<SectorInstance*> adjacencySector;	// 인접 섹터 목록
 };
 
 // 개별로 존재하는 섹터 인스턴스를 총괄하는 섹터클래스
@@ -34,4 +30,21 @@ private:
 public:
 	C_Sector();
 	~C_Sector();
+
+	// 위치정보를 토대로 섹터 인덱스를 얻는다.(인라인)
+	inline INDEX GetIndex(double _posX, double _posZ)
+	{
+		INDEX index;
+		index.i = abs((int)_posZ / GRID_SIZE);
+		index.j = abs((int)_posX / GRID_SIZE);
+
+		printf("현재 인덱스 : %d, %d\n", index.i, index.j);
+
+		return index;
+	}
+
+	list<C_ClientInfo*> GetMergedPlayerList(INDEX& _index, byte& _playerBit);	// 인덱스를 토대로 해당 섹터 + 인접 섹터의 플레이어 리스트를 하나로 병합하여 리턴해줌
+
+	void Add(C_ClientInfo* _player, INDEX& _index);
+	void Delete(C_ClientInfo* _player, INDEX _index);
 };

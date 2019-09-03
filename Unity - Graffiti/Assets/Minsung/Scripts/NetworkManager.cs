@@ -28,6 +28,14 @@ public partial class NetworkManager : MonoBehaviour
 	readonly static int PROTOCOL_MASK = 0xFFFFF;
 	readonly static int RESULT_MASK = 0x3FF;
 
+	enum PLAYER_BIT : byte
+	{
+		PLAYER_1 = (1 << 3),
+		PLAYER_2 = (1 << 2),
+		PLAYER_3 = (1 << 1),
+		PLAYER_4 = (1 << 0),
+	}
+
 	/// <summary>
 	/// 10(STATE_PROTOCOL) + 20(PROTOCOL) + 10(RESULT) + 24(그외)
 	/// </summary>
@@ -156,7 +164,10 @@ public partial class NetworkManager : MonoBehaviour
 		[MarshalAs(UnmanagedType.R4)]
 		public float rotY;
 
-		public byte[] Serialize()
+        [MarshalAs(UnmanagedType.I4)]
+        public int action;
+
+        public byte[] Serialize()
 		{
 			// allocate a byte array for the struct data
 			var buffer = new byte[Marshal.SizeOf(typeof(PositionPacket))];
@@ -188,7 +199,7 @@ public partial class NetworkManager : MonoBehaviour
 	RESULT result;          // 결과
 
 	// 서버 IP와 포트
-	private static IPAddress serverIP = IPAddress.Parse("121.164.149.16");
+	private static IPAddress serverIP = IPAddress.Parse("127.0.0.1");
 	private static int serverPort = 10823;
 
 	// 버퍼
@@ -234,8 +245,12 @@ public partial class NetworkManager : MonoBehaviour
 	{
 		return posPacket[_idx].rotY;
 	}
+    public float GetActionState(int _idx)
+    {
+        return posPacket[_idx].action;
+    }
 
-	public int GetPosPlayerNum(int _idx)
+    public int GetPosPlayerNum(int _idx)
 	{
 		return posPacket[_idx].playerNum;
 	}
@@ -252,12 +267,16 @@ public partial class NetworkManager : MonoBehaviour
 	{
 		this.posPacket[_idx].rotY = _rotY;
 	}
-
-	public void SetPosPlayerNum(int _idx, int _num)
+    public void SetActionState(int _idx, int _action)
+    {
+        this.posPacket[_idx].action = _action;
+    }
+    public void SetPosPlayerNum(int _idx, int _num)
 	{
 		this.posPacket[_idx].playerNum = _num;
 	}
 
-	public static NetworkManager instance = null;
+	//private GameObject[] playerObjects;
 
+	public static NetworkManager instance = null;
 }

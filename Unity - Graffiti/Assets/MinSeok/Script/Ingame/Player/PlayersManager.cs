@@ -26,7 +26,8 @@ public partial class PlayersManager : MonoBehaviour
     public AnimationClip tmp;
     #endregion
 
-    #region PLAYERS_STATE
+    #region PLAYERS_STATE 
+    // 현재 액션 스테이트 
     public _ACTION_STATE[] actionState { get; set; }
     public _ATTRIBUTE_STATE[] attributeState { get; set; }
     #endregion
@@ -44,7 +45,7 @@ public partial class PlayersManager : MonoBehaviour
         if (instance == null)
             instance = this;
 
-        coroutine = MovePlayer();
+        coroutine = MovePlayer(); /////////////////////// 네트워크 코드 //////////////////////
         coroutineFlag = 0;
         myIndex = GameManager.instance.myIndex; //게임매니저에서 받은 인덱스를 다시등록
         Initialization(C_Global.MAX_PLAYER); //기타 초기화
@@ -62,7 +63,12 @@ public partial class PlayersManager : MonoBehaviour
                 am_animePlayer[i] = obj_players[i].GetComponent<Animator>(); 
             }
         }
-    }
+
+		//////////////// 게임 시작 시 최초로 1회 위치정보를 서버로 전송해야함 /////////////////
+		NetworkManager.instance.SendPosition(obj_players[myIndex].transform.localPosition.x,
+			obj_players[myIndex].transform.localPosition.z,
+			obj_players[myIndex].transform.localEulerAngles.y, actionState[myIndex], true);
+	}
 
     void Initialization(int _num)
     {
@@ -94,20 +100,20 @@ public partial class PlayersManager : MonoBehaviour
             }
         }
     }
+    
+    IEnumerator MovePlayer()
+    {
+        while (true)
+        {
+			NetworkManager.instance.SendPosition(obj_players[myIndex].transform.localPosition.x,
+	            obj_players[myIndex].transform.localPosition.z,
+	            obj_players[myIndex].transform.localEulerAngles.y, actionState[myIndex]);
 
-	IEnumerator MovePlayer()
-	{
-		while (true)
-		{
-			NetworkManager.instance.MayIMove(obj_players[myIndex].transform.localPosition.x,
-	  obj_players[myIndex].transform.localPosition.z,
-	  obj_players[myIndex].transform.localEulerAngles.y);
+            yield return YieldInstructionCache.WaitForSeconds(0.14f);
+        }
+    }
 
-			yield return YieldInstructionCache.WaitForSeconds(0.14f);
-		}
-	}
-
-	public void StartMoveCoroutine()
+    public void StartMoveCoroutine()
     {
         Debug.Log(coroutineFlag);
         // 2개의 조이스틱이 있으므로 코루틴이 겹치는걸 방지 
@@ -121,24 +127,23 @@ public partial class PlayersManager : MonoBehaviour
         coroutineFlag++;
     }
 
-	public void StopMoveCoroutine()
-	{
-		Debug.Log(coroutineFlag);
+    public void StopMoveCoroutine()
+    {
+        //Debug.Log(coroutineFlag);
 
-		// 양쪽 조이스틱중 하나만 땠을 경우 플레그 카운트만 1줄여준다.
-		if (1 < coroutineFlag)
-		{
-			coroutineFlag--;
-			return;
-		}
+        // 양쪽 조이스틱중 하나만 땠을 경우 플레그 카운트만 1줄여준다.
+        if (1 < coroutineFlag)
+        {
+            coroutineFlag--;
+            return;
+        }
 
-		StopCoroutine(coroutine);
+        // 코루틴 정지시에 마지막 위치를 보내준다.
+        NetworkManager.instance.SendPosition(obj_players[myIndex].transform.localPosition.x,
+            obj_players[myIndex].transform.localPosition.z,
+            obj_players[myIndex].transform.localEulerAngles.y, actionState[myIndex]);
 
-		// 코루틴 정지시에 마지막 위치를 보내준다.
-		NetworkManager.instance.MayIMove(obj_players[myIndex].transform.localPosition.x,
-			  obj_players[myIndex].transform.localPosition.z,
-			  obj_players[myIndex].transform.localEulerAngles.y);
-
-		coroutineFlag--;
-	}
+        StopCoroutine(coroutine);
+        coroutineFlag--;
+    }
 }

@@ -268,19 +268,33 @@ public partial class NetworkManager : MonoBehaviour
 		_size += sizeof(int);   // 총 보내야 할 바이트 수 저장한다.
 	}
 
-	private void UnPackPacket(byte[] _buf, ref PositionPacket _struct)
+	private void UnPackPacket(byte[] _buf, ref PositionPacket _struct, out byte _playerBit)
 	{
-
 		int offset = sizeof(PROTOCOL);
-
-		// 문자열 길이
 
 		// 문자열 길이 만큼 생성해서 문자열을 저장함
 		byte[] posByte = new byte[Marshal.SizeOf(_struct)];
 		Buffer.BlockCopy(_buf, offset, posByte, 0, Marshal.SizeOf(_struct));
+		offset += Marshal.SizeOf(_struct);
+
+		_struct.Deserialize(ref posByte);   // 이제 역직렬화
+
+
+		// 밑에 코드 (비효율적인듯)
+		//_playerBit = new byte();
+		byte[] bitByte = new byte[sizeof(byte)];
+		Buffer.BlockCopy(_buf, offset, bitByte, 0, sizeof(byte));
+		offset += sizeof(byte);
+
+		_playerBit = bitByte[0];
+
+		// 이제 다시 byte로 변환
+		//_playerBit = Convert.ToByte(bitByte);
+		//_playerBit = Convert.ToByte(bitByte);
+		//BitConverter.
+		//Buffer.BlockCopy(_buf, offset, _playerBit
 
 		//posPacket[_struct.playerNum - 1].Deserialize(ref posByte);
-		_struct.Deserialize(ref posByte);
 	}
 	private void UnPackPacket(byte[] _buf, out int _num)
 	{

@@ -47,10 +47,11 @@ public class GameManager : MonoBehaviour
 	    playersTag[0] = "Player1"; playersTag[1] = "Player2";
 	    playersTag[2] = "Player3"; playersTag[3] = "Player4";
 
+///////////////////////////////// 네트워크 코드 ////////////////////////////////////////
         myNetworkNum = NetworkManager.instance.MyPlayerNum;
         //myNetworkNum = 1; //예시로 번호부여함.  서버에서 샌드된번호로 해야함.
         myIndex = myNetworkNum - 1;
 
         myTag = playersTag[myIndex]; //내 태그등록
-    }
+	}
 }

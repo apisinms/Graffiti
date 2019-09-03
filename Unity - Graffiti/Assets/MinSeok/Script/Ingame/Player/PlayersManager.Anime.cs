@@ -26,8 +26,22 @@ public partial class PlayersManager : MonoBehaviour
     }
     public void Anime_Aiming_Left(int _index)
     {
-      //  if(am_animePlayer[_index].GetBool("Aiming") == false)
         am_animePlayer[_index].SetBool("Aiming", true);
         am_animePlayer[_index].SetTrigger("Aiming_Left");
+    }
+    public void Anime_Aiming_Right(int _index)
+    {
+        am_animePlayer[_index].SetBool("Aiming", true);
+        am_animePlayer[_index].SetTrigger("Aiming_Right");
+    }
+    public void Anime_Aiming_Forward(int _index)
+    {
+        am_animePlayer[_index].SetBool("Aiming", true);
+        am_animePlayer[_index].SetTrigger("Aiming_Forward");
+    }
+    public void Anime_Aiming_Back(int _index)
+    {
+        am_animePlayer[_index].SetBool("Aiming", true);
+        am_animePlayer[_index].SetTrigger("Aiming_Back");
     }
 }

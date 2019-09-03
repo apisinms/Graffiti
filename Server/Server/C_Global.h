@@ -21,12 +21,57 @@ using namespace std;
 #define PROTOCOL_OFFSET	0xFFFFF
 #define PROTOCOL_MASK	30
 
+
+// 플레이어 플래그
+enum PLAYER_BIT : byte
+{
+	PLAYER_1 = (1 << 3),
+	PLAYER_2 = (1 << 2),
+	PLAYER_3 = (1 << 1),
+	PLAYER_4 = (1 << 0),
+};
+
+struct INDEX
+{
+	int i, j;
+
+	inline bool operator!= (INDEX _param)
+	{
+		if ((i != _param.i) || (j != _param.j))
+			return true;
+
+		return false;
+	}
+};
+
+struct COORD_DOUBLE
+{
+	double x, z;
+};
+
 struct PositionPacket
 {
 	int playerNum;
 	float posX;
 	float posZ;
 	float rotY;
+	int action;
+
+	PositionPacket() 
+	{
+		playerNum = 0;
+		posX = posZ = rotY = 0.0f;
+		action = 0;
+	}
+
+	PositionPacket(PositionPacket& _pos)
+	{
+		this->playerNum = _pos.playerNum;
+		this->posX      = _pos.posX;
+		this->posZ      = _pos.posZ;
+		this->rotY      = _pos.rotY;
+		this->action    = _pos.action;
+	}
 };
 
 struct Weapon
@@ -48,6 +93,7 @@ struct PlayerInfo
 {
 private:
 	PositionPacket* position;
+	INDEX index;
 	Weapon* weapon;
 	float health;
 	float speed;
@@ -56,18 +102,34 @@ private:
 public:
 	PlayerInfo()
 	{
-		position = new PositionPacket();
-		weapon   = new Weapon();
+		position = nullptr;
+		memset(&index, 0, sizeof(INDEX));
+		weapon = nullptr;
 
 		health = speed = 0.0f;
 		bullet = 0;
 	}
 
 	PositionPacket* GetPosition() { return position; }
-	void SetPosition(PositionPacket* _position) { position = _position; }
+	void SetPosition(PositionPacket* _position)
+	{
+		if (position != nullptr)
+			delete position;
+
+		position = _position;
+	}
+
+	INDEX GetIndex() { return index; }
+	void SetIndex(INDEX _index) { index = _index; }
 
 	Weapon* GetWeapon() { return weapon; }
-	void SetWeapon(Weapon* _weapon) { weapon = _weapon; }
+	void SetWeapon(Weapon* _weapon) 
+	{
+		if (weapon != nullptr)
+			delete weapon;
+
+		weapon = _weapon;
+	}
 
 	float GetHealth() { return health; }
 	void SetHealth(float _health) { health = _health; }
@@ -148,10 +210,6 @@ struct UserInfo
 		_tcscpy_s(nickname, NICKNAMESIZE, _info.nickname);
 	}
 };
-
-
-
-
 
 
 
