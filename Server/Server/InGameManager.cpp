@@ -53,16 +53,7 @@ void InGameManager::PackPacket(char* _setptr, TCHAR* _str1, int& _size)
 	_size = _size + strsize1;
 }
 
-void InGameManager::UnPackPacket(char* _getBuf, PositionPacket& _struct)
-{
-	char* ptr = _getBuf + sizeof(PROTOCOL_INGAME);
-
-	// 구조체 받음
-	memcpy(&_struct, ptr, sizeof(PositionPacket));
-	ptr = ptr + sizeof(PositionPacket);
-}
-
-void InGameManager::PackPacket(char* _setptr, PositionPacket& _struct, unsigned char _playerBit, int& _size)
+void InGameManager::PackPacket(char* _setptr, PositionPacket& _struct, int& _size)
 {
 	char* ptr = _setptr;
 	_size = 0;
@@ -71,11 +62,26 @@ void InGameManager::PackPacket(char* _setptr, PositionPacket& _struct, unsigned 
 	memcpy(ptr, &_struct, sizeof(PositionPacket));
 	ptr = ptr + sizeof(PositionPacket);
 	_size = _size + sizeof(PositionPacket);
+}
 
-	// 플레이어 비트
+void InGameManager::PackPacket(char* _setptr, byte _playerBit, int& _size)
+{
+	char* ptr = _setptr;
+	_size = 0;
+
+	// 비트 셋팅
 	memcpy(ptr, &_playerBit, sizeof(byte));
 	ptr = ptr + sizeof(byte);
 	_size = _size + sizeof(byte);
+}
+
+void InGameManager::UnPackPacket(char* _getBuf, PositionPacket& _struct)
+{
+	char* ptr = _getBuf + sizeof(PROTOCOL_INGAME);
+
+	// 구조체 받음
+	memcpy(&_struct, ptr, sizeof(PositionPacket));
+	ptr = ptr + sizeof(PositionPacket);
 }
 
 void InGameManager::UnPackPacket(char* _getBuf, Weapon* &_weapon)
@@ -99,6 +105,7 @@ void InGameManager::GetProtocol(PROTOCOL_INGAME& _protocol)
 	// 나중에 한번더 저장해주는 이유는 나중에 추가로 받을 수 있는 result 에 대해서 protocol 을 살려놓기 위해 
 	_protocol = protocol;
 }
+
 InGameManager::PROTOCOL_INGAME InGameManager::SetProtocol(STATE_PROTOCOL _state, PROTOCOL_INGAME _protocol, RESULT_INGAME _result)
 {
 	// 완성된 프로토콜을 리턴 
@@ -118,7 +125,6 @@ InGameManager::PROTOCOL_INGAME InGameManager::GetBufferAndProtocol(C_ClientInfo*
 
 	return realProtocol;
 }
-
 
 bool InGameManager::WeaponSelectProcess(C_ClientInfo* _ptr, char* _buf)
 {
@@ -195,73 +201,67 @@ bool InGameManager::InitProcess(C_ClientInfo* _ptr, char* _buf)
 
 bool InGameManager::MoveProcess(C_ClientInfo* _ptr, char* _buf)
 {
-	TCHAR msg[MSGSIZE] = { 0, };
-	PROTOCOL_INGAME protocol;
-	char buf[BUFSIZE];
-	int packetSize;
+   PROTOCOL_INGAME protocol;
+   char buf[BUFSIZE] = { 0, };
+   int packetSize;
 
-	RESULT_INGAME move = RESULT_INGAME::INGAME_SUCCESS;
+   // 전달된 위치 정보를 얻음
+   PositionPacket movedPos;
+   UnPackPacket(_buf, movedPos);
+   printf("%d ,%f, %f, %f, %d\n", movedPos.playerNum, movedPos.posX, movedPos.posZ, movedPos.rotY, movedPos.action);
 
-	// 전달된 위치 정보를 얻음
-	PositionPacket tmpPos;
-	UnPackPacket(_buf, tmpPos);
+   // 플레이어의 위치 정보를 저장해둔다.
+   PositionPacket* position = new PositionPacket(movedPos);
+   _ptr->SetPosition(position);
 
-	// 플레이어의 위치 정보를 저장해둔다.
-	PositionPacket* position = new PositionPacket(tmpPos);
-	_ptr->SetPosition(position);
+   // 이 방의 섹터 매니저를 얻는다.
+   C_Sector* sector = _ptr->GetRoom()->GetSector();   
 
+   // 1. 플레이어 위치를 토대로 몇행 몇열인지 인덱스를 구한다.
+   INDEX index = sector->GetIndex(movedPos.posX, movedPos.posZ);
+   
+   // 원래 갖고 있던 인덱스 정보와 현재 이동한 인덱스 정보가 다르다면 원래 있던 리스트에서 빼고, 지금 들어온 리스트에 추가해준다.
+   if (index != _ptr->GetIndex())
+   {
+      sector->Delete(_ptr, _ptr->GetIndex());         // 기존에 있던 인덱스에서는 빼고
+      sector->Add(_ptr, index);                  // 새로운 인덱스위치 리스트에 추가한다.
 
-	// 디버깅용 출력
-	printf("%d ,%f, %f, %f, %d\n", position->playerNum, position->posX, position->posZ, position->rotY, position->action);
-	
+      list<C_ClientInfo*>exitList = sector->GetMergedPlayerList(_ptr->GetIndex());   // 퇴장한 섹터 리스트
+      list<C_ClientInfo*>enterList    = sector->GetMergedPlayerList(index);         // 입장한 섹터 리스트
 
-	// 이 방의 섹터 매니저를 얻는다.
-	C_Sector* sector = _ptr->GetRoom()->GetSector();	
+      // 1. 섹터 퇴장 알림 패킷 조립 및 전송
+      protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::MOVE_PROTOCOL, RESULT_INGAME::EXIT_SECTOR);
+      PackPacket(buf, movedPos, packetSize);
 
-	// 1. 플레이어 위치를 토대로 몇행 몇열인지 인덱스를 구한다.
-	INDEX index = sector->GetIndex(tmpPos.posX, tmpPos.posZ);
-	
-	// 원래 갖고 있던 인덱스 정보와 현재 이동한 인덱스 정보가 다르다면 원래 있던 리스트에서 빼고, 지금 들어온 리스트에 추가해준다.
-	if (index != _ptr->GetIndex())
-	{
-		sector->Delete(_ptr, _ptr->GetIndex());			// 기존에 있던 인덱스에서는 빼고
-		sector->Add(_ptr, index);						// 새로운 인덱스위치 리스트에 추가한다.
-		_ptr->SetIndex(index);							// 인덱스 설정
+      ListSendPacket(exitList, _ptr, protocol, buf, packetSize);
 
-		/// 위치를 이동했으니 기존의 인접 섹터들에게 내가 이동했다고 알려줘야하고,
-		/// 위치를 이동했으니 새롭게 만난 인접 섹터들에게 내가 왔다고 알려줘야함.. 어휴 시발 언제하냐
-	}
+      // 2. 섹터 입장 알림 패킷 조립 및 전송
+      protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::MOVE_PROTOCOL, RESULT_INGAME::ENTER_SECTOR);
+      PackPacket(buf, movedPos, packetSize);
 
-	// 2. 구해진 인덱스로 해당 섹터와 인접 섹터의 플레이어 리스트를 병합하여 얻고, 인접 섹터에 있는 플레이어의 bit도 얻는다.
-	byte playerBit = 0;	// 플레이어 비트
-	list<C_ClientInfo*>sendList = sector->GetMergedPlayerList(index, playerBit);
+      ListSendPacket(enterList, _ptr, protocol, buf, packetSize);
 
-	// 가져온 sendList가 비어있지 않은 경우에만
-	if (!sendList.empty())
-	{
-		// 3. 프로토콜 세팅 및 패킹
-		protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::MOVE_PROTOCOL, move);
-		ZeroMemory(buf, sizeof(BUFSIZE));
-		PackPacket(buf, tmpPos, playerBit, packetSize);
+      // 3. 본인에게는 새롭게 입장한 인접 섹터의 플레이어 리스트를 보내준다.
+      byte playerBit = 0;
+      FlagPlayerBit(enterList, playerBit);
+      protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::MOVE_PROTOCOL, RESULT_INGAME::UPDATE_PLAYER);
+      PackPacket(buf, playerBit, packetSize);
 
-		// 4. 본인을 제외한 다른 플레이어들에게 위치를 전송한다.
-		C_ClientInfo* player = nullptr;
-		for (list<C_ClientInfo*>::iterator iter = sendList.begin(); iter != sendList.end(); ++iter)
-		{
-			player = *iter;
+      _ptr->SendPacket(protocol, buf, packetSize);   // 전송
 
-			// 자기는 제외
-			if (_ptr == player)
-				continue;
+      _ptr->SetIndex(index);            // 변경된 새로운 인덱스 설정
+   }
 
-			player->SendPacket(protocol, buf, packetSize);
-		}
-	}
+   // 2. 구해진 인덱스로 해당 섹터와 인접 섹터의 플레이어 리스트를 병합하여 얻는다.
+   list<C_ClientInfo*>sendList = sector->GetMergedPlayerList(index);
 
-	if (move == RESULT_INGAME::INGAME_SUCCESS)
-		return true;
+   // 3. 섹터 내 정상이동 프로토콜 세팅 및 패킹
+   protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::MOVE_PROTOCOL, RESULT_INGAME::INGAME_SUCCESS);
+   PackPacket(buf, movedPos, packetSize);
 
-	return false;
+   ListSendPacket(sendList, _ptr, protocol, buf, packetSize);
+
+   return true;   // 걍 다 true여
 }
 
 bool InGameManager::LeaveProcess(C_ClientInfo* _ptr, int _playerNum)
@@ -330,6 +330,53 @@ bool InGameManager::CanIMove(C_ClientInfo* _ptr)
 	return false;
 }
 
+void InGameManager::ListSendPacket(list<C_ClientInfo*> _list, C_ClientInfo* _exceptClient, PROTOCOL_INGAME _protocol, char* _buf, int _packetSize)
+{
+	// 가져온 List가 비어있지 않은 경우에만
+	if (!_list.empty())
+	{
+		// 리스트 안에있는 플레이어들에게 패킷을 전송한다.
+		C_ClientInfo* player = nullptr;
+		for (list<C_ClientInfo*>::iterator iter = _list.begin(); iter != _list.end(); ++iter)
+		{
+			player = *iter;
+
+			// 전송 제외할 클라 건너뜀
+			if (player == _exceptClient)
+				continue;
+
+			player->SendPacket(_protocol, _buf, _packetSize);
+		}
+	}
+}
+
+void InGameManager::FlagPlayerBit(list<C_ClientInfo*> _list, byte& _playerBit)
+{
+	_playerBit = 0;
+	// 현재 근방 섹터에 있는 플레이어들의 bit를 활성화 시켜서 서버로 보낸다.
+	for (auto iter = _list.begin(); iter != _list.end(); ++iter)
+	{
+		// 플레이어 넘버를 읽어서 bit를 활성화 시킴(ex : 1011 << 1,3,4 플레이어가 같은 섹터에 있음)
+		switch (((C_ClientInfo*)(*iter))->GetPosition()->playerNum)
+		{
+		case 1:
+			_playerBit |= PLAYER_1;
+			break;
+
+		case 2:
+			_playerBit |= PLAYER_2;
+			break;
+
+		case 3:
+			_playerBit |= PLAYER_3;
+			break;
+
+		case 4:
+			_playerBit |= PLAYER_4;
+			break;
+		}
+	}
+}
 
 // 무기 선택 타이머 쓰레드
 unsigned long __stdcall InGameManager::TimerThread(void* _arg)

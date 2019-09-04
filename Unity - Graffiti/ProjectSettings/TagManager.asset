@@ -8,6 +8,9 @@ TagManager:
   - Player2
   - Player3
   - Player4
+  - Ar
+  - Smg
+  - Sg
   layers:
   - Default
   - TransparentFX

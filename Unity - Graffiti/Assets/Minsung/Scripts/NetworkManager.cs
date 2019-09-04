@@ -28,14 +28,6 @@ public partial class NetworkManager : MonoBehaviour
 	readonly static int PROTOCOL_MASK = 0xFFFFF;
 	readonly static int RESULT_MASK = 0x3FF;
 
-	enum PLAYER_BIT : byte
-	{
-		PLAYER_1 = (1 << 3),
-		PLAYER_2 = (1 << 2),
-		PLAYER_3 = (1 << 1),
-		PLAYER_4 = (1 << 0),
-	}
-
 	/// <summary>
 	/// 10(STATE_PROTOCOL) + 20(PROTOCOL) + 10(RESULT) + 24(그외)
 	/// </summary>
@@ -78,38 +70,48 @@ public partial class NetworkManager : MonoBehaviour
 		// 48 ~ 34
 	};
 
-	// 33 ~ 24
-	enum RESULT : Int64
-	{
-		//LoginState
-		JOIN_SUCCESS = ((Int64)0x1 << 33),
-		LOGIN_SUCCESS = ((Int64)0x1 << 33),
-		LOGOUT_SUCCESS = ((Int64)0x1 << 33),
-		LOGOUT_FAIL = ((Int64)0x1 << 32),
+    // 33 ~ 24
+    enum RESULT : Int64
+    {
+        //LoginState
+        JOIN_SUCCESS = ((Int64)0x1 << 33),
+        LOGIN_SUCCESS = ((Int64)0x1 << 33),
+        LOGOUT_SUCCESS = ((Int64)0x1 << 33),
+        LOGOUT_FAIL = ((Int64)0x1 << 32),
 
-		// Join & Login result
-		ID_EXIST = ((Int64)0x1 << 32),
-		ID_ERROR = ((Int64)0x1 << 31),
-		PW_ERROR = ((Int64)0x1 << 30),
+        // Join & Login result
+        ID_EXIST = ((Int64)0x1 << 32),
+        ID_ERROR = ((Int64)0x1 << 31),
+        PW_ERROR = ((Int64)0x1 << 30),
 
-		// LobbyState
-		LOBBY_SUCCESS = ((Int64)0x1 << 33),     // 로비에서 성공 처리
-		LOBBY_FAIL = ((Int64)0x1 << 32),        // 로비에서 실패 처리
+        // LobbyState
+        LOBBY_SUCCESS = ((Int64)0x1 << 33),     // 로비에서 성공 처리
+        LOBBY_FAIL = ((Int64)0x1 << 32),        // 로비에서 실패 처리
 
-		// ChatState
-		LEAVE_ROOM_SUCCESS = ((Int64)0x1 << 33),
-		LEAVE_ROOM_FAIL = ((Int64)0x1 << 32),
+        // ChatState
+        LEAVE_ROOM_SUCCESS = ((Int64)0x1 << 33),
+        LEAVE_ROOM_FAIL = ((Int64)0x1 << 32),
 
-		// InGameState
-		INGAME_SUCCESS = ((Int64)0x1 << 33),
-		INGAME_FAIL = ((Int64)0x1 << 32),
+        // InGameState
+        INGAME_SUCCESS = ((Int64)0x1 << 33),
+        INGAME_FAIL = ((Int64)0x1 << 32),
+        ENTER_SECTOR = ((Int64)0x1 << 31),   // 섹터 진입
+        EXIT_SECTOR = ((Int64)0x1 << 30),    // 섹터 퇴장
+        UPDATE_PLAYER = ((Int64)0x1 << 29),   // 플레이어 목록 최신화
 
-		// ~ 25
+        // ~ 25
+        NODATA = ((Int64)0x1 << 24)
+    };
 
-		NODATA = ((Int64)0x1 << 24)
-	};
+    enum PLAYER_BIT : byte
+    {
+        PLAYER_1 = (1 << 3),
+        PLAYER_2 = (1 << 2),
+        PLAYER_3 = (1 << 1),
+        PLAYER_4 = (1 << 0),
+    }
 
-	struct _User_Info
+    struct _User_Info
 	{
 		public string id;
 		public string pw;
@@ -164,6 +166,9 @@ public partial class NetworkManager : MonoBehaviour
 		[MarshalAs(UnmanagedType.R4)]
 		public float rotY;
 
+        [MarshalAs(UnmanagedType.R4)]
+        public float speed;
+
         [MarshalAs(UnmanagedType.I4)]
         public int action;
 
@@ -191,8 +196,6 @@ public partial class NetworkManager : MonoBehaviour
 	}
 
 	PositionPacket[] posPacket = new PositionPacket[C_Global.MAX_PLAYER];
-
-
 
 	STATE_PROTOCOL state;   // 클라 상태
 	PROTOCOL protocol;      // 프로토콜
@@ -245,11 +248,14 @@ public partial class NetworkManager : MonoBehaviour
 	{
 		return posPacket[_idx].rotY;
 	}
+    public float GetSpeed(int _idx)
+    {
+        return posPacket[_idx].speed;
+    }
     public float GetActionState(int _idx)
     {
         return posPacket[_idx].action;
     }
-
     public int GetPosPlayerNum(int _idx)
 	{
 		return posPacket[_idx].playerNum;
@@ -267,6 +273,10 @@ public partial class NetworkManager : MonoBehaviour
 	{
 		this.posPacket[_idx].rotY = _rotY;
 	}
+    public void SetSpeed(int _idx, float _speed)
+    {
+        this.posPacket[_idx].speed = _speed;
+    }
     public void SetActionState(int _idx, int _action)
     {
         this.posPacket[_idx].action = _action;
@@ -276,7 +286,6 @@ public partial class NetworkManager : MonoBehaviour
 		this.posPacket[_idx].playerNum = _num;
 	}
 
-	//private GameObject[] playerObjects;
-
 	public static NetworkManager instance = null;
+
 }

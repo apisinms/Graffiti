@@ -43,7 +43,7 @@ public:
 		return index;
 	}
 
-	list<C_ClientInfo*> GetMergedPlayerList(INDEX& _index, byte& _playerBit);	// 인덱스를 토대로 해당 섹터 + 인접 섹터의 플레이어 리스트를 하나로 병합하여 리턴해줌
+	list<C_ClientInfo*> GetMergedPlayerList(INDEX _idx);	// 인덱스를 토대로 해당 섹터 + 인접 섹터의 플레이어 리스트를 하나로 병합하여 리턴해줌
 
 	void Add(C_ClientInfo* _player, INDEX& _index);
 	void Delete(C_ClientInfo* _player, INDEX _index);

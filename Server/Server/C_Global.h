@@ -21,16 +21,6 @@ using namespace std;
 #define PROTOCOL_OFFSET	0xFFFFF
 #define PROTOCOL_MASK	30
 
-
-// 플레이어 플래그
-enum PLAYER_BIT : byte
-{
-	PLAYER_1 = (1 << 3),
-	PLAYER_2 = (1 << 2),
-	PLAYER_3 = (1 << 1),
-	PLAYER_4 = (1 << 0),
-};
-
 struct INDEX
 {
 	int i, j;
@@ -55,12 +45,13 @@ struct PositionPacket
 	float posX;
 	float posZ;
 	float rotY;
+	float speed;
 	int action;
 
 	PositionPacket() 
 	{
 		playerNum = 0;
-		posX = posZ = rotY = 0.0f;
+		posX = posZ = rotY = speed = 0.0f;
 		action = 0;
 	}
 
@@ -70,6 +61,7 @@ struct PositionPacket
 		this->posX      = _pos.posX;
 		this->posZ      = _pos.posZ;
 		this->rotY      = _pos.rotY;
+		this->speed		= _pos.speed;
 		this->action    = _pos.action;
 	}
 };

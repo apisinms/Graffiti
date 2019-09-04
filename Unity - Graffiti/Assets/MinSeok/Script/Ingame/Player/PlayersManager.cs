@@ -7,6 +7,24 @@ using UnityEngine;
  * 분할된 클래스 내 필드들의 Awake는 여기서 한번에 이루어진다.
  */
 
+public enum _ATTRIBUTE_STATE
+{
+    //속성상태 
+    DEAD = 0,
+    ALIVE = 1
+}
+
+public enum _ACTION_STATE //액션(움직임)의 상태
+{
+    // 단일 STATE
+    IDLE = 0,
+    CIRCUIT,
+    AIMING,
+
+    // 복합 STATE
+    CIRCUIT_AND_AIMING = (CIRCUIT + AIMING),
+}
+
 public partial class PlayersManager : MonoBehaviour
 {
     //public const int NUM = 4;
@@ -18,12 +36,10 @@ public partial class PlayersManager : MonoBehaviour
 
     #region PLAYERS_ROBIN
     public GameObject[] obj_players { get; set; }
-    public GameObject obj_myPlayer { get; set; }
     #endregion
 
     #region PLAYERS_ANIMATOR
     public Animator[] am_animePlayer { get; set; }
-    public AnimationClip tmp;
     #endregion
 
     #region PLAYERS_STATE 
@@ -35,6 +51,8 @@ public partial class PlayersManager : MonoBehaviour
     #region PLAYERS_ATTRIBUTE
     public float[] speed { get; set; }
     public float[] hp { get; set; }
+    public float[] maxSpeed { get; set; }
+    public float[] maxHp { get; set; }
     public Vector3[] direction { get; set; } //플레이어의 방향
     public Vector3[] direction2 { get; set; }
     #endregion
@@ -45,7 +63,7 @@ public partial class PlayersManager : MonoBehaviour
         if (instance == null)
             instance = this;
 
-        coroutine = MovePlayer(); /////////////////////// 네트워크 코드 //////////////////////
+        coroutine = MovePlayer();
         coroutineFlag = 0;
         myIndex = GameManager.instance.myIndex; //게임매니저에서 받은 인덱스를 다시등록
         Initialization(C_Global.MAX_PLAYER); //기타 초기화
@@ -64,11 +82,28 @@ public partial class PlayersManager : MonoBehaviour
             }
         }
 
-		//////////////// 게임 시작 시 최초로 1회 위치정보를 서버로 전송해야함 /////////////////
-		NetworkManager.instance.SendPosition(obj_players[myIndex].transform.localPosition.x,
-			obj_players[myIndex].transform.localPosition.z,
-			obj_players[myIndex].transform.localEulerAngles.y, actionState[myIndex], true);
-	}
+        //////////////// 게임 시작 시 최초로 1회 위치정보를 서버로 전송해야함 /////////////////
+        NetworkManager.instance.SendPosition(obj_players[myIndex].transform.localPosition.x,
+           obj_players[myIndex].transform.localPosition.z,
+           obj_players[myIndex].transform.localEulerAngles.y, speed[myIndex], actionState[myIndex], true);
+
+
+        //////////////////////// 테스트용(상대팀 끄기) ////////////////////
+        switch (myIndex)
+        {
+            case 0:
+            case 1:
+                obj_players[2].SetActive(false);
+                obj_players[3].SetActive(false);
+                break;
+
+            case 2:
+            case 3:
+                obj_players[0].SetActive(false);
+                obj_players[1].SetActive(false);
+                break;
+        }
+    }
 
     void Initialization(int _num)
     {
@@ -78,6 +113,8 @@ public partial class PlayersManager : MonoBehaviour
         actionState    = new _ACTION_STATE[C_Global.MAX_PLAYER];
         speed          = new float[C_Global.MAX_PLAYER];
         hp             = new float[C_Global.MAX_PLAYER];
+        maxSpeed  = new float[C_Global.MAX_PLAYER];
+        maxHp       = new float[C_Global.MAX_PLAYER];
         direction      = new Vector3[C_Global.MAX_PLAYER];
         direction2     = new Vector3[C_Global.MAX_PLAYER];
 
@@ -88,15 +125,15 @@ public partial class PlayersManager : MonoBehaviour
             {
                 attributeState[i] = _ATTRIBUTE_STATE.ALIVE;
                 actionState[i] = _ACTION_STATE.IDLE;
-                speed[i] = 4.0f;
-                hp[i] = 100.0f;
+                speed[i] = maxSpeed[i] = 4.0f;
+                hp[i] = maxHp[i] = 100.0f;
             }
             else //나머지 3명 인덱스의 초기화
             {
                 attributeState[i] = _ATTRIBUTE_STATE.ALIVE;
                 actionState[i] = _ACTION_STATE.IDLE;
-                speed[i] = 4.0f;
-                hp[i] = 100.0f;
+                speed[i] = maxSpeed[i] = 4.0f;
+                hp[i] = maxHp[i] = 100.0f;
             }
         }
     }
@@ -107,7 +144,7 @@ public partial class PlayersManager : MonoBehaviour
         {
 			NetworkManager.instance.SendPosition(obj_players[myIndex].transform.localPosition.x,
 	            obj_players[myIndex].transform.localPosition.z,
-	            obj_players[myIndex].transform.localEulerAngles.y, actionState[myIndex]);
+	            obj_players[myIndex].transform.localEulerAngles.y, speed[myIndex], actionState[myIndex]);
 
             yield return YieldInstructionCache.WaitForSeconds(0.14f);
         }
@@ -129,7 +166,6 @@ public partial class PlayersManager : MonoBehaviour
 
     public void StopMoveCoroutine()
     {
-        //Debug.Log(coroutineFlag);
 
         // 양쪽 조이스틱중 하나만 땠을 경우 플레그 카운트만 1줄여준다.
         if (1 < coroutineFlag)
@@ -141,7 +177,7 @@ public partial class PlayersManager : MonoBehaviour
         // 코루틴 정지시에 마지막 위치를 보내준다.
         NetworkManager.instance.SendPosition(obj_players[myIndex].transform.localPosition.x,
             obj_players[myIndex].transform.localPosition.z,
-            obj_players[myIndex].transform.localEulerAngles.y, actionState[myIndex]);
+            obj_players[myIndex].transform.localEulerAngles.y, speed[myIndex], actionState[myIndex]);
 
         StopCoroutine(coroutine);
         coroutineFlag--;

@@ -12,15 +12,15 @@ using UnityEngine;
 /// </summary>
 public partial class NetworkManager : MonoBehaviour
 {
-	////////// 테스트용!!
-	GameObject[] playerObjects;
+    private PositionPacket tmpPosPacket = new PositionPacket();
 
-	private void Awake()
+    private void Awake()
 	{
 		if (instance == null)
 		{
 			instance = this;
 
+            Screen.sleepTimeout = SleepTimeout.NeverSleep;
 			// 처음 서버와 연결하는 부분
 			IPEndPoint serverEndPoint = new IPEndPoint(serverIP, serverPort);
 			tcpClient.Connect(serverEndPoint);
@@ -33,9 +33,6 @@ public partial class NetworkManager : MonoBehaviour
 				instance.bw = new BinaryWriter(tcpClient.GetStream());
 
 				queue = new Queue<C_Global.QueueInfo>();    // 처리되야할 작업들을 담을 큐 생성
-
-				/////// 테스트용
-				playerObjects = new GameObject[C_Global.MAX_PLAYER];
 
 				ThreadManager.GetInstance.Init();
 			}
@@ -54,13 +51,12 @@ public partial class NetworkManager : MonoBehaviour
 			RecvProcess();
 	}
 
-	//// 프로그램이 종료될 때
-	//private void OnApplicationQuit()
-	//{
-	//	Disconnect();
-	//}
-
-	private void RecvProcess()
+    //// 프로그램이 종료될 때
+    //private void OnApplicationQuit()
+    //{
+    //	Disconnect();
+    //}
+    private void RecvProcess()
 	{
 		// 큐에 저장된 패킷을 꺼내온다.
 		C_Global.QueueInfo info = queue.Dequeue();
@@ -157,95 +153,135 @@ public partial class NetworkManager : MonoBehaviour
 				}
 				break;
 
-			case STATE_PROTOCOL.INGAME_STATE:
-				{
-					switch (protocol)
-					{
-						// 타이머 프로토콜이 넘겨져오면
-						case PROTOCOL.TIMER_PROTOCOL:
-							{
-								// result 생략
+            case STATE_PROTOCOL.INGAME_STATE:
+                {
+                    switch (protocol)
+                    {
+                        // 타이머 프로토콜이 넘겨져오면
+                        case PROTOCOL.TIMER_PROTOCOL:
+                            {
+                                // result 생략
 
-								// 넘겨온 초를 string으로 변환해서 sysMsg에 저장한다.
-								lock (key)
-								{
-									sysMsg = string.Empty;
+                                // 넘겨온 초를 string으로 변환해서 sysMsg에 저장한다.
+                                lock (key)
+                                {
+                                    sysMsg = string.Empty;
 
-									int sec = 0;
-									UnPackPacket(info.packet, out sec);
-									sysMsg = sec.ToString() + "초";
-									Debug.Log(sysMsg);
-								}
-							}
-							break;
+                                    int sec = 0;
+                                    UnPackPacket(info.packet, out sec);
+                                    sysMsg = sec.ToString() + "초";
+                                    Debug.Log(sysMsg);
+                                }
+                            }
+                            break;
 
-						// 게임 시작 프로토콜
-						case PROTOCOL.START_PROTOCOL:
-							break;
+                        // 게임 시작 프로토콜
+                        case PROTOCOL.START_PROTOCOL:
+                            break;
 
-						// 움직임 프로토콜
-						case PROTOCOL.MOVE_PROTOCOL:
-							{
-								switch (result)
-								{
-									case RESULT.INGAME_SUCCESS:
-										{
-											lock (key)
-											{
-												if (playerObjects[0] == null)
-												{
-													//////// 테스트용(최초 1번 얻음)
-													playerObjects[0] = GameObject.FindGameObjectWithTag("Player1");
-													playerObjects[1] = GameObject.FindGameObjectWithTag("Player2");
-													playerObjects[2] = GameObject.FindGameObjectWithTag("Player3");
-													playerObjects[3] = GameObject.FindGameObjectWithTag("Player4");
-												}
-
-
-												PositionPacket tmpPosPacket = new PositionPacket();
-												byte playerBit;
-                                                UnPackPacket(info.packet, ref tmpPosPacket, out playerBit);
+                        // 움직임 프로토콜
+                        case PROTOCOL.MOVE_PROTOCOL:
+                            {
+                                switch (result)
+                                {
+                                    // 정상 이동 시
+                                    case RESULT.INGAME_SUCCESS:
+                                        {
+                                            lock (key)
+                                            {
+                                                UnPackPacket(info.packet, ref tmpPosPacket);
                                                 posPacket[tmpPosPacket.playerNum - 1] = tmpPosPacket;   // 해당 플레이어 위치에 저장
+                                                                                                        //// 마스크 만들어서 어떤 플레이어가 같은 섹터에 있는지 확인하고, 오브젝트를 켜고 끔
+                                                                                                        //byte bitMask = (byte)PLAYER_BIT.PLAYER_1;
+                                                                                                        //for (int i = 0; i < C_Global.MAX_PLAYER; i++, bitMask >>= 1)
+                                                                                                        //{
+                                                                                                        //   // 오브젝트를 켜준다.
+                                                                                                        //   if((playerBit & bitMask) > 0)
+                                                                                                        //      playerObjects[i].SetActive(true);
 
-												// 마스크 만들어서 어떤 플레이어가 같은 섹터에 있는지 확인하고, 오브젝트를 켜고 끔
-												byte bitMask = (byte)PLAYER_BIT.PLAYER_1;
-												for (int i = 0; i < C_Global.MAX_PLAYER; i++, bitMask >>= 1)
-												{
-													// 오브젝트를 켜준다.
-													if((playerBit & bitMask) > 0)
-														playerObjects[i].SetActive(true);
+                                                //   // 오브젝트를 꺼준다.
+                                                //   else
+                                                //      playerObjects[i].SetActive(false);
+                                                //}
+                                            }
+                                        }
+                                        break;
 
-													// 오브젝트를 꺼준다.
-													else
-														playerObjects[i].SetActive(false);
-												}
-											}
-										}
-										break;
-								}
-							}
-							break;
+                                    // 섹터 입장 시
+                                    case RESULT.ENTER_SECTOR:
+                                        {
+                                            lock (key)
+                                            {
+                                                UnPackPacket(info.packet, ref tmpPosPacket);
+                                                PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].SetActive(true);   // 켜고
+                                                posPacket[tmpPosPacket.playerNum - 1] = tmpPosPacket;   // 해당 플레이어 위치에 저장
+                                            }
+                                        }
+                                        break;
 
-						// 끊김 프로토콜
-						case PROTOCOL.DISCONNECT_PROTOCOL:
-							{
-								lock (key)
-								{
-									UnPackPacket(info.packet, out quitPlayerNum);
-								}
-							}
-							break;
-					}
-				}
-				break;
-		}
+                                    // 섹터 퇴장 시
+                                    case RESULT.EXIT_SECTOR:
+                                        {
+                                            lock (key)
+                                            {
+                                                UnPackPacket(info.packet, ref tmpPosPacket);
+                                                PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].SetActive(false);   // 끄고
+                                                posPacket[tmpPosPacket.playerNum - 1] = tmpPosPacket;   // 저장해주는게 좋음
+                                            }
+                                        }
+                                        break;
+
+                                    // 섹터 입장 시 새로 입장한 인접섹터에 있는 플레이어 리스트 갱신
+                                    case RESULT.UPDATE_PLAYER:
+                                        {
+                                            lock (key)
+                                            {
+                                                byte playerBit = 0;
+                                                UnPackPacket(info.packet, out playerBit);
+
+                                                // 마스크 만들어서 어떤 플레이어가 같은 섹터에 있는지 확인하고, 오브젝트를 켜고 끔
+                                                byte bitMask = (byte)PLAYER_BIT.PLAYER_1;
+                                                for (int i = 0; i < C_Global.MAX_PLAYER; i++, bitMask >>= 1)
+                                                {
+                                                    // 본인은 걍 건너 뜀
+                                                    if ((myPlayerNum - 1) == i)
+                                                        continue;
+
+                                                    // 오브젝트를 켜준다.
+                                                    if ((playerBit & bitMask) > 0)
+                                                        PlayersManager.instance.obj_players[i].SetActive(true);
+
+                                                    // 오브젝트를 꺼준다.
+                                                    else
+                                                        PlayersManager.instance.obj_players[i].SetActive(false);
+                                                }
+                                            }
+                                        }
+                                        break;
+                                }
+                            }
+                            break;
+
+                        // 끊김 프로토콜
+                        case PROTOCOL.DISCONNECT_PROTOCOL:
+                            {
+                                lock (key)
+                                {
+                                    UnPackPacket(info.packet, out quitPlayerNum);
+                                }
+                            }
+                            break;
+                    }
+                }
+                break;
+        }
 	}
-
 
 	private void OnApplicationQuit()
 	{
 		Disconnect();
 	}
+
 	public void Disconnect()
 	{
 		// 뒷정리

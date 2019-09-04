@@ -21,13 +21,25 @@ class InGameManager
 		DISCONNECT_PROTOCOL   = ((__int64)0x1 << 49),	// 접속 끊김 프로토콜
 	};
 
-	// 33~24
+   // 33~24
 	enum RESULT_INGAME : __int64
 	{
 		INGAME_SUCCESS = ((__int64)0x1 << 33),
-		INGAME_FAIL    = ((__int64)0x1 << 32),
+		INGAME_FAIL = ((__int64)0x1 << 32),
+		ENTER_SECTOR = ((__int64)0x1 << 31),   // 섹터 진입
+		EXIT_SECTOR = ((__int64)0x1 << 30),   // 섹터 퇴장
+		UPDATE_PLAYER = ((__int64)0x1 << 29),   // 플레이어 목록 최신화
 
 		NODATA = ((__int64)0x1 << 24)
+	};
+
+	// 플레이어 플래그
+	enum PLAYER_BIT : byte
+	{
+		PLAYER_1 = (1 << 3),
+		PLAYER_2 = (1 << 2),
+		PLAYER_3 = (1 << 1),
+		PLAYER_4 = (1 << 0),
 	};
 
 private:
@@ -44,7 +56,8 @@ public:
 private:
 	void PackPacket(char* _setptr, const int &_sec, int& _size);
 	void PackPacket(char* _setptr, TCHAR* _str1, int& _size);				// 문자열 1개를 Pack하는 함수
-	void PackPacket(char* _setptr, PositionPacket& _struct, unsigned char _playerBit, int& _size);
+	void PackPacket(char* _setptr, PositionPacket& _struct, int& _size);
+	void PackPacket(char* _setptr, byte _playerBit, int& _size);
 	void UnPackPacket(char* _getBuf, PositionPacket& _struct);
 	void UnPackPacket(char* _getBuf, Weapon* &_weapon);
 
@@ -62,5 +75,7 @@ public:
 	bool CanIMove(C_ClientInfo* _ptr);			// 이동
 	bool LeaveProcess(C_ClientInfo* _ptr, int _playerIndex);		// 종료 프로세스
 
+	void ListSendPacket(list<C_ClientInfo*> _list, C_ClientInfo* _exceptClient, PROTOCOL_INGAME _protocol, char* _buf, int _packetSize);
+	void FlagPlayerBit(list<C_ClientInfo*> _list, byte& _playerBit);
 	static unsigned long __stdcall TimerThread(void* _arg);	// 아이템 선택 시간을 세는 타이머 쓰레드
 };

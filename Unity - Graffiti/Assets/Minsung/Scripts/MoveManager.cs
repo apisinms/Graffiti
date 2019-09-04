@@ -44,7 +44,25 @@ public class MoveManager : MonoBehaviour
             switch ((_ACTION_STATE)NetworkManager.instance.GetActionState(i))
             {
                 case _ACTION_STATE.IDLE:
-                    PlayersManager.instance.Action_Idle(i);
+                    {
+                        if (Mathf.Abs(NetworkManager.instance.GetPosX(i) - curPlayerPos[i].position.x) > 0.015f ||
+                            Mathf.Abs(NetworkManager.instance.GetPosZ(i) - curPlayerPos[i].position.z) > 0.015f)
+                        {
+                            pos.x = networkManager.GetPosX(i);
+                            pos.y = curPlayerPos[i].localPosition.y;
+                            pos.z = networkManager.GetPosZ(i);
+
+                            PlayersManager.instance.obj_players[i].transform.localPosition = Vector3.Lerp(PlayersManager.instance.obj_players[i].transform.localPosition, pos,
+                            Time.smoothDeltaTime * (PlayersManager.instance.speed[i]));
+                        }
+                        else
+                        {
+                            PlayersManager.instance.obj_players[i].transform.localPosition = Vector3.MoveTowards(PlayersManager.instance.obj_players[i].transform.localPosition, pos,
+                            Time.smoothDeltaTime * PlayersManager.instance.speed[i]);
+                        }
+
+                        PlayersManager.instance.Action_Idle(i);
+                    }
                     break;
                 case _ACTION_STATE.CIRCUIT:
                     {
@@ -57,6 +75,22 @@ public class MoveManager : MonoBehaviour
                     break;
                 case _ACTION_STATE.AIMING:
                     {
+                        if (Mathf.Abs(NetworkManager.instance.GetPosX(i) - curPlayerPos[i].position.x) > 0.015f ||
+                            Mathf.Abs(NetworkManager.instance.GetPosZ(i) - curPlayerPos[i].position.z) > 0.015f)
+                        {
+                            pos.x = networkManager.GetPosX(i);
+                            pos.y = curPlayerPos[i].localPosition.y;
+                            pos.z = networkManager.GetPosZ(i);
+
+                            PlayersManager.instance.obj_players[i].transform.localPosition = Vector3.Lerp(PlayersManager.instance.obj_players[i].transform.localPosition, pos,
+                            Time.smoothDeltaTime * (PlayersManager.instance.speed[i]));
+                        }
+                        else
+                        {
+                            PlayersManager.instance.obj_players[i].transform.localPosition = Vector3.MoveTowards(PlayersManager.instance.obj_players[i].transform.localPosition, pos,
+                            Time.smoothDeltaTime * PlayersManager.instance.speed[i]);
+                        }
+
                         PlayersManager.instance.Action_AimingNormal(i, networkManager.GetRotY(i));
                     }
                     break;

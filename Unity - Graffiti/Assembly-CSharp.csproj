@@ -80,6 +80,8 @@
     <Compile Include="Assets\MinSeok\Script\Ingame\Player\PlayersManager.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\Player\PlayersManager.MyAction.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\Player\PlayersManager.OthersAction.cs" />
+    <Compile Include="Assets\MinSeok\Script\Ingame\Weapons\WeaponManager.Action.cs" />
+    <Compile Include="Assets\MinSeok\Script\Ingame\Weapons\WeaponManager.cs" />
     <Compile Include="Assets\MinSeok\Script\Login_Join\InputInfoManager.cs" />
     <Compile Include="Assets\MinSeok\Script\MainMenu\btn_option.cs" />
     <Compile Include="Assets\MinSeok\Script\MainMenu\btn_quit.cs" />
