@@ -50,8 +50,13 @@ public:
 	void SetPlayerInfo(PlayerInfo* _playerInfo);
 	PlayerInfo* GetPlayerInfo();
 
+	///////// 이 밑에 메서드들은 처리하는 방식을 좀 바꿔야될듯.. 멤버 늘어나면 계속 늘어나게됨
+
 	PositionPacket* GetPosition();
 	void SetPosition(PositionPacket* _position);
+
+	INDEX GetIndex();
+	void SetIndex(INDEX _index);
 
 	Weapon* GetWeapon();
 	void SetWeapon(Weapon* _weapon);

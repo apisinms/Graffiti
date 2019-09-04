@@ -80,6 +80,9 @@ PlayerInfo* C_ClientInfo::GetPlayerInfo() {return playerInfo;}
 PositionPacket* C_ClientInfo::GetPosition() { return playerInfo->GetPosition(); }
 void C_ClientInfo::SetPosition(PositionPacket* _position) { playerInfo->SetPosition(_position); }
 
+INDEX C_ClientInfo::GetIndex() { return playerInfo->GetIndex(); }
+void C_ClientInfo::SetIndex(INDEX _index) { playerInfo->SetIndex(_index); }
+
 Weapon* C_ClientInfo::GetWeapon() { return playerInfo->GetWeapon(); }
 void C_ClientInfo::SetWeapon(Weapon* _weapon) { playerInfo->SetWeapon(_weapon); }
 

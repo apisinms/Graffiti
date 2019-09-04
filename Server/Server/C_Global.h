@@ -21,13 +21,49 @@ using namespace std;
 #define PROTOCOL_OFFSET	0xFFFFF
 #define PROTOCOL_MASK	30
 
+struct INDEX
+{
+	int i, j;
+
+	inline bool operator!= (INDEX _param)
+	{
+		if ((i != _param.i) || (j != _param.j))
+			return true;
+
+		return false;
+	}
+};
+
+struct COORD_DOUBLE
+{
+	double x, z;
+};
+
 struct PositionPacket
 {
 	int playerNum;
 	float posX;
 	float posZ;
 	float rotY;
+	float speed;
 	int action;
+
+	PositionPacket() 
+	{
+		playerNum = 0;
+		posX = posZ = rotY = speed = 0.0f;
+		action = 0;
+	}
+
+	PositionPacket(PositionPacket& _pos)
+	{
+		this->playerNum = _pos.playerNum;
+		this->posX      = _pos.posX;
+		this->posZ      = _pos.posZ;
+		this->rotY      = _pos.rotY;
+		this->speed		= _pos.speed;
+		this->action    = _pos.action;
+	}
 };
 
 struct Weapon
@@ -49,6 +85,7 @@ struct PlayerInfo
 {
 private:
 	PositionPacket* position;
+	INDEX index;
 	Weapon* weapon;
 	float health;
 	float speed;
@@ -57,18 +94,34 @@ private:
 public:
 	PlayerInfo()
 	{
-		position = new PositionPacket();
-		weapon   = new Weapon();
+		position = nullptr;
+		memset(&index, 0, sizeof(INDEX));
+		weapon = nullptr;
 
 		health = speed = 0.0f;
 		bullet = 0;
 	}
 
 	PositionPacket* GetPosition() { return position; }
-	void SetPosition(PositionPacket* _position) { position = _position; }
+	void SetPosition(PositionPacket* _position)
+	{
+		if (position != nullptr)
+			delete position;
+
+		position = _position;
+	}
+
+	INDEX GetIndex() { return index; }
+	void SetIndex(INDEX _index) { index = _index; }
 
 	Weapon* GetWeapon() { return weapon; }
-	void SetWeapon(Weapon* _weapon) { weapon = _weapon; }
+	void SetWeapon(Weapon* _weapon) 
+	{
+		if (weapon != nullptr)
+			delete weapon;
+
+		weapon = _weapon;
+	}
 
 	float GetHealth() { return health; }
 	void SetHealth(float _health) { health = _health; }

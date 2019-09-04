@@ -29,7 +29,7 @@ private:
 	int numOfPlayer;				// 현재 방에 있는 플레이어 수
 	ROOMSTATUS roomStatus;			// 방의 상태
 	list<C_ClientInfo*>playerList;	// 유저들을 리스트에 저장
-	C_Sector* sector;
+	C_Sector* sector;				// 이 방의 섹터 매니저
 
 public:
 	RoomInfo(C_ClientInfo** _playerList, int _numOfPlayer);
@@ -50,6 +50,8 @@ public:
 
 	void SetRoomStatus(ROOMSTATUS _roomStatus) { roomStatus = _roomStatus; }
 	ROOMSTATUS GetRoomStatus() { return roomStatus; }
+
+	C_Sector* GetSector() { return sector; }
 };
 
 class RoomManager

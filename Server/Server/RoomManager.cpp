@@ -37,7 +37,7 @@ bool RoomInfo::LeaveRoom(C_ClientInfo* _player)
 			{
 				// 방 인원수를 감소하고, 자신의 흔적을 지운다.
 				numOfPlayer--;				// 방 인원수 감소
-				playerList.erase(iter);		// 방의 플레이어 리스트에서 제거
+				playerList.erase(iter++);		// 방의 플레이어 리스트에서 제거
 				_player->SetRoom(nullptr);	// 플레이어의 방을 null로 설정
 				curIter = playerList.begin();	// 반복자가 꼬이지 않게 다시 처음으로(나갔으니까)
 
