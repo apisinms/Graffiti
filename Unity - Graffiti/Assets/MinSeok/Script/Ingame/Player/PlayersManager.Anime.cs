@@ -11,37 +11,60 @@ public partial class PlayersManager : MonoBehaviour
 {
     public void Anime_Idle(int _index)
     {
-        am_animePlayer[_index].SetBool("Aiming", false);
+        if (am_animePlayer[_index].GetBool("isAimingAndCurcuit") == true)
+            am_animePlayer[_index].SetBool("isAimingAndCurcuit", false);
+
         am_animePlayer[_index].SetTrigger("Idle");
     }
     public void Anime_Circuit(int _index)
     {
-        am_animePlayer[_index].SetBool("Aiming", false);
+        if (am_animePlayer[_index].GetBool("isAimingAndCurcuit") == true)
+            am_animePlayer[_index].SetBool("isAimingAndCurcuit", false);
+
+        am_animePlayer[_index].SetFloat("Speed", speed[myIndex]);
         am_animePlayer[_index].SetTrigger("Curcuit");
     }
     public void Anime_Aiming_Idle(int _index)
     {
-        am_animePlayer[_index].SetBool("Aiming", true);
+        if (am_animePlayer[_index].GetBool("isAimingAndCurcuit") == true)
+            am_animePlayer[_index].SetBool("isAimingAndCurcuit", false);
+
         am_animePlayer[_index].SetTrigger("Aiming_Idle");
     }
-    public void Anime_Aiming_Left(int _index)
+    public void Anime_AimingWithCircuit(int _index, int _directionNum)
     {
-        am_animePlayer[_index].SetBool("Aiming", true);
-        am_animePlayer[_index].SetTrigger("Aiming_Left");
+        if (am_animePlayer[_index].GetBool("isAimingAndCurcuit") == false)
+            am_animePlayer[_index].SetBool("isAimingAndCurcuit", true);
+
+        am_animePlayer[_index].SetInteger("DirectionLeftstick", _directionNum); //우측스틱방향. 즉 플레이어의 조준뱡향을 애니메이터에넘김
+        am_animePlayer[_index].SetFloat("Direction_rightX", direction2[_index].x); //블렌드에서 쓸 스틱방향(조준방향)좌표를 넘김.
+        am_animePlayer[_index].SetFloat("Direction_rightY", direction2[_index].z);
     }
-    public void Anime_Aiming_Right(int _index)
-    {
-        am_animePlayer[_index].SetBool("Aiming", true);
-        am_animePlayer[_index].SetTrigger("Aiming_Right");
-    }
-    public void Anime_Aiming_Forward(int _index)
-    {
-        am_animePlayer[_index].SetBool("Aiming", true);
-        am_animePlayer[_index].SetTrigger("Aiming_Forward");
-    }
-    public void Anime_Aiming_Back(int _index)
-    {
-        am_animePlayer[_index].SetBool("Aiming", true);
-        am_animePlayer[_index].SetTrigger("Aiming_Back");
-    }
+
 }
+
+
+
+
+/*
+public void Anime_Aiming_Left(int _index)
+{
+    //am_animePlayer[_index].SetBool("Aiming", true);
+    //am_animePlayer[_index].SetTrigger("Aiming_Left");
+}
+public void Anime_Aiming_Right(int _index)
+{
+    //am_animePlayer[_index].SetBool("Aiming", true);
+    // am_animePlayer[_index].SetTrigger("Aiming_Right");
+}
+public void Anime_Aiming_Forward(int _index)
+{
+    //am_animePlayer[_index].SetBool("Aiming", true);
+    //am_animePlayer[_index].SetTrigger("Aiming_Forward");
+}
+public void Anime_Aiming_Back(int _index)
+{
+   // am_animePlayer[_index].SetBool("Aiming", true);
+    //am_animePlayer[_index].SetTrigger("Aiming_Back");      
+}
+*/

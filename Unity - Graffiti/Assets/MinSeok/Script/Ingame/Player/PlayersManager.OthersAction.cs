@@ -50,7 +50,33 @@ public partial class PlayersManager : MonoBehaviour
         if (myIndex == _index)
             return;
 
-        Anime_Aiming_Left(_index);
+        //좌측조이스틱 위로일때.         우측조이스틱의 방향에따라서 애니메이션을 달리함.
+        if ((new Vector3(0, Mathf.Atan2(direction[_index].x, direction[_index].z) * Mathf.Rad2Deg, 0).y >= -30.0f) &&
+            (new Vector3(0, Mathf.Atan2(direction[_index].x, direction[_index].z) * Mathf.Rad2Deg, 0).y <= 30.0f))
+        {
+            Anime_AimingWithCircuit(_index, 1);
+        }
+        //우측일때
+        else if ((new Vector3(0, Mathf.Atan2(direction[_index].x, direction[_index].z) * Mathf.Rad2Deg, 0).y >= 30.0f) &&
+            (new Vector3(0, Mathf.Atan2(direction[_index].x, direction[_index].z) * Mathf.Rad2Deg, 0).y <= 150.0f))
+        {
+            Anime_AimingWithCircuit(_index, 2);
+        }
+        //아래일때
+        else if ((new Vector3(0, Mathf.Atan2(direction[_index].x, direction[_index].z) * Mathf.Rad2Deg, 0).y >= 150.0f &&
+            new Vector3(0, Mathf.Atan2(direction[_index].x, direction[_index].z) * Mathf.Rad2Deg, 0).y <= 180.0f) ||
+            (new Vector3(0, Mathf.Atan2(direction[_index].x, direction[_index].z) * Mathf.Rad2Deg, 0).y >= -180.0f &&
+            new Vector3(0, Mathf.Atan2(direction[_index].x, direction[_index].z) * Mathf.Rad2Deg, 0).y <= -150.0f))
+        {
+            Anime_AimingWithCircuit(_index, 3);
+        }
+        //좌측일때
+        else if ((new Vector3(0, Mathf.Atan2(direction[_index].x, direction[_index].z) * Mathf.Rad2Deg, 0).y >= -150.0f) &&
+            (new Vector3(0, Mathf.Atan2(direction[_index].x, direction[_index].z) * Mathf.Rad2Deg, 0).y <= -30.0f))
+        {
+            Anime_AimingWithCircuit(_index, 4);
+        }
+
 
         obj_players[_index].transform.localPosition = Vector3.Lerp(obj_players[_index].transform.localPosition, _pos,
     Time.smoothDeltaTime * (speed[_index]));

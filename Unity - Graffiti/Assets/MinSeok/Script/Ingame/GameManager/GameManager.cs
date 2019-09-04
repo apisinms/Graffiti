@@ -2,25 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public enum _ATTRIBUTE_STATE
-{
-    //속성상태 
-    DEAD = 0,
-    ALIVE = 1
-}
-
-public enum _ACTION_STATE //액션(움직임)의 상태
-{
-    // 단일 STATE
-    IDLE = 0,
-    CIRCUIT,
-    AIMING,
-
-    // 복합 STATE
-    CIRCUIT_AND_AIMING = (CIRCUIT + AIMING),
-}
-
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
