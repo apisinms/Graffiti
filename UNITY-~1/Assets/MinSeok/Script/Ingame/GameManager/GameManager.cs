@@ -13,23 +13,14 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
 		if (instance == null)
-		{
 			instance = this;
-
-			// 스크린 가로모드 고정
-			Screen.orientation = ScreenOrientation.AutoRotation;
-			Screen.autorotateToPortrait = false;
-			Screen.autorotateToPortraitUpsideDown = false;
-			Screen.autorotateToLandscapeLeft = true;
-			Screen.autorotateToLandscapeRight = true;
-		}
 
         //obj_players = new GameObject[4];
 	    playersTag[0] = "Player1"; playersTag[1] = "Player2";
 	    playersTag[2] = "Player3"; playersTag[3] = "Player4";
 
-        myNetworkNum = NetworkManager.instance.MyPlayerNum;
-        //myNetworkNum = 1; //예시로 번호부여함.  서버에서 샌드된번호로 해야함.
+        //myNetworkNum = NetworkManager.instance.MyPlayerNum;
+        myNetworkNum = 1; //예시로 번호부여함.  서버에서 샌드된번호로 해야함.
         myIndex = myNetworkNum - 1;
 
         myTag = playersTag[myIndex]; //내 태그등록

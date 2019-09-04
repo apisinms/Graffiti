@@ -37,7 +37,7 @@ public class LeftJoystick : MonoBehaviour, JoystickControll
         PlayersManager.instance.actionState[myIndex] += (int)_ACTION_STATE.CIRCUIT;
 
         // 모든 설정 을 끝낸 뒤에 와야함 
-        PlayersManager.instance.StartMoveCoroutine();
+        //PlayersManager.instance.StartMoveCoroutine();
     }
 
     public  void Drag(BaseEventData _Data)
@@ -82,6 +82,6 @@ public class LeftJoystick : MonoBehaviour, JoystickControll
         PlayersManager.instance.actionState[myIndex] -= (int)_ACTION_STATE.CIRCUIT;
 
         // 마지막에 와야함
-        PlayersManager.instance.StopMoveCoroutine();
+        //PlayersManager.instance.StopMoveCoroutine();
     }
 }

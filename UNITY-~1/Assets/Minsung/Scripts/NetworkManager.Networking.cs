@@ -20,7 +20,14 @@ public partial class NetworkManager : MonoBehaviour
 		{
 			instance = this;
 
+            // 스크린 가로모드 고정
+            Screen.orientation = ScreenOrientation.AutoRotation;
+            Screen.autorotateToPortrait = false;
+            Screen.autorotateToPortraitUpsideDown = false;
+            Screen.autorotateToLandscapeLeft = true;
+            Screen.autorotateToLandscapeRight = true;
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
+
 			// 처음 서버와 연결하는 부분
 			IPEndPoint serverEndPoint = new IPEndPoint(serverIP, serverPort);
 			tcpClient.Connect(serverEndPoint);

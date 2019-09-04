@@ -18,7 +18,6 @@ ScriptsOnlyBuild:
     - UnityEditor.Graphs.AnimationStateMachine.AnyStateNode
     - UnityEditor.Graphs.AnimationStateMachine.Graph
     - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
-    - UnityEditor.Graphs.AnimationStateMachine.StateMachineNode
     - UnityEditor.Graphs.AnimationStateMachine.StateNode
     - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
@@ -99,7 +98,7 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 10344}
     - Class: 114
-      Script: {instanceID: 10536}
+      Script: {instanceID: 10538}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 135

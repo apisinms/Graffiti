@@ -17,7 +17,7 @@ public partial class PlayersManager : MonoBehaviour
         if (myIndex == _index)
             return;
 
-        speed[_index] = NetworkManager.instance.GetSpeed(_index);
+        //speed[_index] = NetworkManager.instance.GetSpeed(_index);
         Debug.Log(speed[_index]);
         Anime_Circuit(_index);
 

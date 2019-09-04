@@ -63,7 +63,7 @@ public partial class PlayersManager : MonoBehaviour
         if (instance == null)
             instance = this;
 
-        coroutine = MovePlayer();
+        //coroutine = MovePlayer();
         coroutineFlag = 0;
         myIndex = GameManager.instance.myIndex; //게임매니저에서 받은 인덱스를 다시등록
         Initialization(C_Global.MAX_PLAYER); //기타 초기화
@@ -82,6 +82,7 @@ public partial class PlayersManager : MonoBehaviour
             }
         }
 
+        /*
         //////////////// 게임 시작 시 최초로 1회 위치정보를 서버로 전송해야함 /////////////////
         NetworkManager.instance.SendPosition(obj_players[myIndex].transform.localPosition.x,
            obj_players[myIndex].transform.localPosition.z,
@@ -103,8 +104,9 @@ public partial class PlayersManager : MonoBehaviour
                 obj_players[1].SetActive(false);
                 break;
         }
+        */
     }
-
+    
     void Initialization(int _num)
     {
         obj_players    = new GameObject[C_Global.MAX_PLAYER];
@@ -138,6 +140,7 @@ public partial class PlayersManager : MonoBehaviour
         }
     }
     
+    /*
     IEnumerator MovePlayer()
     {
         while (true)
@@ -182,4 +185,6 @@ public partial class PlayersManager : MonoBehaviour
         StopCoroutine(coroutine);
         coroutineFlag--;
     }
+
+    */
 }
