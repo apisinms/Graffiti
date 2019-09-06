@@ -34,6 +34,8 @@ public partial class PlayersManager : MonoBehaviour
     public int coroutineFlag { get; set; }
     private IEnumerator coroutine;
 
+	private NetworkManager networkManager;	// 접근용
+
     #region PLAYERS_ROBIN
     public GameObject[] obj_players { get; set; }
     #endregion
@@ -63,7 +65,8 @@ public partial class PlayersManager : MonoBehaviour
         if (instance == null)
             instance = this;
 
-        coroutine = MovePlayer();
+		networkManager = NetworkManager.instance;
+		coroutine = MovePlayer();
         coroutineFlag = 0;
         myIndex = GameManager.instance.myIndex; //게임매니저에서 받은 인덱스를 다시등록
         Initialization(C_Global.MAX_PLAYER); //기타 초기화
@@ -82,8 +85,8 @@ public partial class PlayersManager : MonoBehaviour
             }
         }
 
-        //////////////// 게임 시작 시 최초로 1회 위치정보를 서버로 전송해야함 /////////////////
-        NetworkManager.instance.SendPosition(obj_players[myIndex].transform.localPosition.x,
+		//////////////// 게임 시작 시 최초로 1회 위치정보를 서버로 전송해야함 /////////////////
+		networkManager.SendPosition(obj_players[myIndex].transform.localPosition.x,
            obj_players[myIndex].transform.localPosition.z,
            obj_players[myIndex].transform.localEulerAngles.y, speed[myIndex], actionState[myIndex], true);
 
@@ -142,11 +145,13 @@ public partial class PlayersManager : MonoBehaviour
     {
         while (true)
         {
-			NetworkManager.instance.SendPosition(obj_players[myIndex].transform.localPosition.x,
-	            obj_players[myIndex].transform.localPosition.z,
-	            obj_players[myIndex].transform.localEulerAngles.y, speed[myIndex], actionState[myIndex]);
+			networkManager.SendPosition(obj_players[myIndex].transform.localPosition.x,
+				obj_players[myIndex].transform.localPosition.z,
+				obj_players[myIndex].transform.localEulerAngles.y,
+				speed[myIndex],
+				actionState[myIndex]);
 
-            yield return YieldInstructionCache.WaitForSeconds(0.14f);
+            yield return YieldInstructionCache.WaitForSeconds(0.1f);
         }
     }
 
@@ -174,8 +179,10 @@ public partial class PlayersManager : MonoBehaviour
             return;
         }
 
-        // 코루틴 정지시에 마지막 위치를 보내준다.
-        NetworkManager.instance.SendPosition(obj_players[myIndex].transform.localPosition.x,
+		Debug.Log("speed:" + speed[myIndex]);
+
+		// 코루틴 정지시에 마지막 위치를 보내준다.
+		networkManager.SendPosition(obj_players[myIndex].transform.localPosition.x,
             obj_players[myIndex].transform.localPosition.z,
             obj_players[myIndex].transform.localEulerAngles.y, speed[myIndex], actionState[myIndex]);
 

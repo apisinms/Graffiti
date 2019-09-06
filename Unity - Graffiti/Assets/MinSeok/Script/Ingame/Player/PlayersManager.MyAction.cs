@@ -53,7 +53,7 @@ public partial class PlayersManager : MonoBehaviour
         } 
      
         obj_players[myIndex].transform.localRotation = Quaternion.LookRotation(direction2[myIndex]);
-        obj_players[myIndex].transform.Translate(direction[myIndex] * (speed[myIndex] * 0.35f) * Time.smoothDeltaTime, Space.World);
+		obj_players[myIndex].transform.Translate(direction[myIndex] * (speed[myIndex] * C_Global.amingSpeed * Time.smoothDeltaTime), Space.World);
     }
 
 }

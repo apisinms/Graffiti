@@ -25,6 +25,11 @@ struct INDEX
 {
 	int i, j;
 
+	INDEX()
+	{
+		i = j = 1;
+	}
+
 	inline bool operator!= (INDEX _param)
 	{
 		if ((i != _param.i) || (j != _param.j))

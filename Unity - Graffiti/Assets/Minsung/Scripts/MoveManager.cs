@@ -10,7 +10,6 @@ public class MoveManager : MonoBehaviour
 
     void Awake()
     {
-        Application.targetFrameRate = 60;
         networkManager = NetworkManager.instance;
 
 		curPlayerPos = new Transform[C_Global.MAX_PLAYER];
@@ -32,106 +31,58 @@ public class MoveManager : MonoBehaviour
     }
 
 
-    // 플레이어를 뒤져봐서 위치가 다르면 업데이트
-    void Update()
+	// 플레이어를 뒤져봐서 위치가 다르면 업데이트
+	void Update()
+	{
+		for (int i = 0; i < curPlayerPos.Length; i++)
+		{
+			// 자기 제외하고
+			if (GameManager.instance.myIndex == i)
+				continue;
+
+			pos.x = networkManager.GetPosX(i);
+			pos.y = curPlayerPos[i].localPosition.y;
+			pos.z = networkManager.GetPosZ(i);
+
+			switch ((_ACTION_STATE)NetworkManager.instance.GetActionState(i))
+			{
+				case _ACTION_STATE.IDLE:
+					{
+						PlayersManager.instance.Action_Idle(i, pos);
+					}
+					break;
+				case _ACTION_STATE.CIRCUIT:
+					{
+						PlayersManager.instance.Action_CircuitNormal(i, pos, networkManager.GetRotY(i));
+					}
+					break;
+				case _ACTION_STATE.AIMING:
+					{
+						PlayersManager.instance.Action_AimingNormal(i, pos, networkManager.GetRotY(i));
+					}
+					break;
+				case _ACTION_STATE.CIRCUIT_AND_AIMING:
+					{
+						PlayersManager.instance.Action_AimingWithCircuit(i, pos, networkManager.GetRotY(i));
+					}
+					break;
+			}
+		}
+	}
+
+	IEnumerator CheckQuit()
     {
-        for (int i = 0; i < curPlayerPos.Length; i++)
-        {
-            // 자기 제외하고
-            if (GameManager.instance.myIndex == i)
-                continue;
-
-            switch ((_ACTION_STATE)NetworkManager.instance.GetActionState(i))
-            {
-                case _ACTION_STATE.IDLE:
-                    {
-                        if (Mathf.Abs(NetworkManager.instance.GetPosX(i) - curPlayerPos[i].position.x) > 0.015f ||
-                            Mathf.Abs(NetworkManager.instance.GetPosZ(i) - curPlayerPos[i].position.z) > 0.015f)
-                        {
-                            pos.x = networkManager.GetPosX(i);
-                            pos.y = curPlayerPos[i].localPosition.y;
-                            pos.z = networkManager.GetPosZ(i);
-
-                            PlayersManager.instance.obj_players[i].transform.localPosition = Vector3.Lerp(PlayersManager.instance.obj_players[i].transform.localPosition, pos,
-                            Time.smoothDeltaTime * (PlayersManager.instance.speed[i]));
-                        }
-                        else
-                        {
-                            PlayersManager.instance.obj_players[i].transform.localPosition = Vector3.MoveTowards(PlayersManager.instance.obj_players[i].transform.localPosition, pos,
-                            Time.smoothDeltaTime * PlayersManager.instance.speed[i]);
-                        }
-
-                        PlayersManager.instance.Action_Idle(i);
-                    }
-                    break;
-                case _ACTION_STATE.CIRCUIT:
-                    {
-                        pos.x = networkManager.GetPosX(i);
-                        pos.y = curPlayerPos[i].localPosition.y;
-                        pos.z = networkManager.GetPosZ(i);
-
-                        PlayersManager.instance.Action_CircuitNormal(i, pos, networkManager.GetRotY(i));
-                    }
-                    break;
-                case _ACTION_STATE.AIMING:
-                    {
-                        if (Mathf.Abs(NetworkManager.instance.GetPosX(i) - curPlayerPos[i].position.x) > 0.015f ||
-                            Mathf.Abs(NetworkManager.instance.GetPosZ(i) - curPlayerPos[i].position.z) > 0.015f)
-                        {
-                            pos.x = networkManager.GetPosX(i);
-                            pos.y = curPlayerPos[i].localPosition.y;
-                            pos.z = networkManager.GetPosZ(i);
-
-                            PlayersManager.instance.obj_players[i].transform.localPosition = Vector3.Lerp(PlayersManager.instance.obj_players[i].transform.localPosition, pos,
-                            Time.smoothDeltaTime * (PlayersManager.instance.speed[i]));
-                        }
-                        else
-                        {
-                            PlayersManager.instance.obj_players[i].transform.localPosition = Vector3.MoveTowards(PlayersManager.instance.obj_players[i].transform.localPosition, pos,
-                            Time.smoothDeltaTime * PlayersManager.instance.speed[i]);
-                        }
-
-                        PlayersManager.instance.Action_AimingNormal(i, networkManager.GetRotY(i));
-                    }
-                    break;
-                case _ACTION_STATE.CIRCUIT_AND_AIMING:
-                    {
-                        pos.x = networkManager.GetPosX(i);
-                        pos.y = curPlayerPos[i].localPosition.y;
-                        pos.z = networkManager.GetPosZ(i);
-
-                        PlayersManager.instance.Action_AimingWithCircuit(i, pos, networkManager.GetRotY(i));
-                    }
-                    break;
-            }
-        }
-    }
-
-    IEnumerator CheckQuit()
-    {
+		int quitPlayerNum;
         while (true)
         {
-            switch (networkManager.CheckQuit())
-            {
-                case 1:
-					Destroy(GameObject.FindGameObjectWithTag("Player1"));
-                    break;
+			quitPlayerNum = networkManager.CheckQuit();
+			if (quitPlayerNum > 0)	// 음수가 아니면 퇴장한 플레이어가 있다는 소리임
+			{
+				// 나간놈을 꺼준다.
+				if (PlayersManager.instance.obj_players[quitPlayerNum - 1].activeSelf == true)
+					PlayersManager.instance.obj_players[quitPlayerNum - 1].SetActive(false);
 
-                case 2:
-					Destroy(GameObject.FindGameObjectWithTag("Player2"));
-					break;
-
-                case 3:
-					Destroy(GameObject.FindGameObjectWithTag("Player3"));
-					break;
-
-                case 4:
-					Destroy(GameObject.FindGameObjectWithTag("Player4"));
-					break;
-
-                default:
-                    break;
-            }
+			}
 
             yield return YieldInstructionCache.WaitForSeconds(0.25f);
         }

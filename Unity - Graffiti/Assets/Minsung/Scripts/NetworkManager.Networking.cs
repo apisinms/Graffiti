@@ -13,6 +13,8 @@ using UnityEngine;
 public partial class NetworkManager : MonoBehaviour
 {
     private PositionPacket tmpPosPacket = new PositionPacket();
+	private Vector3 tmpVec = new Vector3();
+	private Vector3 tmpAngle = new Vector3();
 
     private void Awake()
 	{
@@ -20,7 +22,19 @@ public partial class NetworkManager : MonoBehaviour
 		{
 			instance = this;
 
-            Screen.sleepTimeout = SleepTimeout.NeverSleep;
+			// 스크린 가로모드 고정
+			Screen.orientation = ScreenOrientation.AutoRotation;
+			Screen.autorotateToPortrait = false;
+			Screen.autorotateToPortraitUpsideDown = false;
+			Screen.autorotateToLandscapeLeft = true;
+			Screen.autorotateToLandscapeRight = true;
+
+			// 60프레임 설정
+			Application.targetFrameRate = 60;
+
+			// 절전모드 안되게
+			Screen.sleepTimeout = SleepTimeout.NeverSleep;
+
 			// 처음 서버와 연결하는 부분
 			IPEndPoint serverEndPoint = new IPEndPoint(serverIP, serverPort);
 			tcpClient.Connect(serverEndPoint);
@@ -191,18 +205,6 @@ public partial class NetworkManager : MonoBehaviour
                                             {
                                                 UnPackPacket(info.packet, ref tmpPosPacket);
                                                 posPacket[tmpPosPacket.playerNum - 1] = tmpPosPacket;   // 해당 플레이어 위치에 저장
-                                                                                                        //// 마스크 만들어서 어떤 플레이어가 같은 섹터에 있는지 확인하고, 오브젝트를 켜고 끔
-                                                                                                        //byte bitMask = (byte)PLAYER_BIT.PLAYER_1;
-                                                                                                        //for (int i = 0; i < C_Global.MAX_PLAYER; i++, bitMask >>= 1)
-                                                                                                        //{
-                                                                                                        //   // 오브젝트를 켜준다.
-                                                                                                        //   if((playerBit & bitMask) > 0)
-                                                                                                        //      playerObjects[i].SetActive(true);
-
-                                                //   // 오브젝트를 꺼준다.
-                                                //   else
-                                                //      playerObjects[i].SetActive(false);
-                                                //}
                                             }
                                         }
                                         break;
@@ -214,8 +216,18 @@ public partial class NetworkManager : MonoBehaviour
                                             {
                                                 UnPackPacket(info.packet, ref tmpPosPacket);
                                                 PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].SetActive(true);   // 켜고
-                                                posPacket[tmpPosPacket.playerNum - 1] = tmpPosPacket;   // 해당 플레이어 위치에 저장
-                                            }
+																				
+												// 이렇게 해줘야 이전 위치랑 보간을 안해서 캐릭터가 슬라이딩 되지 않음
+												tmpVec = PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localPosition;
+												tmpAngle = PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localEulerAngles;
+
+												tmpVec.x = tmpPosPacket.posX;
+												tmpVec.z = tmpPosPacket.posZ;
+												tmpAngle.y = tmpPosPacket.rotY;
+
+												PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localPosition = tmpVec;
+												PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localEulerAngles = tmpAngle;
+											}
                                         }
                                         break;
 
@@ -247,14 +259,20 @@ public partial class NetworkManager : MonoBehaviour
                                                     if ((myPlayerNum - 1) == i)
                                                         continue;
 
-                                                    // 오브젝트를 켜준다.
-                                                    if ((playerBit & bitMask) > 0)
-                                                        PlayersManager.instance.obj_players[i].SetActive(true);
+													// 오브젝트를 켜준다.(오브젝트가 꺼진 경우만)
+													if ((playerBit & bitMask) > 0)
+													{
+														if(PlayersManager.instance.obj_players[i].activeSelf == false)
+															PlayersManager.instance.obj_players[i].SetActive(true);
+													}
 
-                                                    // 오브젝트를 꺼준다.
-                                                    else
-                                                        PlayersManager.instance.obj_players[i].SetActive(false);
-                                                }
+													// 오브젝트를 꺼준다.(오브젝트가 켜진 경우만)
+													else
+													{
+														if (PlayersManager.instance.obj_players[i].activeSelf == true)
+															PlayersManager.instance.obj_players[i].SetActive(false);
+													}
+												}
                                             }
                                         }
                                         break;

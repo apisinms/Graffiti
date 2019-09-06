@@ -13,16 +13,7 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
 		if (instance == null)
-		{
 			instance = this;
-
-			// 스크린 가로모드 고정
-			Screen.orientation = ScreenOrientation.AutoRotation;
-			Screen.autorotateToPortrait = false;
-			Screen.autorotateToPortraitUpsideDown = false;
-			Screen.autorotateToLandscapeLeft = true;
-			Screen.autorotateToLandscapeRight = true;
-		}
 
         //obj_players = new GameObject[4];
 	    playersTag[0] = "Player1"; playersTag[1] = "Player2";

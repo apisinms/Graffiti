@@ -31,12 +31,13 @@ public:
 	C_Sector();
 	~C_Sector();
 
-	// 위치정보를 토대로 섹터 인덱스를 얻는다.(인라인)
+	// 위치정보를 토대로 섹터 인덱스를 얻는다.
 	inline INDEX GetIndex(double _posX, double _posZ)
 	{
 		INDEX index;
-		index.i = abs((int)_posZ / GRID_SIZE);
-		index.j = abs((int)_posX / GRID_SIZE);
+
+		index.i = (int)(abs(_posZ / GRID_SIZE));
+		index.j = (int)(abs(_posX / GRID_SIZE));
 
 		printf("현재 인덱스 : %d, %d\n", index.i, index.j);
 

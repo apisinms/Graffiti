@@ -4,35 +4,21 @@
   C_IOCP.cpp
   C_Packet.cpp
   C_Sector.cpp
-c:\_programming_\_portfolio\graffiti\server\server\c_sector.h(38): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\_programming_\_portfolio\graffiti\server\server\c_sector.h(39): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   C_Select.cpp
   C_Socket.cpp
   ChatManager.cpp
   DatabaseManager.cpp
   InGameManager.cpp
-c:\_programming_\_portfolio\graffiti\server\server\c_sector.h(38): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\_programming_\_portfolio\graffiti\server\server\c_sector.h(39): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 c:\_programming_\_portfolio\graffiti\server\server\ingamemanager.cpp(174): warning C4101: 'buf' :참조되지 않은 지역 변수입니다.
 c:\_programming_\_portfolio\graffiti\server\server\ingamemanager.cpp(175): warning C4101: 'packetSize' :참조되지 않은 지역 변수입니다.
 c:\_programming_\_portfolio\graffiti\server\server\ingamemanager.cpp(173): warning C4101: 'protocol' :참조되지 않은 지역 변수입니다.
   LobbyManager.cpp
-c:\_programming_\_portfolio\graffiti\server\server\c_sector.h(38): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\_programming_\_portfolio\graffiti\server\server\c_sector.h(39): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   LogManager.cpp
   LoginManager.cpp
   Main.cpp
-c:\_programming_\_portfolio\graffiti\server\server\c_sector.h(38): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\_programming_\_portfolio\graffiti\server\server\c_sector.h(39): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   MainManager.cpp
-c:\_programming_\_portfolio\graffiti\server\server\c_sector.h(38): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\_programming_\_portfolio\graffiti\server\server\c_sector.h(39): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   MatchManager.cpp
-c:\_programming_\_portfolio\graffiti\server\server\c_sector.h(38): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\_programming_\_portfolio\graffiti\server\server\c_sector.h(39): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   RoomManager.cpp
-c:\_programming_\_portfolio\graffiti\server\server\c_sector.h(38): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\_programming_\_portfolio\graffiti\server\server\c_sector.h(39): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   SessionManager.cpp
   UtilityManager.cpp
   코드를 생성하고 있습니다...

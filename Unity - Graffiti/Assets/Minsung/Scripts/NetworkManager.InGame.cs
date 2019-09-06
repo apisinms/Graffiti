@@ -63,8 +63,8 @@ public partial class NetworkManager : MonoBehaviour
 			return false;
 	}
 
-
-    public void SendPosition(float _posX, float _posZ, float _rotY, float _speed ,_ACTION_STATE _action, bool _isInit = false)
+	PositionPacket position = new PositionPacket();
+	public void SendPosition(float _posX, float _posZ, float _rotY, float _speed ,_ACTION_STATE _action, bool _isInit = false)
     {
         // 초기 위치 보낼 때
         if (_isInit == true)
@@ -85,7 +85,7 @@ public partial class NetworkManager : MonoBehaviour
                   RESULT.NODATA);
         }
 
-        PositionPacket position = new PositionPacket();
+        //PositionPacket position = new PositionPacket();
         position.playerNum = myPlayerNum;
         position.posX = _posX;
         position.posZ = _posZ;
