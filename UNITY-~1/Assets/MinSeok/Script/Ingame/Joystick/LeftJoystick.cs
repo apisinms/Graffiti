@@ -77,10 +77,14 @@ public class LeftJoystick : MonoBehaviour, JoystickControll
 
     public  void DragEnd()
     {
-        img_joystick_stick.transform.position = left_joystick.stickFirstPos;
-        left_joystick.stickDir = Vector3.zero; // 방향을 0으로.
-        PlayersManager.instance.actionState[myIndex] -= (int)_ACTION_STATE.CIRCUIT;
+        if (PlayersManager.instance.actionState[myIndex] > (int)_ACTION_STATE.IDLE)
+        {
+            PlayersManager.instance.actionState[myIndex] -= (int)_ACTION_STATE.CIRCUIT;
+            img_joystick_stick.transform.position = left_joystick.stickFirstPos;
+            left_joystick.stickDir = Vector3.zero; // 방향을 0으로.
+        }
 
+     
         // 마지막에 와야함
         //PlayersManager.instance.StopMoveCoroutine();
     }

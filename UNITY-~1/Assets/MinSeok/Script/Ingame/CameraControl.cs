@@ -42,7 +42,7 @@ public class CameraControl : UnityEngine.MonoBehaviour
             //Debug.Log(PlayerManager.instance.myDirection);
             //transform.localRotation = Quaternion.Slerp(transform.rotation, obj_player.transform.rotation, Time.smoothDeltaTime * 5.0f);
             //  transform.localRotation = Quaternion.Euler(50, Mathf.Atan2(PlayerManager.instance.tmp.x, PlayerManager.instance.tmp.y) * Mathf.Rad2Deg, 0);
-            //  transform.position = cameraPos;//Vector3.Lerp(transform.position, cameraPos, Time.smoothDeltaTime * 2.0f);
+              transform.position = Vector3.Lerp(transform.position, cameraPos, Time.smoothDeltaTime * 5.0f);
             //  transform.LookAt(obj_player.transform);
             transform.position = cameraPos;
             //this.transform.localRotation = Quaternion.LookRotation(PlayerManager.instance.myDirection);
