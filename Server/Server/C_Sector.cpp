@@ -89,52 +89,77 @@ C_Sector::~C_Sector()
 	delete[]sectors;
 }
 
-list<C_ClientInfo*> C_Sector::GetMergedPlayerList(INDEX _idx)
+list<C_ClientInfo*> C_Sector::GetUniquePlayerList(INDEX _IdxA, INDEX _IdxB)
 {
-   list<C_ClientInfo*> mergedList;      // 통으로 합쳐서 리턴시킬 리스트
+	list<C_ClientInfo*> mergedList;				// 통으로 합쳐서 리턴시킬 리스트
+	list<C_ClientInfo*> copyList;				// 복사용
+	vector<SectorInstance*> uniqueAdjSector;	// 겹치지 않는 인접 섹터
 
-   // 1. 일단 이 섹터의 플레이어 리스트 먼저 추가
-   if (!sectors[_idx.i][_idx.j].playerList.empty())
-   {
-      // 복사본 만들어서 그놈을 리스트랑 병합시킨다.(이 부분도 리팩토링이 가능하면 복사생성자 호출하지 않는 방향으로 해보자)
-      sectors[_idx.i][_idx.j].playerList.sort();   // merge전에 정렬해야함(여기선 원본정렬)
-      list<C_ClientInfo*> copyList(sectors[_idx.i][_idx.j].playerList);
-      mergedList.merge(copyList);
-   }
+	// 일단 자기 섹터부터 때려박는다.
+	uniqueAdjSector.emplace_back(sectors[_IdxA.i][_IdxA.j]);
+	uniqueAdjSector.emplace_back(sectors[_IdxB.i][_IdxB.j]);
 
-   // 2. 인접 섹터의 플레이어 리스트도 추가
-   SectorInstance* sector;
-   for (int i = 0; i < sectors[_idx.i][_idx.j].adjacencySector.size(); i++)
-   {
-      sector = sectors[_idx.i][_idx.j].adjacencySector.at(i);
+	// 그 다음 모든 인접 섹터를 다 때려 박는다.
+	int i;
+	for (i = 0; i < sectors[_IdxA.i][_IdxA.j].adjacencySector.size(); i++)
+		uniqueAdjSector.emplace_back(sectors[_IdxA.i][_IdxA.j].adjacencySector.at(i));
 
-      if (!sector->playerList.empty())
-      {
-         sector->playerList.sort();   // merge전에 정렬해야함(여기선 원본정렬)
-         list<C_ClientInfo*> copyList(sector->playerList);
-         mergedList.merge(copyList);
-      }
-   }
+	for (i = 0; i < sectors[_IdxB.i][_IdxB.j].adjacencySector.size(); i++)
+		uniqueAdjSector.emplace_back(sectors[_IdxB.i][_IdxB.j].adjacencySector.at(i));
 
-   return mergedList;   // 합친거를 리턴해준다.
+	// 정렬한 후에 인접 원소를 모두 유니크하게 만든다.
+	sort(uniqueAdjSector.begin(), uniqueAdjSector.end());
+	unique(uniqueAdjSector.begin(), uniqueAdjSector.end());
+
+	// 이제 반복문을 돌면서 플레이어 리스트가 비지 않은 섹터를 merge해준다.(merge전 정렬 필수)
+	for (i = 0; i < uniqueAdjSector.size(); i++)
+	{
+		if (!uniqueAdjSector[i]->playerList.empty())
+		{
+			uniqueAdjSector[i]->playerList.sort();
+			copyList = uniqueAdjSector[i]->playerList;
+			mergedList.merge(copyList);
+		}
+	}
+
+	return mergedList;   // 합친거를 리턴해준다.
 }
 
 void C_Sector::Add(C_ClientInfo* _player, INDEX& _index)
 {
+	INDEX index = _player->GetIndex();
+
+	if ((_index.i < 0) || (_index.i >= ROW)
+		|| (_index.j < 0) || (_index.j) >= COL)
+	{
+		printf("Add()에서 옳지 않은 인덱스 발견\t%d,%d", _index.i, _index.j);
+		return;
+	}
+
    sectors[_index.i][_index.j].playerList.emplace_front(_player);
 }
 
 void C_Sector::Delete(C_ClientInfo* _player, INDEX _index)
 {
-   // 리스트를 순회하며
-   for (auto iter = sectors[_index.i][_index.j].playerList.begin(); 
-      iter != sectors[_index.i][_index.j].playerList.end(); ++iter)
-   {
-      // 자신을 찾은 경우
-      if (*iter == _player)
-      {
-         sectors[_index.i][_index.j].playerList.erase(iter++);         // 방의 플레이어 리스트에서 제거(iterator때문에 반드시 iter++을 해줘야 함!)
-         break;
-      }
-   }
+	if ((_index.i < 0) || (_index.i >= ROW)
+		|| (_index.j < 0) || (_index.j) >= COL)
+	{
+		printf("Delete()에서 옳지 않은 인덱스 발견\t%d,%d", _index.i, _index.j);
+		return;
+	}
+
+   //// 리스트를 순회하며
+   //for (auto iter = sectors[_index.i][_index.j].playerList.begin(); 
+   //   iter != sectors[_index.i][_index.j].playerList.end(); ++iter)
+   //{
+   //   // 자신을 찾은 경우
+   //   if (*iter == _player)
+   //   {
+   //      sectors[_index.i][_index.j].playerList.erase(iter++);         // 방의 플레이어 리스트에서 제거(iterator때문에 반드시 iter++을 해줘야 함!)
+   //      break;
+   //   }
+   //}
+	//printf("size=%d\n", sectors[_index.i][_index.j].playerList.size());
+
+	sectors[_index.i][_index.j].playerList.remove(_player);
 }

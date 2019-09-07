@@ -8,12 +8,12 @@ public partial class PlayersManager : MonoBehaviour
 
 	public void Action_Idle(int _index, Vector3 _pos)  //서있을때
 	{
-		if (myIndex == _index) //함수가 아더용이므로 내인덱스가 혹여라도 인풋됐을때 예외처리. 내전용함수는 따로있다.
+		if (myIndex == _index) //함수가 아더용이므로 내인덱스가 혹여라도 인풋됐을때 예외처리. 내 전용함수는 따로있다.
 			return;
 
 		// 포지션 동기화
-		if (obj_players[_index].transform.localPosition.x != networkManager.GetPosX(_index) ||
-			obj_players[_index].transform.localPosition.z != networkManager.GetPosZ(_index))
+		if (obj_players[_index].transform.localPosition.x != _pos.x ||
+			obj_players[_index].transform.localPosition.z != _pos.z)
 		{
 			obj_players[_index].transform.localPosition = Vector3.MoveTowards(obj_players[_index].transform.localPosition, _pos,
 			Time.smoothDeltaTime * speed[myIndex] * C_Global.interpolation_Pos);
@@ -72,8 +72,8 @@ public partial class PlayersManager : MonoBehaviour
 		if (myIndex == _index)
 			return;
 
-		if (obj_players[_index].transform.localPosition.x != networkManager.GetPosX(_index) ||
-			obj_players[_index].transform.localPosition.z != networkManager.GetPosZ(_index))
+		if (obj_players[_index].transform.localPosition.x != _pos.x ||
+			obj_players[_index].transform.localPosition.z != _pos.z)
 		{
 			obj_players[_index].transform.localPosition = Vector3.MoveTowards(obj_players[_index].transform.localPosition, _pos,
 			Time.smoothDeltaTime * speed[myIndex] * C_Global.interpolation_Pos);

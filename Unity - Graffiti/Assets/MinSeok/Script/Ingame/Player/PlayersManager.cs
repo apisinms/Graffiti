@@ -48,9 +48,9 @@ public partial class PlayersManager : MonoBehaviour
     // 현재 액션 스테이트 
     public _ACTION_STATE[] actionState { get; set; }
     public _ATTRIBUTE_STATE[] attributeState { get; set; }
-    #endregion
+	#endregion
 
-    #region PLAYERS_ATTRIBUTE
+	#region PLAYERS_ATTRIBUTE
     public float[] speed { get; set; }
     public float[] hp { get; set; }
     public float[] maxSpeed { get; set; }

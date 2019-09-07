@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\_programming_\_portfolio\graffiti\server\server</FILEPATH>
+      <FILENAME>c_socket.cpp</FILENAME>
+      <LINE>57</LINE>
+      <COLUMN>5</COLUMN>
+    </SFA>
+    <DEFECTCODE>6001</DEFECTCODE>
+    <DESCRIPTION>초기화되지 않은 메모리 'clientAddr'을(를) 사용하고 있습니다.</DESCRIPTION>
+    <FUNCTION>C_Socket::Connect</FUNCTION>
+    <DECORATED>?Connect@C_Socket@@QEAA_NXZ</DECORATED>
+    <FUNCLINE>50</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>3</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>c:\_programming_\_portfolio\graffiti\server\server</FILEPATH>
+        <FILENAME>c_socket.cpp</FILENAME>
+        <LINE>52</LINE>
+        <COLUMN>13</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>선언</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'clientAddr'이(가) 초기화되지 않았습니다.</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\_programming_\_portfolio\graffiti\server\server</FILEPATH>
+        <FILENAME>c_socket.cpp</FILENAME>
+        <LINE>53</LINE>
+        <COLUMN>5</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\_programming_\_portfolio\graffiti\server\server</FILEPATH>
+        <FILENAME>c_socket.cpp</FILENAME>
+        <LINE>56</LINE>
+        <COLUMN>9</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>c:\_programming_\_portfolio\graffiti\server\server</FILEPATH>
+        <FILENAME>c_socket.cpp</FILENAME>
+        <LINE>57</LINE>
+        <COLUMN>5</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>사용법</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'clientAddr'이(가) 사용되는데 초기화되지 않았을 수 있습니다.</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT>
+</DEFECTS>

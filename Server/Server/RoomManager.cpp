@@ -23,45 +23,71 @@ RoomInfo::RoomInfo(C_ClientInfo** _playerList, int _numOfPlayer)
 }
 
 bool RoomInfo::LeaveRoom(C_ClientInfo* _player)
-{
-	// 리스트를 순회하며
-	int i = 0;
-	for (list<C_ClientInfo*>::iterator iter = playerList.begin();
-		iter != playerList.end(); ++iter, i++)
+{															// 이런 식으로 접근하는거 나중에 바꾸자
+	if (InGameManager::GetInstance()->LeaveProcess(_player, _player->GetPosition()->playerNum) == true)
 	{
-		// 자신을 찾은 경우
-		if (*iter == _player)
-		{
-			// 다른 플레이어들에게 자신이 나간다고 알리고
-			if (InGameManager::GetInstance()->LeaveProcess(_player, (i + 1)) == true)
-			{
-				// 방 인원수를 감소하고, 자신의 흔적을 지운다.
-				numOfPlayer--;				// 방 인원수 감소
-				playerList.erase(iter++);		// 방의 플레이어 리스트에서 제거
-				_player->SetRoom(nullptr);	// 플레이어의 방을 null로 설정
-				curIter = playerList.begin();	// 반복자가 꼬이지 않게 다시 처음으로(나갔으니까)
+		// 방 인원수를 감소하고, 자신의 흔적을 지운다.
+		numOfPlayer--;				// 방 인원수 감소
+		playerList.remove(_player);		// 방의 플레이어 리스트에서 제거
+		_player->SetRoom(nullptr);	// 플레이어의 방을 null로 설정
+		curIter = playerList.begin();	// 반복자가 꼬이지 않게 다시 처음으로(나갔으니까)
 
-				/// 그리고 같은 팀 2명이 모두 나가면 그냥 게임 끝나야함
+		/// 그리고 같은 팀 2명이 모두 나가면 그냥 게임 끝나야함
 
-				// 방금 나간사람이 마지막이었다면 방을 없앰
-				if (numOfPlayer == 0)
-					RoomManager::GetInstance()->DeleteRoom(this);
+		// 방금 나간사람이 마지막이었다면 방을 없앰
+		if (numOfPlayer == 0)
+			RoomManager::GetInstance()->DeleteRoom(this);
 
-				return true;
-			}
-		}
+		return true;
 	}
+
+	//// 리스트를 순회하며
+	//int i = 0;
+	//for (list<C_ClientInfo*>::iterator iter = playerList.begin();
+	//	iter != playerList.end(); ++iter, i++)
+	//{
+	//	// 자신을 찾은 경우
+	//	if (*iter == _player)
+	//	{
+	//		// 다른 플레이어들에게 자신이 나간다고 알리고
+	//		if (InGameManager::GetInstance()->LeaveProcess(_player, (i + 1)) == true)
+	//		{
+	//			// 방 인원수를 감소하고, 자신의 흔적을 지운다.
+	//			numOfPlayer--;				// 방 인원수 감소
+	//			//playerList.erase(iter++);		// 방의 플레이어 리스트에서 제거
+	//			playerList.erase(iter++);		// 방의 플레이어 리스트에서 제거
+	//			_player->SetRoom(nullptr);	// 플레이어의 방을 null로 설정
+	//			curIter = playerList.begin();	// 반복자가 꼬이지 않게 다시 처음으로(나갔으니까)
+
+	//			/// 그리고 같은 팀 2명이 모두 나가면 그냥 게임 끝나야함
+
+	//			// 방금 나간사람이 마지막이었다면 방을 없앰
+	//			if (numOfPlayer == 0)
+	//				RoomManager::GetInstance()->DeleteRoom(this);
+
+	//			return true;
+	//		}
+	//	}
+	//}
 
 	return false;	// 못찾은 경우
 }
 
-bool RoomInfo::GetPlayer(C_ClientInfo* &_ptr)
+bool RoomInfo::GetPlayer(C_ClientInfo* &_ptr, bool _isReset)
 {
 	/*
 	중간에 누가 나가면 문제가 될 수 있는 코드임...
 	*/
-
 	static bool flag = true;	// 플래그가 켜져 있다면 아직 보낼 플레이어 리스트 정보가 남음
+	
+	// 리셋
+	if (_isReset == true)
+	{
+		flag = true;
+		curIter = playerList.begin();
+
+		return false;
+	}
 
 	// 끝에 도달하면 flag 비활성
 	if (curIter == playerList.end())

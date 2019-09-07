@@ -44,7 +44,9 @@ public class CameraControl : UnityEngine.MonoBehaviour
             //  transform.localRotation = Quaternion.Euler(50, Mathf.Atan2(PlayerManager.instance.tmp.x, PlayerManager.instance.tmp.y) * Mathf.Rad2Deg, 0);
             //  transform.position = cameraPos;//Vector3.Lerp(transform.position, cameraPos, Time.smoothDeltaTime * 2.0f);
             //  transform.LookAt(obj_player.transform);
+
             transform.position = cameraPos;
+
             //this.transform.localRotation = Quaternion.LookRotation(PlayerManager.instance.myDirection);
             // Vector3.MoveTowards(transform.position, cameraPos, Time.smoothDeltaTime * 8.0f);
             // transform.eulerAngles = new Vector3(0, Mathf.Atan2(PlayerManager.instance.tmp.x, PlayerManager.instance.tmp.y) * Mathf.Rad2Deg, 0);
@@ -77,6 +79,15 @@ public class CameraControl : UnityEngine.MonoBehaviour
                 */
         }
     }
+
+	public void SetCameraPos(float _posX, float _posY, float _posZ)
+	{
+		cameraPos.x = obj_player.transform.position.x + _posX;
+		cameraPos.y = obj_player.transform.position.y + _posY;
+		cameraPos.z = obj_player.transform.position.z + _posZ;
+
+		transform.position = cameraPos;
+	}
 
 }
 

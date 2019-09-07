@@ -36,7 +36,7 @@ public:
 
 	bool LeaveRoom(C_ClientInfo* _player);
 
-	bool GetPlayer(C_ClientInfo* &_ptr);	// 리스트에 있는 플레이어를 담아보냄
+	bool GetPlayer(C_ClientInfo* &_ptr, bool _isReset = false);	// 리스트에 있는 플레이어를 담아보냄
 
 	bool IsPlayerListEmpty() { return playerList.empty(); }
 

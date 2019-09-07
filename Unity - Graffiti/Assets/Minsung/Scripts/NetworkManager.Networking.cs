@@ -15,6 +15,7 @@ public partial class NetworkManager : MonoBehaviour
     private PositionPacket tmpPosPacket = new PositionPacket();
 	private Vector3 tmpVec = new Vector3();
 	private Vector3 tmpAngle = new Vector3();
+	private bool offFlag = false;
 
     private void Awake()
 	{
@@ -65,11 +66,7 @@ public partial class NetworkManager : MonoBehaviour
 			RecvProcess();
 	}
 
-    //// 프로그램이 종료될 때
-    //private void OnApplicationQuit()
-    //{
-    //	Disconnect();
-    //}
+
     private void RecvProcess()
 	{
 		// 큐에 저장된 패킷을 꺼내온다.
@@ -209,7 +206,7 @@ public partial class NetworkManager : MonoBehaviour
                                         }
                                         break;
 
-                                    // 섹터 입장 시
+                                    // 다른 플레이어가 섹터 입장 시
                                     case RESULT.ENTER_SECTOR:
                                         {
                                             lock (key)
@@ -231,39 +228,47 @@ public partial class NetworkManager : MonoBehaviour
                                         }
                                         break;
 
-                                    // 섹터 퇴장 시
+                                    // 다른 플레이어가 섹터 퇴장 시
                                     case RESULT.EXIT_SECTOR:
                                         {
                                             lock (key)
                                             {
-                                                UnPackPacket(info.packet, ref tmpPosPacket);
+                                                UnPackPacket(info.packet, ref tmpPosPacket);	// 사실 이 부분도 int 하나만 갖고도 될 일
                                                 PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].SetActive(false);   // 끄고
-                                                posPacket[tmpPosPacket.playerNum - 1] = tmpPosPacket;   // 저장해주는게 좋음
-                                            }
+                                                //posPacket[tmpPosPacket.playerNum - 1] = tmpPosPacket;   // 패킷 저장해주고
+											}
                                         }
                                         break;
 
-                                    // 섹터 입장 시 새로 입장한 인접섹터에 있는 플레이어 리스트 갱신
-                                    case RESULT.UPDATE_PLAYER:
-                                        {
-                                            lock (key)
-                                            {
-                                                byte playerBit = 0;
-                                                UnPackPacket(info.packet, out playerBit);
+									// 섹터 입장 시 새로 입장한 인접섹터에 있는 플레이어 리스트 갱신
+									case RESULT.UPDATE_PLAYER:
+										{
+											lock (key)
+											{
+												byte playerBit = 0;
+												UnPackPacket(info.packet, out playerBit);
 
-                                                // 마스크 만들어서 어떤 플레이어가 같은 섹터에 있는지 확인하고, 오브젝트를 켜고 끔
-                                                byte bitMask = (byte)PLAYER_BIT.PLAYER_1;
-                                                for (int i = 0; i < C_Global.MAX_PLAYER; i++, bitMask >>= 1)
-                                                {
-                                                    // 본인은 걍 건너 뜀
-                                                    if ((myPlayerNum - 1) == i)
-                                                        continue;
+												// 다른 클라의 위치 요청 프로토콜
+												PROTOCOL reqProtocol = SetProtocol(
+														STATE_PROTOCOL.INGAME_STATE,
+														PROTOCOL.MOVE_PROTOCOL,
+														RESULT.GET_OTHERPLAYER_POS);
 
-													// 오브젝트를 켜준다.(오브젝트가 꺼진 경우만)
+												// 마스크 만들어서 어떤 플레이어가 같은 섹터에 있는지 확인하고, 오브젝트를 켜고 끔
+												byte bitMask = (byte)PLAYER_BIT.PLAYER_1;
+												int packetSize;
+												for (int i = 0; i < C_Global.MAX_PLAYER; i++, bitMask >>= 1)
+												{
+													// 본인은 걍 건너 뜀
+													if ((myPlayerNum - 1) == i)
+														continue;
+
+													// 섹터에 포함되어있는 플레이어라면, 위치 패킷을 서버로 요청한다.
 													if ((playerBit & bitMask) > 0)
 													{
-														if(PlayersManager.instance.obj_players[i].activeSelf == false)
-															PlayersManager.instance.obj_players[i].SetActive(true);
+														// 켜진 플레이어의 위치를 넘버로 요청한다.(얘네들만 갱신해주면 됨)
+														PackPacket(ref sendBuf, reqProtocol, (i + 1), out packetSize);
+														bw.Write(sendBuf, 0, packetSize);
 													}
 
 													// 오브젝트를 꺼준다.(오브젝트가 켜진 경우만)
@@ -273,9 +278,65 @@ public partial class NetworkManager : MonoBehaviour
 															PlayersManager.instance.obj_players[i].SetActive(false);
 													}
 												}
-                                            }
-                                        }
-                                        break;
+											}
+										}
+										break;
+
+									case RESULT.FORCE_MOVE:
+										{
+											lock (key)
+											{
+												UnPackPacket(info.packet, ref tmpPosPacket);    // 포지션 패킷 가져옴
+												posPacket[tmpPosPacket.playerNum - 1] = tmpPosPacket;   // 이전 위치 패킷에 저장해줌
+
+												// 원래 플레이어가 가지고 있던 정보를 임시 벡터에 가져옴
+												tmpVec   = PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localPosition;
+												tmpAngle = PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localEulerAngles;
+
+												// 변환된 값을 바로 대입
+												tmpVec.x   = tmpPosPacket.posX;
+												tmpVec.z   = tmpPosPacket.posZ;
+												tmpAngle.y = tmpPosPacket.rotY;
+
+												// 러프없이 강제로 대입해버림
+												PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localPosition    = tmpVec;
+												PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localEulerAngles = tmpAngle;
+
+												// 본인일 경우에는 카메라도 강제 셋팅 시켜준다.
+												if (tmpPosPacket.playerNum == myPlayerNum)
+												{ 
+													// 카메라도 설정
+													if (GameManager.instance.mainCamera != null)
+														GameManager.instance.mainCamera.SetCameraPos(0.0f, C_Global.camPosY, C_Global.camPosZ);
+												}
+											}
+										}
+										break;
+
+									case RESULT.GET_OTHERPLAYER_POS:
+										{
+											lock (key)
+											{
+												UnPackPacket(info.packet, ref tmpPosPacket);			// 패킷을 받고
+												posPacket[tmpPosPacket.playerNum - 1] = tmpPosPacket;   // 패킷 저장해주고
+
+												// 플레이어 위치를 바로 대입해서 셋팅해버림
+												tmpVec = PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localPosition;
+												tmpAngle = PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localEulerAngles;
+
+												tmpVec.x = tmpPosPacket.posX;
+												tmpVec.z = tmpPosPacket.posZ;
+												tmpAngle.y = tmpPosPacket.rotY;
+
+												PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localPosition = tmpVec;
+												PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localEulerAngles = tmpAngle;
+
+												// 꺼져있다면 켜준다!
+												if (PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].activeSelf == false)
+													PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].SetActive(true);
+											}
+										}
+										break;
                                 }
                             }
                             break;

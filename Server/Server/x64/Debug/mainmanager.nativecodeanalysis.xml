@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\_programming_\_portfolio\graffiti\server\server</FILEPATH>
+      <FILENAME>c_iocp.h</FILENAME>
+      <LINE>20</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'C_IOCP::hcp' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>C_IOCP::{ctor}</FUNCTION>
+    <DECORATED>??0C_IOCP@@QEAA@XZ</DECORATED>
+    <FUNCLINE>20</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\_programming_\_portfolio\graffiti\server\server</FILEPATH>
+      <FILENAME>c_iocp.h</FILENAME>
+      <LINE>20</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'C_IOCP::listenSock' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>C_IOCP::{ctor}</FUNCTION>
+    <DECORATED>??0C_IOCP@@QEAA@XZ</DECORATED>
+    <FUNCLINE>20</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\_programming_\_portfolio\graffiti\server\server</FILEPATH>
+      <FILENAME>databasemanager.h</FILENAME>
+      <LINE>25</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'DatabaseManager::conn' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>DatabaseManager::{ctor}</FUNCTION>
+    <DECORATED>??0DatabaseManager@@AEAA@XZ</DECORATED>
+    <FUNCLINE>25</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\_programming_\_portfolio\graffiti\server\server</FILEPATH>
+      <FILENAME>databasemanager.h</FILENAME>
+      <LINE>25</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'DatabaseManager::connPtr' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>DatabaseManager::{ctor}</FUNCTION>
+    <DECORATED>??0DatabaseManager@@AEAA@XZ</DECORATED>
+    <FUNCLINE>25</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\_programming_\_portfolio\graffiti\server\server</FILEPATH>
+      <FILENAME>databasemanager.h</FILENAME>
+      <LINE>25</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'DatabaseManager::result' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>DatabaseManager::{ctor}</FUNCTION>
+    <DECORATED>??0DatabaseManager@@AEAA@XZ</DECORATED>
+    <FUNCLINE>25</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\_programming_\_portfolio\graffiti\server\server</FILEPATH>
+      <FILENAME>databasemanager.h</FILENAME>
+      <LINE>25</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'DatabaseManager::row' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>DatabaseManager::{ctor}</FUNCTION>
+    <DECORATED>??0DatabaseManager@@AEAA@XZ</DECORATED>
+    <FUNCLINE>25</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\_programming_\_portfolio\graffiti\server\server</FILEPATH>
+      <FILENAME>databasemanager.h</FILENAME>
+      <LINE>25</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'DatabaseManager::stat' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>DatabaseManager::{ctor}</FUNCTION>
+    <DECORATED>??0DatabaseManager@@AEAA@XZ</DECORATED>
+    <FUNCLINE>25</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\_programming_\_portfolio\graffiti\server\server</FILEPATH>
+      <FILENAME>loginmanager.h</FILENAME>
+      <LINE>44</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'LoginManager::joinList' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>LoginManager::{ctor}</FUNCTION>
+    <DECORATED>??0LoginManager@@AEAA@XZ</DECORATED>
+    <FUNCLINE>44</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\_programming_\_portfolio\graffiti\server\server</FILEPATH>
+      <FILENAME>loginmanager.h</FILENAME>
+      <LINE>44</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'LoginManager::loginList' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>LoginManager::{ctor}</FUNCTION>
+    <DECORATED>??0LoginManager@@AEAA@XZ</DECORATED>
+    <FUNCLINE>44</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>c:\_programming_\_portfolio\graffiti\server\server</FILEPATH>
+      <FILENAME>roommanager.h</FILENAME>
+      <LINE>64</LINE>
+      <COLUMN>1</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'RoomManager::roomList' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>RoomManager::{ctor}</FUNCTION>
+    <DECORATED>??0RoomManager@@AEAA@XZ</DECORATED>
+    <FUNCLINE>64</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>

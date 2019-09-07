@@ -75,18 +75,16 @@ public class LeftJoystick : MonoBehaviour, JoystickControll
         //tf_player.eulerAngles = new Vector3(0, Mathf.Atan2(playerDir.x, playerDir.y) * Mathf.Rad2Deg, 0); //플레이어의 방향을 바꿔줌.
     }
 
-    public  void DragEnd()
-    {
-        img_joystick_stick.transform.position = left_joystick.stickFirstPos;
-        left_joystick.stickDir = Vector3.zero; // 방향을 0으로.
+	public void DragEnd()
+	{
+		if (PlayersManager.instance.actionState[myIndex] > (int)_ACTION_STATE.IDLE)
+		{
+			PlayersManager.instance.actionState[myIndex] -= (int)_ACTION_STATE.CIRCUIT;
+			img_joystick_stick.transform.position = left_joystick.stickFirstPos;
+			left_joystick.stickDir = Vector3.zero; // 방향을 0으로.
+		}
 
-		// 왼쪽 조이스틱 뗐을 때 조준+이동 이었다면 스피드에 amingSpeed를 곱해서 보내줘야한다.
-		if (PlayersManager.instance.actionState[myIndex] == _ACTION_STATE.CIRCUIT_AND_AIMING)
-			PlayersManager.instance.speed[myIndex] *= C_Global.amingSpeed;
-
-		PlayersManager.instance.actionState[myIndex] -= (int)_ACTION_STATE.CIRCUIT;
-
-        // 마지막에 와야함
-        PlayersManager.instance.StopMoveCoroutine();
-    }
+		// 마지막에 와야함
+		PlayersManager.instance.StopMoveCoroutine();
+	}
 }

@@ -13,6 +13,9 @@ public class C_Global
 	public const float interpolation_Rot = 20.0f;
 	public const float amingSpeed = 0.35f;
 
+	public const float camPosY = 7.0f;
+	public const float camPosZ = -5.3f;
+
 
 	// 큐에 들어갈 정보
 	public struct QueueInfo

@@ -152,7 +152,8 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
 
 				//로그인이 성공하면 아래작성
 				else if (networkManager.CheckLoginSuccess() == true)
-					SceneManager.LoadScene("MainMenu"); //메인타이틀로 입장
+					SceneManager.LoadScene("LobbyScene"); //로비로 입장
+					 //SceneManager.LoadScene("MainMenu"); //메인타이틀로 입장
 
 				btn_login_enter.interactable = true;	// 버튼 다시 원상 복구
 				yield break;

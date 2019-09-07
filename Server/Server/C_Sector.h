@@ -25,6 +25,7 @@ private:
 
 	const double GRID_SIZE = 2.5;	// 격자 사이즈
 
+
 	SectorInstance** sectors;	// 전체 섹터
 
 public:
@@ -32,19 +33,57 @@ public:
 	~C_Sector();
 
 	// 위치정보를 토대로 섹터 인덱스를 얻는다.
-	inline INDEX GetIndex(double _posX, double _posZ)
+	inline bool GetIndex(const INDEX _beforeIdx, INDEX& _newIdx, double _posX, double _posZ)
 	{
-		INDEX index;
+		// 맵의 끝 부분을 넘어갔다면 이전 인덱스를 그대로 저장시키고, false를 리턴한다.
+		if (sectors[0][0].leftTop.x > _posX || sectors[0][0].leftTop.z < _posZ ||
+			sectors[ROW - 1][COL - 1].rightBottom.x < _posX ||
+			sectors[ROW - 1][COL - 1].rightBottom.z > _posZ)
+		{
+			printf("좌표오류!x:%f, z:%f\n", _posX, _posZ);
+			_newIdx = _beforeIdx;
+			return false;
+		}
 
-		index.i = (int)(abs(_posZ / GRID_SIZE));
-		index.j = (int)(abs(_posX / GRID_SIZE));
+		_newIdx.i = (int)(abs(_posZ / GRID_SIZE));
+		_newIdx.j = (int)(abs(_posX / GRID_SIZE));
 
-		printf("현재 인덱스 : %d, %d\n", index.i, index.j);
+		printf("GetIndex:%d, %d\n", _newIdx.i, _newIdx.j);
 
-		return index;
+		// 섹터 범위 안에 있는 인덱스이면 true리턴.
+		if (_newIdx.i >= 0 && _newIdx.i < ROW
+			&&	_newIdx.j >= 0 && _newIdx.j < COL)
+		{
+			return true;
+		}
+
+		// 그것도 아니면 false임(2중으로 예외체크)
+		return false;
+	}
+	inline COORD_DOUBLE GetLeftTop(INDEX _index)
+	{
+		if (_index.i >= 0 && _index.i < ROW
+			&&	_index.j >= 0 && _index.j < COL)
+		{
+			return sectors[_index.i][_index.j].leftTop;
+		}
+		
+		else
+			printf("GetLeftTop 인덱스에러 %d, %d\n", _index.i, _index.j);
+	}
+	inline COORD_DOUBLE GetRightBottom(INDEX _index)
+	{
+		if (_index.i >= 0 && _index.i < ROW
+			&&	_index.j >= 0 && _index.j < COL)
+		{
+			return sectors[_index.i][_index.j].rightBottom;
+		}
+
+		else
+			printf("GetLeftTop 인덱스에러 %d, %d\n", _index.i, _index.j);
 	}
 
-	list<C_ClientInfo*> GetMergedPlayerList(INDEX _idx);	// 인덱스를 토대로 해당 섹터 + 인접 섹터의 플레이어 리스트를 하나로 병합하여 리턴해줌
+	list<C_ClientInfo*> GetUniquePlayerList(INDEX _needIdx, INDEX _minusIdx);	// 인덱스를 토대로 해당 섹터 + 인접 섹터의 플레이어 리스트를 하나로 병합하여 리턴해줌
 
 	void Add(C_ClientInfo* _player, INDEX& _index);
 	void Delete(C_ClientInfo* _player, INDEX _index);

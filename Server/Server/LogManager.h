@@ -1,8 +1,9 @@
 #pragma once
 #include "C_Global.h"
 
-#define ERR_FILE_NAME		"errLog.log"
-#define CONNECT_FILE_NAME	"connectLog.log"
+#define ERR_FILE_NAME			"errLog.log"
+#define CONNECT_FILE_NAME		"connectLog.log"
+#define HACKED_USER_FILE_NAME	"hackedLog.log"
 
 struct WSAOVERLAPPED_EX;
 
@@ -14,6 +15,7 @@ private:
 	static LogManager* instance;
 	static FILE* errPtr;		// 에러 로그용
 	static FILE* connectPtr;	// 접속 로그용
+	static FILE* hackPtr;		// 해킹 유저 로그용
 
 public:
 	static LogManager* GetInstance();
@@ -28,5 +30,8 @@ public:
 	void ErrorFileWrite(const char* fmt, ...);		// 오류로그를 파일에 기록
 
 	void ConnectFileWrite(const char* _fmt, ...);	// 접속로그에 내용을 기록
+
+	void HackerFileWrite(const char* _fmt, ...);	// 핵을 사용하는 유저에 대한 로그를 기록
+	
 	void WSAOverlappedResultPrintf(const char* _msg, WSAOVERLAPPED_EX* _overlapped);
 };

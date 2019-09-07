@@ -21,13 +21,28 @@ using namespace std;
 #define PROTOCOL_OFFSET	0xFFFFF
 #define PROTOCOL_MASK	30
 
+#define RESULT_OFFSET 0x3FF
+#define RESULT_MASK		40
+
+//#define MAX_SPEED 4.0f;	//////// 나중에 바꿀거임
+
+	// 플레이어 플래그
+enum PLAYER_BIT : byte
+{
+	PLAYER_1 = (1 << 3),
+	PLAYER_2 = (1 << 2),
+	PLAYER_3 = (1 << 1),
+	PLAYER_4 = (1 << 0),
+};
+
+
 struct INDEX
 {
 	int i, j;
 
 	INDEX()
 	{
-		i = j = 1;
+		i = j = -1;
 	}
 
 	inline bool operator!= (INDEX _param)
@@ -97,6 +112,9 @@ private:
 	int bullet;
 
 public:
+	static const float MAX_SPEED;
+
+public:
 	PlayerInfo()
 	{
 		position = nullptr;
@@ -137,6 +155,7 @@ public:
 	int GetBullet() { return bullet; }
 	void SetBullet(int _bullet) { bullet = _bullet; }
 };
+const float PlayerInfo::MAX_SPEED = 4.0f;
 
 enum STATE : int
 {

@@ -41,7 +41,8 @@ public class MoveManager : MonoBehaviour
 				continue;
 
 			pos.x = networkManager.GetPosX(i);
-			pos.y = curPlayerPos[i].localPosition.y;
+			//pos.y = curPlayerPos[i].localPosition.y;
+			pos.y = 0;
 			pos.z = networkManager.GetPosZ(i);
 
 			switch ((_ACTION_STATE)NetworkManager.instance.GetActionState(i))

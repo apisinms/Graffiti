@@ -18,6 +18,7 @@
 #include <list>
 #include <vector>
 #include <queue>
+#include <algorithm>
 
 // custom STL
 #include "C_LinkedList.h"

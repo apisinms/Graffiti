@@ -64,9 +64,9 @@ public partial class NetworkManager : MonoBehaviour
 		return protocol;
 	}
 
-	private void PackPacket(ref byte[] _sendBuf, PROTOCOL _protocol, out int _size)
+	private void PackPacket(ref byte[] _buf, PROTOCOL _protocol, out int _size)
 	{
-		Array.Clear(_sendBuf, 0, C_Global.BUFSIZE); // 송신 버퍼 초기화
+		Array.Clear(_buf, 0, C_Global.BUFSIZE); // 송신 버퍼 초기화
 
 		// 임시 저장 버퍼 + 암호화 시킬 버퍼
 		byte[] tmpBuf = new byte[C_Global.BUFSIZE];
@@ -84,13 +84,46 @@ public partial class NetworkManager : MonoBehaviour
 
 		// 가장 앞에 size를 넣고, 그 뒤에 암호화했던 버퍼를 붙임.
 		offset = 0;
-		Buffer.BlockCopy(BitConverter.GetBytes(_size), 0, _sendBuf, offset, sizeof(int));
+		Buffer.BlockCopy(BitConverter.GetBytes(_size), 0, _buf, offset, sizeof(int));
 		offset += sizeof(int);
-		Buffer.BlockCopy(tmpBuf, 0, _sendBuf, offset, _size);
+		Buffer.BlockCopy(tmpBuf, 0, _buf, offset, _size);
 		offset += _size;
 
 		_size += sizeof(int);   // 총 보내야 할 바이트 수 저장한다.
 	}
+
+	private void PackPacket(ref byte[] _buf, PROTOCOL _protocol, int _num, out int _size)
+	{
+		// 암호화된 내용을 저장할 버퍼이다.
+		byte[] encryptBuf = new byte[C_Global.BUFSIZE];
+		byte[] buf = new byte[C_Global.BUFSIZE];
+
+		_size = 0;
+		int offset = 0;
+
+		// 프로토콜
+		Buffer.BlockCopy(BitConverter.GetBytes((Int64)_protocol), 0, buf, offset, sizeof(PROTOCOL));
+		offset += sizeof(PROTOCOL);
+		_size += sizeof(PROTOCOL);
+
+		// num
+		Buffer.BlockCopy(BitConverter.GetBytes(_num), 0, buf, offset, sizeof(int));
+		offset += sizeof(int);
+		_size += sizeof(int);
+
+		// 암호화된 내용을 encryptBuf에 저장
+		C_Encrypt.instance.Encrypt(buf, encryptBuf, _size);
+
+		// 가장 앞에 size를 넣고, 그 뒤에 암호화했던 버퍼를 붙임.
+		offset = 0;
+		Buffer.BlockCopy(BitConverter.GetBytes(_size), 0, _buf, offset, sizeof(int));
+		offset += sizeof(int);
+		Buffer.BlockCopy(encryptBuf, 0, _buf, offset, _size);
+		offset += _size;
+
+		_size += sizeof(int);   // 총 보내야 할 바이트 수 저장한다.
+	}
+
 	private void PackPacket(ref byte[] _buf, PROTOCOL _protocol, WeaponPacket _weapon, out int _size)
 	{
 
@@ -267,7 +300,6 @@ public partial class NetworkManager : MonoBehaviour
 
 	private void UnPackPacket(byte[] _buf, ref PositionPacket _struct)
 	{
-
 		int offset = sizeof(PROTOCOL);
 		// 문자열 길이 만큼 생성해서 문자열을 저장함
 
