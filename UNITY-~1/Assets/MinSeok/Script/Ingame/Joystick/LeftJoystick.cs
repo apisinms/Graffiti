@@ -22,7 +22,7 @@ public class LeftJoystick : MonoBehaviour, JoystickControll
 
     void Awake()
     {
-        myIndex = PlayersManager.instance.myIndex;
+        myIndex = GameManager.instance.myIndex;
         left_joystick.maxMoveArea = img_joystick_back.rectTransform.sizeDelta.y * 0.9f; //스틱이 움직일수있는 수평범위. ( * 0.5f면 정확히 조이스틱배경의 반지름만큼)
         left_joystick.stickFirstPos = img_joystick_stick.rectTransform.position;
 
@@ -33,8 +33,7 @@ public class LeftJoystick : MonoBehaviour, JoystickControll
 
     public void DragStart()
     {
-        // 왼쪽 조이스틱 버튼을 누르면 코루틴 시작
-        PlayersManager.instance.actionState[myIndex] += (int)_ACTION_STATE.CIRCUIT;
+        PlayersManager.instance.ApplyActionState(_ACTION_STATE.CIR, true);
 
         // 모든 설정 을 끝낸 뒤에 와야함 
         //PlayersManager.instance.StartMoveCoroutine();
@@ -77,14 +76,21 @@ public class LeftJoystick : MonoBehaviour, JoystickControll
 
     public  void DragEnd()
     {
-        if (PlayersManager.instance.actionState[myIndex] > (int)_ACTION_STATE.IDLE)
+        PlayersManager.instance.ApplyActionState(_ACTION_STATE.CIR, false);
+        img_joystick_stick.transform.position = left_joystick.stickFirstPos;
+        left_joystick.stickDir = Vector3.zero; // 방향을 0으로.
+        
+
+        /*
+        if (PlayersManager.instance.stateInfo[myIndex].actionState > (int)_ACTION_STATE.IDLE)
         {
-            PlayersManager.instance.actionState[myIndex] -= (int)_ACTION_STATE.CIRCUIT;
+            PlayersManager.instance.stateInfo[myIndex].actionState -= (int)_ACTION_STATE.CIRCUIT;
             img_joystick_stick.transform.position = left_joystick.stickFirstPos;
             left_joystick.stickDir = Vector3.zero; // 방향을 0으로.
         }
+        */
 
-     
+
         // 마지막에 와야함
         //PlayersManager.instance.StopMoveCoroutine();
     }

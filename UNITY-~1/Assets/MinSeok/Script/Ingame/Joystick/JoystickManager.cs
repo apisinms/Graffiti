@@ -13,6 +13,12 @@ public interface JoystickControll
 
 public class JoystickManager : MonoBehaviour
 {
+    private int myIndex { get; set; }
+
+    void Awake()
+    {
+        myIndex = GameManager.instance.myIndex;
+    }
     void Update()
     {
         //    if (Input.GetKeyDown(KeyCode.Space))
@@ -40,21 +46,25 @@ public class JoystickManager : MonoBehaviour
             PlayersManager.instance.direction[PlayersManager.instance.myIndex].z) * Mathf.Rad2Deg, 0)
            
             );
-          */  
+          */
 
-        switch (PlayersManager.instance.actionState[PlayersManager.instance.myIndex])
+        Debug.Log(PlayersManager.instance.stateInfo[myIndex].actionState);
+
+        switch (PlayersManager.instance.stateInfo[myIndex].actionState)
         {
             case _ACTION_STATE.IDLE:
                 PlayersManager.instance.Action_Idle();
                 break;
-            case _ACTION_STATE.CIRCUIT:          
+            case _ACTION_STATE.CIR:          
                 PlayersManager.instance.Action_CircuitNormal();
                 break;
-            case _ACTION_STATE.AIMING:
+            case _ACTION_STATE.AIM:
                 PlayersManager.instance.Action_AimingNormal();
                 break;
-            case _ACTION_STATE.CIRCUIT_AND_AIMING:
+            case _ACTION_STATE.CIR_AIM:
                 PlayersManager.instance.Action_AimingWithCircuit();
+                break;
+            case _ACTION_STATE.CIR_AIM_SHOT:
                 break;
         }
     }

@@ -69,10 +69,7 @@ public class ClientSectorManager : UnityEngine.MonoBehaviour
         myVisited.prevCol = myVisited.curCol = (int)Mathf.Abs(tf_player.localPosition.z / CELL_SIZE); //내가 속한 행 인덱스를 구함
         myVisited.prevRow = myVisited.curRow = (int)Mathf.Abs(tf_player.localPosition.x / CELL_SIZE); //열 인덱스를 구함
     }
-    private void Update()
-    {
-       // GetMyArea();
-    }
+
 
     public void CheckOthersEntryMyArea(Transform _pos) //다른오브젝트(플레이어)가 내 시야에 들어왔는지 검사.
     {

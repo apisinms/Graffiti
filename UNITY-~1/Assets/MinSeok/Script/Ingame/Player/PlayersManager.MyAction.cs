@@ -8,11 +8,16 @@ using UnityEngine;
 
 public partial class PlayersManager : MonoBehaviour
 {
+    private float[] lastPosX { get; set; }
+    private float[] lastPosZ { get; set; }
+     
     public void Action_Idle() { Anime_Idle(myIndex); } //서있을때
 
     public void Action_CircuitNormal() //노말 움직임일때. 순회.
     {
         Anime_Circuit(myIndex);
+        BlockCollisionEachOther();
+
         obj_players[myIndex].transform.localRotation = Quaternion.LookRotation(direction[myIndex]);
         obj_players[myIndex].transform.Translate(direction[myIndex] * speed[myIndex] * Time.smoothDeltaTime, Space.World);
     }
@@ -24,7 +29,7 @@ public partial class PlayersManager : MonoBehaviour
     }
 
     public void Action_AimingWithCircuit()  // 순회와 조준동시
-    {  
+    {
         //좌측조이스틱 위로일때.         우측조이스틱의 방향에따라서 애니메이션을 달리함.
         if ((new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= -30.0f) &&
             (new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= 30.0f))
@@ -50,10 +55,35 @@ public partial class PlayersManager : MonoBehaviour
             (new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= -30.0f))
         {
             Anime_AimingWithCircuit(myIndex, 4);
-        } 
-     
+        }
+
+        BlockCollisionEachOther();
         obj_players[myIndex].transform.localRotation = Quaternion.LookRotation(direction2[myIndex]);
         obj_players[myIndex].transform.Translate(direction[myIndex] * (speed[myIndex] * 0.35f) * Time.smoothDeltaTime, Space.World);
+    }
+
+  
+    public void BlockCollisionEachOther()
+    {
+        for (int i = 0; i < C_Global.MAX_PLAYER; i++)
+        {
+            if (myIndex == i)
+                continue;
+
+            if (obj_players[myIndex].transform.localPosition.x <= (obj_players[i].transform.localPosition.x - 0.18f) ||
+                obj_players[myIndex].transform.localPosition.x >= (obj_players[i].transform.localPosition.x + 0.18f) ||
+                obj_players[myIndex].transform.localPosition.z <= (obj_players[i].transform.localPosition.z - 0.18f) ||
+                obj_players[myIndex].transform.localPosition.z >= (obj_players[i].transform.localPosition.z + 0.18f))
+            {
+                lastPosX[i] = obj_players[myIndex].transform.localPosition.x;
+                lastPosZ[i] = obj_players[myIndex].transform.localPosition.z;
+            }
+            else
+            {               
+                obj_players[myIndex].transform.localPosition = new Vector3(lastPosX[i], 0, lastPosZ[i]);
+                break;
+            }
+        }
     }
 
 }

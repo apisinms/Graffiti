@@ -64,7 +64,7 @@ public class MoveManager : MonoBehaviour
                         PlayersManager.instance.Action_Idle(i);
                     }
                     break;
-                case _ACTION_STATE.CIRCUIT:
+                case _ACTION_STATE.CIR:
                     {
                         pos.x = networkManager.GetPosX(i);
                         pos.y = curPlayerPos[i].localPosition.y;
@@ -73,7 +73,7 @@ public class MoveManager : MonoBehaviour
                         PlayersManager.instance.Action_CircuitNormal(i, pos, networkManager.GetRotY(i));
                     }
                     break;
-                case _ACTION_STATE.AIMING:
+                case _ACTION_STATE.AIM:
                     {
                         if (Mathf.Abs(NetworkManager.instance.GetPosX(i) - curPlayerPos[i].position.x) > 0.015f ||
                             Mathf.Abs(NetworkManager.instance.GetPosZ(i) - curPlayerPos[i].position.z) > 0.015f)
@@ -94,7 +94,7 @@ public class MoveManager : MonoBehaviour
                         PlayersManager.instance.Action_AimingNormal(i, networkManager.GetRotY(i));
                     }
                     break;
-                case _ACTION_STATE.CIRCUIT_AND_AIMING:
+                case _ACTION_STATE.CIR_AIM:
                     {
                         pos.x = networkManager.GetPosX(i);
                         pos.y = curPlayerPos[i].localPosition.y;

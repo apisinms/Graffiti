@@ -17,18 +17,17 @@ public enum _ATTRIBUTE_STATE
 public enum _ACTION_STATE //액션(움직임)의 상태
 {
     // 단일 STATE
-    IDLE = 0,
-    CIRCUIT,
-    AIMING,
+    IDLE   = 0, 
+    CIR,
+    AIM, 
+    SHOT,
 
     // 복합 STATE
-    CIRCUIT_AND_AIMING = (CIRCUIT + AIMING),
+    CIR_AIM,
+    CIR_AIM_SHOT,
 }
-
 public partial class PlayersManager : MonoBehaviour
-{
-    //public const int NUM = 4;
-
+{ 
     public static PlayersManager instance;
     public int myIndex { get; set; } //가독성을위해 하나 더만들어줌
     public int coroutineFlag { get; set; }
@@ -43,9 +42,17 @@ public partial class PlayersManager : MonoBehaviour
     #endregion
 
     #region PLAYERS_STATE 
-    // 현재 액션 스테이트 
-    public _ACTION_STATE[] actionState { get; set; }
-    public _ATTRIBUTE_STATE[] attributeState { get; set; }
+    public const int ACTIONSTATE_NUM = 6;
+    public Dictionary<_ACTION_STATE, int> dn_stateAndIndex { get; set; } //액션스테이트 각각에 번호를 부여할것임(인덱스화하여 배열에접근할것임).
+   
+    public struct _STATE_INFO
+    {
+        public _ACTION_STATE actionState; //행동상태
+        public bool[] isApply; //액션스테이트 이넘 목록n개중 각각 적용이 되있는 상태인지 판별. 스테이트가 중복적용되는걸방지.
+
+        public _ATTRIBUTE_STATE attributeState;
+    }
+    public _STATE_INFO[] stateInfo { get; set; }
     #endregion
 
     #region PLAYERS_ATTRIBUTE
@@ -57,15 +64,15 @@ public partial class PlayersManager : MonoBehaviour
     public Vector3[] direction2 { get; set; }
     #endregion
 
-
     void Awake()
     {
         if (instance == null)
             instance = this;
-
-        //coroutine = MovePlayer();
+        
+         //coroutine = MovePlayer();
         coroutineFlag = 0;
         myIndex = GameManager.instance.myIndex; //게임매니저에서 받은 인덱스를 다시등록
+        dn_stateAndIndex = new Dictionary<_ACTION_STATE, int>();
         Initialization(C_Global.MAX_PLAYER); //기타 초기화
 
         //내 인덱스번호에 맞는 로빈오브젝트와 합체.
@@ -82,6 +89,7 @@ public partial class PlayersManager : MonoBehaviour
             }
         }
 
+      
         /*
         //////////////// 게임 시작 시 최초로 1회 위치정보를 서버로 전송해야함 /////////////////
         NetworkManager.instance.SendPosition(obj_players[myIndex].transform.localPosition.x,
@@ -109,37 +117,252 @@ public partial class PlayersManager : MonoBehaviour
     
     void Initialization(int _num)
     {
+
         obj_players    = new GameObject[C_Global.MAX_PLAYER];
         am_animePlayer = new Animator[C_Global.MAX_PLAYER];
-        attributeState = new _ATTRIBUTE_STATE[C_Global.MAX_PLAYER];
-        actionState    = new _ACTION_STATE[C_Global.MAX_PLAYER];
         speed          = new float[C_Global.MAX_PLAYER];
         hp             = new float[C_Global.MAX_PLAYER];
         maxSpeed  = new float[C_Global.MAX_PLAYER];
         maxHp       = new float[C_Global.MAX_PLAYER];
         direction      = new Vector3[C_Global.MAX_PLAYER];
         direction2     = new Vector3[C_Global.MAX_PLAYER];
+        lastPosX = new float[C_Global.MAX_PLAYER];
+        lastPosZ = new float[C_Global.MAX_PLAYER];
+        stateInfo = new _STATE_INFO[C_Global.MAX_PLAYER];
 
-		// !!!!!!!!!!! 서버에서 받은데이터로 초기화해야함  임의로 속성값부여해둠. !!!!!!!!!!
-		for (int i = 0; i < C_Global.MAX_PLAYER; i++)
+        for (int i = 0; i < ACTIONSTATE_NUM; i++)
+            dn_stateAndIndex.Add((_ACTION_STATE)i, i);
+
+
+        // !!!!!!!!!!! 서버에서 받은데이터로 초기화해야함  임의로 속성값부여해둠. !!!!!!!!!!
+        for (int i = 0; i < C_Global.MAX_PLAYER; i++)
 		{
             if(myIndex == i) //내인덱스들의 초기화
             {
-                attributeState[i] = _ATTRIBUTE_STATE.ALIVE;
-                actionState[i] = _ACTION_STATE.IDLE;
+                stateInfo[i].attributeState = _ATTRIBUTE_STATE.ALIVE;
+                stateInfo[i].actionState = _ACTION_STATE.IDLE;
+                stateInfo[i].isApply = new bool[dn_stateAndIndex.Count];
                 speed[i] = maxSpeed[i] = 4.0f;
                 hp[i] = maxHp[i] = 100.0f;
             }
             else //나머지 3명 인덱스의 초기화
             {
-                attributeState[i] = _ATTRIBUTE_STATE.ALIVE;
-                actionState[i] = _ACTION_STATE.IDLE;
+                stateInfo[i].attributeState = _ATTRIBUTE_STATE.ALIVE;
+                stateInfo[i].actionState = _ACTION_STATE.IDLE;
+                stateInfo[i].isApply = new bool[dn_stateAndIndex.Count];
                 speed[i] = maxSpeed[i] = 4.0f;
                 hp[i] = maxHp[i] = 100.0f;
             }
         }
+
     }
-    
+
+    public void ApplyActionState(_ACTION_STATE _state, bool _value)
+    {
+        switch (_state)
+        {
+            case _ACTION_STATE.IDLE:
+                break;
+            case _ACTION_STATE.CIR:            
+                switch (stateInfo[myIndex].actionState)
+                {
+                    case _ACTION_STATE.IDLE:
+                        if (_value == true)
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR;
+                        else
+                            stateInfo[myIndex].actionState = _ACTION_STATE.IDLE;
+                        break;
+                    case _ACTION_STATE.CIR:
+                        if(_value == true)
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR;
+                        else
+                            stateInfo[myIndex].actionState = _ACTION_STATE.IDLE;
+                        break; 
+                    case _ACTION_STATE.AIM:
+                        if (_value == true)
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM;
+                        else
+                            stateInfo[myIndex].actionState = _ACTION_STATE.AIM;
+                        break;
+                    case _ACTION_STATE.SHOT:
+                        if (_value == true)
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM_SHOT;
+                        else
+                            stateInfo[myIndex].actionState = _ACTION_STATE.SHOT;
+                        break;
+                    case _ACTION_STATE.CIR_AIM:
+                        if (_value == true)
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM;
+                        else
+                            stateInfo[myIndex].actionState = _ACTION_STATE.AIM;
+                        break;
+                    case _ACTION_STATE.CIR_AIM_SHOT:
+                        if (_value == true)
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM_SHOT;
+                        else
+                            stateInfo[myIndex].actionState = _ACTION_STATE.SHOT;
+                        break;
+                }
+                break;
+            case _ACTION_STATE.AIM:
+                switch (stateInfo[myIndex].actionState)
+                {
+                    case _ACTION_STATE.IDLE:
+                        if (_value == true)
+                            stateInfo[myIndex].actionState = _ACTION_STATE.AIM;
+                        else
+                            stateInfo[myIndex].actionState = _ACTION_STATE.IDLE; 
+                        break;
+                    case _ACTION_STATE.CIR:
+                        if (_value == true)
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM;
+                        else
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR;
+                        break;
+                    case _ACTION_STATE.AIM:
+                        if (_value == true)
+                            stateInfo[myIndex].actionState = _ACTION_STATE.AIM;
+                        else
+                            stateInfo[myIndex].actionState = _ACTION_STATE.IDLE;
+                        break;
+                    case _ACTION_STATE.SHOT:
+                        if (_value == true)
+                            stateInfo[myIndex].actionState = _ACTION_STATE.SHOT;
+                        else
+                            stateInfo[myIndex].actionState = _ACTION_STATE.IDLE;
+                        break;
+                    case _ACTION_STATE.CIR_AIM:
+                        if (_value == true)
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM;
+                        else
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR;
+                        break;
+                    case _ACTION_STATE.CIR_AIM_SHOT:
+                        if (_value == true)
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM_SHOT;
+                        else
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR;
+                        break;
+                }
+                break;
+            case _ACTION_STATE.SHOT:
+                switch (stateInfo[myIndex].actionState)
+                {
+                    case _ACTION_STATE.IDLE:
+                        if (_value == true)
+                            stateInfo[myIndex].actionState = _ACTION_STATE.SHOT;
+                        else
+                            stateInfo[myIndex].actionState = _ACTION_STATE.IDLE;
+                        break;
+                    case _ACTION_STATE.CIR:
+                        if (_value == true)
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM_SHOT;
+                        else
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR;
+                        break;
+                    case _ACTION_STATE.AIM:
+                        if (_value == true)
+                            stateInfo[myIndex].actionState = _ACTION_STATE.SHOT;
+                        else
+                            stateInfo[myIndex].actionState = _ACTION_STATE.AIM;
+                        break;
+                    case _ACTION_STATE.SHOT:
+                        if (_value == true)
+                            stateInfo[myIndex].actionState = _ACTION_STATE.SHOT;
+                        else
+                            stateInfo[myIndex].actionState = _ACTION_STATE.IDLE;
+                        break;
+                    case _ACTION_STATE.CIR_AIM:
+                        if (_value == true)
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM_SHOT;
+                        else
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM;
+                        break;
+                    case _ACTION_STATE.CIR_AIM_SHOT:
+                        if (_value == true)
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM_SHOT;
+                        else
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM;
+                        break;
+                }
+                break;
+            case _ACTION_STATE.CIR_AIM:
+                switch (stateInfo[myIndex].actionState)
+                {
+                    case _ACTION_STATE.IDLE:
+                        if (_value == true)
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM;
+                        else
+                            stateInfo[myIndex].actionState = _ACTION_STATE.IDLE;
+                        break;
+                    case _ACTION_STATE.CIR:
+                        if (_value == true)
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM;
+                        else
+                            stateInfo[myIndex].actionState = _ACTION_STATE.AIM;
+                        break;
+                    case _ACTION_STATE.AIM:
+                        if (_value == true)
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM;
+                        else
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR;
+                        break;
+                    case _ACTION_STATE.SHOT:
+                        if (_value == true)
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM_SHOT;
+                        else
+                            stateInfo[myIndex].actionState = _ACTION_STATE.IDLE;
+                        break;
+                    case _ACTION_STATE.CIR_AIM:
+                        if (_value == true)
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM;
+                        else
+                            stateInfo[myIndex].actionState = _ACTION_STATE.IDLE;
+                        break;
+                    case _ACTION_STATE.CIR_AIM_SHOT:
+                        if (_value == true)
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM_SHOT;
+                        else
+                            stateInfo[myIndex].actionState = _ACTION_STATE.IDLE;
+                        break;
+                }
+                break;
+            case _ACTION_STATE.CIR_AIM_SHOT:
+                switch (stateInfo[myIndex].actionState)
+                {
+                    case _ACTION_STATE.IDLE:
+                    case _ACTION_STATE.CIR:
+                    case _ACTION_STATE.AIM:
+                    case _ACTION_STATE.CIR_AIM:
+                    case _ACTION_STATE.CIR_AIM_SHOT:
+                        if (_value == true)
+                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM_SHOT;
+                        else
+                            stateInfo[myIndex].actionState = _ACTION_STATE.IDLE;
+                        break;
+                }
+                break;
+        }
+        /*
+        switch(_value) //트루면+ 펄스면-
+        {
+            case true:
+                if (stateInfo[myIndex].isApply[dn_stateAndIndex[_state]] == false)
+                {
+                    stateInfo[myIndex].actionState += (int)_state - 1;
+                    stateInfo[myIndex].isApply[dn_stateAndIndex[_state]] = true;
+                }
+                break;
+            case false:
+                if (stateInfo[myIndex].isApply[dn_stateAndIndex[_state]] == true)
+                {
+                    stateInfo[myIndex].actionState -= (int)_state - 1;
+                    stateInfo[myIndex].isApply[dn_stateAndIndex[_state]] = false;
+                }
+                break;
+        }
+        */
+    }
     /*
     IEnumerator MovePlayer()
     {
