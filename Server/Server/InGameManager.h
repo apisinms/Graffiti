@@ -74,7 +74,6 @@ public:
 	bool LeaveProcess(C_ClientInfo* _ptr, int _playerIndex);		// 종료 프로세스
 
 	void ListSendPacket(list<C_ClientInfo*> _list, C_ClientInfo* _exceptClient, PROTOCOL_INGAME _protocol, char* _buf, int _packetSize);
-	void FlagPlayerBit(list<C_ClientInfo*> _list, byte& _playerBit);
 	
 	static unsigned long __stdcall TimerThread(void* _arg);	// 아이템 선택 시간을 세는 타이머 쓰레드
 };

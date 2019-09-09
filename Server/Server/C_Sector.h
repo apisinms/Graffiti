@@ -5,6 +5,7 @@ struct SectorInstance
 {
 	friend class C_Sector;
 private:
+	int num;							// 섹터 번호
 	COORD_DOUBLE leftTop;				// 좌상 좌표
 	COORD_DOUBLE rightBottom;			// 우하 좌표
 
@@ -27,6 +28,9 @@ private:
 
 
 	SectorInstance** sectors;	// 전체 섹터
+
+private:
+	byte FlagPlayerBit(vector<SectorInstance*> _enterSector);
 
 public:
 	C_Sector();
@@ -83,7 +87,11 @@ public:
 			printf("GetLeftTop 인덱스에러 %d, %d\n", _index.i, _index.j);
 	}
 
-	list<C_ClientInfo*> GetUniquePlayerList(INDEX _needIdx, INDEX _minusIdx);	// 인덱스를 토대로 해당 섹터 + 인접 섹터의 플레이어 리스트를 하나로 병합하여 리턴해줌
+	// 인덱스를 토대로 해당 섹터 + 인접 섹터의 플레이어 리스트를 하나로 병합하여 리턴해줌
+	list<C_ClientInfo*> GetSectorPlayerList(INDEX _Idx);
+
+	byte GetMovedSectorPlayerList(INDEX _beforeIdx, INDEX _curIdx,
+		list<C_ClientInfo*>& _enterList, list<C_ClientInfo*>& _exitList);
 
 	void Add(C_ClientInfo* _player, INDEX& _index);
 	void Delete(C_ClientInfo* _player, INDEX _index);

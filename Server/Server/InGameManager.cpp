@@ -256,8 +256,8 @@ bool InGameManager::MoveProcess(C_ClientInfo* _ptr, char* _buf)
 	INDEX getIdx;
 	bool isValidIdx = sector->GetIndex(_ptr->GetIndex(), getIdx, movedPos.posX, movedPos.posZ);
 
-	// 2. 구해진 인덱스로 해당 섹터와 인접 섹터의 플레이어 리스트를 병합하여 얻는다.
-	list<C_ClientInfo*>sendList = sector->GetMergedPlayerList(getIdx);
+	//// 2. 구해진 인덱스로 해당 섹터와 인접 섹터의 플레이어 리스트를 병합하여 얻는다.
+	list<C_ClientInfo*>sendList = sector->GetSectorPlayerList(getIdx);
 
 	C_ClientInfo* exceptClient = nullptr;	// 전송 제외 대상
 	// 유효한 인덱스라면
@@ -271,8 +271,12 @@ bool InGameManager::MoveProcess(C_ClientInfo* _ptr, char* _buf)
 			sector->Delete(_ptr, _ptr->GetIndex());    // 기존에 있던 인덱스에서는 빼고
 			sector->Add(_ptr, getIdx);                  // 새로운 인덱스위치 리스트에 추가한다.
 
-			list<C_ClientInfo*>enterList = sector->GetEnterPlayerList(getIdx);			// 입장한 섹터 리스트
-			list<C_ClientInfo*>exitList = sector->GetExitPlayerList(_ptr->GetIndex());	// 퇴장한 섹터 리스트
+			list<C_ClientInfo*>enterList;
+			list<C_ClientInfo*>exitList;
+
+			// 입, 퇴장한 섹터 리스트
+			byte playerBit = 0;	// 새롭게 입장한 인접 섹터의 플레이어 비트
+			playerBit = sector->GetMovedSectorPlayerList(_ptr->GetIndex(), getIdx, enterList, exitList);
 
 			// 1. 섹터 퇴장 알림 패킷 조립 및 전송
 			protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::MOVE_PROTOCOL, RESULT_INGAME::EXIT_SECTOR);
@@ -286,9 +290,7 @@ bool InGameManager::MoveProcess(C_ClientInfo* _ptr, char* _buf)
 
 			ListSendPacket(enterList, exceptClient, protocol, buf, packetSize);
 
-			// 3. 본인에게는 새롭게 입장한 인접 섹터의 플레이어 리스트를 보내준다.
-			byte playerBit = 0;
-			FlagPlayerBit(enterList, playerBit);
+			// 3. 본인에게는 새롭게 입장한 인접 섹터의 플레이어 리스트를 활성화된 비트로 보내준다.
 			protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::MOVE_PROTOCOL, RESULT_INGAME::UPDATE_PLAYER);
 			PackPacket(buf, playerBit, packetSize);
 
@@ -464,34 +466,6 @@ void InGameManager::ListSendPacket(list<C_ClientInfo*> _list, C_ClientInfo* _exc
 				continue;
 
 			player->SendPacket(_protocol, _buf, _packetSize);
-		}
-	}
-}
-
-void InGameManager::FlagPlayerBit(list<C_ClientInfo*> _list, byte& _playerBit)
-{
-	_playerBit = 0;
-	// 현재 근방 섹터에 있는 플레이어들의 bit를 활성화 시켜서 서버로 보낸다.
-	for (auto iter = _list.begin(); iter != _list.end(); ++iter)
-	{
-		// 플레이어 넘버를 읽어서 bit를 활성화 시킴(ex : 1011 << 1,3,4 플레이어가 같은 섹터에 있음)
-		switch (((C_ClientInfo*)(*iter))->GetPosition()->playerNum)
-		{
-		case 1:
-			_playerBit |= PLAYER_1;
-			break;
-
-		case 2:
-			_playerBit |= PLAYER_2;
-			break;
-
-		case 3:
-			_playerBit |= PLAYER_3;
-			break;
-
-		case 4:
-			_playerBit |= PLAYER_4;
-			break;
 		}
 	}
 }

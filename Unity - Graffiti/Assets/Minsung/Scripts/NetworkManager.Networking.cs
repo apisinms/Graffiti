@@ -263,15 +263,23 @@ public partial class NetworkManager : MonoBehaviour
 													if ((myPlayerNum - 1) == i)
 														continue;
 
-													// 섹터에 포함되어있는 플레이어라면, 위치 패킷을 서버로 요청한다.
+													// 섹터에 포함되어있는 플레이어인데
 													if ((playerBit & bitMask) > 0)
 													{
-														// 켜진 플레이어의 위치를 넘버로 요청한다.(얘네들만 갱신해주면 됨)
-														PackPacket(ref sendBuf, reqProtocol, (i + 1), out packetSize);
-														bw.Write(sendBuf, 0, packetSize);
+														// 꺼져있는 플레이어라면 위치를 넘버로 요청한다.(얘네들만 갱신해주면 됨)
+														if (PlayersManager.instance.obj_players[i].activeSelf == false)
+														{
+															PackPacket(ref sendBuf, reqProtocol, (i + 1), out packetSize);
+															bw.Write(sendBuf, 0, packetSize);
+														}
+
+														// 켜져있다면 굳이 위치를 받아올 필요 없다.
+														else
+															continue;
+
 													}
 
-													// 오브젝트를 꺼준다.(오브젝트가 켜진 경우만)
+													// 섹터에 포함되어 있지 않다면 오브젝트를 꺼준다.(오브젝트가 켜진 경우만)
 													else
 													{
 														if (PlayersManager.instance.obj_players[i].activeSelf == true)

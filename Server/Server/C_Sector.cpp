@@ -23,12 +23,15 @@ C_Sector::C_Sector()
 	RB.z = -(GRID_SIZE);
 
 	int i, j;
+	int num = 1;
 
 ///////////// 각 섹터의 좌상, 우하 좌표 셋팅 /////////////
 	for (i = 0; i < ROW; i++)
 	{
 		for (j = 0; j < COL; j++)
 		{
+			sectors[i][j].num = num++;	// 번호 설정
+
 			sectors[i][j].leftTop     = LT;
 			sectors[i][j].rightBottom = RB;
 
@@ -89,40 +92,79 @@ C_Sector::~C_Sector()
 	delete[]sectors;
 }
 
-list<C_ClientInfo*> C_Sector::GetUniquePlayerList(INDEX _IdxA, INDEX _IdxB)
+list<C_ClientInfo*> C_Sector::GetSectorPlayerList(INDEX _idx)
 {
-	list<C_ClientInfo*> mergedList;				// 통으로 합쳐서 리턴시킬 리스트
-	list<C_ClientInfo*> copyList;				// 복사용
-	vector<SectorInstance*> uniqueAdjSector;	// 겹치지 않는 인접 섹터
+	list<C_ClientInfo*> mergedList;     // 통으로 합쳐서 리턴시킬 리스트
 
-	// 일단 자기 섹터부터 때려박는다.
-	uniqueAdjSector.emplace_back(sectors[_IdxA.i][_IdxA.j]);
-	uniqueAdjSector.emplace_back(sectors[_IdxB.i][_IdxB.j]);
-
-	// 그 다음 모든 인접 섹터를 다 때려 박는다.
-	int i;
-	for (i = 0; i < sectors[_IdxA.i][_IdxA.j].adjacencySector.size(); i++)
-		uniqueAdjSector.emplace_back(sectors[_IdxA.i][_IdxA.j].adjacencySector.at(i));
-
-	for (i = 0; i < sectors[_IdxB.i][_IdxB.j].adjacencySector.size(); i++)
-		uniqueAdjSector.emplace_back(sectors[_IdxB.i][_IdxB.j].adjacencySector.at(i));
-
-	// 정렬한 후에 인접 원소를 모두 유니크하게 만든다.
-	sort(uniqueAdjSector.begin(), uniqueAdjSector.end());
-	unique(uniqueAdjSector.begin(), uniqueAdjSector.end());
-
-	// 이제 반복문을 돌면서 플레이어 리스트가 비지 않은 섹터를 merge해준다.(merge전 정렬 필수)
-	for (i = 0; i < uniqueAdjSector.size(); i++)
+	// 1. 일단 이 섹터의 플레이어 리스트 먼저 추가
+	if (!sectors[_idx.i][_idx.j].playerList.empty())
 	{
-		if (!uniqueAdjSector[i]->playerList.empty())
+		// 복사본 만들어서 그놈을 리스트랑 병합시킨다.(이 부분도 리팩토링이 가능하면 복사생성자 호출하지 않는 방향으로 해보자)
+		sectors[_idx.i][_idx.j].playerList.sort();   // merge전에 정렬해야함(여기선 원본정렬)
+		list<C_ClientInfo*> copyList(sectors[_idx.i][_idx.j].playerList);
+		mergedList.merge(copyList);
+	}
+
+	// 2. 인접 섹터의 플레이어 리스트도 추가
+	SectorInstance* sector;
+	for (int i = 0; i < sectors[_idx.i][_idx.j].adjacencySector.size(); i++)
+	{
+		sector = sectors[_idx.i][_idx.j].adjacencySector.at(i);
+
+		if (!sector->playerList.empty())
 		{
-			uniqueAdjSector[i]->playerList.sort();
-			copyList = uniqueAdjSector[i]->playerList;
+			sector->playerList.sort();   // merge전에 정렬해야함(여기선 원본정렬)
+			list<C_ClientInfo*> copyList(sector->playerList);
 			mergedList.merge(copyList);
 		}
 	}
 
 	return mergedList;   // 합친거를 리턴해준다.
+}
+
+byte C_Sector::GetMovedSectorPlayerList(INDEX _beforeIdx, INDEX _curIdx,
+	list<C_ClientInfo*>& _enterList, list<C_ClientInfo*>& _exitList)
+{
+	// 1. 각각 퇴장할 섹터, 입장한 섹터를 저장(해당섹터+인접섹터)
+	vector<SectorInstance*> exitVector(sectors[_beforeIdx.i][_beforeIdx.j].adjacencySector);
+	exitVector.push_back(&sectors[_beforeIdx.i][_beforeIdx.j]);
+
+	vector<SectorInstance*> enterVector(sectors[_curIdx.i][_curIdx.j].adjacencySector);
+	enterVector.push_back(&sectors[_curIdx.i][_curIdx.j]);
+
+	// 1-1. 먼저 exitVector를 지워줄것이기 때문에 지워지기 전의 원본을 가지고 있어야 한다. (exitVector원본)
+	vector<SectorInstance*> originalExitVector(exitVector);
+
+	// 1-2. 입장한 인접섹터에 대한 원본을 가지고 있어야 playerBit를 활성화 시킬 수 있다. (enterVector원본)
+	vector<SectorInstance*> originalEnterVector(enterVector);
+
+	// 2. 먼저 공통되는 부분을 지워서 퇴장한 벡터먼저 구한다.
+	for (auto i = enterVector.begin(); i < enterVector.end(); ++i)
+		exitVector.erase(remove(exitVector.begin(), exitVector.end(), *i), exitVector.end());
+
+	for (auto i = originalExitVector.begin(); i < originalExitVector.end(); ++i)
+		enterVector.erase(remove(enterVector.begin(), enterVector.end(), *i), enterVector.end());
+
+	// 3. 마지막으로 입장 리스트에 추가
+	_enterList.clear();
+	list<C_ClientInfo*>::iterator iter = _enterList.begin();
+	for (int i = 0; i < enterVector.size(); i++)
+	{
+		if (!enterVector[i]->playerList.empty())
+			iter = _enterList.insert(iter, enterVector[i]->playerList.begin(), enterVector[i]->playerList.end());
+	}
+
+	// 3. 마지막으로 퇴장 리스트에 추가
+	_exitList.clear();
+	iter = _exitList.begin();
+	for (int i = 0; i < exitVector.size(); i++)
+	{
+		if (!exitVector[i]->playerList.empty())
+			iter = _exitList.insert(iter, exitVector[i]->playerList.begin(), exitVector[i]->playerList.end());
+	}
+
+	// 4. 입장한 섹터에 있는 플레이어 비트를 가져와서 리턴
+	return FlagPlayerBit(originalEnterVector);
 }
 
 void C_Sector::Add(C_ClientInfo* _player, INDEX& _index)
@@ -162,4 +204,44 @@ void C_Sector::Delete(C_ClientInfo* _player, INDEX _index)
 	//printf("size=%d\n", sectors[_index.i][_index.j].playerList.size());
 
 	sectors[_index.i][_index.j].playerList.remove(_player);
+}
+
+//////// private method
+byte C_Sector::FlagPlayerBit(vector<SectorInstance*>_enterSector)
+{
+	byte playerBit = 0;
+
+	// 입장한 인접 섹터를 다 돌면서
+	for (int i = 0; i < _enterSector.size(); i++)
+	{
+		// 해당 플레이어 리스트가 비지 않았다면
+		if (!_enterSector[i]->playerList.empty())
+		{
+			// 그 플레이어 리스트를 다 돌면서 어느 플레이어가 있는지 bit를 활성화 시킨다.
+			for (auto iter = _enterSector[i]->playerList.begin(); iter != _enterSector[i]->playerList.end(); ++iter)
+			{
+				// 플레이어 넘버를 읽어서 bit를 활성화 시킴(ex : 1011 << 1,3,4 플레이어가 같은 섹터에 있음)
+				switch (((C_ClientInfo*)(*iter))->GetPosition()->playerNum)
+				{
+				case 1:
+					playerBit |= PLAYER_1;
+					break;
+
+				case 2:
+					playerBit |= PLAYER_2;
+					break;
+
+				case 3:
+					playerBit |= PLAYER_3;
+					break;
+
+				case 4:
+					playerBit |= PLAYER_4;
+					break;
+				}
+			}
+		}
+	}
+
+	return playerBit;
 }
