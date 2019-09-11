@@ -240,7 +240,6 @@ public class SelectWeapons : UnityEngine.MonoBehaviour
 			yield return null;
 		}
 	}
-
 	// 서버로 보냈던 무기선택 결과를 대기한다.
 	IEnumerator CheckWeaponSend()
 	{
@@ -261,5 +260,4 @@ public class SelectWeapons : UnityEngine.MonoBehaviour
 				yield return null;
 		}
 	}
-
 }

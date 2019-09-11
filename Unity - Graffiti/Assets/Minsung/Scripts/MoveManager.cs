@@ -10,7 +10,9 @@ public class MoveManager : MonoBehaviour
 
     void Awake()
     {
+#if NETWORK
         networkManager = NetworkManager.instance;
+#endif
 
 		curPlayerPos = new Transform[C_Global.MAX_PLAYER];
 
@@ -19,6 +21,7 @@ public class MoveManager : MonoBehaviour
 
 		pos = new Vector3();
 
+#if NETWORK
 		// 초기값 설정 
 		for (int i = 0; i < C_Global.MAX_PLAYER; i++)
 		{
@@ -28,12 +31,14 @@ public class MoveManager : MonoBehaviour
 		}
 
 		StartCoroutine(this.CheckQuit());
+#endif
     }
 
 
 	// 플레이어를 뒤져봐서 위치가 다르면 업데이트
 	void Update()
 	{
+#if NETWORK
 		for (int i = 0; i < curPlayerPos.Length; i++)
 		{
 			// 자기 제외하고
@@ -69,6 +74,7 @@ public class MoveManager : MonoBehaviour
 					break;
 			}
 		}
+#endif
 	}
 
 	IEnumerator CheckQuit()

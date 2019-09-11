@@ -110,9 +110,9 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
 			inputField_login_id.text, 
 			inputField_login_pw.text);
 
-		btn_login_enter.interactable = false;	// 버튼 비활성
-		StartCoroutine(LoginCheck());	// 로그인 검사 코루틴 시작
+		btn_login_enter.interactable = false;   // 버튼 비활성
 
+		StartCoroutine(LoginCheck());   // 로그인 검사 코루틴 시작
 		inputField_login_id.Select();
 	}
 
@@ -182,9 +182,8 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
 			inputField_join_pw.text, 
 			inputField_join_nick.text);
 
-
 		btn_join_enter.interactable = false;
-		StartCoroutine(JoinCheck());	// 회원가입 확인 코루틴 실행
+		StartCoroutine(JoinCheck());    // 회원가입 확인 코루틴 실행
 	}
 
 	private IEnumerator JoinCheck()
@@ -227,5 +226,4 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
 		networkManager.Disconnect();
 		Application.Quit();
 	}
-
 }

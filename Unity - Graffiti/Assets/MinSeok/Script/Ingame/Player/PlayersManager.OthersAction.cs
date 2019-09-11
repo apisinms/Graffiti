@@ -4,7 +4,7 @@ using UnityEngine;
 
 public partial class PlayersManager : MonoBehaviour
 {
-	private Vector3 tmpRot = new Vector3();	// 자꾸 new해서 가비지 생성하는거 방지용
+	private Vector3 tmpRot = new Vector3(); // 자꾸 new해서 가비지 생성하는거 방지용
 
 	public void Action_Idle(int _index, Vector3 _pos)  //서있을때
 	{

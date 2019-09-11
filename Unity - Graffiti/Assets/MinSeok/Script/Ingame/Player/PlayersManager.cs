@@ -34,10 +34,10 @@ public partial class PlayersManager : MonoBehaviour
     public int coroutineFlag { get; set; }
     private IEnumerator coroutine;
 
-	private NetworkManager networkManager;	// 접근용
+	private NetworkManager networkManager;  // 접근용
 
-    #region PLAYERS_ROBIN
-    public GameObject[] obj_players { get; set; }
+	#region PLAYERS_ROBIN
+	public GameObject[] obj_players { get; set; }
     #endregion
 
     #region PLAYERS_ANIMATOR
@@ -65,9 +65,11 @@ public partial class PlayersManager : MonoBehaviour
         if (instance == null)
             instance = this;
 
+#if NETWORK
 		networkManager = NetworkManager.instance;
 		coroutine = MovePlayer();
-        coroutineFlag = 0;
+#endif
+		coroutineFlag = 0;
         myIndex = GameManager.instance.myIndex; //게임매니저에서 받은 인덱스를 다시등록
         Initialization(C_Global.MAX_PLAYER); //기타 초기화
 
@@ -85,14 +87,15 @@ public partial class PlayersManager : MonoBehaviour
             }
         }
 
+#if NETWORK
 		//////////////// 게임 시작 시 최초로 1회 위치정보를 서버로 전송해야함 /////////////////
 		networkManager.SendPosition(obj_players[myIndex].transform.localPosition.x,
            obj_players[myIndex].transform.localPosition.z,
            obj_players[myIndex].transform.localEulerAngles.y, speed[myIndex], actionState[myIndex], true);
+#endif
 
-
-        //////////////////////// 테스트용(상대팀 끄기) ////////////////////
-        switch (myIndex)
+		//////////////////////// 테스트용(상대팀 끄기) ////////////////////
+		switch (myIndex)
         {
             case 0:
             case 1:
@@ -140,8 +143,8 @@ public partial class PlayersManager : MonoBehaviour
             }
         }
     }
-    
-    IEnumerator MovePlayer()
+
+	IEnumerator MovePlayer()
     {
         while (true)
         {
@@ -154,8 +157,7 @@ public partial class PlayersManager : MonoBehaviour
             yield return YieldInstructionCache.WaitForSeconds(0.1f);
         }
     }
-
-    public void StartMoveCoroutine()
+	public void StartMoveCoroutine()
     {
         Debug.Log(coroutineFlag);
         // 2개의 조이스틱이 있으므로 코루틴이 겹치는걸 방지 
@@ -168,8 +170,7 @@ public partial class PlayersManager : MonoBehaviour
         StartCoroutine(coroutine);
         coroutineFlag++;
     }
-
-    public void StopMoveCoroutine()
+	public void StopMoveCoroutine()
     {
 
         // 양쪽 조이스틱중 하나만 땠을 경우 플레그 카운트만 1줄여준다.
