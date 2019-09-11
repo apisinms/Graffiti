@@ -13,6 +13,7 @@ public class CameraControl : UnityEngine.MonoBehaviour
     {
         obj_player = GameObject.FindGameObjectWithTag(GameManager.instance.myTag);
         myIndex = GameManager.instance.myIndex;
+  
     }
 
     void Start()
@@ -26,8 +27,7 @@ public class CameraControl : UnityEngine.MonoBehaviour
 
     void LateUpdate()
     {
-        if (PlayersManager.instance.stateInfo[myIndex].attributeState == _ATTRIBUTE_STATE.ALIVE &&
-            PlayersManager.instance.stateInfo[myIndex].actionState != _ACTION_STATE.IDLE)
+        if (PlayersManager.instance.attributeState[myIndex] == _ATTRIBUTE_STATE.ALIVE)
         {
             cameraPos.x = obj_player.transform.position.x;
             cameraPos.y = obj_player.transform.position.y + 7f;

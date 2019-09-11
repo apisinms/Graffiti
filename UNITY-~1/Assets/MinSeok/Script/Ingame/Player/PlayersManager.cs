@@ -37,22 +37,9 @@ public partial class PlayersManager : MonoBehaviour
     public GameObject[] obj_players { get; set; }
     #endregion
 
-    #region PLAYERS_ANIMATOR
-    public Animator[] am_animePlayer { get; set; }
-    #endregion
-
     #region PLAYERS_STATE 
-    public const int ACTIONSTATE_NUM = 6;
-    public Dictionary<_ACTION_STATE, int> dn_stateAndIndex { get; set; } //액션스테이트 각각에 번호를 부여할것임(인덱스화하여 배열에접근할것임).
-   
-    public struct _STATE_INFO
-    {
-        public _ACTION_STATE actionState; //행동상태
-        public bool[] isApply; //액션스테이트 이넘 목록n개중 각각 적용이 되있는 상태인지 판별. 스테이트가 중복적용되는걸방지.
-
-        public _ATTRIBUTE_STATE attributeState;
-    }
-    public _STATE_INFO[] stateInfo { get; set; }
+    public _ACTION_STATE[] actionState { get; set; } //행동상태
+    public _ATTRIBUTE_STATE[] attributeState { get; set; }
     #endregion
 
     #region PLAYERS_ATTRIBUTE
@@ -72,7 +59,6 @@ public partial class PlayersManager : MonoBehaviour
          //coroutine = MovePlayer();
         coroutineFlag = 0;
         myIndex = GameManager.instance.myIndex; //게임매니저에서 받은 인덱스를 다시등록
-        dn_stateAndIndex = new Dictionary<_ACTION_STATE, int>();
         Initialization(C_Global.MAX_PLAYER); //기타 초기화
 
         //내 인덱스번호에 맞는 로빈오브젝트와 합체.
@@ -117,7 +103,6 @@ public partial class PlayersManager : MonoBehaviour
     
     void Initialization(int _num)
     {
-
         obj_players    = new GameObject[C_Global.MAX_PLAYER];
         am_animePlayer = new Animator[C_Global.MAX_PLAYER];
         speed          = new float[C_Global.MAX_PLAYER];
@@ -126,12 +111,18 @@ public partial class PlayersManager : MonoBehaviour
         maxHp       = new float[C_Global.MAX_PLAYER];
         direction      = new Vector3[C_Global.MAX_PLAYER];
         direction2     = new Vector3[C_Global.MAX_PLAYER];
+        actionState = new _ACTION_STATE [C_Global.MAX_PLAYER];
+        attributeState = new _ATTRIBUTE_STATE[C_Global.MAX_PLAYER];
         lastPosX = new float[C_Global.MAX_PLAYER];
         lastPosZ = new float[C_Global.MAX_PLAYER];
-        stateInfo = new _STATE_INFO[C_Global.MAX_PLAYER];
 
-        for (int i = 0; i < ACTIONSTATE_NUM; i++)
-            dn_stateAndIndex.Add((_ACTION_STATE)i, i);
+        //액션움직임 들의 코루틴함수 등록.
+        curCor = null;
+        prevCor = null;
+        cor_ActionIdle = ActionIdle();
+        cor_ActionCircuit = ActionCircuit();
+        cor_ActionAim = ActionAim();
+        cor_ActionAimCurcuit = ActionAimCircuit();
 
 
         // !!!!!!!!!!! 서버에서 받은데이터로 초기화해야함  임의로 속성값부여해둠. !!!!!!!!!!
@@ -139,17 +130,15 @@ public partial class PlayersManager : MonoBehaviour
 		{
             if(myIndex == i) //내인덱스들의 초기화
             {
-                stateInfo[i].attributeState = _ATTRIBUTE_STATE.ALIVE;
-                stateInfo[i].actionState = _ACTION_STATE.IDLE;
-                stateInfo[i].isApply = new bool[dn_stateAndIndex.Count];
+                attributeState[i] = _ATTRIBUTE_STATE.ALIVE;
+                actionState[i] = _ACTION_STATE.IDLE;
                 speed[i] = maxSpeed[i] = 4.0f;
                 hp[i] = maxHp[i] = 100.0f;
             }
             else //나머지 3명 인덱스의 초기화
             {
-                stateInfo[i].attributeState = _ATTRIBUTE_STATE.ALIVE;
-                stateInfo[i].actionState = _ACTION_STATE.IDLE;
-                stateInfo[i].isApply = new bool[dn_stateAndIndex.Count];
+                attributeState[i] = _ATTRIBUTE_STATE.ALIVE;
+                actionState[i] = _ACTION_STATE.IDLE;
                 speed[i] = maxSpeed[i] = 4.0f;
                 hp[i] = maxHp[i] = 100.0f;
             }
@@ -157,192 +146,6 @@ public partial class PlayersManager : MonoBehaviour
 
     }
 
-    public void ApplyActionState(_ACTION_STATE _state, bool _value)
-    {
-        switch (_state)
-        {
-            case _ACTION_STATE.IDLE:
-                break;
-            case _ACTION_STATE.CIR:            
-                switch (stateInfo[myIndex].actionState)
-                {
-                    case _ACTION_STATE.IDLE:
-                        if (_value == true)
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR;
-                        else
-                            stateInfo[myIndex].actionState = _ACTION_STATE.IDLE;
-                        break;
-                    case _ACTION_STATE.CIR:
-                        if(_value == true)
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR;
-                        else
-                            stateInfo[myIndex].actionState = _ACTION_STATE.IDLE;
-                        break; 
-                    case _ACTION_STATE.AIM:
-                        if (_value == true)
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM;
-                        else
-                            stateInfo[myIndex].actionState = _ACTION_STATE.AIM;
-                        break;
-                    case _ACTION_STATE.SHOT:
-                        if (_value == true)
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM_SHOT;
-                        else
-                            stateInfo[myIndex].actionState = _ACTION_STATE.SHOT;
-                        break;
-                    case _ACTION_STATE.CIR_AIM:
-                        if (_value == true)
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM;
-                        else
-                            stateInfo[myIndex].actionState = _ACTION_STATE.AIM;
-                        break;
-                    case _ACTION_STATE.CIR_AIM_SHOT:
-                        if (_value == true)
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM_SHOT;
-                        else
-                            stateInfo[myIndex].actionState = _ACTION_STATE.SHOT;
-                        break;
-                }
-                break;
-            case _ACTION_STATE.AIM:
-                switch (stateInfo[myIndex].actionState)
-                {
-                    case _ACTION_STATE.IDLE:
-                        if (_value == true)
-                            stateInfo[myIndex].actionState = _ACTION_STATE.AIM;
-                        else
-                            stateInfo[myIndex].actionState = _ACTION_STATE.IDLE; 
-                        break;
-                    case _ACTION_STATE.CIR:
-                        if (_value == true)
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM;
-                        else
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR;
-                        break;
-                    case _ACTION_STATE.AIM:
-                        if (_value == true)
-                            stateInfo[myIndex].actionState = _ACTION_STATE.AIM;
-                        else
-                            stateInfo[myIndex].actionState = _ACTION_STATE.IDLE;
-                        break;
-                    case _ACTION_STATE.SHOT:
-                        if (_value == true)
-                            stateInfo[myIndex].actionState = _ACTION_STATE.SHOT;
-                        else
-                            stateInfo[myIndex].actionState = _ACTION_STATE.IDLE;
-                        break;
-                    case _ACTION_STATE.CIR_AIM:
-                        if (_value == true)
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM;
-                        else
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR;
-                        break;
-                    case _ACTION_STATE.CIR_AIM_SHOT:
-                        if (_value == true)
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM_SHOT;
-                        else
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR;
-                        break;
-                }
-                break;
-            case _ACTION_STATE.SHOT:
-                switch (stateInfo[myIndex].actionState)
-                {
-                    case _ACTION_STATE.IDLE:
-                        if (_value == true)
-                            stateInfo[myIndex].actionState = _ACTION_STATE.SHOT;
-                        else
-                            stateInfo[myIndex].actionState = _ACTION_STATE.IDLE;
-                        break;
-                    case _ACTION_STATE.CIR:
-                        if (_value == true)
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM_SHOT;
-                        else
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR;
-                        break;
-                    case _ACTION_STATE.AIM:
-                        if (_value == true)
-                            stateInfo[myIndex].actionState = _ACTION_STATE.SHOT;
-                        else
-                            stateInfo[myIndex].actionState = _ACTION_STATE.AIM;
-                        break;
-                    case _ACTION_STATE.SHOT:
-                        if (_value == true)
-                            stateInfo[myIndex].actionState = _ACTION_STATE.SHOT;
-                        else
-                            stateInfo[myIndex].actionState = _ACTION_STATE.IDLE;
-                        break;
-                    case _ACTION_STATE.CIR_AIM:
-                        if (_value == true)
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM_SHOT;
-                        else
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM;
-                        break;
-                    case _ACTION_STATE.CIR_AIM_SHOT:
-                        if (_value == true)
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM_SHOT;
-                        else
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM;
-                        break;
-                }
-                break;
-            case _ACTION_STATE.CIR_AIM:
-                switch (stateInfo[myIndex].actionState)
-                {
-                    case _ACTION_STATE.IDLE:
-                        if (_value == true)
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM;
-                        else
-                            stateInfo[myIndex].actionState = _ACTION_STATE.IDLE;
-                        break;
-                    case _ACTION_STATE.CIR:
-                        if (_value == true)
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM;
-                        else
-                            stateInfo[myIndex].actionState = _ACTION_STATE.AIM;
-                        break;
-                    case _ACTION_STATE.AIM:
-                        if (_value == true)
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM;
-                        else
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR;
-                        break;
-                    case _ACTION_STATE.SHOT:
-                        if (_value == true)
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM_SHOT;
-                        else
-                            stateInfo[myIndex].actionState = _ACTION_STATE.IDLE;
-                        break;
-                    case _ACTION_STATE.CIR_AIM:
-                        if (_value == true)
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM;
-                        else
-                            stateInfo[myIndex].actionState = _ACTION_STATE.IDLE;
-                        break;
-                    case _ACTION_STATE.CIR_AIM_SHOT:
-                        if (_value == true)
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM_SHOT;
-                        else
-                            stateInfo[myIndex].actionState = _ACTION_STATE.IDLE;
-                        break;
-                }
-                break;
-            case _ACTION_STATE.CIR_AIM_SHOT:
-                switch (stateInfo[myIndex].actionState)
-                {
-                    case _ACTION_STATE.IDLE:
-                    case _ACTION_STATE.CIR:
-                    case _ACTION_STATE.AIM:
-                    case _ACTION_STATE.CIR_AIM:
-                    case _ACTION_STATE.CIR_AIM_SHOT:
-                        if (_value == true)
-                            stateInfo[myIndex].actionState = _ACTION_STATE.CIR_AIM_SHOT;
-                        else
-                            stateInfo[myIndex].actionState = _ACTION_STATE.IDLE;
-                        break;
-                }
-                break;
-        }
         /*
         switch(_value) //트루면+ 펄스면-
         {
@@ -410,4 +213,4 @@ public partial class PlayersManager : MonoBehaviour
     }
 
     */
-}
+

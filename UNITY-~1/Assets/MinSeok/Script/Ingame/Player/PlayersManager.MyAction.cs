@@ -8,59 +8,88 @@ using UnityEngine;
 
 public partial class PlayersManager : MonoBehaviour
 {
+    #region PLAYERS_ACTION
     private float[] lastPosX { get; set; }
     private float[] lastPosZ { get; set; }
-     
-    public void Action_Idle() { Anime_Idle(myIndex); } //서있을때
 
-    public void Action_CircuitNormal() //노말 움직임일때. 순회.
+    public Coroutine curCor; //현재 실행중인 코루틴을 저장.
+    public Coroutine prevCor; //이전실행되었던 코루틴저장. 중복방지.
+    public IEnumerator cor_ActionIdle { get; set; }
+    public IEnumerator cor_ActionCircuit { get; set; }
+    public IEnumerator cor_ActionAim { get; set; }
+    public IEnumerator cor_ActionAimCurcuit { get; set; }
+    #endregion
+
+    public IEnumerator ActionIdle()
     {
-        Anime_Circuit(myIndex);
-        BlockCollisionEachOther();
-
-        obj_players[myIndex].transform.localRotation = Quaternion.LookRotation(direction[myIndex]);
-        obj_players[myIndex].transform.Translate(direction[myIndex] * speed[myIndex] * Time.smoothDeltaTime, Space.World);
+        while (true)
+        {
+            Anime_Idle(myIndex);
+            yield return null;
+        }
     }
 
-    public void Action_AimingNormal() //제자리 조준
+    public IEnumerator ActionCircuit()
     {
-        Anime_Aiming_Idle(myIndex);
-        obj_players[myIndex].transform.localRotation = Quaternion.LookRotation(direction2[myIndex]);
+        while(true)
+        {
+            Anime_Circuit(myIndex);
+            BlockCollisionEachOther();
+
+            obj_players[myIndex].transform.localRotation = Quaternion.LookRotation(direction[myIndex]);
+            obj_players[myIndex].transform.Translate(direction[myIndex] * speed[myIndex] * Time.smoothDeltaTime, Space.World);
+            yield return null;
+        }
     }
 
-    public void Action_AimingWithCircuit()  // 순회와 조준동시
+    public IEnumerator ActionAim()
     {
-        //좌측조이스틱 위로일때.         우측조이스틱의 방향에따라서 애니메이션을 달리함.
-        if ((new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= -30.0f) &&
-            (new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= 30.0f))
+        while (true)
         {
-            Anime_AimingWithCircuit(myIndex, 1);
+            Anime_Aiming_Idle(myIndex);
+            obj_players[myIndex].transform.localRotation = Quaternion.LookRotation(direction2[myIndex]);
+            yield return null;
         }
-        //우측일때
-        else if ((new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= 30.0f) &&
-            (new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= 150.0f))
-        {
-            Anime_AimingWithCircuit(myIndex, 2);
-        }
-        //아래일때
-        else if ((new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= 150.0f &&
-            new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= 180.0f) ||
-            (new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= -180.0f &&
-            new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= -150.0f))
-        {
-            Anime_AimingWithCircuit(myIndex, 3);
-        }
-        //좌측일때
-        else if ((new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= -150.0f) &&
-            (new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= -30.0f))
-        {
-            Anime_AimingWithCircuit(myIndex, 4);
-        }
-
-        BlockCollisionEachOther();
-        obj_players[myIndex].transform.localRotation = Quaternion.LookRotation(direction2[myIndex]);
-        obj_players[myIndex].transform.Translate(direction[myIndex] * (speed[myIndex] * 0.35f) * Time.smoothDeltaTime, Space.World);
     }
+
+    public IEnumerator ActionAimCircuit()
+    {
+        while (true)
+        {
+            //좌측조이스틱 위로일때.         우측조이스틱의 방향에따라서 애니메이션을 달리함.
+            if ((new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= -30.0f) &&
+                (new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= 30.0f))
+            {
+                Anime_AimingWithCircuit(myIndex, 1);
+            }
+            //우측일때
+            else if ((new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= 30.0f) &&
+                (new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= 150.0f))
+            {
+                Anime_AimingWithCircuit(myIndex, 2);
+            }
+            //아래일때
+            else if ((new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= 150.0f &&
+                new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= 180.0f) ||
+                (new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= -180.0f &&
+                new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= -150.0f))
+            {
+                Anime_AimingWithCircuit(myIndex, 3);
+            }
+            //좌측일때
+            else if ((new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= -150.0f) &&
+                (new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= -30.0f))
+            {
+                Anime_AimingWithCircuit(myIndex, 4);
+            }
+
+            BlockCollisionEachOther();
+            obj_players[myIndex].transform.localRotation = Quaternion.LookRotation(direction2[myIndex]);
+            obj_players[myIndex].transform.Translate(direction[myIndex] * (speed[myIndex] * 0.35f) * Time.smoothDeltaTime, Space.World);
+            yield return null;
+        }
+    }
+
 
   
     public void BlockCollisionEachOther()

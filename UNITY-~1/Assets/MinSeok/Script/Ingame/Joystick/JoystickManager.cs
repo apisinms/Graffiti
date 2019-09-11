@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public interface JoystickControll
+public interface IJoystickControll
 {
     void DragStart();
     void Drag(BaseEventData _Data);
@@ -48,8 +48,11 @@ public class JoystickManager : MonoBehaviour
             );
           */
 
-        Debug.Log(PlayersManager.instance.stateInfo[myIndex].actionState);
+        //Debug.Log(PlayersManager.instance.stateInfo[myIndex].actionState);
 
+
+
+        /*
         switch (PlayersManager.instance.stateInfo[myIndex].actionState)
         {
             case _ACTION_STATE.IDLE:
@@ -67,6 +70,7 @@ public class JoystickManager : MonoBehaviour
             case _ACTION_STATE.CIR_AIM_SHOT:
                 break;
         }
+        */
     }
 
 }
