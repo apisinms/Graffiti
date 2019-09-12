@@ -9,7 +9,7 @@ public class State_AimCircuitShot : MonoBehaviour, IActionState
     public static State_AimCircuitShot GetStateInstance()
     {
         if (instance == null)
-            instance = StateManager.instance.obj_stateList.GetComponent<State_AimCircuitShot>();
+            instance = (State_AimCircuitShot)StateManager.instance.cn_stateList[6];  //StateManager.instance.obj_stateList.GetComponent<State_AimCircuitShot>();
 
         return instance;
     }

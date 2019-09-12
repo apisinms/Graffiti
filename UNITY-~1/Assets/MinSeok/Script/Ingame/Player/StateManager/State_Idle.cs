@@ -9,7 +9,7 @@ public class State_Idle : MonoBehaviour, IActionState
     public static State_Idle GetStateInstance()
     {
         if (instance == null)
-            instance = StateManager.instance.obj_stateList.GetComponent<State_Idle>();
+            instance = (State_Idle)StateManager.instance.cn_stateList[1];// StateManager.instance.obj_stateList.GetComponent<State_Idle>();
 
         return instance;
     } 

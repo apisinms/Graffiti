@@ -36,8 +36,8 @@ public partial class PlayersManager : MonoBehaviour
             Anime_Circuit(myIndex);
             BlockCollisionEachOther();
 
-            obj_players[myIndex].transform.localRotation = Quaternion.LookRotation(direction[myIndex]);
-            obj_players[myIndex].transform.Translate(direction[myIndex] * speed[myIndex] * Time.smoothDeltaTime, Space.World);
+            tf_players[myIndex].localRotation = Quaternion.LookRotation(direction[myIndex]);
+            tf_players[myIndex].Translate(direction[myIndex] * speed[myIndex] * Time.smoothDeltaTime, Space.World);
             yield return null;
         }
     }
@@ -47,7 +47,7 @@ public partial class PlayersManager : MonoBehaviour
         while (true)
         {
             Anime_Aiming_Idle(myIndex);
-            obj_players[myIndex].transform.localRotation = Quaternion.LookRotation(direction2[myIndex]);
+            tf_players[myIndex].localRotation = Quaternion.LookRotation(direction2[myIndex]);
             yield return null;
         }
     }
@@ -84,8 +84,8 @@ public partial class PlayersManager : MonoBehaviour
             }
 
             BlockCollisionEachOther();
-            obj_players[myIndex].transform.localRotation = Quaternion.LookRotation(direction2[myIndex]);
-            obj_players[myIndex].transform.Translate(direction[myIndex] * (speed[myIndex] * 0.35f) * Time.smoothDeltaTime, Space.World);
+            tf_players[myIndex].localRotation = Quaternion.LookRotation(direction2[myIndex]);
+            tf_players[myIndex].Translate(direction[myIndex] * (speed[myIndex] * 0.35f) * Time.smoothDeltaTime, Space.World);
             yield return null;
         }
     }
@@ -99,17 +99,17 @@ public partial class PlayersManager : MonoBehaviour
             if (myIndex == i)
                 continue;
 
-            if (obj_players[myIndex].transform.localPosition.x <= (obj_players[i].transform.localPosition.x - 0.18f) ||
-                obj_players[myIndex].transform.localPosition.x >= (obj_players[i].transform.localPosition.x + 0.18f) ||
-                obj_players[myIndex].transform.localPosition.z <= (obj_players[i].transform.localPosition.z - 0.18f) ||
-                obj_players[myIndex].transform.localPosition.z >= (obj_players[i].transform.localPosition.z + 0.18f))
+            if (tf_players[myIndex].localPosition.x <= (tf_players[i].localPosition.x - 0.18f) ||
+                tf_players[myIndex].localPosition.x >= (tf_players[i].localPosition.x + 0.18f) ||
+                tf_players[myIndex].localPosition.z <= (tf_players[i].localPosition.z - 0.18f) ||
+                tf_players[myIndex].localPosition.z >= (tf_players[i].localPosition.z + 0.18f))
             {
-                lastPosX[i] = obj_players[myIndex].transform.localPosition.x;
-                lastPosZ[i] = obj_players[myIndex].transform.localPosition.z;
+                lastPosX[i] = tf_players[myIndex].localPosition.x;
+                lastPosZ[i] = tf_players[myIndex].localPosition.z;
             }
             else
-            {               
-                obj_players[myIndex].transform.localPosition = new Vector3(lastPosX[i], 0, lastPosZ[i]);
+            {
+                tf_players[myIndex].localPosition = new Vector3(lastPosX[i], 0, lastPosZ[i]);
                 break;
             }
         }

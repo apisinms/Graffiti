@@ -9,7 +9,7 @@ public class State_Circuit : MonoBehaviour, IActionState
     public static State_Circuit GetStateInstance()
     {
         if (instance == null)
-            instance = StateManager.instance.obj_stateList.GetComponent<State_Circuit>();
+            instance = (State_Circuit)StateManager.instance.cn_stateList[2]; //StateManager.instance.obj_stateList.GetComponent<State_Circuit>();
 
         return instance;
     }
@@ -28,7 +28,7 @@ public class State_Circuit : MonoBehaviour, IActionState
 
     public void Circuit(bool _value)
     {
-        if(_value == false)
+        if (_value == false)
         {
             StateManager.instance.SetState(State_Idle.GetStateInstance());
 

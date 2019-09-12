@@ -9,14 +9,14 @@ public class State_AimCircuit : MonoBehaviour, IActionState
     public static State_AimCircuit GetStateInstance()
     {
         if (instance == null)
-            instance = StateManager.instance.obj_stateList.GetComponent<State_AimCircuit>();
+            instance = (State_AimCircuit)StateManager.instance.cn_stateList[5];  // StateManager.instance.obj_stateList.GetComponent<State_AimCircuit>();
 
         return instance;
     }
 
     public void Idle(bool _value)
     {
-        if(_value == true)
+        if (_value == true)
         {
             StateManager.instance.SetState(State_Idle.GetStateInstance());
 
@@ -39,7 +39,7 @@ public class State_AimCircuit : MonoBehaviour, IActionState
     }
 
     public void Aim(bool _value)
-    {
+    { 
         if (_value == false)
         {
             StateManager.instance.SetState(State_Circuit.GetStateInstance());

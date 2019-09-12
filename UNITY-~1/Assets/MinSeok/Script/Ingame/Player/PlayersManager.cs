@@ -35,6 +35,7 @@ public partial class PlayersManager : MonoBehaviour
 
     #region PLAYERS_ROBIN
     public GameObject[] obj_players { get; set; }
+    public Transform[] tf_players { get; set; } 
     #endregion
 
     #region PLAYERS_STATE 
@@ -60,9 +61,10 @@ public partial class PlayersManager : MonoBehaviour
         coroutineFlag = 0;
         myIndex = GameManager.instance.myIndex; //게임매니저에서 받은 인덱스를 다시등록
         Initialization(C_Global.MAX_PLAYER); //기타 초기화
-
+ 
         //내 인덱스번호에 맞는 로빈오브젝트와 합체.
         obj_players[myIndex] = GameObject.FindGameObjectWithTag(GameManager.instance.myTag);
+        tf_players[myIndex] = obj_players[myIndex].GetComponent<Transform>().transform; //최적화를위해 트랜스폼만 따로저장.
         am_animePlayer[myIndex] = obj_players[myIndex].GetComponent<Animator>();
 
         // 나를 제외한 플레이어 오브젝트에 나머지 3명을 순서대로 등록. 애니메이터도.
@@ -71,6 +73,7 @@ public partial class PlayersManager : MonoBehaviour
             if (myIndex != i)
             {
                 obj_players[i] = GameObject.FindGameObjectWithTag(GameManager.instance.playersTag[i]);
+                tf_players[i] = obj_players[i].GetComponent<Transform>();
                 am_animePlayer[i] = obj_players[i].GetComponent<Animator>(); 
             }
         }
@@ -100,10 +103,11 @@ public partial class PlayersManager : MonoBehaviour
         }
         */
     }
-    
+
     void Initialization(int _num)
     {
         obj_players    = new GameObject[C_Global.MAX_PLAYER];
+        tf_players      = new Transform[C_Global.MAX_PLAYER];
         am_animePlayer = new Animator[C_Global.MAX_PLAYER];
         speed          = new float[C_Global.MAX_PLAYER];
         hp             = new float[C_Global.MAX_PLAYER];

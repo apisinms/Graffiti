@@ -34,20 +34,50 @@ public class StateManager : MonoBehaviour, IActionState
     public static StateManager instance;
     public GameObject obj_stateList;
     public IActionState myActionState { get; set; }
-    
+    public Component[] cn_stateList { get; set; }
+
     private void Update()
     {
-        //Debug.Log(myActionState);
+        Debug.Log(PlayersManager.instance.actionState[PlayersManager.instance.myIndex]);
     }
     private void Awake()
     {
         if (instance == null)
             instance = this;
+   
+        cn_stateList = obj_stateList.GetComponents<Component>(); //모든 스테이트 컴포넌트를 가져옴
 
-        SetState(State_Idle.GetStateInstance());
+        SetState(State_Idle.GetStateInstance()); //초기상태는 아이들.
     }
 
-    public void SetState(IActionState _actionState) {  myActionState = _actionState;  }
+    public void SetState(IActionState _actionState)
+    {
+        myActionState = _actionState; //내 상태 업데이트.
+
+        //상태클래스의 함수안에 직접넣어야됨 일단보기편하게모아둠
+        //서버에 일단 보내야되니까 임시로 기존꺼 이넘써서 넣어둠.
+        switch (myActionState.ToString())
+        {
+            case "StateList (State_Idle)":
+                PlayersManager.instance.actionState[PlayersManager.instance.myIndex] = _ACTION_STATE.IDLE;
+                break;
+            case "StateList (State_Circuit)":
+                PlayersManager.instance.actionState[PlayersManager.instance.myIndex] = _ACTION_STATE.CIR;
+                break;
+            case "StateList (State_Aim)":
+                PlayersManager.instance.actionState[PlayersManager.instance.myIndex] = _ACTION_STATE.AIM;
+                break;
+            case "StateList (State_Shot)":
+                PlayersManager.instance.actionState[PlayersManager.instance.myIndex] = _ACTION_STATE.SHOT;
+                break;
+            case "StateList (State_AimCircuit)":
+                PlayersManager.instance.actionState[PlayersManager.instance.myIndex] = _ACTION_STATE.CIR_AIM;
+                break;
+            case "StateList (State_AimCircuitShot)":
+                PlayersManager.instance.actionState[PlayersManager.instance.myIndex] = _ACTION_STATE.CIR_AIM_SHOT;
+                break;
+        }
+    }
 
     public void Idle(bool _value) {  myActionState.Idle(_value);  }
 

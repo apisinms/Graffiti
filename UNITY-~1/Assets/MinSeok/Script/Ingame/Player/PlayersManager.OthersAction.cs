@@ -18,10 +18,10 @@ public partial class PlayersManager : MonoBehaviour
             return;
 
         //speed[_index] = NetworkManager.instance.GetSpeed(_index);
-        Debug.Log(speed[_index]);
+
         Anime_Circuit(_index);
 
-        obj_players[_index].transform.localPosition = Vector3.Lerp(obj_players[_index].transform.localPosition, _pos,
+        tf_players[_index].localPosition = Vector3.Lerp(tf_players[_index].localPosition, _pos,
             Time.smoothDeltaTime * (speed[_index]));
 
         //서버로부터 받은 플레이어 오일러각도를 다시 방향벡터로 바꿔서 저장해둠.
@@ -29,7 +29,7 @@ public partial class PlayersManager : MonoBehaviour
         direction[_index] = new Vector3(angleToDirection.y, 0, angleToDirection.x);
 
         // lerp보간작업
-        obj_players[_index].transform.localRotation = Quaternion.Lerp(obj_players[_index].transform.localRotation, 
+        tf_players[_index].localRotation = Quaternion.Lerp(tf_players[_index].localRotation, 
             Quaternion.LookRotation(direction[_index]), Time.smoothDeltaTime * 15);
     }
 
@@ -43,8 +43,8 @@ public partial class PlayersManager : MonoBehaviour
         Vector3 angleToDirection = Quaternion.AngleAxis(_roty, Vector3.forward) * Vector3.right;
         direction2[_index] = new Vector3(angleToDirection.y, 0, angleToDirection.x);
 
-        obj_players[_index].transform.localRotation = Quaternion.Lerp(obj_players[_index].transform.localRotation,
-    Quaternion.LookRotation(direction2[_index]), Time.smoothDeltaTime * 15);
+        tf_players[_index].localRotation = Quaternion.Lerp(tf_players[_index].localRotation,
+            Quaternion.LookRotation(direction2[_index]), Time.smoothDeltaTime * 15);
     }
 
     public void Action_AimingWithCircuit(int _index, Vector3 _pos, float _roty )
@@ -80,13 +80,13 @@ public partial class PlayersManager : MonoBehaviour
         }
 
 
-        obj_players[_index].transform.localPosition = Vector3.Lerp(obj_players[_index].transform.localPosition, _pos,
+        tf_players[_index].localPosition = Vector3.Lerp(tf_players[_index].localPosition, _pos,
     Time.smoothDeltaTime * (speed[_index]));
 
         Vector3 angleToDirection = Quaternion.AngleAxis(_roty, Vector3.forward) * Vector3.right;
         direction2[_index] = new Vector3(angleToDirection.y, 0, angleToDirection.x);
 
-        obj_players[_index].transform.localRotation = Quaternion.Lerp(obj_players[_index].transform.localRotation,
+        tf_players[_index].localRotation = Quaternion.Lerp(tf_players[_index].localRotation,
     Quaternion.LookRotation(direction2[_index]), Time.smoothDeltaTime * 15);
 
         //서버로부터 받은 플레이어 오일러각도를 다시 방향벡터로 바꿔서 저장해둠. 나중에 방향쓸일이 있을수도있으므로.

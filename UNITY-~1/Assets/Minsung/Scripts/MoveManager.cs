@@ -52,12 +52,12 @@ public class MoveManager : MonoBehaviour
                             pos.y = curPlayerPos[i].localPosition.y;
                             pos.z = networkManager.GetPosZ(i);
 
-                            PlayersManager.instance.obj_players[i].transform.localPosition = Vector3.Lerp(PlayersManager.instance.obj_players[i].transform.localPosition, pos,
+                            PlayersManager.instance.tf_players[i].localPosition = Vector3.Lerp(PlayersManager.instance.tf_players[i].localPosition, pos,
                             Time.smoothDeltaTime * (PlayersManager.instance.speed[i]));
                         }
                         else
                         {
-                            PlayersManager.instance.obj_players[i].transform.localPosition = Vector3.MoveTowards(PlayersManager.instance.obj_players[i].transform.localPosition, pos,
+                            PlayersManager.instance.tf_players[i].localPosition = Vector3.MoveTowards(PlayersManager.instance.tf_players[i].localPosition, pos,
                             Time.smoothDeltaTime * PlayersManager.instance.speed[i]);
                         }
 
@@ -82,12 +82,12 @@ public class MoveManager : MonoBehaviour
                             pos.y = curPlayerPos[i].localPosition.y;
                             pos.z = networkManager.GetPosZ(i);
 
-                            PlayersManager.instance.obj_players[i].transform.localPosition = Vector3.Lerp(PlayersManager.instance.obj_players[i].transform.localPosition, pos,
+                            PlayersManager.instance.tf_players[i].localPosition = Vector3.Lerp(PlayersManager.instance.tf_players[i].localPosition, pos,
                             Time.smoothDeltaTime * (PlayersManager.instance.speed[i]));
                         }
                         else
                         {
-                            PlayersManager.instance.obj_players[i].transform.localPosition = Vector3.MoveTowards(PlayersManager.instance.obj_players[i].transform.localPosition, pos,
+                            PlayersManager.instance.tf_players[i].localPosition = Vector3.MoveTowards(PlayersManager.instance.tf_players[i].localPosition, pos,
                             Time.smoothDeltaTime * PlayersManager.instance.speed[i]);
                         }
 

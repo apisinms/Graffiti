@@ -9,7 +9,7 @@ public class State_Aim : MonoBehaviour, IActionState
     public static State_Aim GetStateInstance()
     {
         if (instance == null)
-            instance = StateManager.instance.obj_stateList.GetComponent<State_Aim>();
+            instance = (State_Aim)StateManager.instance.cn_stateList[3];  //StateManager.instance.obj_stateList.GetComponent<State_Aim>();
 
         return instance;
     }
@@ -39,8 +39,8 @@ public class State_Aim : MonoBehaviour, IActionState
     }
 
     public void Aim(bool _value)
-    { 
-        if(_value == false)
+    {
+        if (_value == false)
         {
             StateManager.instance.SetState(State_Idle.GetStateInstance());
 

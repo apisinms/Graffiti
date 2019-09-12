@@ -9,7 +9,7 @@ public class State_Shot : MonoBehaviour, IActionState
     public static State_Shot GetStateInstance()
     {
         if (instance == null)
-            instance = StateManager.instance.obj_stateList.GetComponent<State_Shot>();
+            instance = (State_Shot)StateManager.instance.cn_stateList[4]; // StateManager.instance.obj_stateList.GetComponent<State_Shot>();
 
         return instance;
     }
