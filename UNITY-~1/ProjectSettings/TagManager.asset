@@ -11,6 +11,8 @@ TagManager:
   - Ar
   - Smg
   - Sg
+  - BulletPool
+  - Bullet
   layers:
   - Default
   - TransparentFX

@@ -34,9 +34,11 @@ public class State_AimCircuitShot : MonoBehaviour, IActionState
 
             if (PlayersManager.instance.curCor != null)
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
+            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.cor_ActionAim);
 
-            Debug.Log("그냥샷2");
-            //PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.cor_ActionAimCurcuit);
+            if (WeaponManager.instance.curCor != null)
+                WeaponManager.instance.StopCoroutine(WeaponManager.instance.curCor);
+            WeaponManager.instance.curCor = WeaponManager.instance.StartCoroutine(WeaponManager.instance.cor_ActionBullet);
         }
     }
 
@@ -49,6 +51,9 @@ public class State_AimCircuitShot : MonoBehaviour, IActionState
             if (PlayersManager.instance.curCor != null)
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
             PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.cor_ActionCircuit);
+
+            if (WeaponManager.instance.curCor != null)
+                WeaponManager.instance.StopCoroutine(WeaponManager.instance.curCor);
         }
     }
 
@@ -61,6 +66,9 @@ public class State_AimCircuitShot : MonoBehaviour, IActionState
             if (PlayersManager.instance.curCor != null)
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
             PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.cor_ActionAimCurcuit);
+
+            if (WeaponManager.instance.curCor != null)
+                WeaponManager.instance.StopCoroutine(WeaponManager.instance.curCor);
         }
     }
 }

@@ -1,6 +1,7 @@
 ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
+    - BulletCollision
     - CameraControl
     - ClientSectorManager
     - Customizable
@@ -10,15 +11,19 @@ ScriptsOnlyBuild:
     - MoveManager
     - PlayersManager
     - RightJoystick
+    - StateManager
+    - State_Aim
+    - State_AimCircuit
+    - State_AimCircuitShot
+    - State_Circuit
+    - State_Idle
+    - State_Shot
     - WeaponManager
     UnityEditor.Graphs.dll:
     - UnityEditor.Graphs.AnimationBlendTree.Graph
     - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
-    - UnityEditor.Graphs.AnimationBlendTree.Node
-    - UnityEditor.Graphs.AnimationStateMachine.AnyStateNode
     - UnityEditor.Graphs.AnimationStateMachine.Graph
     - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
-    - UnityEditor.Graphs.AnimationStateMachine.StateNode
     - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.TestListCacheData
@@ -72,33 +77,49 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9310}
     - Class: 114
-      Script: {instanceID: 9378}
-    - Class: 114
-      Script: {instanceID: 9384}
+      Script: {instanceID: 9380}
     - Class: 114
       Script: {instanceID: 9386}
     - Class: 114
-      Script: {instanceID: 9390}
+      Script: {instanceID: 9388}
     - Class: 114
-      Script: {instanceID: 9398}
+      Script: {instanceID: 9392}
     - Class: 114
-      Script: {instanceID: 9434}
+      Script: {instanceID: 9400}
     - Class: 114
-      Script: {instanceID: 9596}
+      Script: {instanceID: 9436}
     - Class: 114
-      Script: {instanceID: 9640}
+      Script: {instanceID: 9598}
     - Class: 114
-      Script: {instanceID: 9794}
+      Script: {instanceID: 9642}
     - Class: 114
-      Script: {instanceID: 9826}
+      Script: {instanceID: 9796}
     - Class: 114
-      Script: {instanceID: 9932}
+      Script: {instanceID: 9828}
     - Class: 114
-      Script: {instanceID: 10146}
+      Script: {instanceID: 9926}
     - Class: 114
-      Script: {instanceID: 10344}
+      Script: {instanceID: 9936}
     - Class: 114
-      Script: {instanceID: 10538}
+      Script: {instanceID: 10044}
+    - Class: 114
+      Script: {instanceID: 10068}
+    - Class: 114
+      Script: {instanceID: 10088}
+    - Class: 114
+      Script: {instanceID: 10108}
+    - Class: 114
+      Script: {instanceID: 10158}
+    - Class: 114
+      Script: {instanceID: 10324}
+    - Class: 114
+      Script: {instanceID: 10354}
+    - Class: 114
+      Script: {instanceID: 10362}
+    - Class: 114
+      Script: {instanceID: 10410}
+    - Class: 114
+      Script: {instanceID: 10558}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 135
@@ -142,7 +163,7 @@ ScriptsOnlyBuild:
     className: TMP_Dropdown
   - hash:
       serializedVersion: 2
-      Hash: 965ef8ab17f708ba748b9c676f7267cd
+      Hash: 6fa4fe63de0392396f379e02b3fce667
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: WeaponManager
@@ -164,6 +185,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: ActivationTrack
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: sample
   - hash:
       serializedVersion: 2
       Hash: cf9f5cf2c3145a37ac07f00e50e460f9
@@ -712,6 +739,12 @@ ScriptsOnlyBuild:
     className: TMP_SpriteAnimator
   - hash:
       serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: State_AimCircuitShot
+  - hash:
+      serializedVersion: 2
       Hash: a796a03de953ff7c03b3c0eca3869fc1
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
@@ -730,10 +763,22 @@ ScriptsOnlyBuild:
     className: TextContainer
   - hash:
       serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: State_AimCircuit
+  - hash:
+      serializedVersion: 2
       Hash: 3f8d7b92a6be3c715e55d5cfa7cc8384
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: SignalReceiver
+  - hash:
+      serializedVersion: 2
+      Hash: 408e1fd9d14561e9a623411fa376c8fe
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: StateManager
   - hash:
       serializedVersion: 2
       Hash: 35a9693c388776aaf487636491a20f11
@@ -754,10 +799,22 @@ ScriptsOnlyBuild:
     className: ActivationPlayableAsset
   - hash:
       serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: State_Idle
+  - hash:
+      serializedVersion: 2
       Hash: b9aea022e48dd09142baa448ff430b72
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: InputInfoManager
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: BulletCollision
   - hash:
       serializedVersion: 2
       Hash: 88cc9df3c6fc697bfbeacd24c0d6f2d7
@@ -841,13 +898,31 @@ ScriptsOnlyBuild:
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
+    className: State_Circuit
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
     className: DragToRotate
   - hash:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
+    className: State_Aim
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
     className: GameManager
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: State_Shot
   - hash:
       serializedVersion: 2
       Hash: c3d3430df9e3ea95e3e3d587961390fb
@@ -911,4 +986,4 @@ ScriptsOnlyBuild:
   platform: 13
   scenePathNames:
   - Assets/Scenes/MainGame.unity
-  playerPath: C:/Users/GANPAN/Desktop/dd.apk
+  playerPath: C:/Users/GANPAN/Desktop/SG.apk

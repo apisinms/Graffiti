@@ -38,8 +38,9 @@ public class StateManager : MonoBehaviour, IActionState
 
     private void Update()
     {
-        Debug.Log(PlayersManager.instance.actionState[PlayersManager.instance.myIndex]);
+        //Debug.Log(myActionState);
     }
+
     private void Awake()
     {
         if (instance == null)

@@ -87,8 +87,10 @@
     <Compile Include="Assets\MinSeok\Script\Ingame\Player\StateManager\State_Idle.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\Player\StateManager\State_Shot.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\Player\StateManager\StateManager.cs" />
+    <Compile Include="Assets\MinSeok\Script\Ingame\Weapons\BulletCollision.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\Weapons\WeaponManager.Action.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\Weapons\WeaponManager.cs" />
+    <Compile Include="Assets\MinSeok\Script\Ingame\Weapons\WeaponManager.ObjectPool.cs" />
     <Compile Include="Assets\MinSeok\Script\Login_Join\InputInfoManager.cs" />
     <Compile Include="Assets\MinSeok\Script\MainMenu\btn_option.cs" />
     <Compile Include="Assets\MinSeok\Script\MainMenu\btn_quit.cs" />

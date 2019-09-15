@@ -73,6 +73,7 @@ public partial class PlayersManager : MonoBehaviour
             if (myIndex != i)
             {
                 obj_players[i] = GameObject.FindGameObjectWithTag(GameManager.instance.playersTag[i]);
+                obj_players[i].GetComponent<CapsuleCollider>().isTrigger = true;
                 tf_players[i] = obj_players[i].GetComponent<Transform>();
                 am_animePlayer[i] = obj_players[i].GetComponent<Animator>(); 
             }

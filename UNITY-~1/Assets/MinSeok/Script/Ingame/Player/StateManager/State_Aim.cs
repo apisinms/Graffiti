@@ -58,9 +58,12 @@ public class State_Aim : MonoBehaviour, IActionState
 
             if (PlayersManager.instance.curCor != null)
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
+            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.cor_ActionAim);
 
-            Debug.Log("그냥샷1");
-            //PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.cor_ActionIdle);
+            if (WeaponManager.instance.curCor != null)
+              WeaponManager.instance.StopCoroutine(WeaponManager.instance.curCor);
+            WeaponManager.instance.curCor = WeaponManager.instance.StartCoroutine(WeaponManager.instance.cor_ActionBullet);
+
         }
     }
 }

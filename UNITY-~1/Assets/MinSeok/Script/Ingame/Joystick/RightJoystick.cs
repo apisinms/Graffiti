@@ -35,7 +35,10 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
     {
         //PlayersManager.instance.StartMoveCoroutine();
     }
-
+    private void Update()
+    {
+       // Debug.Log(isStep0 + "   " + isStep1 +"   " + isStep2);
+    }
     public void Drag(BaseEventData _Data)
     {
         PointerEventData data = _Data as PointerEventData;
@@ -56,9 +59,10 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
                     StateManager.instance.Aim(false);
                     isStep0 = true;
                 }
+                isStep1 = false; isStep2 = false;
+
                 img_joystick_stick.transform.position = right_joystick.stickFirstPos;
                 right_joystick.stickDir = Vector3.zero; // 방향을 0으로.
-                isStep1 = false; isStep2 = false;
                 break;
 
             case 1:
@@ -68,8 +72,9 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
                     StateManager.instance.Aim(true);
                     isStep1 = true;
                 }
-                img_joystick_stick.rectTransform.position = right_joystick.stickFirstPos + (right_joystick.stickDir * right_joystick.maxMoveArea * 0.4f);
                 isStep0 = false; isStep2 = false;
+
+                img_joystick_stick.rectTransform.position = right_joystick.stickFirstPos + (right_joystick.stickDir * right_joystick.maxMoveArea * 0.4f);
                 break;
 
             case 2:
@@ -77,9 +82,10 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
                 {
                     StateManager.instance.Shot(true);
                     isStep2 = true;
-                }    
-                img_joystick_stick.rectTransform.position = right_joystick.stickFirstPos + (right_joystick.stickDir * right_joystick.maxMoveArea);
+                }
                 isStep0 = false; isStep1 = false;
+
+                img_joystick_stick.rectTransform.position = right_joystick.stickFirstPos + (right_joystick.stickDir * right_joystick.maxMoveArea);
                 break;
         }
   
@@ -87,7 +93,7 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
     
     public int GetJoystickStep(float _distance)
     {
-        if (_distance > 0 && _distance <= right_joystick.maxMoveArea * 0.4f) //0단계때
+        if (_distance >= 0 && _distance <= right_joystick.maxMoveArea * 0.4f) //0단계때
             return 0;
         else if (_distance >= right_joystick.maxMoveArea * 0.4f && _distance <= right_joystick.maxMoveArea * 1.5f) //1단계 조준단계
             return 1;
@@ -101,7 +107,7 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
         StateManager.instance.Aim(false);
         img_joystick_stick.transform.position = right_joystick.stickFirstPos;
         right_joystick.stickDir = Vector3.zero; // 방향을 0으로.
-
+        isStep0 = true; isStep1 = false; isStep2 = false;
         // PlayersManager.instance.StopMoveCoroutine();
     }
 

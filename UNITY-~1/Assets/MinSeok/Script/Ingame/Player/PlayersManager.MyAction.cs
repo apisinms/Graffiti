@@ -12,8 +12,8 @@ public partial class PlayersManager : MonoBehaviour
     private float[] lastPosX { get; set; }
     private float[] lastPosZ { get; set; }
 
-    public Coroutine curCor; //현재 실행중인 코루틴을 저장.
-    public Coroutine prevCor; //이전실행되었던 코루틴저장. 중복방지.
+    public Coroutine curCor { get; set; } //현재 실행중인 코루틴을 저장.
+    public Coroutine prevCor { get; set; } //이전실행되었던 코루틴저장. 중복방지.
     public IEnumerator cor_ActionIdle { get; set; }
     public IEnumerator cor_ActionCircuit { get; set; }
     public IEnumerator cor_ActionAim { get; set; }
