@@ -119,8 +119,8 @@ public partial class PlayersManager : MonoBehaviour
         actionState    = new _ACTION_STATE[C_Global.MAX_PLAYER];
         speed          = new float[C_Global.MAX_PLAYER];
         hp             = new float[C_Global.MAX_PLAYER];
-        maxSpeed  = new float[C_Global.MAX_PLAYER];
-        maxHp       = new float[C_Global.MAX_PLAYER];
+        maxSpeed       = new float[C_Global.MAX_PLAYER];
+        maxHp          = new float[C_Global.MAX_PLAYER];
         direction      = new Vector3[C_Global.MAX_PLAYER];
         direction2     = new Vector3[C_Global.MAX_PLAYER];
 
@@ -154,7 +154,7 @@ public partial class PlayersManager : MonoBehaviour
 				speed[myIndex],
 				actionState[myIndex]);
 
-            yield return YieldInstructionCache.WaitForSeconds(0.1f);
+            yield return YieldInstructionCache.WaitForSeconds(0.1f);	// 0.1초마다 이동 패킷 전송
         }
     }
 	public void StartMoveCoroutine()

@@ -18,7 +18,9 @@ class InGameManager
 		WEAPON_PROTOCOL       = ((__int64)0x1 << 52),	// 서버측:무기선택받아옴, 클라측:무기선택보내옴
 		START_PROTOCOL        = ((__int64)0x1 << 51),	// 게임 시작 프로토콜
 		MOVE_PROTOCOL		  = ((__int64)0x1 << 50),	// 이동 프로토콜
-		DISCONNECT_PROTOCOL   = ((__int64)0x1 << 49),	// 접속 끊김 프로토콜
+		FOCUS_PROTOCOL        = ((__int64)0x1 << 49),	// 포커스 프로토콜
+
+		DISCONNECT_PROTOCOL   = ((__int64)0x1 << 34),	// 접속 끊김 프로토콜
 	};
 
    // 33~24
@@ -51,7 +53,6 @@ public:
 
 private:
 	void PackPacket(char* _setptr, const int &_sec, int& _size);
-	void PackPacket(char* _setptr, TCHAR* _str1, int& _size);				// 문자열 1개를 Pack하는 함수
 	void PackPacket(char* _setptr, PositionPacket& _struct, int& _size);
 	void UnPackPacket(char* _getBuf, int& _num);
 	void UnPackPacket(char* _getBuf, PositionPacket& _struct);
@@ -65,15 +66,17 @@ private:
 	bool WeaponSelectProcess(C_ClientInfo* _ptr, char* _buf);
 	bool InitProcess(C_ClientInfo* _ptr, char* _buf);
 	bool MoveProcess(C_ClientInfo* _ptr, char* _buf);
-	bool GetPosProcess(C_ClientInfo* _ptr, char* _buf);	// 위치를 얻어주는 함수
+	bool GetPosProcess(C_ClientInfo* _ptr, char* _buf);		// 위치를 얻어주는 함수
+	bool OnFocusProcess(C_ClientInfo* _ptr);				// 포커스 On시의 처리 함수(다른 플레이어 인게임 정보 보내줌)
 
 public:
 	bool CanISelectWeapon(C_ClientInfo* _ptr);	// 무기 선택
 	bool CanIStart(C_ClientInfo* _ptr);			// 시작 시 초기화
 	bool CanIMove(C_ClientInfo* _ptr);			// 이동
+	bool CanIChangeFocus(C_ClientInfo* _ptr);	// 포커스 변경
 	bool LeaveProcess(C_ClientInfo* _ptr, int _playerIndex);		// 종료 프로세스
 
-	void ListSendPacket(list<C_ClientInfo*> _list, C_ClientInfo* _exceptClient, PROTOCOL_INGAME _protocol, char* _buf, int _packetSize);
+	void ListSendPacket(list<C_ClientInfo*> _list, C_ClientInfo* _exceptClient, PROTOCOL_INGAME _protocol, char* _buf, int _packetSize, bool _notFocusExcept = true);
 	
-	static unsigned long __stdcall TimerThread(void* _arg);	// 아이템 선택 시간을 세는 타이머 쓰레드
+	static unsigned long __stdcall WeaponSelectTimerThread(void* _arg);	// 아이템 선택 시간을 세는 타이머 쓰레드
 };

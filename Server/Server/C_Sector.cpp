@@ -169,7 +169,7 @@ byte C_Sector::GetMovedSectorPlayerList(INDEX _beforeIdx, INDEX _curIdx,
 
 void C_Sector::Add(C_ClientInfo* _player, INDEX& _index)
 {
-	INDEX index = _player->GetIndex();
+	INDEX index = _player->GetPlayerInfo()->GetIndex();
 
 	if ((_index.i < 0) || (_index.i >= ROW)
 		|| (_index.j < 0) || (_index.j) >= COL)
@@ -211,6 +211,7 @@ byte C_Sector::FlagPlayerBit(vector<SectorInstance*>_enterSector)
 {
 	byte playerBit = 0;
 
+	C_ClientInfo* otherPlayer = nullptr;
 	// 입장한 인접 섹터를 다 돌면서
 	for (int i = 0; i < _enterSector.size(); i++)
 	{
@@ -220,8 +221,10 @@ byte C_Sector::FlagPlayerBit(vector<SectorInstance*>_enterSector)
 			// 그 플레이어 리스트를 다 돌면서 어느 플레이어가 있는지 bit를 활성화 시킨다.
 			for (auto iter = _enterSector[i]->playerList.begin(); iter != _enterSector[i]->playerList.end(); ++iter)
 			{
+				otherPlayer = *iter;
+
 				// 플레이어 넘버를 읽어서 bit를 활성화 시킴(ex : 1011 << 1,3,4 플레이어가 같은 섹터에 있음)
-				switch (((C_ClientInfo*)(*iter))->GetPosition()->playerNum)
+				switch (otherPlayer->GetPlayerInfo()->GetPlayerNum())
 				{
 				case 1:
 					playerBit |= PLAYER_1;

@@ -47,26 +47,7 @@ public:
 	void SetRoom(RoomInfo* _room);
 	RoomInfo* GetRoom();
 
+	// 모든 정보가 다 포함된 얘를 리턴해주면 됨(어차피 인터페이스 있으니까)
 	void SetPlayerInfo(PlayerInfo* _playerInfo);
 	PlayerInfo* GetPlayerInfo();
-
-	///////// 이 밑에 메서드들은 처리하는 방식을 좀 바꿔야될듯.. 멤버 늘어나면 계속 늘어나게됨
-
-	PositionPacket* GetPosition();
-	void SetPosition(PositionPacket* _position);
-
-	INDEX GetIndex();
-	void SetIndex(INDEX _index);
-
-	Weapon* GetWeapon();
-	void SetWeapon(Weapon* _weapon);
-
-	float GetHealth();
-	void SetHealth(float _health);
-
-	float GetSpeed();
-	void SetSpeed(float _speed);
-
-	int GetBullet();
-	void SetBullet(int _bullet);
 };

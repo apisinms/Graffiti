@@ -85,6 +85,8 @@ public class LeftJoystick : MonoBehaviour, JoystickControll
 			img_joystick_stick.transform.position = left_joystick.stickFirstPos;
 			left_joystick.stickDir = Vector3.zero; // 방향을 0으로.
 		}
+
+
 #if NETWORK
 		// 마지막에 와야함
 		PlayersManager.instance.StopMoveCoroutine();

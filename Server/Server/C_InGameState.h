@@ -20,6 +20,10 @@ public:
 
 		if (InGameManager::GetInstance()->CanIMove(_ptr) == true)
 			state = STATE_INGAME;
+
+		if (InGameManager::GetInstance()->CanIChangeFocus(_ptr) == true)
+			state = STATE_INGAME;
+
 	}
 
 	void Write(C_ClientInfo* _ptr) override

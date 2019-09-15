@@ -73,7 +73,11 @@ public:
 		}
 		
 		else
+		{
 			printf("GetLeftTop 인덱스에러 %d, %d\n", _index.i, _index.j);
+			COORD_DOUBLE ret;
+			return ret;
+		}
 	}
 	inline COORD_DOUBLE GetRightBottom(INDEX _index)
 	{
@@ -84,7 +88,11 @@ public:
 		}
 
 		else
+		{
 			printf("GetLeftTop 인덱스에러 %d, %d\n", _index.i, _index.j);
+			COORD_DOUBLE ret;
+			return ret;
+		}
 	}
 
 	// 인덱스를 토대로 해당 섹터 + 인접 섹터의 플레이어 리스트를 하나로 병합하여 리턴해줌
@@ -95,4 +103,10 @@ public:
 
 	void Add(C_ClientInfo* _player, INDEX& _index);
 	void Delete(C_ClientInfo* _player, INDEX _index);
+
+	// 자신의 섹터에서 나감 처리
+	inline void LeaveProcess(C_ClientInfo* _player, INDEX _index)
+	{
+		sectors[_index.i][_index.j].playerList.remove(_player);
+	}
 };

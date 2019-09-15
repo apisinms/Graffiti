@@ -180,7 +180,16 @@ bool LobbyManager::CanIGotoInGame(C_ClientInfo* _ptr)
 		if (_ptr->GetRoom()->GetRoomStatus() == ROOMSTATUS::ROOM_NONE)
 		{
 			// InGameManager에게 무기타이머 쓰레드를 생성해 30초를 세도록 부탁한다.
-			_ptr->GetRoom()->SetWeaponTimerHandle((HANDLE)_beginthreadex(nullptr, 0, (_beginthreadex_proc_type)InGameManager::TimerThread, (void*)_ptr, 0, NULL));
+			_ptr->GetRoom()->SetWeaponTimerHandle
+			(
+				(HANDLE)_beginthreadex(
+					nullptr, 
+					0,
+					(_beginthreadex_proc_type)InGameManager::WeaponSelectTimerThread, 
+					(void*)_ptr,
+					0, 
+					NULL)
+			);
 
 			if (_ptr->GetRoom()->GetWeaponTimerHandle() == nullptr)
 				LogManager::GetInstance()->ErrorPrintf("_beginthreadex() in CanIStart()");
@@ -200,9 +209,11 @@ void LobbyManager::SendPacket_Room(C_ClientInfo* _ptr, char* _buf, PROTOCOL_LOBB
 	int i = 1;
 
 	// 같은 방에 있는 모든 플레이어에게 현재 무기 선택종료까지 남은 시간을 보내줌
+	list<C_ClientInfo*> playerList = _ptr->GetRoom()->GetPlayerList();	// 리스트 얻어옴
 	C_ClientInfo* player = nullptr;
-	while (_ptr->GetRoom()->GetPlayer(player) == true)
+	for (auto iter = playerList.begin(); iter != playerList.end(); ++iter)
 	{
+		player = *iter;
 		PackPacket(_buf, i++, packetSize);
 		player->SendPacket(_protocol, _buf, packetSize);
 	}

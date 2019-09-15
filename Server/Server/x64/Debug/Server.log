@@ -1,2 +1,22 @@
-﻿  C_Sector.cpp
+﻿  stdafx.cpp
+  C_ClientInfo.cpp
+  C_Encrypt.cpp
+  C_IOCP.cpp
+  C_Packet.cpp
+  C_Sector.cpp
+  C_Select.cpp
+  C_Socket.cpp
+  ChatManager.cpp
+  DatabaseManager.cpp
+  InGameManager.cpp
+  LobbyManager.cpp
+  LogManager.cpp
+  LoginManager.cpp
+  Main.cpp
+  MainManager.cpp
+  MatchManager.cpp
+  RoomManager.cpp
+  SessionManager.cpp
+  UtilityManager.cpp
+  코드를 생성하고 있습니다...
   Server.vcxproj -> C:\_PROGRAMMING_\_Portfolio\Graffiti\Server\x64\Debug\Server.exe

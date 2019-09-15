@@ -24,9 +24,11 @@ using namespace std;
 #define RESULT_OFFSET 0x3FF
 #define RESULT_MASK		40
 
-//#define MAX_SPEED 4.0f;	//////// 나중에 바꿀거임
+// Keep-alive 설정 관련
+#define KEEPALIVE_TIME 3000							// TIME ms마다 keep-alive 신호를 주고받는다
+#define KEEPALIVE_INTERVAL (KEEPALIVE_TIME / 20)		// Heart-beat가 없을시 INTERVAL ms마다 재전송한다(10번)
 
-	// 플레이어 플래그
+// 플레이어 플래그
 enum PLAYER_BIT : byte
 {
 	PLAYER_1 = (1 << 3),
@@ -57,6 +59,7 @@ struct INDEX
 struct COORD_DOUBLE
 {
 	double x, z;
+	COORD_DOUBLE() { x = z = 0; }
 };
 
 struct PositionPacket
@@ -104,12 +107,13 @@ public:
 struct PlayerInfo
 {
 private:
-	PositionPacket* position;
-	INDEX index;
-	Weapon* weapon;
-	float health;
-	float speed;
-	int bullet;
+	PositionPacket* position;	// 플레이어 번호 + 위치 + 로테이션 + 애니메이션
+	INDEX index;				// 현재 플레이어의 섹터 인덱스
+	Weapon* weapon;				// 무기
+	float health;				// 체력
+	float speed;				// 속도
+	int bullet;					// 총알
+	bool isFocus;				// 기기가 Focus중인지 
 
 public:
 	static const float MAX_SPEED;
@@ -123,6 +127,8 @@ public:
 
 		health = speed = 0.0f;
 		bullet = 0;
+
+		isFocus = true;
 	}
 
 	PositionPacket* GetPosition() { return position; }
@@ -133,6 +139,9 @@ public:
 
 		position = _position;
 	}
+
+	int GetPlayerNum() { return position->playerNum; }
+	int GetAnimation() { return position->action; }
 
 	INDEX GetIndex() { return index; }
 	void SetIndex(INDEX _index) { index = _index; }
@@ -149,11 +158,12 @@ public:
 	float GetHealth() { return health; }
 	void SetHealth(float _health) { health = _health; }
 
-	float GetSpeed() { return speed; }
-	void SetSpeed(float _speed) { speed = _speed; }
-
 	int GetBullet() { return bullet; }
 	void SetBullet(int _bullet) { bullet = _bullet; }
+
+	void FocusOn() { isFocus = true; }
+	void FocusOff() { isFocus = false; }
+	bool GetFocus() { return isFocus; }
 };
 const float PlayerInfo::MAX_SPEED = 4.0f;
 

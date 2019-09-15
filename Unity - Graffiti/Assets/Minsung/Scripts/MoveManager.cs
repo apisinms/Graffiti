@@ -29,8 +29,6 @@ public class MoveManager : MonoBehaviour
 			networkManager.SetPosZ(i, curPlayerPos[i].localPosition.z);
 			networkManager.SetPosPlayerNum(i, i + 1);
 		}
-
-		StartCoroutine(this.CheckQuit());
 #endif
     }
 
@@ -76,22 +74,4 @@ public class MoveManager : MonoBehaviour
 		}
 #endif
 	}
-
-	IEnumerator CheckQuit()
-    {
-		int quitPlayerNum;
-        while (true)
-        {
-			quitPlayerNum = networkManager.CheckQuit();
-			if (quitPlayerNum > 0)	// 음수가 아니면 퇴장한 플레이어가 있다는 소리임
-			{
-				// 나간놈을 꺼준다.
-				if (PlayersManager.instance.obj_players[quitPlayerNum - 1].activeSelf == true)
-					PlayersManager.instance.obj_players[quitPlayerNum - 1].SetActive(false);
-
-			}
-
-            yield return YieldInstructionCache.WaitForSeconds(0.25f);
-        }
-    }
 }

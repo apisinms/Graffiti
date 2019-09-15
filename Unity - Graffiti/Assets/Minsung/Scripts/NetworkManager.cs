@@ -14,9 +14,9 @@ using UnityEngine;
 public partial class NetworkManager : MonoBehaviour
 {
 	// 서버 IP와 포트
-	private static IPAddress serverIP = IPAddress.Parse("127.0.0.1");
-	//private static IPAddress serverIP = IPAddress.Parse("211.195.240.158");
-	private static int serverPort = 10823;
+	//private static IPAddress serverIP = IPAddress.Parse("127.0.0.1");
+	private static IPAddress serverIP = IPAddress.Parse("211.227.82.222");
+	private static int serverPort     = 10823;
 
 	readonly static int IDSIZE = 255;
 	readonly static int PWSIZE = 255;
@@ -24,12 +24,12 @@ public partial class NetworkManager : MonoBehaviour
 
 
 	readonly static int STATE_PROTOCOL_OFFSET = 10;                     // 10
-	readonly static int PROTOCOL_OFFSET = STATE_PROTOCOL_OFFSET + 20;   // 30
-	readonly static int RESULT_OFFSET = PROTOCOL_OFFSET + 10;         // 40
+	readonly static int PROTOCOL_OFFSET       = STATE_PROTOCOL_OFFSET + 20;   // 30
+	readonly static int RESULT_OFFSET         = PROTOCOL_OFFSET + 10;         // 40
 
 	readonly static int STATE_PROTOCOL_MASK = 0x3FF;
-	readonly static int PROTOCOL_MASK = 0xFFFFF;
-	readonly static int RESULT_MASK = 0x3FF;
+	readonly static int PROTOCOL_MASK       = 0xFFFFF;
+	readonly static int RESULT_MASK         = 0x3FF;
 
 	/// <summary>
 	/// 10(STATE_PROTOCOL) + 20(PROTOCOL) + 10(RESULT) + 24(그외)
@@ -38,9 +38,9 @@ public partial class NetworkManager : MonoBehaviour
 	enum STATE_PROTOCOL : Int64
 	{
 		// 상위 5비트 스테이트를 표현해주는 프로토콜
-		LOGIN_STATE = ((Int64)0x1 << 63),
-		LOBBY_STATE = ((Int64)0x1 << 62),
-		CHAT_STATE = ((Int64)0x1 << 61),
+		LOGIN_STATE  = ((Int64)0x1 << 63),
+		LOBBY_STATE  = ((Int64)0x1 << 62),
+		CHAT_STATE   = ((Int64)0x1 << 61),
 		INGAME_STATE = ((Int64)0x1 << 60),
 
 		//59 ~ 54
@@ -50,25 +50,28 @@ public partial class NetworkManager : MonoBehaviour
 	enum PROTOCOL : Int64
 	{
 		// LoginState
-		JOIN_PROTOCOL = ((Int64)0x1 << 53),
+		JOIN_PROTOCOL  = ((Int64)0x1 << 53),
 		LOGIN_PROTOCOL = ((Int64)0x1 << 52),
 
 		// LobbyState
-		MATCH_PROTOCOL = ((Int64)0x1 << 53),
+		MATCH_PROTOCOL        = ((Int64)0x1 << 53),
 		MATCH_CANCEL_PROTOCOL = ((Int64)0x1 << 52),
-		GOTO_INGAME_PROTOCOL = ((Int64)0x1 << 51),      // 인게임 상태로 진입 프로토콜
-		LOGOUT_PROTOCOL = ((Int64)0x1 << 50),
+		GOTO_INGAME_PROTOCOL  = ((Int64)0x1 << 51),      // 인게임 상태로 진입 프로토콜
+		LOGOUT_PROTOCOL       = ((Int64)0x1 << 50),
 
 		// ChatState
 		LEAVE_ROOM_PROTOCOL = ((Int64)0x1 << 53),
-		CHAT_PROTOCOL = ((Int64)0x1 << 52),
+		CHAT_PROTOCOL       = ((Int64)0x1 << 52),
 
 		// InGameState
-		TIMER_PROTOCOL = ((Int64)0x1 << 53),    // 타이머 프로토콜(1초씩 받음)
-		WEAPON_PROTOCOL = ((Int64)0x1 << 52),   // 무기 전송 프로토콜
-		START_PROTOCOL = ((Int64)0x1 << 51),    // 게임 시작 프로토콜
-		MOVE_PROTOCOL = ((Int64)0x1 << 50), // 이동 프로토콜
-		DISCONNECT_PROTOCOL = ((Int64)0x1 << 49), // 접속 끊김 프로토콜
+		TIMER_PROTOCOL      = ((Int64)0x1 << 53),		// 타이머 프로토콜(1초씩 받음)
+		WEAPON_PROTOCOL     = ((Int64)0x1 << 52),		// 무기 전송 프로토콜
+		START_PROTOCOL      = ((Int64)0x1 << 51),		// 게임 시작 프로토콜
+		MOVE_PROTOCOL       = ((Int64)0x1 << 50),		// 이동 프로토콜
+		FOCUS_PROTOCOL      = ((Int64)0x1 << 49),		// 포커스 프로토콜
+		ALIVE_PROTOCOL      = ((Int64)0x1 << 48),		// 연결되어있는지 확인하는
+
+		DISCONNECT_PROTOCOL = ((Int64)0x1 << 34), // 접속 끊김 프로토콜
 
 		// 48 ~ 34
 	};
@@ -77,10 +80,10 @@ public partial class NetworkManager : MonoBehaviour
     enum RESULT : Int64
     {
         //LoginState
-        JOIN_SUCCESS = ((Int64)0x1 << 33),
-        LOGIN_SUCCESS = ((Int64)0x1 << 33),
+        JOIN_SUCCESS   = ((Int64)0x1 << 33),
+        LOGIN_SUCCESS  = ((Int64)0x1 << 33),
         LOGOUT_SUCCESS = ((Int64)0x1 << 33),
-        LOGOUT_FAIL = ((Int64)0x1 << 32),
+        LOGOUT_FAIL    = ((Int64)0x1 << 32),
 
         // Join & Login result
         ID_EXIST = ((Int64)0x1 << 32),
@@ -89,15 +92,15 @@ public partial class NetworkManager : MonoBehaviour
 
         // LobbyState
         LOBBY_SUCCESS = ((Int64)0x1 << 33),     // 로비에서 성공 처리
-        LOBBY_FAIL = ((Int64)0x1 << 32),        // 로비에서 실패 처리
+        LOBBY_FAIL    = ((Int64)0x1 << 32),        // 로비에서 실패 처리
 
         // ChatState
         LEAVE_ROOM_SUCCESS = ((Int64)0x1 << 33),
-        LEAVE_ROOM_FAIL = ((Int64)0x1 << 32),
+        LEAVE_ROOM_FAIL    = ((Int64)0x1 << 32),
 
         // InGameState(공통)
         INGAME_SUCCESS = ((Int64)0x1 << 33),
-        INGAME_FAIL = ((Int64)0x1 << 32),
+        INGAME_FAIL    = ((Int64)0x1 << 32),
 
 		// MOVE_PROTOCOL 개별
         ENTER_SECTOR        = ((Int64)0x1 << 31),				// 섹터 진입
@@ -217,7 +220,7 @@ public partial class NetworkManager : MonoBehaviour
 	private BinaryReader br = null;
 	private BinaryWriter bw = null;
 
-	private object key = new object();      // 동기화에 사용할 key이다.
+	private object key    = new object();      // 동기화에 사용할 key이다.
 	private string sysMsg = string.Empty;   // 서버로부터 전달되는 메시지를 저장할 변수
 	private int myPlayerNum;
 	private int quitPlayerNum;              // 게임에서 나간 플레이어 번호

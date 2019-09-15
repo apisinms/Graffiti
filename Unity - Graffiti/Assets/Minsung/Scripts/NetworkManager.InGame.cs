@@ -100,36 +100,20 @@ public partial class NetworkManager : MonoBehaviour
         bw.Write(sendBuf, 0, packetSize);
     }
 
-    public bool CheckMove()
+	// 포커스 바꾼다고 서버로 전송
+	public void MayIChangeFocus(bool _focus)
 	{
-		if (state == STATE_PROTOCOL.INGAME_STATE &&
-			protocol == PROTOCOL.MOVE_PROTOCOL &&
-			result == RESULT.INGAME_SUCCESS)
-		{
-			result = RESULT.NODATA;
-			return true;
-		}
+		// 프로토콜 셋팅(포커스 없어짐)
+		protocol = SetProtocol(
+				STATE_PROTOCOL.INGAME_STATE,
+				PROTOCOL.FOCUS_PROTOCOL,
+				( _focus == true 
+				? RESULT.INGAME_SUCCESS
+				: RESULT.INGAME_FAIL));
 
-		else
-			return false;
-	}
-
-	// 게임을 나간 플레이어가 있는지 조회
-	public int CheckQuit()
-	{
-		// 나간 플레이어가 있을 시에
-		if (state == STATE_PROTOCOL.INGAME_STATE &&
-			protocol == PROTOCOL.DISCONNECT_PROTOCOL &&
-			result == RESULT.INGAME_SUCCESS)
-		{
-			// 해당 플레이어 넘버를 리턴하고, 다시 -1로 셋팅한다.
-			int ret = quitPlayerNum;
-			quitPlayerNum = -1;
-			return ret;
-		}
-
-		// 없으면 호출해도 음수 리턴
-		else
-			return -1;
+		// 패킹 및 전송
+		int packetSize;
+		PackPacket(ref sendBuf, protocol, out packetSize);
+		bw.Write(sendBuf, 0, packetSize);
 	}
 }

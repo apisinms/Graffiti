@@ -13,6 +13,7 @@
 #include <tchar.h>
 #include <process.h>
 #include <locale.h>
+#include <mstcpip.h>
 
 // STL
 #include <list>
