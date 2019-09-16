@@ -8,52 +8,109 @@ using UnityEngine;
 
 public partial class PlayersManager : MonoBehaviour
 {
-    public void Action_Idle() { Anime_Idle(myIndex); } //서있을때
+    #region PLAYERS_ACTION
+    private float[] lastPosX { get; set; }
+    private float[] lastPosZ { get; set; }
 
-    public void Action_CircuitNormal() //노말 움직임일때. 순회.
+    public Coroutine curCor { get; set; } //현재 실행중인 코루틴을 저장.
+    #endregion
+
+    public IEnumerator ActionIdle()
     {
-        Anime_Circuit(myIndex);
-        obj_players[myIndex].transform.localRotation = Quaternion.LookRotation(direction[myIndex]);
-        obj_players[myIndex].transform.Translate(direction[myIndex] * speed[myIndex] * Time.smoothDeltaTime, Space.World);
+        while (true)
+        {
+            Anime_Idle(myIndex);
+            yield return null;
+        }
     }
 
-    public void Action_AimingNormal() //제자리 조준
+    public IEnumerator ActionCircuit()
     {
-        Anime_Aiming_Idle(myIndex);
-        obj_players[myIndex].transform.localRotation = Quaternion.LookRotation(direction2[myIndex]);
+        while(true)
+        {
+            Anime_Circuit(myIndex);
+            BlockCollisionEachOther();
+
+            tf_players[myIndex].localRotation = Quaternion.LookRotation(direction[myIndex]);
+            tf_players[myIndex].Translate(direction[myIndex] * speed[myIndex] * Time.smoothDeltaTime, Space.World);
+            yield return null;
+        }
     }
 
-    public void Action_AimingWithCircuit()  // 순회와 조준동시
-    {  
-        //좌측조이스틱 위로일때.         우측조이스틱의 방향에따라서 애니메이션을 달리함.
-        if ((new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= -30.0f) &&
-            (new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= 30.0f))
+    public IEnumerator ActionAim()
+    {
+        while (true)
         {
-            Anime_AimingWithCircuit(myIndex, 1);
+            Anime_Aiming_Idle(myIndex);
+            tf_players[myIndex].localRotation = Quaternion.LookRotation(direction2[myIndex]);
+            yield return null;
         }
-        //우측일때
-        else if ((new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= 30.0f) &&
-            (new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= 150.0f))
+    }
+
+    public IEnumerator ActionAimCircuit()
+    {
+        while (true)
         {
-            Anime_AimingWithCircuit(myIndex, 2);
+            //좌측조이스틱 위로일때.         우측조이스틱의 방향에따라서 애니메이션을 달리함.
+            if ((new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= -30.0f) &&
+                (new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= 30.0f))
+            {
+                Anime_AimingWithCircuit(myIndex, 1);
+            }
+            //우측일때
+            else if ((new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= 30.0f) &&
+                (new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= 150.0f))
+            {
+                Anime_AimingWithCircuit(myIndex, 2);
+            }
+            //아래일때
+            else if ((new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= 150.0f &&
+                new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= 180.0f) ||
+                (new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= -180.0f &&
+                new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= -150.0f))
+            {
+                Anime_AimingWithCircuit(myIndex, 3);
+            }
+            //좌측일때
+            else if ((new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= -150.0f) &&
+                (new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= -30.0f))
+            {
+                Anime_AimingWithCircuit(myIndex, 4);
+            }
+
+            BlockCollisionEachOther();
+            tf_players[myIndex].localRotation = Quaternion.LookRotation(direction2[myIndex]);
+            tf_players[myIndex].Translate(direction[myIndex] * (speed[myIndex] * 0.35f) * Time.smoothDeltaTime, Space.World);
+            yield return null;
         }
-        //아래일때
-        else if ((new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= 150.0f &&
-            new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= 180.0f) ||
-            (new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= -180.0f &&
-            new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= -150.0f))
+    }
+
+
+  
+    public void BlockCollisionEachOther()
+    {
+        for (int i = 0; i < C_Global.MAX_PLAYER; i++)
         {
-            Anime_AimingWithCircuit(myIndex, 3);
+            if (myIndex == i)
+                continue;
+
+            if (Vector3.Distance(tf_players[myIndex].position, tf_players[i].position) <= 1.05f) //나랑 다른플레이어 거리로 충돌을 구함.
+            {
+                tf_players[myIndex].localPosition = new Vector3(lastPosX[i], 0, lastPosZ[i]); //저장좌표로 내위치 고정시킴. 
+                break;
+            }
+            else //충돌범위 밖이면 좌표저장
+            {
+                lastPosX[i] = tf_players[myIndex].localPosition.x;
+                lastPosZ[i] = tf_players[myIndex].localPosition.z;
+            }
+
+            /*
+            if (tf_players[myIndex].localPosition.x <= (tf_players[i].localPosition.x - 0.18f) ||
+                tf_players[myIndex].localPosition.x >= (tf_players[i].localPosition.x + 0.18f) ||
+                tf_players[myIndex].localPosition.z <= (tf_players[i].localPosition.z - 0.18f) ||
+                tf_players[myIndex].localPosition.z >= (tf_players[i].localPosition.z + 0.18f)) */
         }
-        //좌측일때
-        else if ((new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= -150.0f) &&
-            (new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= -30.0f))
-        {
-            Anime_AimingWithCircuit(myIndex, 4);
-        } 
-     
-        obj_players[myIndex].transform.localRotation = Quaternion.LookRotation(direction2[myIndex]);
-		obj_players[myIndex].transform.Translate(direction[myIndex] * (speed[myIndex] * C_Global.amingSpeed * Time.smoothDeltaTime), Space.World);
     }
 
 }

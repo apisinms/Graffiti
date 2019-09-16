@@ -26,17 +26,17 @@ public class btn_start : UnityEngine.MonoBehaviour
 			obj_loadingBar.SetActive(true);
 			am_loadingBar.SetBool("isStart", true);
 
-			// 매칭이 가능한지 서버로 전송한다.
-			NetworkManager.instance.MayIMatch();
+            // 매칭이 가능한지 서버로 전송한다.
+            NetworkManager.instance.MayIMatch();
 
             // 코루틴을 돌려서 매칭이 잡힐때까지 반복한다.
             StartCoroutine(CheckMatch());
-		}
+        }
 
 		else if (flag == 1) //3초전에 취소눌렀을경우 원상복구
 		{
 			NetworkManager.instance.MayICancelMatch();  // 매칭 취소가 가능한지 서버로 전송
-			StartCoroutine(CheckMatchCancel());         // 매칭 취소 결과 받을 때까지 코루틴 돌림
+			StartCoroutine(CheckMatchCancel());			// 매칭 취소 결과 받을 때까지 코루틴 돌림
 		}
 	}
 
@@ -80,6 +80,7 @@ public class btn_start : UnityEngine.MonoBehaviour
 
 				yield break;    // 코루틴 종료
 			}
+
 		}
 	}
 }

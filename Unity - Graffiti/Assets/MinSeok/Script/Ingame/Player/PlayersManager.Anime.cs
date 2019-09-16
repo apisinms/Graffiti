@@ -9,6 +9,10 @@ using UnityEngine;
 
 public partial class PlayersManager : MonoBehaviour
 {
+    #region PLAYERS_ANIMATOR
+    public Animator[] am_animePlayer { get; set; }
+    #endregion
+
     public void Anime_Idle(int _index)
     {
         if (am_animePlayer[_index].GetBool("isAimingAndCurcuit") == true)

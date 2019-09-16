@@ -7,10 +7,13 @@ public class CameraControl : UnityEngine.MonoBehaviour
     private GameObject obj_player;
     private Vector3 cameraPos;
     private Vector3 tmpPlayerPos;
+    private int myIndex { get; set; }
 
     void Awake()
     {
         obj_player = GameObject.FindGameObjectWithTag(GameManager.instance.myTag);
+        myIndex = GameManager.instance.myIndex;
+  
     }
 
     void Start()
@@ -24,8 +27,7 @@ public class CameraControl : UnityEngine.MonoBehaviour
 
     void LateUpdate()
     {
-        if (PlayersManager.instance.attributeState[PlayersManager.instance.myIndex] == _ATTRIBUTE_STATE.ALIVE &&
-            PlayersManager.instance.actionState[PlayersManager.instance.myIndex] != _ACTION_STATE.IDLE)
+        if (PlayersManager.instance.attributeState[myIndex] == _ATTRIBUTE_STATE.ALIVE)
         {
             cameraPos.x = obj_player.transform.position.x;
             cameraPos.y = obj_player.transform.position.y + 7f;
@@ -42,11 +44,9 @@ public class CameraControl : UnityEngine.MonoBehaviour
             //Debug.Log(PlayerManager.instance.myDirection);
             //transform.localRotation = Quaternion.Slerp(transform.rotation, obj_player.transform.rotation, Time.smoothDeltaTime * 5.0f);
             //  transform.localRotation = Quaternion.Euler(50, Mathf.Atan2(PlayerManager.instance.tmp.x, PlayerManager.instance.tmp.y) * Mathf.Rad2Deg, 0);
-            //  transform.position = cameraPos;//Vector3.Lerp(transform.position, cameraPos, Time.smoothDeltaTime * 2.0f);
+             // transform.position = Vector3.Lerp(transform.position, cameraPos, Time.smoothDeltaTime * 1.0f);
             //  transform.LookAt(obj_player.transform);
-
             transform.position = cameraPos;
-
             //this.transform.localRotation = Quaternion.LookRotation(PlayerManager.instance.myDirection);
             // Vector3.MoveTowards(transform.position, cameraPos, Time.smoothDeltaTime * 8.0f);
             // transform.eulerAngles = new Vector3(0, Mathf.Atan2(PlayerManager.instance.tmp.x, PlayerManager.instance.tmp.y) * Mathf.Rad2Deg, 0);
@@ -80,14 +80,14 @@ public class CameraControl : UnityEngine.MonoBehaviour
         }
     }
 
-	public void SetCameraPos(float _posX, float _posY, float _posZ)
-	{
-		cameraPos.x = obj_player.transform.position.x + _posX;
-		cameraPos.y = obj_player.transform.position.y + _posY;
-		cameraPos.z = obj_player.transform.position.z + _posZ;
+    public void SetCameraPos(float _posX, float _posY, float _posZ)
+    {
+        cameraPos.x = obj_player.transform.position.x + _posX;
+        cameraPos.y = obj_player.transform.position.y + _posY;
+        cameraPos.z = obj_player.transform.position.z + _posZ;
 
-		transform.position = cameraPos;
-	}
+        transform.position = cameraPos;
+    }
 
 }
 

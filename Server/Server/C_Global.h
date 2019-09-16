@@ -14,7 +14,7 @@ using namespace std;
 #define NICKNAMESIZE	255
 #define MSGSIZE			512
 
-#define MAX_PLAYER		2
+#define MAX_PLAYER		3
 
 #define THREAD_END		-777
 
