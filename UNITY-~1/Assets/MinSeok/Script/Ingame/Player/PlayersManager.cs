@@ -29,6 +29,7 @@ public enum _ACTION_STATE //액션(움직임)의 상태
 public partial class PlayersManager : MonoBehaviour
 { 
     public static PlayersManager instance;
+    private NetworkManager networkManager;  // 접근용
     public int myIndex { get; set; } //가독성을위해 하나 더만들어줌
     public int coroutineFlag { get; set; }
     private IEnumerator coroutine;
@@ -56,8 +57,13 @@ public partial class PlayersManager : MonoBehaviour
     {
         if (instance == null)
             instance = this;
-        
-         //coroutine = MovePlayer();
+
+#if NETWORK
+      networkManager = NetworkManager.instance;
+      coroutine = MovePlayer();
+#endif
+
+        //coroutine = MovePlayer();
         coroutineFlag = 0;
         myIndex = GameManager.instance.myIndex; //게임매니저에서 받은 인덱스를 다시등록
         Initialization(C_Global.MAX_PLAYER); //기타 초기화
@@ -73,22 +79,22 @@ public partial class PlayersManager : MonoBehaviour
             if (myIndex != i)
             {
                 obj_players[i] = GameObject.FindGameObjectWithTag(GameManager.instance.playersTag[i]);
-                obj_players[i].GetComponent<CapsuleCollider>().isTrigger = true;
+                //obj_players[i].GetComponent<CapsuleCollider>().isTrigger = true;
                 tf_players[i] = obj_players[i].GetComponent<Transform>();
                 am_animePlayer[i] = obj_players[i].GetComponent<Animator>(); 
             }
         }
 
-      
-        /*
-        //////////////// 게임 시작 시 최초로 1회 위치정보를 서버로 전송해야함 /////////////////
-        NetworkManager.instance.SendPosition(obj_players[myIndex].transform.localPosition.x,
+#if NETWORK
+      //////////////// 게임 시작 시 최초로 1회 위치정보를 서버로 전송해야함 /////////////////
+      networkManager.SendPosition(obj_players[myIndex].transform.localPosition.x,
            obj_players[myIndex].transform.localPosition.z,
            obj_players[myIndex].transform.localEulerAngles.y, speed[myIndex], actionState[myIndex], true);
+#endif
 
-
-        //////////////////////// 테스트용(상대팀 끄기) ////////////////////
-        switch (myIndex)
+#if NETWORK
+      //////////////////////// 테스트용(상대팀 끄기) ////////////////////
+      switch (myIndex)
         {
             case 0:
             case 1:
@@ -102,7 +108,7 @@ public partial class PlayersManager : MonoBehaviour
                 obj_players[1].SetActive(false);
                 break;
         }
-        */
+#endif
     }
 
     void Initialization(int _num)
@@ -121,13 +127,8 @@ public partial class PlayersManager : MonoBehaviour
         lastPosX = new float[C_Global.MAX_PLAYER];
         lastPosZ = new float[C_Global.MAX_PLAYER];
 
-        //액션움직임 들의 코루틴함수 등록.
+        //재생중이였던 이전 코루틴.
         curCor = null;
-        prevCor = null;
-        cor_ActionIdle = ActionIdle();
-        cor_ActionCircuit = ActionCircuit();
-        cor_ActionAim = ActionAim();
-        cor_ActionAimCurcuit = ActionAimCircuit();
 
 
         // !!!!!!!!!!! 서버에서 받은데이터로 초기화해야함  임의로 속성값부여해둠. !!!!!!!!!!
@@ -151,71 +152,51 @@ public partial class PlayersManager : MonoBehaviour
 
     }
 
-        /*
-        switch(_value) //트루면+ 펄스면-
-        {
-            case true:
-                if (stateInfo[myIndex].isApply[dn_stateAndIndex[_state]] == false)
-                {
-                    stateInfo[myIndex].actionState += (int)_state - 1;
-                    stateInfo[myIndex].isApply[dn_stateAndIndex[_state]] = true;
-                }
-                break;
-            case false:
-                if (stateInfo[myIndex].isApply[dn_stateAndIndex[_state]] == true)
-                {
-                    stateInfo[myIndex].actionState -= (int)_state - 1;
-                    stateInfo[myIndex].isApply[dn_stateAndIndex[_state]] = false;
-                }
-                break;
-        }
-        */
-    }
-    /*
     IEnumerator MovePlayer()
     {
         while (true)
         {
-			NetworkManager.instance.SendPosition(obj_players[myIndex].transform.localPosition.x,
-	            obj_players[myIndex].transform.localPosition.z,
-	            obj_players[myIndex].transform.localEulerAngles.y, speed[myIndex], actionState[myIndex]);
+            NetworkManager.instance.SendPosition(tf_players[myIndex].localPosition.x,
+                tf_players[myIndex].localPosition.z,
+                tf_players[myIndex].localEulerAngles.y, speed[myIndex], actionState[myIndex]);
 
-            yield return YieldInstructionCache.WaitForSeconds(0.14f);
+            yield return YieldInstructionCache.WaitForSeconds(C_Global.packetInterval);
         }
     }
 
     public void StartMoveCoroutine()
     {
-        Debug.Log(coroutineFlag);
-        // 2개의 조이스틱이 있으므로 코루틴이 겹치는걸 방지 
-        if (1 <= coroutineFlag)
-        {
-            coroutineFlag++;
-            return;
-        }
-
         StartCoroutine(coroutine);
-        coroutineFlag++;
     }
 
     public void StopMoveCoroutine()
     {
-
-        // 양쪽 조이스틱중 하나만 땠을 경우 플레그 카운트만 1줄여준다.
-        if (1 < coroutineFlag)
-        {
-            coroutineFlag--;
-            return;
-        }
-
         // 코루틴 정지시에 마지막 위치를 보내준다.
-        NetworkManager.instance.SendPosition(obj_players[myIndex].transform.localPosition.x,
-            obj_players[myIndex].transform.localPosition.z,
-            obj_players[myIndex].transform.localEulerAngles.y, speed[myIndex], actionState[myIndex]);
+        networkManager.SendPosition(tf_players[myIndex].localPosition.x,
+            tf_players[myIndex].localPosition.z,
+            tf_players[myIndex].localEulerAngles.y, speed[myIndex], actionState[myIndex]);
 
         StopCoroutine(coroutine);
-        coroutineFlag--;
     }
 
+    /*
+    switch(_value) //트루면+ 펄스면-
+    {
+        case true:
+            if (stateInfo[myIndex].isApply[dn_stateAndIndex[_state]] == false)
+            {
+                stateInfo[myIndex].actionState += (int)_state - 1;
+                stateInfo[myIndex].isApply[dn_stateAndIndex[_state]] = true;
+            }
+            break;
+        case false:
+            if (stateInfo[myIndex].isApply[dn_stateAndIndex[_state]] == true)
+            {
+                stateInfo[myIndex].actionState -= (int)_state - 1;
+                stateInfo[myIndex].isApply[dn_stateAndIndex[_state]] = false;
+            }
+            break;
+    }
     */
+}
 

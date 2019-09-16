@@ -20,9 +20,6 @@ public partial class WeaponManager : MonoBehaviour
             obj_bulletClone.SetActive(false);
             list_bulletPool.Add(obj_bulletClone);
         }
-        
-        for(int i=0; i<list_bulletPool.Count; i++)
-            sample[i] = list_bulletPool[i];
     }
 
     public GameObject GetBulletFromPool()

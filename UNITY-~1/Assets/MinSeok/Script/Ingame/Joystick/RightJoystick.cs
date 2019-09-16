@@ -9,6 +9,8 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
 {
     public Image img_joystick_back;
     public Image img_joystick_stick;
+    private static bool isRightDrag = false;
+    public static bool RightTouch { get { return isRightDrag; } }
 
     protected struct _Joystick
     {
@@ -33,12 +35,19 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
 
     public void DragStart()
     {
-        //PlayersManager.instance.StartMoveCoroutine();
+        isRightDrag = true;
+
+#if NETWORK
+      // 처음 터치할 때만
+      if (LeftJoystick.LeftTouch == false && RightJoystick.RightTouch == false)
+      {
+         PlayersManager.instance.StartMoveCoroutine();
+         Debug.Log("무브코루틴 start!");
+      }
+
+#endif
     }
-    private void Update()
-    {
-       // Debug.Log(isStep0 + "   " + isStep1 +"   " + isStep2);
-    }
+
     public void Drag(BaseEventData _Data)
     {
         PointerEventData data = _Data as PointerEventData;
@@ -108,7 +117,14 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
         img_joystick_stick.transform.position = right_joystick.stickFirstPos;
         right_joystick.stickDir = Vector3.zero; // 방향을 0으로.
         isStep0 = true; isStep1 = false; isStep2 = false;
-        // PlayersManager.instance.StopMoveCoroutine();
+
+        isRightDrag = false;
+
+#if NETWORK
+      // 둘 다 터치 뗐을 때만
+      if (LeftJoystick.LeftTouch == false && RightJoystick.RightTouch == false)
+         PlayersManager.instance.StopMoveCoroutine();
+#endif
     }
 
 }

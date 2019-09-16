@@ -22,7 +22,7 @@ public class State_AimCircuitShot : MonoBehaviour, IActionState
 
             if (PlayersManager.instance.curCor != null)
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
-            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.cor_ActionIdle);
+            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.ActionIdle());
         }
     }
 
@@ -34,11 +34,13 @@ public class State_AimCircuitShot : MonoBehaviour, IActionState
 
             if (PlayersManager.instance.curCor != null)
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
-            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.cor_ActionAim);
+            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.ActionAim());
 
-            if (WeaponManager.instance.curCor != null)
-                WeaponManager.instance.StopCoroutine(WeaponManager.instance.curCor);
-            WeaponManager.instance.curCor = WeaponManager.instance.StartCoroutine(WeaponManager.instance.cor_ActionBullet);
+            if (WeaponManager.instance.curActionCor != null)
+                WeaponManager.instance.StopCoroutine(WeaponManager.instance.curActionCor);
+            WeaponManager.instance.curActionCor = WeaponManager.instance.StartCoroutine(WeaponManager.instance.ActionBullet());
+
+           // BulletCollision.instance.curCheckRangeCor = BulletCollision.instance.StartCoroutine(BulletCollision.instance.CheckBulletRange());       
         }
     }
 
@@ -50,10 +52,13 @@ public class State_AimCircuitShot : MonoBehaviour, IActionState
 
             if (PlayersManager.instance.curCor != null)
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
-            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.cor_ActionCircuit);
+            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.ActionCircuit());
 
-            if (WeaponManager.instance.curCor != null)
-                WeaponManager.instance.StopCoroutine(WeaponManager.instance.curCor);
+            if (WeaponManager.instance.curActionCor != null)
+                WeaponManager.instance.StopCoroutine(WeaponManager.instance.curActionCor);
+            /*
+            if (BulletCollision.instance.curCheckRangeCor != null)
+                BulletCollision.instance.StopCoroutine(BulletCollision.instance.curCheckRangeCor); */
         }
     }
 
@@ -65,10 +70,13 @@ public class State_AimCircuitShot : MonoBehaviour, IActionState
 
             if (PlayersManager.instance.curCor != null)
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
-            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.cor_ActionAimCurcuit);
+            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.ActionAimCircuit());
 
-            if (WeaponManager.instance.curCor != null)
-                WeaponManager.instance.StopCoroutine(WeaponManager.instance.curCor);
+            if (WeaponManager.instance.curActionCor != null)
+                WeaponManager.instance.StopCoroutine(WeaponManager.instance.curActionCor);
+            /*
+            if (BulletCollision.instance.curCheckRangeCor != null)
+                BulletCollision.instance.StopCoroutine(BulletCollision.instance.curCheckRangeCor); */
         }
     }
 }

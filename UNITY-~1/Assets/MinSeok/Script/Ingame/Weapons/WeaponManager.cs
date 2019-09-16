@@ -92,8 +92,7 @@ public partial class WeaponManager : MonoBehaviour
         mainWeapon = new _WEAPONS[_num];
         subWeapon = new _WEAPONS[_num];
 
-        curCor = null;
-        cor_ActionBullet = ActionBullet();
+        curActionCor = null;
 
         // !!!!!!!!!!! 서버에서 받은데이터로 초기화해야함  임의로 속성값부여해둠. !!!!!!!!!!
         for (int i = 0; i < _num; i++)
@@ -134,7 +133,7 @@ public partial class WeaponManager : MonoBehaviour
         infoSG    = new _INFO_SG[_num];
         infoSMG = new _INFO_SMG[_num];
         //rg_bullet = new Rigidbody[30];
-        sample = new GameObject[30];
+
         for (int i = 0; i < _num; i++)
         {
             infoAR[i].curAmmo  = 30;

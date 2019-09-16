@@ -9,6 +9,8 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
 {
     public Image img_joystick_back;
     public Image img_joystick_stick;
+    private static bool isLeftDrag = false;
+    public static bool LeftTouch { get { return isLeftDrag; } }
 
     protected struct _Joystick
     {
@@ -34,8 +36,13 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
     {
         StateManager.instance.Circuit(true);
 
-        // 모든 설정 을 끝낸 뒤에 와야함 
-        //PlayersManager.instance.StartMoveCoroutine();
+        isLeftDrag = true;
+
+#if NETWORK
+      // 처음 터치할 때만
+      if (LeftJoystick.LeftTouch == false && RightJoystick.RightTouch == false)
+         PlayersManager.instance.StartMoveCoroutine();
+#endif
     }
 
     public  void Drag(BaseEventData _Data)
@@ -76,7 +83,7 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
         left_joystick.stickDir = Vector3.zero; // 방향을 0으로.
         StateManager.instance.Circuit(false);
 
-        /*
+      /*
         if (PlayersManager.instance.stateInfo[myIndex].actionState > (int)_ACTION_STATE.IDLE)
         {
             PlayersManager.instance.stateInfo[myIndex].actionState -= (int)_ACTION_STATE.CIRCUIT;
@@ -85,8 +92,11 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
         }
         */
 
-
-        // 마지막에 와야함
-        //PlayersManager.instance.StopMoveCoroutine();
+      isLeftDrag = false;
+#if NETWORK
+      // 둘 다 터치 뗐을 때만
+      if (LeftJoystick.LeftTouch == false && RightJoystick.RightTouch == false)
+       PlayersManager.instance.StopMoveCoroutine();
+#endif
     }
 }

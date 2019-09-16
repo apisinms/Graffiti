@@ -22,7 +22,7 @@ public class State_Circuit : MonoBehaviour, IActionState
 
             if (PlayersManager.instance.curCor != null)
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
-            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.cor_ActionIdle);
+            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.ActionIdle());
         }
     }
 
@@ -34,7 +34,7 @@ public class State_Circuit : MonoBehaviour, IActionState
 
             if (PlayersManager.instance.curCor != null)
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
-            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.cor_ActionIdle);
+            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.ActionIdle());
         }
     }
 
@@ -46,7 +46,7 @@ public class State_Circuit : MonoBehaviour, IActionState
 
             if (PlayersManager.instance.curCor != null)
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
-            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.cor_ActionAimCurcuit);
+            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.ActionAimCircuit());
         }
     }
 

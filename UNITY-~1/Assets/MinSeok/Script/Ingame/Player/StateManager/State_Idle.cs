@@ -22,7 +22,7 @@ public class State_Idle : MonoBehaviour, IActionState
 
             if (PlayersManager.instance.curCor != null) //실행된 코루틴을 저장해놓고, 다음코루틴실행때 그실행됬던 코루틴을 정지하고 새코루틴재생 
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
-            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.cor_ActionCircuit);
+            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.ActionCircuit());
         }
     }
     
@@ -34,7 +34,7 @@ public class State_Idle : MonoBehaviour, IActionState
 
             if (PlayersManager.instance.curCor != null)
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
-            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.cor_ActionAim);
+            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.ActionAim());
         }
     }
 

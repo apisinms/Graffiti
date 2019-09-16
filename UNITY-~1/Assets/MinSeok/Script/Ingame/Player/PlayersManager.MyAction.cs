@@ -13,11 +13,6 @@ public partial class PlayersManager : MonoBehaviour
     private float[] lastPosZ { get; set; }
 
     public Coroutine curCor { get; set; } //현재 실행중인 코루틴을 저장.
-    public Coroutine prevCor { get; set; } //이전실행되었던 코루틴저장. 중복방지.
-    public IEnumerator cor_ActionIdle { get; set; }
-    public IEnumerator cor_ActionCircuit { get; set; }
-    public IEnumerator cor_ActionAim { get; set; }
-    public IEnumerator cor_ActionAimCurcuit { get; set; }
     #endregion
 
     public IEnumerator ActionIdle()
@@ -99,19 +94,22 @@ public partial class PlayersManager : MonoBehaviour
             if (myIndex == i)
                 continue;
 
-            if (tf_players[myIndex].localPosition.x <= (tf_players[i].localPosition.x - 0.18f) ||
-                tf_players[myIndex].localPosition.x >= (tf_players[i].localPosition.x + 0.18f) ||
-                tf_players[myIndex].localPosition.z <= (tf_players[i].localPosition.z - 0.18f) ||
-                tf_players[myIndex].localPosition.z >= (tf_players[i].localPosition.z + 0.18f))
+            if (Vector3.Distance(tf_players[myIndex].position, tf_players[i].position) <= 1.05f) //나랑 다른플레이어 거리로 충돌을 구함.
+            {
+                tf_players[myIndex].localPosition = new Vector3(lastPosX[i], 0, lastPosZ[i]); //저장좌표로 내위치 고정시킴. 
+                break;
+            }
+            else //충돌범위 밖이면 좌표저장
             {
                 lastPosX[i] = tf_players[myIndex].localPosition.x;
                 lastPosZ[i] = tf_players[myIndex].localPosition.z;
             }
-            else
-            {
-                tf_players[myIndex].localPosition = new Vector3(lastPosX[i], 0, lastPosZ[i]);
-                break;
-            }
+
+            /*
+            if (tf_players[myIndex].localPosition.x <= (tf_players[i].localPosition.x - 0.18f) ||
+                tf_players[myIndex].localPosition.x >= (tf_players[i].localPosition.x + 0.18f) ||
+                tf_players[myIndex].localPosition.z <= (tf_players[i].localPosition.z - 0.18f) ||
+                tf_players[myIndex].localPosition.z >= (tf_players[i].localPosition.z + 0.18f)) */
         }
     }
 

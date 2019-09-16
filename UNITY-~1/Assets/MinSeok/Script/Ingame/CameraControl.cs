@@ -80,5 +80,14 @@ public class CameraControl : UnityEngine.MonoBehaviour
         }
     }
 
+    public void SetCameraPos(float _posX, float _posY, float _posZ)
+    {
+        cameraPos.x = obj_player.transform.position.x + _posX;
+        cameraPos.y = obj_player.transform.position.y + _posY;
+        cameraPos.z = obj_player.transform.position.z + _posZ;
+
+        transform.position = cameraPos;
+    }
+
 }
 
