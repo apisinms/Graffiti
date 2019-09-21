@@ -5,6 +5,12 @@ using UnityEngine;
 public class State_Aim : MonoBehaviour, IActionState
 {
     private static State_Aim instance;
+    private int myIndex { get; set; }
+
+    private void Start()
+    {
+        myIndex = GameManager.instance.myIndex;
+    }
 
     public static State_Aim GetStateInstance()
     {
@@ -60,9 +66,9 @@ public class State_Aim : MonoBehaviour, IActionState
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
             PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.ActionAim());
 
-            if (WeaponManager.instance.curActionCor != null)
-              WeaponManager.instance.StopCoroutine(WeaponManager.instance.curActionCor);
-            WeaponManager.instance.curActionCor = WeaponManager.instance.StartCoroutine(WeaponManager.instance.ActionBullet());
+            if (WeaponManager.instance.curActionCor[myIndex] != null)
+              WeaponManager.instance.StopCoroutine(WeaponManager.instance.curActionCor[myIndex]);
+            WeaponManager.instance.curActionCor[myIndex] = WeaponManager.instance.StartCoroutine(WeaponManager.instance.ActionBullet());
 
             //BulletCollision.instance.curCheckRangeCor = BulletCollision.instance.StartCoroutine(BulletCollision.instance.CheckBulletRange()); 
         }

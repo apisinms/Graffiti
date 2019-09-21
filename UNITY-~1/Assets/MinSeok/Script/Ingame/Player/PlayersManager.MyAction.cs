@@ -91,15 +91,15 @@ public partial class PlayersManager : MonoBehaviour
     {
         for (int i = 0; i < C_Global.MAX_PLAYER; i++)
         {
-            if (myIndex == i)
+            if (myIndex == i || obj_players[i].activeSelf == false)
                 continue;
 
             if (Vector3.Distance(tf_players[myIndex].position, tf_players[i].position) <= 1.05f) //나랑 다른플레이어 거리로 충돌을 구함.
             {
-                tf_players[myIndex].localPosition = new Vector3(lastPosX[i], 0, lastPosZ[i]); //저장좌표로 내위치 고정시킴. 
+                tf_players[myIndex].localPosition = new Vector3(lastPosX[i], 0, lastPosZ[i]); //else에서 받은 충돌전 마지막 좌표로 플레이어를 고정시킴.
                 break;
             }
-            else //충돌범위 밖이면 좌표저장
+            else //충돌아니면 내좌표를 계속받음
             {
                 lastPosX[i] = tf_players[myIndex].localPosition.x;
                 lastPosZ[i] = tf_players[myIndex].localPosition.z;

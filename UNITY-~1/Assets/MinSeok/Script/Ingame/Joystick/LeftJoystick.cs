@@ -36,13 +36,12 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
     {
         StateManager.instance.Circuit(true);
 
-        isLeftDrag = true;
-
 #if NETWORK
       // 처음 터치할 때만
       if (LeftJoystick.LeftTouch == false && RightJoystick.RightTouch == false)
          PlayersManager.instance.StartMoveCoroutine();
 #endif
+        isLeftDrag = true;
     }
 
     public  void Drag(BaseEventData _Data)

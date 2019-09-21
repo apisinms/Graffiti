@@ -130,7 +130,6 @@ public partial class PlayersManager : MonoBehaviour
         //재생중이였던 이전 코루틴.
         curCor = null;
 
-
         // !!!!!!!!!!! 서버에서 받은데이터로 초기화해야함  임의로 속성값부여해둠. !!!!!!!!!!
         for (int i = 0; i < C_Global.MAX_PLAYER; i++)
 		{

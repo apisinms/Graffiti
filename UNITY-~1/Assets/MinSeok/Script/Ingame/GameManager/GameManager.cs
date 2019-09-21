@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
         myTag = playersTag[myIndex]; //내 태그등록
         myFocus = true;             // 포커스 On
 
-        myNetworkNum = 2; //예시로 번호부여함.  서버에서 샌드된번호로 해야함.
+        myNetworkNum = 1; //예시로 번호부여함.  서버에서 샌드된번호로 해야함.
         myIndex = myNetworkNum - 1;
 
         myTag = playersTag[myIndex]; //내 태그등록

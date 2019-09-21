@@ -11,8 +11,11 @@ TagManager:
   - Ar
   - Smg
   - Sg
-  - BulletPool
   - Bullet
+  - BulletPool1
+  - BulletPool2
+  - BulletPool3
+  - BulletPool4
   layers:
   - Default
   - TransparentFX
