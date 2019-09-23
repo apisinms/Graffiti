@@ -4,7 +4,9 @@ using UnityEngine;
 
 public partial class WeaponManager : MonoBehaviour
 {
-    public IEnumerator ActionBullet(int _index)
+    private Vector3 tmpRot = new Vector3();
+
+    public IEnumerator ActionBullet(int _index, float _roty)
     {
         if (_index == myIndex)
             yield break;
@@ -15,7 +17,7 @@ public partial class WeaponManager : MonoBehaviour
                 {
                     while (true)
                     {
-                        ActionBullet_AR(_index);
+                        ActionBullet_AR(_index, _roty);
                         yield return YieldInstructionCache.WaitForSeconds(infoAR[_index].fireRate);
                     }
                 }
@@ -23,23 +25,30 @@ public partial class WeaponManager : MonoBehaviour
                 {
                     while (true)
                     {
-                        ActionBullet_SG(_index);
+                        ActionBullet_SG(_index, _roty);
                         yield break; //YieldInstructionCache.WaitForSeconds(infoAR[myIndex].fireRate);
                     }
                 }
         }
     }
 
-    public void ActionBullet_AR(int _index)
+    public void ActionBullet_AR(int _index, float _roty)
     {
-        infoAR[_index].vt_bulletPattern[0].x = PlayersManager.instance.direction2[_index].x - infoAR[_index].accuracy;
-        infoAR[_index].vt_bulletPattern[0].z = PlayersManager.instance.direction2[_index].z - infoAR[_index].accuracy;
-        infoAR[_index].vt_bulletPattern[1].x = PlayersManager.instance.direction2[_index].x;
-        infoAR[_index].vt_bulletPattern[1].z = PlayersManager.instance.direction2[_index].z;
-        infoAR[_index].vt_bulletPattern[2].x = PlayersManager.instance.direction2[_index].x + infoAR[_index].accuracy;
-        infoAR[_index].vt_bulletPattern[2].z = PlayersManager.instance.direction2[_index].z + infoAR[_index].accuracy;
+        //받아온 로테이션을 방향으로.
+        Vector3 tmpDir;
+        tmpRot = Quaternion.AngleAxis(_roty, Vector3.forward) * Vector3.right;
+        tmpDir.x = tmpRot.y;
+        tmpDir.z = tmpRot.x;
+
+        infoAR[_index].vt_bulletPattern[0].x = tmpDir.x - infoAR[_index].accuracy;
+        infoAR[_index].vt_bulletPattern[0].z = tmpDir.z - infoAR[_index].accuracy;
+        infoAR[_index].vt_bulletPattern[1].x = tmpDir.x;
+        infoAR[_index].vt_bulletPattern[1].z = tmpDir.z;
+        infoAR[_index].vt_bulletPattern[2].x = tmpDir.x + infoAR[_index].accuracy;
+        infoAR[_index].vt_bulletPattern[2].z = tmpDir.z + infoAR[_index].accuracy;
 
         var clone = GetBulletFromPool(_index);
+        clone.transform.localRotation = Quaternion.LookRotation(infoAR[_index].vt_bulletPattern[infoAR[_index].bulletPatternIndex]);
         clone.GetComponent<Rigidbody>().AddForce(infoAR[_index].vt_bulletPattern[infoAR[_index].bulletPatternIndex] * 2000.0f, ForceMode.Acceleration);
 
         switch (infoAR[_index].bulletPatternIndex)
@@ -68,14 +77,26 @@ public partial class WeaponManager : MonoBehaviour
                 break;
         }
     }
-    public void ActionBullet_SG(int _index)
+    public void ActionBullet_SG(int _index, float _roty)
     {
+        Vector3 tmpDir;
+        tmpRot = Quaternion.AngleAxis(_roty, Vector3.forward) * Vector3.right;
+        tmpDir.x = tmpRot.y;
+        tmpDir.z = tmpRot.x;
+
         for (int i = 0; i < 5; i++)
         {
             infoSG[_index].obj_bulletClone[i] = GetBulletFromPool(_index);
             infoSG[_index].tf_bulletClone[i] = infoSG[_index].obj_bulletClone[i].transform;
         }
 
+        infoSG[_index].vt_bulletDir[0] = new Vector3(tmpDir.x - 0.1f, 0, tmpDir.z - 0.1f);
+        infoSG[_index].vt_bulletDir[1] = new Vector3(tmpDir.x - 0.05f, 0, tmpDir.z - 0.05f);
+        infoSG[_index].vt_bulletDir[2] = new Vector3(tmpDir.x, 0, tmpDir.z);
+        infoSG[_index].vt_bulletDir[3] = new Vector3(tmpDir.x + 0.05f, 0, tmpDir.z + 0.05f);
+        infoSG[_index].vt_bulletDir[4] = new Vector3(tmpDir.x + 0.1f, 0, tmpDir.z + 0.1f);
+
+        /*
         Vector3 tmp0 = (RightJoystick.instance.right_joystick.touchPos - (RightJoystick.instance.right_joystick.stickFirstPos - new Vector3(20.0f, 20.0f, 0))).normalized;
         Vector3 tmp1 = (RightJoystick.instance.right_joystick.touchPos - (RightJoystick.instance.right_joystick.stickFirstPos - new Vector3(10.0f, 10.0f, 0))).normalized;
         Vector3 tmp2 = (RightJoystick.instance.right_joystick.touchPos - RightJoystick.instance.right_joystick.stickFirstPos).normalized;
@@ -87,7 +108,7 @@ public partial class WeaponManager : MonoBehaviour
         infoSG[_index].vt_bulletDir[2].x = tmp2.x; infoSG[_index].vt_bulletDir[3].x = tmp3.x;
         infoSG[_index].vt_bulletDir[2].z = tmp2.y; infoSG[_index].vt_bulletDir[3].z = tmp3.y;
         infoSG[_index].vt_bulletDir[4].x = tmp4.x;
-        infoSG[_index].vt_bulletDir[4].z = tmp4.y;
+        infoSG[_index].vt_bulletDir[4].z = tmp4.y; */
 
         for (int i = 0; i < infoSG[_index].obj_bulletClone.Length; i++)
         {

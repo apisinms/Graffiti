@@ -19,22 +19,22 @@ public class BulletCollision : MonoBehaviour
 
     private void Update()
     {
-        //CheckBulletRange(); //얘도 코루틴이든 인보크든 바꿔야됨
+        CheckBulletRange(); //얘도 코루틴이든 인보크든 바꿔야됨
     }
 
     public void CheckBulletRange()
     {
         for (int i = 0; i < C_Global.MAX_PLAYER; i++)
         {
+            if (PlayersManager.instance.actionState[i] != _ACTION_STATE.SHOT && PlayersManager.instance.actionState[i] != _ACTION_STATE.CIR_AIM_SHOT)
+                continue;
+
             switch (WeaponManager.instance.mainWeapon[i])
             {
                 case _WEAPONS.AR:
                     {
-                        if (PlayersManager.instance.actionState[i] == _ACTION_STATE.SHOT || PlayersManager.instance.actionState[i] == _ACTION_STATE.CIR_AIM_SHOT)
-                        {
-                            if (Vector3.Distance(this.transform.position, PlayersManager.instance.obj_players[i].transform.position) >= WeaponManager.instance.infoAR[i].range)
-                                WeaponManager.instance.ReturnBulletToPool(gameObject, i);
-                        }
+                        if (Vector3.Distance(this.transform.position, PlayersManager.instance.obj_players[i].transform.position) >= WeaponManager.instance.infoAR[i].range)
+                                WeaponManager.instance.ReturnBulletToPool(gameObject, i);             
                     }
                     break;
 

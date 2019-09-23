@@ -158,9 +158,9 @@ public partial class WeaponManager : MonoBehaviour
             infoAR[i].prevBulletPatternIndex     = 2;
             infoAR[i].curAmmo   = 30;
             infoAR[i].maxAmmo  = 30;
-            infoAR[i].fireRate     = 0.1f;
+            infoAR[i].fireRate     = 0.12f;
             infoAR[i].damage    = 1.0f;
-            infoAR[i].accuracy    = 0.04f;
+            infoAR[i].accuracy    = 0.06f;
             infoAR[i].range       = 20.0f;
 
             infoSG[i].obj_bulletClone = new GameObject[5];

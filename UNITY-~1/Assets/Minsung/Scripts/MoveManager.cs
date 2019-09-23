@@ -65,7 +65,7 @@ public class MoveManager : MonoBehaviour
                             if (WeaponManager.instance.curActionCor[i] != null)
                                 StopCoroutine(WeaponManager.instance.curActionCor[i]);
 
-                            StopCoroutine(WeaponManager.instance.ActionBullet(i));
+                            StopCoroutine(WeaponManager.instance.ActionBullet(i, 0));
                             isStartShotCor[i] = false;
                         }
 
@@ -79,7 +79,7 @@ public class MoveManager : MonoBehaviour
                             if (WeaponManager.instance.curActionCor[i] != null)
                                 StopCoroutine(WeaponManager.instance.curActionCor[i]);
 
-                            StopCoroutine(WeaponManager.instance.ActionBullet(i));
+                            StopCoroutine(WeaponManager.instance.ActionBullet(i, 0));
                             isStartShotCor[i] = false;
                         }
 
@@ -93,7 +93,7 @@ public class MoveManager : MonoBehaviour
                             if (WeaponManager.instance.curActionCor[i] != null)
                                 StopCoroutine(WeaponManager.instance.curActionCor[i]);
 
-                            StopCoroutine(WeaponManager.instance.ActionBullet(i));
+                            StopCoroutine(WeaponManager.instance.ActionBullet(i, 0));
                             isStartShotCor[i] = false;
                         }
 
@@ -101,18 +101,19 @@ public class MoveManager : MonoBehaviour
                     break;
                 case _ACTION_STATE.SHOT:
                     {
-                        PlayersManager.instance.Action_AimingNormal(i, pos, networkManager.GetRotY(i)); //조준애니메이션은 계속하고.
+                        float roty = networkManager.GetRotY(i);
+                        PlayersManager.instance.Action_AimingNormal(i, pos, roty); //조준애니메이션은 계속하고.
 
                         if (isStartShotCor[i] == false) //샷만 중복실행 방지하면서 코루틴 1회실행.
                         {
                             if (WeaponManager.instance.curActionCor[i] != null)
                                 StopCoroutine(WeaponManager.instance.curActionCor[i]); //이전꺼 멈추고
 
-                            WeaponManager.instance.curActionCor[i] = StartCoroutine(WeaponManager.instance.ActionBullet(i));
+                            WeaponManager.instance.curActionCor[i] = StartCoroutine(WeaponManager.instance.ActionBullet(i, roty));
                             isStartShotCor[i] = true;
                         }
 
-                        
+
                     }
                     break;
                 case _ACTION_STATE.CIR_AIM:
@@ -124,7 +125,7 @@ public class MoveManager : MonoBehaviour
                             if (WeaponManager.instance.curActionCor[i] != null)
                                 StopCoroutine(WeaponManager.instance.curActionCor[i]);
 
-                            StopCoroutine(WeaponManager.instance.ActionBullet(i));
+                            StopCoroutine(WeaponManager.instance.ActionBullet(i, 0));
                             isStartShotCor[i] = false;
                         }
 
@@ -132,18 +133,17 @@ public class MoveManager : MonoBehaviour
                     break;
                 case _ACTION_STATE.CIR_AIM_SHOT:
                     {
-                        PlayersManager.instance.Action_AimingWithCircuit(i, pos, networkManager.GetRotY(i)); //조준이동 애니메이션은 계속하고.
+                        float roty = networkManager.GetRotY(i);
+                        PlayersManager.instance.Action_AimingWithCircuit(i, pos, roty); //조준이동 애니메이션은 계속하고.
 
                         if (isStartShotCor[i] == false) //샷만 중복실행 방지하면서 코루틴 1회실행.
                         {
                             if (WeaponManager.instance.curActionCor[i] != null)
                                 StopCoroutine(WeaponManager.instance.curActionCor[i]);
 
-                            WeaponManager.instance.curActionCor[i] = StartCoroutine(WeaponManager.instance.ActionBullet(i));
+                            WeaponManager.instance.curActionCor[i] = StartCoroutine(WeaponManager.instance.ActionBullet(i, roty));
                             isStartShotCor[i] = true;
                         }
-
-
                     }
                     break;
             }
