@@ -14,7 +14,7 @@ using namespace std;
 #define NICKNAMESIZE	255
 #define MSGSIZE			512
 
-#define MAX_PLAYER		3
+#define MAX_PLAYER		4
 
 #define THREAD_END		-777
 
@@ -140,6 +140,13 @@ public:
 		position = _position;
 	}
 
+	void SetPlayerNum(int _num)
+	{
+		if (position == nullptr)
+			position = new PositionPacket();
+
+		position->playerNum = _num;
+	}
 	int GetPlayerNum() { return position->playerNum; }
 	int GetAnimation() { return position->action; }
 

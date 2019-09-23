@@ -20,8 +20,8 @@ public class CameraControl : UnityEngine.MonoBehaviour
     {
         //tmpPlayerPos = obj_player.transform.position;
         cameraPos.x = obj_player.transform.position.x;
-        cameraPos.y = obj_player.transform.position.y + 7f;
-        cameraPos.z = obj_player.transform.position.z - 5.3f;
+        cameraPos.y = obj_player.transform.position.y + 15f;
+        cameraPos.z = obj_player.transform.position.z - 6.0f;
         transform.position = cameraPos;
     }
 
@@ -30,8 +30,8 @@ public class CameraControl : UnityEngine.MonoBehaviour
         if (PlayersManager.instance.attributeState[myIndex] == _ATTRIBUTE_STATE.ALIVE)
         {
             cameraPos.x = obj_player.transform.position.x;
-            cameraPos.y = obj_player.transform.position.y + 7f;
-            cameraPos.z = obj_player.transform.position.z - 5.3f;
+            cameraPos.y = obj_player.transform.position.y + 15f;
+            cameraPos.z = obj_player.transform.position.z - 6.0f;
 
 
 

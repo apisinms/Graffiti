@@ -134,7 +134,7 @@ public partial class NetworkManager : MonoBehaviour
                                                       PROTOCOL.START_PROTOCOL,
                                                       RESULT.NODATA);
 
-                                                // 패킹 및 전송
+                                                // 시작 프로토콜 + 플레이어 번호 패킹 및 전송
                                                 int packetSize;
                                                 PackPacket(ref sendBuf, startProtocol, out packetSize);
                                                 bw.Write(sendBuf, 0, packetSize);
@@ -186,10 +186,30 @@ public partial class NetworkManager : MonoBehaviour
                                     int sec = 0;
                                     UnPackPacket(info.packet, out sec);
                                     sysMsg = sec.ToString() + "초";
-                                    Debug.Log(sysMsg);
                                 }
                             }
                             break;
+
+							// (자신포함)상대방이 자신의 총 정보를 넘겨주면 그걸로 셋팅함
+						case PROTOCOL.WEAPON_PROTOCOL:
+							{
+								switch(result)
+								{
+									case RESULT.NOTIFY_WEAPON:
+										{
+											int playerNum;
+											WeaponPacket weapon = new WeaponPacket();
+
+											UnPackPacket(info.packet, out playerNum, ref weapon);
+
+											//무기정보 저장
+											WeaponManager.instance.mainWeapon[playerNum - 1] = (_WEAPONS)weapon.mainW;
+											WeaponManager.instance.subWeapon[playerNum - 1] = (_WEAPONS)weapon.subW;
+										}
+										break;
+								}
+							}
+							break;
 
                         // 게임 시작 프로토콜
                         case PROTOCOL.START_PROTOCOL:

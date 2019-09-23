@@ -208,7 +208,6 @@ void LobbyManager::SendPacket_Room(C_ClientInfo* _ptr, char* _buf, PROTOCOL_LOBB
 	int packetSize = 0;
 	int i = 1;
 
-	// 같은 방에 있는 모든 플레이어에게 현재 무기 선택종료까지 남은 시간을 보내줌
 	list<C_ClientInfo*> playerList = _ptr->GetRoom()->GetPlayerList();	// 리스트 얻어옴
 	C_ClientInfo* player = nullptr;
 	for (auto iter = playerList.begin(); iter != playerList.end(); ++iter)
@@ -216,5 +215,7 @@ void LobbyManager::SendPacket_Room(C_ClientInfo* _ptr, char* _buf, PROTOCOL_LOBB
 		player = *iter;
 		PackPacket(_buf, i++, packetSize);
 		player->SendPacket(_protocol, _buf, packetSize);
+
+		player->GetPlayerInfo()->SetPlayerNum(i);	// 플레이어 번호 셋팅
 	}
 }

@@ -15,11 +15,24 @@ public class JoystickManager : MonoBehaviour
 {
     private int myIndex { get; set; }
 
+    int flag;
     void Awake()
     {
         myIndex = GameManager.instance.myIndex;
+        flag = 1;
     }
 
+
+    public void Change()
+    {
+        flag = 1 - flag;
+
+        if(flag == 0)
+        WeaponManager.instance.mainWeapon[myIndex] = _WEAPONS.SG;
+
+        else
+            WeaponManager.instance.mainWeapon[myIndex] = _WEAPONS.AR;
+    }
     void Update()
     {
             //    if (Input.GetKeyDown(KeyCode.Space))

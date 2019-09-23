@@ -9,6 +9,8 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
 {
     public Image img_joystick_back;
     public Image img_joystick_stick;
+    private static bool isLeftDrag = false;
+    public static bool LeftTouch { get { return isLeftDrag; } }
 
     protected struct _Joystick
     {
@@ -20,11 +22,6 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
     private _Joystick left_joystick; // 왼쪽 오른쪽 2개의 조이스틱
     private int myIndex;
 
-	// 터칭중인지
-	static private bool leftTouch = false;
-
-	static public bool LeftTouch { get { return leftTouch; } }
-
     void Awake()
     {
         myIndex = GameManager.instance.myIndex;
@@ -32,7 +29,7 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
         left_joystick.stickFirstPos = img_joystick_stick.rectTransform.position;
 
         float can = transform.parent.GetComponent<RectTransform>().localScale.x; // 캔버스 크기에대한 반지름 조절.
-        left_joystick.maxMoveArea *= can;
+        left_joystick.maxMoveArea *= can; 
     }
 
     public void DragStart()
@@ -40,13 +37,12 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
         StateManager.instance.Circuit(true);
 
 #if NETWORK
-		// 처음 터치할 때만
-		if (LeftJoystick.LeftTouch == false && RightJoystick.RightTouch == false)
-			PlayersManager.instance.StartMoveCoroutine();
+      // 처음 터치할 때만
+      if (LeftJoystick.LeftTouch == false && RightJoystick.RightTouch == false)
+         PlayersManager.instance.StartMoveCoroutine();
 #endif
-
-		leftTouch = true;
-	}
+        isLeftDrag = true;
+    }
 
     public  void Drag(BaseEventData _Data)
     {
@@ -86,7 +82,7 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
         left_joystick.stickDir = Vector3.zero; // 방향을 0으로.
         StateManager.instance.Circuit(false);
 
-		/*
+      /*
         if (PlayersManager.instance.stateInfo[myIndex].actionState > (int)_ACTION_STATE.IDLE)
         {
             PlayersManager.instance.stateInfo[myIndex].actionState -= (int)_ACTION_STATE.CIRCUIT;
@@ -95,11 +91,11 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
         }
         */
 
-		leftTouch = false;
+      isLeftDrag = false;
 #if NETWORK
-		// 둘 다 터치 뗐을 때만
-		if (LeftJoystick.LeftTouch == false && RightJoystick.RightTouch == false)
-		 PlayersManager.instance.StopMoveCoroutine();
+      // 둘 다 터치 뗐을 때만
+      if (LeftJoystick.LeftTouch == false && RightJoystick.RightTouch == false)
+       PlayersManager.instance.StopMoveCoroutine();
 #endif
     }
 }
