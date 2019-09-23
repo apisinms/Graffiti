@@ -21,10 +21,7 @@ class C_ClientInfo;
 // 방의 정보
 struct RoomInfo
 {
-	// 여기도 private으로 바꿔야할듯
 private:
-	list<C_ClientInfo*>::iterator curIter;	// 현재 반복자 위치
-
 	void* weaponTimerHandle;		// 무기 선택 타이머 핸들
 	int numOfPlayer;				// 현재 방에 있는 플레이어 수
 	ROOMSTATUS roomStatus;			// 방의 상태
@@ -36,7 +33,8 @@ public:
 
 	bool LeaveRoom(C_ClientInfo* _player);
 
-	bool GetPlayer(C_ClientInfo* &_ptr);	// 리스트에 있는 플레이어를 담아보냄
+	// 플레이어 리스트를 리턴해주되, 어차피 복사본이 전달되므로 원본은 영향이 없다.
+	list<C_ClientInfo*> GetPlayerList() { return playerList; }
 
 	bool IsPlayerListEmpty() { return playerList.empty(); }
 

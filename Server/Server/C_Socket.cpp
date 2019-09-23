@@ -75,6 +75,26 @@ SOCKET C_Socket::Accept()
 		return clientSock;
 	}
 
+
+	/*
+	keep-alive 속성을 추가한다. mstcpip.h를 추가해야하며, Windows2000 이상의 OS에서만 동작한다.
+	SIO_KEEPALIVE_VALS를 사용하는데, 이 속성은 시스템 레지스트리를 수정하지 않는다.
+	*/
+	DWORD dwRet;
+	tcp_keepalive tcpkl;
+	tcpkl.onoff             = 1;					// keep-alive를 켠다.
+	tcpkl.keepalivetime     = KEEPALIVE_TIME;		// 1초마다 keep-alive 신호를 주고받는다
+	tcpkl.keepaliveinterval = KEEPALIVE_INTERVAL;	// 위 신호를 보내고 응답이 없으면 1초마다 재전송하겠다(mstcp는 10회를 재시도 함)
+	
+	// 위에서 설정한 속성을 설정한다.
+	WSAIoctl(
+		clientSock,
+		SIO_KEEPALIVE_VALS,
+		&tcpkl,
+		sizeof(tcp_keepalive),
+		0, 0,
+		&dwRet, NULL, NULL);
+
 	// accpet때 받은 정보대로 클라 정보를 추가하고 받아옴
 	if (SessionManager::GetInstance()->AddSession(clientSock, clientAddr) == true)
 	{

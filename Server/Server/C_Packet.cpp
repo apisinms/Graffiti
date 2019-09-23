@@ -43,7 +43,7 @@ void C_Packet::SetPacket(__int64& _protocol, char* _setBuf, int _packetSize)
 	originalPtr += _packetSize;
 	size += _packetSize;
 
-	// 암호화 진행/
+	// 암호화 진행
 	encPtr += sizeof(size); // size 넣을 공간 미리 확보
 	C_Encrypt::GetInstance()->Encrypt(originalBuf, encPtr, size);
 

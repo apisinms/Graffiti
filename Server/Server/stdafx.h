@@ -13,11 +13,13 @@
 #include <tchar.h>
 #include <process.h>
 #include <locale.h>
+#include <mstcpip.h>
 
 // STL
 #include <list>
 #include <vector>
 #include <queue>
+#include <algorithm>
 
 // custom STL
 #include "C_LinkedList.h"

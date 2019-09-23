@@ -64,7 +64,7 @@ public partial class PlayersManager : MonoBehaviour
 #endif
 
         //coroutine = MovePlayer();
-        coroutineFlag = 0;
+        
         myIndex = GameManager.instance.myIndex; //게임매니저에서 받은 인덱스를 다시등록
         Initialization(C_Global.MAX_PLAYER); //기타 초기화
  
@@ -80,21 +80,21 @@ public partial class PlayersManager : MonoBehaviour
             {
                 obj_players[i] = GameObject.FindGameObjectWithTag(GameManager.instance.playersTag[i]);
                 //obj_players[i].GetComponent<CapsuleCollider>().isTrigger = true;
-                tf_players[i] = obj_players[i].GetComponent<Transform>();
+                tf_players[i] = obj_players[i].GetComponent<Transform>().transform;
                 am_animePlayer[i] = obj_players[i].GetComponent<Animator>(); 
             }
         }
 
 #if NETWORK
-      //////////////// 게임 시작 시 최초로 1회 위치정보를 서버로 전송해야함 /////////////////
-      networkManager.SendPosition(obj_players[myIndex].transform.localPosition.x,
-           obj_players[myIndex].transform.localPosition.z,
-           obj_players[myIndex].transform.localEulerAngles.y, speed[myIndex], actionState[myIndex], true);
+        //////////////// 게임 시작 시 최초로 1회 위치정보를 서버로 전송해야함 /////////////////
+        networkManager.SendPosition(tf_players[myIndex].localPosition.x,
+             tf_players[myIndex].localPosition.z,
+             tf_players[myIndex].localEulerAngles.y, speed[myIndex], actionState[myIndex], true);
 #endif
 
 #if NETWORK
-      //////////////////////// 테스트용(상대팀 끄기) ////////////////////
-      switch (myIndex)
+        //////////////////////// 테스트용(상대팀 끄기) ////////////////////
+        switch (myIndex)
         {
             case 0:
             case 1:

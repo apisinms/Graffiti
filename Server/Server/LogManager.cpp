@@ -2,8 +2,9 @@
 #include "C_ClientInfo.h"
 
 LogManager* LogManager::instance;	// 초기화
-FILE* LogManager::errPtr = nullptr;
+FILE* LogManager::errPtr     = nullptr;
 FILE* LogManager::connectPtr = nullptr;
+FILE* LogManager::hackPtr    = nullptr;
 
 LogManager* LogManager::GetInstance()
 {
@@ -24,6 +25,13 @@ LogManager* LogManager::GetInstance()
 			instance->ErrorPrintf("fopen() connectPtr");
 			return nullptr;
 		}
+
+		hackPtr = fopen(HACKED_USER_FILE_NAME, "at");
+		if (hackPtr == nullptr)
+		{
+			instance->ErrorPrintf("fopen() hackPtr");
+			return nullptr;
+		}
 	}
 
 	return instance;
@@ -37,6 +45,7 @@ void LogManager::End()
 {
 	fclose(errPtr);
 	fclose(connectPtr);
+	fclose(hackPtr);
 }
 
 void LogManager::Destroy()
@@ -151,6 +160,30 @@ void LogManager::ConnectFileWrite(const char* _fmt, ...)
 
 	// 기록한다.
 	fwrite(totalBuf, strlen(totalBuf), 1, connectPtr);
+}
+
+// 핵을 사용하는 유저에 대한 로그를 기록(다른 함수들과 공통되는 기능이 있으니 나중에 수정하자)
+void LogManager::HackerFileWrite(const char* _fmt, ...)
+{
+	char totalBuf[BUFSIZE] = { 0, };
+	char timeBuf[HALF_BUFSIZE] = { 0, };
+	time_t t = time(NULL);
+	struct tm tm = *localtime(&t);
+	va_list ap;
+
+	// 시간 정보를 추가해서
+	sprintf(timeBuf, "[%d-%d-%d %d:%d:%d] ",
+		tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
+		tm.tm_hour, tm.tm_min, tm.tm_sec);
+	strcpy(totalBuf, timeBuf);
+
+	// 포맷을 얻어
+	va_start(ap, _fmt);
+	vsprintf(totalBuf + strlen(totalBuf), _fmt, ap);
+	va_end(ap);
+
+	// 기록한다.
+	fwrite(totalBuf, strlen(totalBuf), 1, hackPtr);
 }
 
 void LogManager::WSAOverlappedResultPrintf(const char* _msg, WSAOVERLAPPED_EX* _overlapped)
