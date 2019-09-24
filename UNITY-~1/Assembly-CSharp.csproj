@@ -96,7 +96,6 @@
     <Compile Include="Assets\MinSeok\Script\MainMenu\btn_option.cs" />
     <Compile Include="Assets\MinSeok\Script\MainMenu\btn_quit.cs" />
     <Compile Include="Assets\MinSeok\Script\MainMenu\btn_start.cs" />
-    <Compile Include="Assets\MinSeok\Script\sample.cs" />
     <Compile Include="Assets\MinSeok\Script\SelectWeapon\SelectWeapons.cs" />
     <Compile Include="Assets\Minsung\Scripts\C_Encrypt.cs" />
     <Compile Include="Assets\Minsung\Scripts\C_Global.cs" />
@@ -109,7 +108,6 @@
     <Compile Include="Assets\Minsung\Scripts\NetworkManager.Networking.cs" />
     <Compile Include="Assets\Minsung\Scripts\NetworkManager.Packet.cs" />
     <Compile Include="Assets\Minsung\Scripts\ThreadManager.cs" />
-    <Compile Include="Assets\NewBehaviourScript.cs" />
     <Compile Include="Assets\Scripts\SimpleCameraController.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <None Include="Assets\LOWPOLY CHARACTERS\Overview\Font\Raleway\OFL.txt" />

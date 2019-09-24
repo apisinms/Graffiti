@@ -65,7 +65,7 @@ public class MoveManager : MonoBehaviour
                             if (WeaponManager.instance.curActionCor[i] != null)
                                 StopCoroutine(WeaponManager.instance.curActionCor[i]);
 
-                            StopCoroutine(WeaponManager.instance.ActionBullet(i, 0));
+                            StopCoroutine(WeaponManager.instance.ActionBullet(i));
                             isStartShotCor[i] = false;
                         }
 
@@ -79,7 +79,7 @@ public class MoveManager : MonoBehaviour
                             if (WeaponManager.instance.curActionCor[i] != null)
                                 StopCoroutine(WeaponManager.instance.curActionCor[i]);
 
-                            StopCoroutine(WeaponManager.instance.ActionBullet(i, 0));
+                            StopCoroutine(WeaponManager.instance.ActionBullet(i));
                             isStartShotCor[i] = false;
                         }
 
@@ -93,7 +93,7 @@ public class MoveManager : MonoBehaviour
                             if (WeaponManager.instance.curActionCor[i] != null)
                                 StopCoroutine(WeaponManager.instance.curActionCor[i]);
 
-                            StopCoroutine(WeaponManager.instance.ActionBullet(i, 0));
+                            StopCoroutine(WeaponManager.instance.ActionBullet(i));
                             isStartShotCor[i] = false;
                         }
 
@@ -109,7 +109,7 @@ public class MoveManager : MonoBehaviour
                             if (WeaponManager.instance.curActionCor[i] != null)
                                 StopCoroutine(WeaponManager.instance.curActionCor[i]); //이전꺼 멈추고
 
-                            WeaponManager.instance.curActionCor[i] = StartCoroutine(WeaponManager.instance.ActionBullet(i, roty));
+                            WeaponManager.instance.curActionCor[i] = StartCoroutine(WeaponManager.instance.ActionBullet(i));
                             isStartShotCor[i] = true;
                         }
 
@@ -125,7 +125,7 @@ public class MoveManager : MonoBehaviour
                             if (WeaponManager.instance.curActionCor[i] != null)
                                 StopCoroutine(WeaponManager.instance.curActionCor[i]);
 
-                            StopCoroutine(WeaponManager.instance.ActionBullet(i, 0));
+                            StopCoroutine(WeaponManager.instance.ActionBullet(i));
                             isStartShotCor[i] = false;
                         }
 
@@ -141,7 +141,7 @@ public class MoveManager : MonoBehaviour
                             if (WeaponManager.instance.curActionCor[i] != null)
                                 StopCoroutine(WeaponManager.instance.curActionCor[i]);
 
-                            WeaponManager.instance.curActionCor[i] = StartCoroutine(WeaponManager.instance.ActionBullet(i, roty));
+                            WeaponManager.instance.curActionCor[i] = StartCoroutine(WeaponManager.instance.ActionBullet(i));
                             isStartShotCor[i] = true;
                         }
                     }

@@ -42,17 +42,17 @@ public partial class WeaponManager : MonoBehaviour
 
     public void ReturnBulletToPool(GameObject _obj_bullet, int _index)
     {
-        var obj_bulletClone = _obj_bullet;
-        obj_bulletClone.SetActive(false);
-        obj_bulletClone.GetComponent<Rigidbody>().isKinematic = true; //남아있는 물리를 제거.
+        //물리초기화.
+        _obj_bullet.GetComponent<Rigidbody>().isKinematic = true;
+        _obj_bullet.GetComponent<Rigidbody>().isKinematic = false; 
+        _obj_bullet.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Continuous; //바뀐옵션을 다시적용
 
-        //총알위치 원상복구.
-        obj_bulletClone.transform.SetParent(PlayersManager.instance.obj_players[_index].transform);
-        obj_bulletClone.transform.localPosition = tf_firstPos[_index].localPosition;
-        obj_bulletClone.transform.localEulerAngles = tf_firstPos[_index].localEulerAngles;
-
-        obj_bulletClone.GetComponent<Rigidbody>().isKinematic = false; //다시끔
-        obj_bulletClone.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Continuous; //바뀐옵션을 다시적용
-        list_bulletPool[_index].Add(obj_bulletClone);
+        //다시 비활성화후 트랜스폼 원상복구후 풀로 복귀.
+        _obj_bullet.SetActive(false);
+        _obj_bullet.transform.SetParent(PlayersManager.instance.obj_players[_index].transform);
+        _obj_bullet.transform.localPosition = tf_firstPos[_index].localPosition;
+        _obj_bullet.transform.localRotation = tf_firstPos[_index].localRotation;
+        _obj_bullet.transform.localScale = tf_firstPos[_index].localScale;
+        list_bulletPool[_index].Add(_obj_bullet);
     }
 }

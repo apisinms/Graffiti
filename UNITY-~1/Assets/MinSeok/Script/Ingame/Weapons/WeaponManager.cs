@@ -73,6 +73,10 @@ public partial class WeaponManager : MonoBehaviour
     #region SMG
     public struct _INFO_SMG
     {
+        public Vector3[] vt_bulletPattern;
+        public int bulletPatternIndex;
+        public int prevBulletPatternIndex;
+
         public int curAmmo;
         public int maxAmmo;
         public float fireRate;
@@ -112,7 +116,7 @@ public partial class WeaponManager : MonoBehaviour
             {
                 int index;
                 curActionCor[i] = null;
-                mainWeapon[i] = _WEAPONS.AR; //셀렉트웨폰에서 선택했던 무기를 서버에서 받아야함.
+                mainWeapon[i] = _WEAPONS.SMG; //셀렉트웨폰에서 선택했던 무기를 서버에서 받아야함.
                 subWeapon[i] = _WEAPONS.GRENADE;
 
                 index = (int)mainWeapon[i]; //주무기의 생성
@@ -158,7 +162,7 @@ public partial class WeaponManager : MonoBehaviour
             infoAR[i].prevBulletPatternIndex     = 2;
             infoAR[i].curAmmo   = 30;
             infoAR[i].maxAmmo  = 30;
-            infoAR[i].fireRate     = 0.12f;
+            infoAR[i].fireRate     = 0.14f;
             infoAR[i].damage    = 1.0f;
             infoAR[i].accuracy    = 0.06f;
             infoAR[i].range       = 20.0f;
@@ -171,14 +175,17 @@ public partial class WeaponManager : MonoBehaviour
             infoSG[i].fireRate           = 1.0f;
             infoSG[i].damage          = 1.5f;
             infoSG[i].accuracy          = 0.25f;
-            infoSG[i].range             = 11.0f;
+            infoSG[i].range             = 10.0f;
 
+            infoSMG[i].vt_bulletPattern              = new Vector3[3];
+            infoSMG[i].bulletPatternIndex           = 2;
+            infoSMG[i].prevBulletPatternIndex      = 1;
             infoSMG[i].curAmmo  = 25;
             infoSMG[i].maxAmmo = 25;
-            infoSMG[i].fireRate     = 2.0f;
+            infoSMG[i].fireRate     = 0.08f;
             infoSMG[i].damage    = 0.5f;
-            infoSMG[i].accuracy   = 0.6f;
-            infoSMG[i].range       = 0.6f;
+            infoSMG[i].accuracy   = 0.12f;
+            infoSMG[i].range       = 15.0f;
         }
 
     }
