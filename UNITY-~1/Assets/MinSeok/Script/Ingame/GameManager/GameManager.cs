@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
         myNetworkNum = NetworkManager.instance.MyPlayerNum;
         myIndex = myNetworkNum - 1;
 #else
-        myNetworkNum = 3; //예시로 번호부여함.  서버에서 샌드된번호로 해야함.
+        myNetworkNum = 1; //예시로 번호부여함.  서버에서 샌드된번호로 해야함.
         myIndex = myNetworkNum - 1;
 #endif
         myTag = playersTag[myIndex]; //내 태그등록

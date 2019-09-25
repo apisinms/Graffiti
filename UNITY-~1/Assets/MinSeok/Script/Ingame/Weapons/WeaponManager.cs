@@ -193,7 +193,7 @@ public partial class WeaponManager : MonoBehaviour
             infoSMG[i].damage    = 0.5f;
             infoSMG[i].accuracy   = 0.1f;
             infoSMG[i].range       = 15.0f;
-            infoSMG[i].speed        = 1300.0f;
+            infoSMG[i].speed        = 1200.0f;
         }
 
     }

@@ -10,8 +10,8 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
     public static RightJoystick instance;
     public Image img_joystick_back;
     public Image img_joystick_stick;
-    private static bool isRightDrag = false;
-    public static bool RightTouch { get { return isRightDrag; } }
+    private bool isRightDrag;
+    public bool RightTouch { get { return isRightDrag; } }
 
     public struct _Joystick
     {
@@ -29,13 +29,14 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
     {
         if (instance == null)
             instance = this;
-
+       
         myIndex = GameManager.instance.myIndex;
         right_joystick.maxMoveArea = img_joystick_back.rectTransform.sizeDelta.y * 1.0f; //스틱이 움직일수있는 수평범위. ( * 0.5f면 정확히 조이스틱배경의 반지름만큼)
         right_joystick.stickFirstPos = img_joystick_stick.rectTransform.position;
         
         float can = transform.parent.GetComponent<RectTransform>().localScale.x;  // 캔버스 크기에대한 반지름 조절.
         right_joystick.maxMoveArea *= can;
+        isRightDrag = true;
     }
 
     public void DragStart()
