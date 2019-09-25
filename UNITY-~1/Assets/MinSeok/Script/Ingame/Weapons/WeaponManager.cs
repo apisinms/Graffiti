@@ -49,6 +49,7 @@ public partial class WeaponManager : MonoBehaviour
         public float damage;
         public float accuracy;
         public float range;
+        public float speed;
     }
     public _INFO_AR[] infoAR { get; set; }
     #endregion
@@ -58,7 +59,8 @@ public partial class WeaponManager : MonoBehaviour
     {
         public GameObject[] obj_bulletClone;
         public Transform[] tf_bulletClone;
-        public Vector3[] vt_bulletDir;
+        public Vector3[,] vt_bulletPattern;
+        public int bulletPatternIndex;
 
         public int curAmmo;
         public int maxAmmo;
@@ -66,6 +68,7 @@ public partial class WeaponManager : MonoBehaviour
         public float damage;
         public float accuracy;
         public float range;
+        public float speed;
     }
     public _INFO_SG[] infoSG { get; set; }
     #endregion
@@ -83,6 +86,7 @@ public partial class WeaponManager : MonoBehaviour
         public float damage;
         public float accuracy;
         public float range;
+        public float speed;
     }
     public _INFO_SMG[] infoSMG { get; set; }
     #endregion
@@ -166,26 +170,30 @@ public partial class WeaponManager : MonoBehaviour
             infoAR[i].damage    = 1.0f;
             infoAR[i].accuracy    = 0.06f;
             infoAR[i].range       = 20.0f;
+            infoAR[i].speed       = 2000.0f;
 
             infoSG[i].obj_bulletClone = new GameObject[5];
             infoSG[i].tf_bulletClone = new Transform[5];
-            infoSG[i].vt_bulletDir      = new Vector3[5];
+            infoSG[i].vt_bulletPattern = new Vector3[2, 5];
+            infoSG[i].bulletPatternIndex = 0;
             infoSG[i].curAmmo        = 2;
             infoSG[i].maxAmmo       = 2;
-            infoSG[i].fireRate           = 1.0f;
+            infoSG[i].fireRate           = 0;
             infoSG[i].damage          = 1.5f;
             infoSG[i].accuracy          = 0.25f;
             infoSG[i].range             = 10.0f;
+            infoSG[i].speed             = 2300.0f;
 
             infoSMG[i].vt_bulletPattern              = new Vector3[3];
             infoSMG[i].bulletPatternIndex           = 2;
             infoSMG[i].prevBulletPatternIndex      = 1;
             infoSMG[i].curAmmo  = 25;
             infoSMG[i].maxAmmo = 25;
-            infoSMG[i].fireRate     = 0.08f;
+            infoSMG[i].fireRate     = 0.07f;
             infoSMG[i].damage    = 0.5f;
-            infoSMG[i].accuracy   = 0.12f;
+            infoSMG[i].accuracy   = 0.1f;
             infoSMG[i].range       = 15.0f;
+            infoSMG[i].speed        = 1300.0f;
         }
 
     }

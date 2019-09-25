@@ -34,47 +34,59 @@ public class BulletCollision : MonoBehaviour
     public void CheckBulletRange(int _index)
     {
         switch (WeaponManager.instance.mainWeapon[_index])
-            {
-                case _WEAPONS.AR:
-                    {
-                        if (Vector3.Distance(this.transform.position, PlayersManager.instance.obj_players[_index].transform.position) >= WeaponManager.instance.infoAR[_index].range)
-                                WeaponManager.instance.ReturnBulletToPool(gameObject, _index);             
-                    }
-                    break;
+        {
+            case _WEAPONS.AR:
+                {
+                    if (Vector3.Distance(this.transform.position, PlayersManager.instance.obj_players[_index].transform.position) >= WeaponManager.instance.infoAR[_index].range)
+                                WeaponManager.instance.ReturnBulletToPool(gameObject, _index);
+                }
+                break;
 
-                case _WEAPONS.SG:
-                    {
-                        if (Vector3.Distance(this.transform.position, PlayersManager.instance.obj_players[_index].transform.position) >= WeaponManager.instance.infoSG[_index].range)
-                            WeaponManager.instance.ReturnBulletToPool(gameObject, _index);
-                    }
-                    break;
+            case _WEAPONS.SG:
+               {
+                   if (Vector3.Distance(this.transform.position, PlayersManager.instance.obj_players[_index].transform.position) >= WeaponManager.instance.infoSG[_index].range)
+                       WeaponManager.instance.ReturnBulletToPool(gameObject, _index);
+               }
+               break;
 
-                case _WEAPONS.SMG:
-                    {
-                        if (Vector3.Distance(this.transform.position, PlayersManager.instance.obj_players[_index].transform.position) >= WeaponManager.instance.infoSMG[_index].range)
-                            WeaponManager.instance.ReturnBulletToPool(gameObject, _index);
-                    }
-                    break;
-            }   
+            case _WEAPONS.SMG:
+               {
+                   if (Vector3.Distance(this.transform.position, PlayersManager.instance.obj_players[_index].transform.position) >= WeaponManager.instance.infoSMG[_index].range)
+                       WeaponManager.instance.ReturnBulletToPool(gameObject, _index);
+               }
+               break;
+        }   
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        //총알끼리는 충돌체크x, 내총알에 내가맞는것도x
         if (other.gameObject.CompareTag("Bullet"))
             return;
 
-        // Debug.Log(other.name + "과(와) 충돌하였다111111111111111111111111111.", this);
-
         if (this.transform.parent.CompareTag("BulletPool1"))
+        {
             WeaponManager.instance.ReturnBulletToPool(gameObject, 0);
-
+            //if (other.gameObject.CompareTag("Player1"))
+            //return;
+        }
         else if (this.transform.parent.CompareTag("BulletPool2"))
+        {
             WeaponManager.instance.ReturnBulletToPool(gameObject, 1);
-
+            //if (other.gameObject.CompareTag("Player2"))
+                //return;
+        }
         else if (this.transform.parent.CompareTag("BulletPool3"))
+        {
             WeaponManager.instance.ReturnBulletToPool(gameObject, 2);
-
+            //if (other.gameObject.CompareTag("Player3"))
+                //return;
+        }
         else if (this.transform.parent.CompareTag("BulletPool4"))
+        {
             WeaponManager.instance.ReturnBulletToPool(gameObject, 3);
+            //if (other.gameObject.CompareTag("Player4"))
+                //return;
+        }
     }
 }
