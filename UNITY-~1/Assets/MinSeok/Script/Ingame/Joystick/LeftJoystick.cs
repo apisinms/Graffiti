@@ -9,7 +9,7 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
 {
     public Image img_joystick_back;
     public Image img_joystick_stick;
-    private static bool isLeftDrag = false;
+    private static bool isLeftDrag;
     public static bool LeftTouch { get { return isLeftDrag; } }
 
     protected struct _Joystick
@@ -25,11 +25,11 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
     void Awake()
     {
         myIndex = GameManager.instance.myIndex;
-        left_joystick.maxMoveArea = img_joystick_back.rectTransform.sizeDelta.y * 0.9f; //스틱이 움직일수있는 수평범위. ( * 0.5f면 정확히 조이스틱배경의 반지름만큼)
+        left_joystick.maxMoveArea = img_joystick_back.rectTransform.sizeDelta.y * 0.8f; //스틱이 움직일수있는 수평범위. ( * 0.5f면 정확히 조이스틱배경의 반지름만큼)
         left_joystick.stickFirstPos = img_joystick_stick.rectTransform.position;
 
         float can = transform.parent.GetComponent<RectTransform>().localScale.x; // 캔버스 크기에대한 반지름 조절.
-        left_joystick.maxMoveArea *= can; 
+        left_joystick.maxMoveArea *= can;
     }
 
     public void DragStart()
@@ -44,7 +44,7 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
         isLeftDrag = true;
     }
 
-    public  void Drag(BaseEventData _Data)
+    public void Drag(BaseEventData _Data)
     {
         PointerEventData data = _Data as PointerEventData;
         Vector3 pos = data.position; //드래그 한곳의 위치.
@@ -82,16 +82,15 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
         left_joystick.stickDir = Vector3.zero; // 방향을 0으로.
         StateManager.instance.Circuit(false);
 
-      /*
-        if (PlayersManager.instance.stateInfo[myIndex].actionState > (int)_ACTION_STATE.IDLE)
-        {
-            PlayersManager.instance.stateInfo[myIndex].actionState -= (int)_ACTION_STATE.CIRCUIT;
-            img_joystick_stick.transform.position = left_joystick.stickFirstPos;
-            left_joystick.stickDir = Vector3.zero; // 방향을 0으로.
-        }
-        */
-
-      isLeftDrag = false;
+        /*
+          if (PlayersManager.instance.stateInfo[myIndex].actionState > (int)_ACTION_STATE.IDLE)
+          {
+              PlayersManager.instance.stateInfo[myIndex].actionState -= (int)_ACTION_STATE.CIRCUIT;
+              img_joystick_stick.transform.position = left_joystick.stickFirstPos;
+              left_joystick.stickDir = Vector3.zero; // 방향을 0으로.
+          }
+          */
+        isLeftDrag = false;
 #if NETWORK
       // 둘 다 터치 뗐을 때만
       if (LeftJoystick.LeftTouch == false && RightJoystick.RightTouch == false)

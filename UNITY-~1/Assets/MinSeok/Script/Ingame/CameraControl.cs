@@ -60,6 +60,7 @@ public class CameraControl : UnityEngine.MonoBehaviour
                     &&
                 (transform.position.z >= cameraPos.z - 0.05f && transform.position.z <= cameraPos.z + 0.05f))
                 {
+                    Debug.Log("됫나");
                     transform.position = cameraPos;
                 }
                 
