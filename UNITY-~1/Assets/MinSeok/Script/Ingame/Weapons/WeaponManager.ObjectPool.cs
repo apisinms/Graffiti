@@ -37,6 +37,7 @@ public partial class WeaponManager : MonoBehaviour
                 break;
             }
         }
+       // obj_bulletClone.transform.GetChild(0).GetComponent<TrailRenderer>().Clear();
         return obj_bulletClone;
     }
 
@@ -46,6 +47,7 @@ public partial class WeaponManager : MonoBehaviour
         _obj_bullet.GetComponent<Rigidbody>().isKinematic = true;
         _obj_bullet.GetComponent<Rigidbody>().isKinematic = false; 
         _obj_bullet.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Continuous; //바뀐옵션을 다시적용
+        _obj_bullet.GetComponent<TrailRenderer>().Clear(); //궤적 렌더러의 위치를 초기화
 
         //다시 비활성화후 트랜스폼 원상복구후 풀로 복귀.
         _obj_bullet.SetActive(false);

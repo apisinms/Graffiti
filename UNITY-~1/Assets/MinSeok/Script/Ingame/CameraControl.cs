@@ -22,8 +22,8 @@ public class CameraControl : UnityEngine.MonoBehaviour
     {
         //tmpPlayerPos = obj_player.transform.position;
         cameraPos.x = obj_player.transform.position.x;
-        cameraPos.y = obj_player.transform.position.y + 15f;
-        cameraPos.z = obj_player.transform.position.z - 6.0f;
+        cameraPos.y = obj_player.transform.position.y + 13f;
+        cameraPos.z = obj_player.transform.position.z - 5.0f;
         transform.position = cameraPos;
     }
 
@@ -37,8 +37,8 @@ public class CameraControl : UnityEngine.MonoBehaviour
         if (PlayersManager.instance.attributeState[myIndex] == _ATTRIBUTE_STATE.ALIVE)
         {
             cameraPos.x = obj_player.transform.position.x;
-            cameraPos.y = obj_player.transform.position.y + 15f;
-            cameraPos.z = obj_player.transform.position.z - 6.0f;
+            cameraPos.y = obj_player.transform.position.y + 13f;
+            cameraPos.z = obj_player.transform.position.z - 5.0f;
             
             
             if (PlayersManager.instance.actionState[myIndex] == _ACTION_STATE.AIM ||
@@ -48,19 +48,18 @@ public class CameraControl : UnityEngine.MonoBehaviour
             {
                 isOnLerp = true;
                 transform.position = new Vector3(Mathf.Lerp(transform.position.x, PlayersManager.instance.direction2[myIndex].x + cameraPos.x, Time.smoothDeltaTime * 7.5f),
-                    15, Mathf.Lerp(transform.position.z, PlayersManager.instance.direction2[myIndex].z + (cameraPos.z - 1.5f), Time.smoothDeltaTime * 7.5f));
+                    13, Mathf.Lerp(transform.position.z, PlayersManager.instance.direction2[myIndex].z + (cameraPos.z - 1.5f), Time.smoothDeltaTime * 7.5f));
                 //transform.position = new Vector3(PlayersManager.instance.direction2[myIndex].x + cameraPos.x, 15, PlayersManager.instance.direction2[myIndex].z + (cameraPos.z - 1.0f));
             }
             else
             {
                 transform.position = Vector3.Lerp(transform.position, cameraPos, Time.smoothDeltaTime * 30f);
-
-                
+        
                 if ((transform.position.x >= cameraPos.x - 0.05f && transform.position.x <= cameraPos.x + 0.05f)
                     &&
                 (transform.position.z >= cameraPos.z - 0.05f && transform.position.z <= cameraPos.z + 0.05f))
                 {
-                    Debug.Log("됫나");
+                    //Debug.Log("됫나");
                     transform.position = cameraPos;
                 }
                 

@@ -12,11 +12,11 @@ using UnityEngine;
 /// </summary>
 public partial class NetworkManager : MonoBehaviour
 {
+    private BridgeClientToServer bridge;
     private PositionPacket tmpPosPacket = new PositionPacket();
     private Vector3 tmpVec = new Vector3();
     private Vector3 tmpAngle = new Vector3();
 
-    PROTOCOL aliveProtocol = 0;
 
     private void Awake()
     {
@@ -61,6 +61,12 @@ public partial class NetworkManager : MonoBehaviour
             Destroy(gameObject);
 
         DontDestroyOnLoad(gameObject);
+    }
+
+    private void Start()
+    {
+        if (bridge == null)
+            bridge = BridgeClientToServer.instance;
     }
 
     private void Update()
@@ -136,7 +142,7 @@ public partial class NetworkManager : MonoBehaviour
                                                       PROTOCOL.START_PROTOCOL,
                                                       RESULT.NODATA);
 
-                                                // 패킹 및 전송
+                                                // 시작 프로토콜 + 플레이어 번호 패킹 및 전송
                                                 int packetSize;
                                                 PackPacket(ref sendBuf, startProtocol, out packetSize);
                                                 bw.Write(sendBuf, 0, packetSize);
@@ -188,20 +194,34 @@ public partial class NetworkManager : MonoBehaviour
                                     int sec = 0;
                                     UnPackPacket(info.packet, out sec);
                                     sysMsg = sec.ToString() + "초";
-                                    Debug.Log(sysMsg);
+                                }
+                            }
+                            break;
+
+                        // (자신포함)상대방이 자신의 총 정보를 넘겨주면 그걸로 셋팅함
+                        case PROTOCOL.WEAPON_PROTOCOL:
+                            {
+                                switch (result)
+                                {
+                                    case RESULT.NOTIFY_WEAPON:
+                                        {
+                                            lock (key)
+                                            {
+                                                int playerNum;
+                                                WeaponPacket weapon = new WeaponPacket();
+
+                                                UnPackPacket(info.packet, out playerNum, ref weapon);
+
+                                                bridge.SetWeapon(playerNum, ref weapon);
+                                            }
+                                        }
+                                        break;
                                 }
                             }
                             break;
 
                         // 게임 시작 프로토콜
                         case PROTOCOL.START_PROTOCOL:
-                            {
-                                // 접속되어있다는 프로토콜 조립 해둠
-                                aliveProtocol = SetProtocol(
-                                         STATE_PROTOCOL.INGAME_STATE,
-                                         PROTOCOL.ALIVE_PROTOCOL,
-                                         RESULT.NODATA);
-                            }
                             break;
 
                         // 움직임 프로토콜
@@ -215,7 +235,7 @@ public partial class NetworkManager : MonoBehaviour
                                             lock (key)
                                             {
                                                 UnPackPacket(info.packet, ref tmpPosPacket);
-                                                posPacket[tmpPosPacket.playerNum - 1] = tmpPosPacket;   // 해당 플레이어 위치에 저장
+                                                bridge.OnMoveSuccess(ref tmpPosPacket);
                                             }
                                         }
                                         break;
@@ -226,18 +246,7 @@ public partial class NetworkManager : MonoBehaviour
                                             lock (key)
                                             {
                                                 UnPackPacket(info.packet, ref tmpPosPacket);
-                                                PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].SetActive(true);   // 켜고
-
-                                                // 이렇게 해줘야 이전 위치랑 보간을 안해서 캐릭터가 슬라이딩 되지 않음
-                                                tmpVec = PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localPosition;
-                                                tmpAngle = PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localEulerAngles;
-
-                                                tmpVec.x = tmpPosPacket.posX;
-                                                tmpVec.z = tmpPosPacket.posZ;
-                                                tmpAngle.y = tmpPosPacket.rotY;
-
-                                                PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localPosition = tmpVec;
-                                                PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localEulerAngles = tmpAngle;
+                                                bridge.EnterSectorProcess(ref tmpPosPacket);                                       
                                             }
                                         }
                                         break;
@@ -248,8 +257,7 @@ public partial class NetworkManager : MonoBehaviour
                                             lock (key)
                                             {
                                                 UnPackPacket(info.packet, ref tmpPosPacket);    // 사실 이 부분도 int 하나만 갖고도 될 일
-                                                PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].SetActive(false);   // 끄고
-                                                                                                                                    //posPacket[tmpPosPacket.playerNum - 1] = tmpPosPacket;   // 패킷 저장해주고
+                                                bridge.ExitSectorProcess(ref tmpPosPacket);
                                             }
                                         }
                                         break;
@@ -309,33 +317,7 @@ public partial class NetworkManager : MonoBehaviour
                                             lock (key)
                                             {
                                                 UnPackPacket(info.packet, ref tmpPosPacket);    // 포지션 패킷 가져옴
-
-                                                // 스피드, 애니메이션 0으로
-                                                tmpPosPacket.speed = 0.0f;
-                                                tmpPosPacket.action = (int)_ACTION_STATE.IDLE;
-
-                                                posPacket[tmpPosPacket.playerNum - 1] = tmpPosPacket;   // 이전 위치 패킷에 저장해줌
-
-                                                // 원래 플레이어가 가지고 있던 정보를 임시 벡터에 가져옴
-                                                tmpVec = PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localPosition;
-                                                tmpAngle = PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localEulerAngles;
-
-                                                // 변환된 값을 바로 대입
-                                                tmpVec.x = tmpPosPacket.posX;
-                                                tmpVec.z = tmpPosPacket.posZ;
-                                                tmpAngle.y = tmpPosPacket.rotY;
-
-                                                // 러프없이 강제로 대입해버림
-                                                PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localPosition = tmpVec;
-                                                PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localEulerAngles = tmpAngle;
-
-                                                // 본인일 경우에는 카메라도 강제 셋팅 시켜준다.
-                                                if (tmpPosPacket.playerNum == myPlayerNum)
-                                                {
-                                                    // 카메라도 설정
-                                                    if (GameManager.instance.mainCamera != null)
-                                                        GameManager.instance.mainCamera.SetCameraPos(0.0f, C_Global.camPosY, C_Global.camPosZ);
-                                                }
+                                                bridge.ForceMoveProcess(ref tmpPosPacket);
                                             }
                                         }
                                         break;
@@ -345,22 +327,7 @@ public partial class NetworkManager : MonoBehaviour
                                             lock (key)
                                             {
                                                 UnPackPacket(info.packet, ref tmpPosPacket);            // 패킷을 받고
-                                                posPacket[tmpPosPacket.playerNum - 1] = tmpPosPacket;   // 패킷 저장해주고
-
-                                                // 플레이어 위치를 바로 대입해서 셋팅해버림
-                                                tmpVec = PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localPosition;
-                                                tmpAngle = PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localEulerAngles;
-
-                                                tmpVec.x = tmpPosPacket.posX;
-                                                tmpVec.z = tmpPosPacket.posZ;
-                                                tmpAngle.y = tmpPosPacket.rotY;
-
-                                                PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localPosition = tmpVec;
-                                                PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localEulerAngles = tmpAngle;
-
-                                                // 꺼져있다면 켜준다!
-                                                if (PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].activeSelf == false)
-                                                    PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].SetActive(true);
+                                                bridge.GetOtherPlayerPos(ref tmpPosPacket);
                                             }
                                         }
                                         break;
@@ -376,20 +343,7 @@ public partial class NetworkManager : MonoBehaviour
                                 lock (key)
                                 {
                                     UnPackPacket(info.packet, ref tmpPosPacket);         // 포지션 패킷 가져옴
-                                    posPacket[tmpPosPacket.playerNum - 1] = tmpPosPacket;   // 이전 위치 패킷에 저장해줌
-
-                                    // 원래 플레이어가 가지고 있던 정보를 임시 벡터에 가져옴
-                                    tmpVec = PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localPosition;
-                                    tmpAngle = PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localEulerAngles;
-
-                                    // 변환된 값을 바로 대입
-                                    tmpVec.x = tmpPosPacket.posX;
-                                    tmpVec.z = tmpPosPacket.posZ;
-                                    tmpAngle.y = tmpPosPacket.rotY;
-
-                                    // 러프없이 강제로 대입해버림
-                                    PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localPosition = tmpVec;
-                                    PlayersManager.instance.obj_players[tmpPosPacket.playerNum - 1].transform.localEulerAngles = tmpAngle;
+                                    bridge.ForceMoveProcess(ref tmpPosPacket);
                                 }
                             }
                             break;
@@ -401,9 +355,7 @@ public partial class NetworkManager : MonoBehaviour
                                 {
                                     // 끊긴 놈을 꺼준다.
                                     UnPackPacket(info.packet, out quitPlayerNum);
-
-                                    if (PlayersManager.instance.obj_players[quitPlayerNum - 1].activeSelf == true)
-                                        PlayersManager.instance.obj_players[quitPlayerNum - 1].SetActive(false);
+                                    bridge.OnOtherPlayerDisconnected(quitPlayerNum);
                                 }
                             }
                             break;

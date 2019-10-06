@@ -102,6 +102,9 @@ public partial class NetworkManager : MonoBehaviour
         INGAME_SUCCESS = ((Int64)0x1 << 33),
         INGAME_FAIL = ((Int64)0x1 << 32),
 
+        // WEAPON_PROTOCOL 개별
+        NOTIFY_WEAPON = ((Int64)0x1 << 31),   // 무기를 알려줌
+
         // MOVE_PROTOCOL 개별
         ENTER_SECTOR = ((Int64)0x1 << 31),            // 섹터 진입
         EXIT_SECTOR = ((Int64)0x1 << 30),            // 섹터 퇴장
@@ -130,7 +133,7 @@ public partial class NetworkManager : MonoBehaviour
 
     // 마샬링을 위한 WeaponPac
     [StructLayout(LayoutKind.Sequential)]
-    struct WeaponPacket
+    public struct WeaponPacket
     {
         [MarshalAs(UnmanagedType.I1)]
         public sbyte mainW;
@@ -162,7 +165,7 @@ public partial class NetworkManager : MonoBehaviour
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    struct PositionPacket
+    public struct PositionPacket
     {
         [MarshalAs(UnmanagedType.I4)]
         public int playerNum;
@@ -230,6 +233,16 @@ public partial class NetworkManager : MonoBehaviour
     public Queue<C_Global.QueueInfo> Queue { get { return queue; } }
     public BinaryReader BinaryReader { get { return br; } }
     public BinaryWriter BinaryWriter { get { return bw; } }
+
+    public PositionPacket GetPosPacket(int _idx)
+    {
+        return posPacket[_idx];
+    }
+
+    public void SetPosPacket(int _idx, ref PositionPacket _packet)
+    {
+        posPacket[_idx] = _packet;
+    }
 
     public string SysMsg
     {

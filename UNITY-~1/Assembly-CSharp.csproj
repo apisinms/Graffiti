@@ -62,6 +62,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Common\BridgeClientToServer.cs" />
+    <Compile Include="Assets\Common\BridgeClientToServer.Networking.cs" />
+    <Compile Include="Assets\Common\BridgeClientToServer.PacketCoroutine.cs" />
+    <Compile Include="Assets\Common\BridgeClientToServer.PlayerViewer.cs" />
     <Compile Include="Assets\LOWPOLY CHARACTERS\AdvancedCustomizer\Scripts\CharacterCustomizer.cs" />
     <Compile Include="Assets\LOWPOLY CHARACTERS\AdvancedCustomizer\Scripts\CharacterGender.cs" />
     <Compile Include="Assets\LOWPOLY CHARACTERS\AdvancedCustomizer\Scripts\Clothes.cs" />

@@ -43,6 +43,9 @@ public partial class PlayersManager : MonoBehaviour
         {
             Anime_Aiming_Idle(myIndex);
             tf_players[myIndex].localRotation = Quaternion.LookRotation(direction2[myIndex]);
+            //GameObject tmp = GameObject.Find("Image_sample");
+            //Vector3 vt_tmp = new Vector3(tf_players[myIndex].forward.y, 90, tf_players[myIndex].forward.z);
+           // tmp.transform.rotation = Quaternion.LookRotation(vt_tmp);
             yield return null;
         }
     }

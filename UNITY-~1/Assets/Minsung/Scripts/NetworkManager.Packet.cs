@@ -28,6 +28,7 @@ public partial class NetworkManager : MonoBehaviour
     {
         _state = 0;
         _protocol = 0;
+
         _result = 0;
 
         int offset = 0;
@@ -317,6 +318,26 @@ public partial class NetworkManager : MonoBehaviour
         offset += sizeof(byte);
 
         _playerBit = bitByte[0];
+    }
+
+    private void UnPackPacket(byte[] _buf, out int _playerNum, ref WeaponPacket _struct)
+    {
+        byte[] arrNum = new byte[sizeof(int)];
+
+        int offset = sizeof(PROTOCOL);
+
+        // 일단 byte 배열로 받고
+        Buffer.BlockCopy(_buf, offset, arrNum, 0, sizeof(int));
+        offset += sizeof(int);
+
+        // 이제 다시 int로 변환
+        _playerNum = BitConverter.ToInt32(arrNum, 0);
+
+        // weapon을 받음
+        byte[] weaponByte = new byte[Marshal.SizeOf(_struct)];
+        Buffer.BlockCopy(_buf, offset, weaponByte, 0, Marshal.SizeOf(_struct));
+
+        _struct.Deserialize(ref weaponByte);
     }
     private void UnPackPacket(byte[] _buf, out int _num)
     {
