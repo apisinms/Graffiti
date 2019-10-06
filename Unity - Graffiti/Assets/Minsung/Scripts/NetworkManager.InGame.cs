@@ -54,8 +54,7 @@ public partial class NetworkManager : MonoBehaviour
     public bool CheckTimerEnd()
     {
         if (state == STATE_PROTOCOL.INGAME_STATE &&
-           protocol == PROTOCOL.WEAPON_PROTOCOL &&
-		   result == RESULT.NODATA)
+           protocol == PROTOCOL.WEAPON_PROTOCOL)
         {
             return true;
         }

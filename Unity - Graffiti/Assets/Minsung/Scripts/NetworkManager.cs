@@ -80,10 +80,10 @@ public partial class NetworkManager : MonoBehaviour
     enum RESULT : Int64
     {
         //LoginState
-        JOIN_SUCCESS   = ((Int64)0x1 << 33),
-        LOGIN_SUCCESS  = ((Int64)0x1 << 33),
+        JOIN_SUCCESS = ((Int64)0x1 << 33),
+        LOGIN_SUCCESS = ((Int64)0x1 << 33),
         LOGOUT_SUCCESS = ((Int64)0x1 << 33),
-        LOGOUT_FAIL    = ((Int64)0x1 << 32),
+        LOGOUT_FAIL = ((Int64)0x1 << 32),
 
         // Join & Login result
         ID_EXIST = ((Int64)0x1 << 32),
@@ -92,37 +92,29 @@ public partial class NetworkManager : MonoBehaviour
 
         // LobbyState
         LOBBY_SUCCESS = ((Int64)0x1 << 33),     // 로비에서 성공 처리
-        LOBBY_FAIL    = ((Int64)0x1 << 32),        // 로비에서 실패 처리
+        LOBBY_FAIL = ((Int64)0x1 << 32),        // 로비에서 실패 처리
 
         // ChatState
         LEAVE_ROOM_SUCCESS = ((Int64)0x1 << 33),
-        LEAVE_ROOM_FAIL    = ((Int64)0x1 << 32),
+        LEAVE_ROOM_FAIL = ((Int64)0x1 << 32),
 
         // InGameState(공통)
         INGAME_SUCCESS = ((Int64)0x1 << 33),
-        INGAME_FAIL    = ((Int64)0x1 << 32),
+        INGAME_FAIL = ((Int64)0x1 << 32),
 
-		// WEAPON_PROTOCOL 개별
-		NOTIFY_WEAPON = ((Int64)0x1 << 31),   // 무기를 알려줌
+        // WEAPON_PROTOCOL 개별
+        NOTIFY_WEAPON = ((Int64)0x1 << 31),   // 무기를 알려줌
 
-		// MOVE_PROTOCOL 개별
-		ENTER_SECTOR        = ((Int64)0x1 << 31),            // 섹터 진입
-        EXIT_SECTOR         = ((Int64)0x1 << 30),            // 섹터 퇴장
-        UPDATE_PLAYER       = ((Int64)0x1 << 29),            // 플레이어 목록 최신화
-        FORCE_MOVE          = ((Int64)0x1 << 28),            // 강제 이동
+        // MOVE_PROTOCOL 개별
+        ENTER_SECTOR = ((Int64)0x1 << 31),            // 섹터 진입
+        EXIT_SECTOR = ((Int64)0x1 << 30),            // 섹터 퇴장
+        UPDATE_PLAYER = ((Int64)0x1 << 29),            // 플레이어 목록 최신화
+        FORCE_MOVE = ((Int64)0x1 << 28),            // 강제 이동
         GET_OTHERPLAYER_POS = ((Int64)0x1 << 27),            // 다른 플레이어 포지션 얻기
 
         // ~ 25
         NODATA = ((Int64)0x1 << 24)
     };
-
-    enum PLAYER_BIT : byte
-    {
-        PLAYER_1 = (1 << 3),
-        PLAYER_2 = (1 << 2),
-        PLAYER_3 = (1 << 1),
-        PLAYER_4 = (1 << 0),
-    }
 
     struct _User_Info
     {
@@ -133,7 +125,7 @@ public partial class NetworkManager : MonoBehaviour
 
     // 마샬링을 위한 WeaponPac
     [StructLayout(LayoutKind.Sequential)]
-    struct WeaponPacket
+    public struct WeaponPacket
     {
         [MarshalAs(UnmanagedType.I1)]
         public sbyte mainW;
@@ -165,7 +157,7 @@ public partial class NetworkManager : MonoBehaviour
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    struct PositionPacket
+    public struct PositionPacket
     {
         [MarshalAs(UnmanagedType.I4)]
         public int playerNum;
@@ -233,6 +225,16 @@ public partial class NetworkManager : MonoBehaviour
     public Queue<C_Global.QueueInfo> Queue { get { return queue; } }
     public BinaryReader BinaryReader { get { return br; } }
     public BinaryWriter BinaryWriter { get { return bw; } }
+
+    public PositionPacket GetPosPacket(int _idx)
+    {
+        return posPacket[_idx];
+    }
+
+    public void SetPosPacket(int _idx, ref PositionPacket _packet)
+    {
+        posPacket[_idx] = _packet;
+    }
 
     public string SysMsg
     {

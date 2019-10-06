@@ -14,7 +14,7 @@ using namespace std;
 #define NICKNAMESIZE	255
 #define MSGSIZE			512
 
-#define MAX_PLAYER		4
+#define MAX_PLAYER		2
 
 #define THREAD_END		-777
 
@@ -25,7 +25,7 @@ using namespace std;
 #define RESULT_MASK		40
 
 // Keep-alive 설정 관련
-#define KEEPALIVE_TIME 3000							// TIME ms마다 keep-alive 신호를 주고받는다
+#define KEEPALIVE_TIME 3000								// TIME ms마다 keep-alive 신호를 주고받는다
 #define KEEPALIVE_INTERVAL (KEEPALIVE_TIME / 20)		// Heart-beat가 없을시 INTERVAL ms마다 재전송한다(10번)
 
 // 플레이어 플래그

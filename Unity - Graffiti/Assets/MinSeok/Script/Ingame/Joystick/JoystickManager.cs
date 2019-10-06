@@ -15,23 +15,32 @@ public class JoystickManager : MonoBehaviour
 {
     private int myIndex { get; set; }
 
-    int flag;
     void Awake()
     {
         myIndex = GameManager.instance.myIndex;
-        flag = 1;
     }
 
 
-    public void Change()
+    public void ChangeGun(int _index)
     {
-        flag = 1 - flag;
+        int index;
 
-        if(flag == 0)
-        WeaponManager.instance.mainWeapon[myIndex] = _WEAPONS.SG;
-
-        else
-            WeaponManager.instance.mainWeapon[myIndex] = _WEAPONS.AR;
+        switch(_index)
+        {
+            case 1:
+                WeaponManager.instance.mainWeapon[myIndex] = _WEAPONS.AR;
+                break;
+            case 2:
+                WeaponManager.instance.mainWeapon[myIndex] = _WEAPONS.SG;
+                break;
+            case 3:
+                WeaponManager.instance.mainWeapon[myIndex] = _WEAPONS.SMG;
+                break;
+        }
+        Destroy(WeaponManager.instance.obj_mainWeapon[myIndex]);
+        index = (int)WeaponManager.instance.mainWeapon[myIndex]; //주무기의 생성
+        WeaponManager.instance.obj_mainWeapon[myIndex] = Instantiate(WeaponManager.instance.obj_weaponPrefabsList[index], PlayersManager.instance.obj_players[myIndex].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
+        WeaponManager.instance.obj_mainWeapon[myIndex].transform.SetParent(PlayersManager.instance.obj_players[myIndex].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
     }
     void Update()
     {

@@ -15,7 +15,8 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraControl>();
-    }
+		BridgeClientToServer.instance.Initialization_PlayerViewer();	// 게임 시작시 플레이어 뷰어 셋팅
+	}
 
     void Awake()
     {
@@ -31,12 +32,16 @@ public class GameManager : MonoBehaviour
         myIndex = myNetworkNum - 1;
 #else
         myNetworkNum = 1; //예시로 번호부여함.  서버에서 샌드된번호로 해야함.
+        myIndex = myNetworkNum - 1;
 #endif
         myTag = playersTag[myIndex]; //내 태그등록
         myFocus = true;             // 포커스 On
 
         myTag = playersTag[myIndex]; //내 태그등록
     }
+
+
+
     // focus말고 pause로 해야 조금 더 정확한 상황을 만들 수 있음
     private void OnApplicationPause(bool pause)
     {

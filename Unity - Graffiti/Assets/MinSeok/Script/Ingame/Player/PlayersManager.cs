@@ -29,11 +29,9 @@ public enum _ACTION_STATE //액션(움직임)의 상태
 public partial class PlayersManager : MonoBehaviour
 { 
     public static PlayersManager instance;
-    private NetworkManager networkManager;  // 접근용
+    private NetworkManager networkManager;
     public int myIndex { get; set; } //가독성을위해 하나 더만들어줌
-    public int coroutineFlag { get; set; }
-    private IEnumerator coroutine;
-
+    
     #region PLAYERS_ROBIN
     public GameObject[] obj_players { get; set; }
     public Transform[] tf_players { get; set; } 
@@ -58,16 +56,13 @@ public partial class PlayersManager : MonoBehaviour
         if (instance == null)
             instance = this;
 
-#if NETWORK
-      networkManager = NetworkManager.instance;
-      coroutine = MovePlayer();
-#endif
+   #if NETWORK
+        networkManager = NetworkManager.instance;
+   #endif
 
-        //coroutine = MovePlayer();
-        
         myIndex = GameManager.instance.myIndex; //게임매니저에서 받은 인덱스를 다시등록
-        Initialization(C_Global.MAX_PLAYER); //기타 초기화
- 
+        Initialization(C_Global.MAX_PLAYER);
+
         //내 인덱스번호에 맞는 로빈오브젝트와 합체.
         obj_players[myIndex] = GameObject.FindGameObjectWithTag(GameManager.instance.myTag);
         tf_players[myIndex] = obj_players[myIndex].GetComponent<Transform>().transform; //최적화를위해 트랜스폼만 따로저장.
@@ -84,45 +79,20 @@ public partial class PlayersManager : MonoBehaviour
                 am_animePlayer[i] = obj_players[i].GetComponent<Animator>(); 
             }
         }
-
-#if NETWORK
-        //////////////// 게임 시작 시 최초로 1회 위치정보를 서버로 전송해야함 /////////////////
-        networkManager.SendPosition(tf_players[myIndex].localPosition.x,
-             tf_players[myIndex].localPosition.z,
-             tf_players[myIndex].localEulerAngles.y, speed[myIndex], actionState[myIndex], true);
-#endif
-
-#if NETWORK
-        //////////////////////// 테스트용(상대팀 끄기) ////////////////////
-        switch (myIndex)
-        {
-            case 0:
-            case 1:
-                obj_players[2].SetActive(false);
-                obj_players[3].SetActive(false);
-                break;
-
-            case 2:
-            case 3:
-                obj_players[0].SetActive(false);
-                obj_players[1].SetActive(false);
-                break;
-        }
-#endif
     }
 
-    void Initialization(int _num)
+    void Initialization(int _num) //클라이언트 자체에서 그냥 초기화. 어차피 서버에서 정보가 있으니까 이렇게함.
     {
-        obj_players    = new GameObject[C_Global.MAX_PLAYER];
-        tf_players      = new Transform[C_Global.MAX_PLAYER];
+        obj_players = new GameObject[C_Global.MAX_PLAYER];
+        tf_players = new Transform[C_Global.MAX_PLAYER];
         am_animePlayer = new Animator[C_Global.MAX_PLAYER];
-        speed          = new float[C_Global.MAX_PLAYER];
-        hp             = new float[C_Global.MAX_PLAYER];
-        maxSpeed  = new float[C_Global.MAX_PLAYER];
-        maxHp       = new float[C_Global.MAX_PLAYER];
-        direction      = new Vector3[C_Global.MAX_PLAYER];
-        direction2     = new Vector3[C_Global.MAX_PLAYER];
-        actionState = new _ACTION_STATE [C_Global.MAX_PLAYER];
+        speed = new float[C_Global.MAX_PLAYER];
+        hp = new float[C_Global.MAX_PLAYER];
+        maxSpeed = new float[C_Global.MAX_PLAYER];
+        maxHp = new float[C_Global.MAX_PLAYER];
+        direction = new Vector3[C_Global.MAX_PLAYER];
+        direction2 = new Vector3[C_Global.MAX_PLAYER];
+        actionState = new _ACTION_STATE[C_Global.MAX_PLAYER];
         attributeState = new _ATTRIBUTE_STATE[C_Global.MAX_PLAYER];
         lastPosX = new float[C_Global.MAX_PLAYER];
         lastPosZ = new float[C_Global.MAX_PLAYER];
@@ -130,10 +100,9 @@ public partial class PlayersManager : MonoBehaviour
         //재생중이였던 이전 코루틴.
         curCor = null;
 
-        // !!!!!!!!!!! 서버에서 받은데이터로 초기화해야함  임의로 속성값부여해둠. !!!!!!!!!!
         for (int i = 0; i < C_Global.MAX_PLAYER; i++)
-		{
-            if(myIndex == i) //내인덱스들의 초기화
+        {
+            if (myIndex == i) //내인덱스들의 초기화
             {
                 attributeState[i] = _ATTRIBUTE_STATE.ALIVE;
                 actionState[i] = _ACTION_STATE.IDLE;
@@ -150,52 +119,5 @@ public partial class PlayersManager : MonoBehaviour
         }
 
     }
-
-    IEnumerator MovePlayer()
-    {
-        while (true)
-        {
-            NetworkManager.instance.SendPosition(tf_players[myIndex].localPosition.x,
-                tf_players[myIndex].localPosition.z,
-                tf_players[myIndex].localEulerAngles.y, speed[myIndex], actionState[myIndex]);
-
-            yield return YieldInstructionCache.WaitForSeconds(C_Global.packetInterval);
-        }
-    }
-
-    public void StartMoveCoroutine()
-    {
-        StartCoroutine(coroutine);
-    }
-
-    public void StopMoveCoroutine()
-    {
-        // 코루틴 정지시에 마지막 위치를 보내준다.
-        networkManager.SendPosition(tf_players[myIndex].localPosition.x,
-            tf_players[myIndex].localPosition.z,
-            tf_players[myIndex].localEulerAngles.y, speed[myIndex], actionState[myIndex]);
-
-        StopCoroutine(coroutine);
-    }
-
-    /*
-    switch(_value) //트루면+ 펄스면-
-    {
-        case true:
-            if (stateInfo[myIndex].isApply[dn_stateAndIndex[_state]] == false)
-            {
-                stateInfo[myIndex].actionState += (int)_state - 1;
-                stateInfo[myIndex].isApply[dn_stateAndIndex[_state]] = true;
-            }
-            break;
-        case false:
-            if (stateInfo[myIndex].isApply[dn_stateAndIndex[_state]] == true)
-            {
-                stateInfo[myIndex].actionState -= (int)_state - 1;
-                stateInfo[myIndex].isApply[dn_stateAndIndex[_state]] = false;
-            }
-            break;
-    }
-    */
 }
 

@@ -28,4 +28,12 @@ public class C_Global
             packet = _packet;
         }
     }
+
+	public enum PLAYER_BIT : byte
+	{
+		PLAYER_1 = (1 << 3),
+		PLAYER_2 = (1 << 2),
+		PLAYER_3 = (1 << 1),
+		PLAYER_4 = (1 << 0),
+	}
 }

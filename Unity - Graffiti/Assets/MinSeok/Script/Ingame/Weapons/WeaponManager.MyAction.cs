@@ -6,9 +6,9 @@ public partial class WeaponManager : MonoBehaviour
 {
     private void Start()
     {
-		for (int i=0; i<C_Global.MAX_PLAYER; i++) //모든플레이어들의 총알풀 생성.
+        for(int i=0; i<C_Global.MAX_PLAYER; i++) //모든플레이어들의 총알풀 생성.
             CreateBulletPool(i, 30);
-	}
+    }
     private void Update()
     {
            // Debug.Log(Vector3.Distance(sample);
@@ -31,7 +31,15 @@ public partial class WeaponManager : MonoBehaviour
                     while (true)
                     {
                         ActionBullet_SG();
-                        yield break; //YieldInstructionCache.WaitForSeconds(infoAR[myIndex].fireRate);
+                        yield break;
+                    }
+                }
+            case _WEAPONS.SMG:
+                {
+                    while (true)
+                    {
+                        ActionBullet_SMG();
+                        yield return YieldInstructionCache.WaitForSeconds(infoSMG[myIndex].fireRate);
                     }
                 }
         }
@@ -39,16 +47,19 @@ public partial class WeaponManager : MonoBehaviour
 
     public void ActionBullet_AR()
     {
-        infoAR[myIndex].vt_bulletPattern[0].x = PlayersManager.instance.direction2[myIndex].x - infoAR[myIndex].accuracy;
-        infoAR[myIndex].vt_bulletPattern[0].z = PlayersManager.instance.direction2[myIndex].z - infoAR[myIndex].accuracy;
-        infoAR[myIndex].vt_bulletPattern[1].x = PlayersManager.instance.direction2[myIndex].x;
-        infoAR[myIndex].vt_bulletPattern[1].z = PlayersManager.instance.direction2[myIndex].z;
-        infoAR[myIndex].vt_bulletPattern[2].x = PlayersManager.instance.direction2[myIndex].x + infoAR[myIndex].accuracy;
-        infoAR[myIndex].vt_bulletPattern[2].z = PlayersManager.instance.direction2[myIndex].z + infoAR[myIndex].accuracy;
-
         var clone = GetBulletFromPool(myIndex);
-        clone.GetComponent<Rigidbody>().AddForce(infoAR[myIndex].vt_bulletPattern[infoAR[myIndex].bulletPatternIndex] * 2000.0f, ForceMode.Acceleration);
+        Transform tf_clone = clone.transform;
 
+        infoAR[myIndex].vt_bulletPattern[0].x = tf_clone.forward.x - (tf_clone.right.x * infoAR[myIndex].accuracy);
+        infoAR[myIndex].vt_bulletPattern[0].z = tf_clone.forward.z - (tf_clone.right.z * infoAR[myIndex].accuracy);
+        infoAR[myIndex].vt_bulletPattern[1].x = tf_clone.forward.x;
+        infoAR[myIndex].vt_bulletPattern[1].z = tf_clone.forward.z;
+        infoAR[myIndex].vt_bulletPattern[2].x = tf_clone.forward.x + (tf_clone.right.x * infoAR[myIndex].accuracy);
+        infoAR[myIndex].vt_bulletPattern[2].z = tf_clone.forward.z + (tf_clone.right.z * infoAR[myIndex].accuracy);
+
+        tf_clone.localRotation = Quaternion.LookRotation(infoAR[myIndex].vt_bulletPattern[infoAR[myIndex].bulletPatternIndex]);
+        clone.GetComponent<Rigidbody>().AddForce(infoAR[myIndex].vt_bulletPattern[infoAR[myIndex].bulletPatternIndex] * infoAR[myIndex].speed, ForceMode.Acceleration);
+        
         switch (infoAR[myIndex].bulletPatternIndex)
         {
             case 0:
@@ -74,7 +85,17 @@ public partial class WeaponManager : MonoBehaviour
                 //Debug.Log("중");
                 break;
         }
+
+        /*
+         infoAR[myIndex].vt_bulletPattern[0].x = PlayersManager.instance.direction2[myIndex].x - (tf_clone.right.x * infoAR[myIndex].accuracy);
+        infoAR[myIndex].vt_bulletPattern[0].z = PlayersManager.instance.direction2[myIndex].z - (tf_clone.right.z * infoAR[myIndex].accuracy);
+        infoAR[myIndex].vt_bulletPattern[1].x = PlayersManager.instance.direction2[myIndex].x;
+        infoAR[myIndex].vt_bulletPattern[1].z = PlayersManager.instance.direction2[myIndex].z;
+        infoAR[myIndex].vt_bulletPattern[2].x = PlayersManager.instance.direction2[myIndex].x + (tf_clone.right.x * infoAR[myIndex].accuracy);
+        infoAR[myIndex].vt_bulletPattern[2].z = PlayersManager.instance.direction2[myIndex].z + (tf_clone.right.z * infoAR[myIndex].accuracy);
+        */
     }
+
     public void ActionBullet_SG()
     {
         for (int i = 0; i < 5; i++)
@@ -83,30 +104,105 @@ public partial class WeaponManager : MonoBehaviour
             infoSG[myIndex].tf_bulletClone[i] = infoSG[myIndex].obj_bulletClone[i].transform;
         }
 
-        Vector3 tmp0 = (RightJoystick.instance.right_joystick.touchPos - (RightJoystick.instance.right_joystick.stickFirstPos - new Vector3(20.0f, 20.0f, 0))).normalized;
-        Vector3 tmp1 = (RightJoystick.instance.right_joystick.touchPos - (RightJoystick.instance.right_joystick.stickFirstPos - new Vector3(10.0f, 10.0f, 0))).normalized;
-        Vector3 tmp2 = (RightJoystick.instance.right_joystick.touchPos - RightJoystick.instance.right_joystick.stickFirstPos).normalized;
-        Vector3 tmp3 = (RightJoystick.instance.right_joystick.touchPos - (RightJoystick.instance.right_joystick.stickFirstPos + new Vector3(10.0f, 10.0f, 0))).normalized;
-        Vector3 tmp4 = (RightJoystick.instance.right_joystick.touchPos - (RightJoystick.instance.right_joystick.stickFirstPos + new Vector3(20.0f, 20.0f, 0))).normalized;
+        infoSG[myIndex].vt_bulletPattern[0, 0].x = (infoSG[myIndex].tf_bulletClone[0].forward.x - infoSG[myIndex].tf_bulletClone[0].right.x * 0.2f) - (infoSG[myIndex].tf_bulletClone[0].right.x * 0.4f);
+        infoSG[myIndex].vt_bulletPattern[0, 0].z = (infoSG[myIndex].tf_bulletClone[0].forward.z - infoSG[myIndex].tf_bulletClone[0].right.z * 0.2f) - (infoSG[myIndex].tf_bulletClone[0].right.z * 0.4f);
+        infoSG[myIndex].vt_bulletPattern[0, 1].x = (infoSG[myIndex].tf_bulletClone[1].forward.x - infoSG[myIndex].tf_bulletClone[1].right.x * 0.2f) - (infoSG[myIndex].tf_bulletClone[1].right.x * 0.2f);
+        infoSG[myIndex].vt_bulletPattern[0, 1].z = (infoSG[myIndex].tf_bulletClone[1].forward.z - infoSG[myIndex].tf_bulletClone[1].right.z * 0.2f) - (infoSG[myIndex].tf_bulletClone[1].right.z * 0.2f);    
+        infoSG[myIndex].vt_bulletPattern[0, 2].x = (infoSG[myIndex].tf_bulletClone[2].forward.x - infoSG[myIndex].tf_bulletClone[2].right.x * 0.2f);
+        infoSG[myIndex].vt_bulletPattern[0, 2].z = (infoSG[myIndex].tf_bulletClone[2].forward.z - infoSG[myIndex].tf_bulletClone[2].right.z * 0.2f);
+        infoSG[myIndex].vt_bulletPattern[0, 3].x = (infoSG[myIndex].tf_bulletClone[3].forward.x - infoSG[myIndex].tf_bulletClone[3].right.x * 0.2f) + (infoSG[myIndex].tf_bulletClone[3].right.x * 0.2f);
+        infoSG[myIndex].vt_bulletPattern[0, 3].z = (infoSG[myIndex].tf_bulletClone[3].forward.z - infoSG[myIndex].tf_bulletClone[3].right.z * 0.2f) + (infoSG[myIndex].tf_bulletClone[3].right.z * 0.2f);
+        infoSG[myIndex].vt_bulletPattern[0, 4].x = (infoSG[myIndex].tf_bulletClone[4].forward.x - infoSG[myIndex].tf_bulletClone[4].right.x * 0.2f) + (infoSG[myIndex].tf_bulletClone[4].right.x * 0.4f);
+        infoSG[myIndex].vt_bulletPattern[0, 4].z = (infoSG[myIndex].tf_bulletClone[4].forward.z - infoSG[myIndex].tf_bulletClone[4].right.z * 0.2f) + (infoSG[myIndex].tf_bulletClone[4].right.z * 0.4f);
 
-        infoSG[myIndex].vt_bulletDir[0].x = tmp0.x;   infoSG[myIndex].vt_bulletDir[1].x = tmp1.x;
-        infoSG[myIndex].vt_bulletDir[0].z = tmp0.y;   infoSG[myIndex].vt_bulletDir[1].z = tmp1.y;
-        infoSG[myIndex].vt_bulletDir[2].x = tmp2.x;   infoSG[myIndex].vt_bulletDir[3].x = tmp3.x;
-        infoSG[myIndex].vt_bulletDir[2].z = tmp2.y;   infoSG[myIndex].vt_bulletDir[3].z = tmp3.y;
-        infoSG[myIndex].vt_bulletDir[4].x = tmp4.x;
-        infoSG[myIndex].vt_bulletDir[4].z = tmp4.y;
+        infoSG[myIndex].vt_bulletPattern[1, 0].x = (infoSG[myIndex].tf_bulletClone[0].forward.x + infoSG[myIndex].tf_bulletClone[0].right.x * 0.2f) - (infoSG[myIndex].tf_bulletClone[0].right.x * 0.4f);
+        infoSG[myIndex].vt_bulletPattern[1, 0].z = (infoSG[myIndex].tf_bulletClone[0].forward.z + infoSG[myIndex].tf_bulletClone[0].right.z * 0.2f) - (infoSG[myIndex].tf_bulletClone[0].right.z * 0.4f);
+        infoSG[myIndex].vt_bulletPattern[1, 1].x = (infoSG[myIndex].tf_bulletClone[1].forward.x + infoSG[myIndex].tf_bulletClone[1].right.x * 0.2f) - (infoSG[myIndex].tf_bulletClone[1].right.x * 0.2f);
+        infoSG[myIndex].vt_bulletPattern[1, 1].z = (infoSG[myIndex].tf_bulletClone[1].forward.z + infoSG[myIndex].tf_bulletClone[1].right.z * 0.2f) - (infoSG[myIndex].tf_bulletClone[1].right.z * 0.2f);
+        infoSG[myIndex].vt_bulletPattern[1, 2].x = (infoSG[myIndex].tf_bulletClone[2].forward.x + infoSG[myIndex].tf_bulletClone[2].right.x * 0.2f);
+        infoSG[myIndex].vt_bulletPattern[1, 2].z = (infoSG[myIndex].tf_bulletClone[2].forward.z + infoSG[myIndex].tf_bulletClone[2].right.z * 0.2f);
+        infoSG[myIndex].vt_bulletPattern[1, 3].x = (infoSG[myIndex].tf_bulletClone[3].forward.x + infoSG[myIndex].tf_bulletClone[3].right.x * 0.2f) + (infoSG[myIndex].tf_bulletClone[3].right.x * 0.2f);
+        infoSG[myIndex].vt_bulletPattern[1, 3].z = (infoSG[myIndex].tf_bulletClone[3].forward.z + infoSG[myIndex].tf_bulletClone[3].right.z * 0.2f) + (infoSG[myIndex].tf_bulletClone[3].right.z * 0.2f);
+        infoSG[myIndex].vt_bulletPattern[1, 4].x = (infoSG[myIndex].tf_bulletClone[4].forward.x + infoSG[myIndex].tf_bulletClone[4].right.x * 0.2f) + (infoSG[myIndex].tf_bulletClone[4].right.x * 0.4f);
+        infoSG[myIndex].vt_bulletPattern[1, 4].z = (infoSG[myIndex].tf_bulletClone[4].forward.z + infoSG[myIndex].tf_bulletClone[4].right.z * 0.2f) + (infoSG[myIndex].tf_bulletClone[4].right.z * 0.4f);
 
         for (int i = 0; i < infoSG[myIndex].obj_bulletClone.Length; i++)
         {
-            infoSG[myIndex].tf_bulletClone[i].localRotation = Quaternion.LookRotation(infoSG[myIndex].vt_bulletDir[i]);
-            infoSG[myIndex].obj_bulletClone[i].GetComponent<Rigidbody>().AddForce(infoSG[myIndex].vt_bulletDir[i] * 2000.0f, ForceMode.Acceleration);
+            infoSG[myIndex].tf_bulletClone[i].localRotation = Quaternion.LookRotation(infoSG[myIndex].vt_bulletPattern[infoSG[myIndex].bulletPatternIndex, i]);
+            infoSG[myIndex].obj_bulletClone[i].GetComponent<Rigidbody>().AddForce(infoSG[myIndex].vt_bulletPattern[infoSG[myIndex].bulletPatternIndex, i] * infoSG[myIndex].speed, ForceMode.Acceleration);
+        }
+
+        switch (infoSG[myIndex].bulletPatternIndex)
+        {
+            case 0:
+                infoSG[myIndex].bulletPatternIndex = 1;
+                break;
+            case 1:
+                infoSG[myIndex].bulletPatternIndex = 0;
+                break;
         }
         /*
-        clone1.GetComponent<Rigidbody>().AddForce(new Vector3(PlayersManager.instance.direction2[myIndex].x - 0.1f, 0, PlayersManager.instance.direction2[myIndex].z - 0.1f) * 2000.0f);
-        clone2.GetComponent<Rigidbody>().AddForce(new Vector3(PlayersManager.instance.direction2[myIndex].x - 0.05f, 0, PlayersManager.instance.direction2[myIndex].z - 0.05f) * 2000.0f);
-        clone3.GetComponent<Rigidbody>().AddForce(PlayersManager.instance.direction2[myIndex] * 2000.0f);
-        clone4.GetComponent<Rigidbody>().AddForce(new Vector3(PlayersManager.instance.direction2[myIndex].x + 0.05f, 0, PlayersManager.instance.direction2[myIndex].z + 0.05f) * 2000.0f);
-        clone5.GetComponent<Rigidbody>().AddForce(new Vector3(PlayersManager.instance.direction2[myIndex].x + 0.1f, 0, PlayersManager.instance.direction2[myIndex].z + 0.1f) * 2000.0f);
+        infoSG[myIndex].vt_bulletDir[0].x = PlayersManager.instance.direction2[myIndex].x - (infoSG[myIndex].tf_bulletClone[0].right.x * 0.2f);
+        infoSG[myIndex].vt_bulletDir[0].z = PlayersManager.instance.direction2[myIndex].z - (infoSG[myIndex].tf_bulletClone[0].right.z * 0.2f);
+        infoSG[myIndex].vt_bulletDir[1].x = PlayersManager.instance.direction2[myIndex].x - (infoSG[myIndex].tf_bulletClone[1].right.x * 0.1f);
+        infoSG[myIndex].vt_bulletDir[1].z = PlayersManager.instance.direction2[myIndex].z - (infoSG[myIndex].tf_bulletClone[1].right.z * 0.1f);
+        infoSG[myIndex].vt_bulletDir[2].x = PlayersManager.instance.direction2[myIndex].x;
+        infoSG[myIndex].vt_bulletDir[2].z = PlayersManager.instance.direction2[myIndex].z;
+        infoSG[myIndex].vt_bulletDir[3].x = PlayersManager.instance.direction2[myIndex].x + (infoSG[myIndex].tf_bulletClone[3].right.x * 0.1f);
+        infoSG[myIndex].vt_bulletDir[3].z = PlayersManager.instance.direction2[myIndex].z + (infoSG[myIndex].tf_bulletClone[3].right.z * 0.1f);
+        infoSG[myIndex].vt_bulletDir[4].x = PlayersManager.instance.direction2[myIndex].x + (infoSG[myIndex].tf_bulletClone[4].right.x * 0.2f);
+        infoSG[myIndex].vt_bulletDir[4].z = PlayersManager.instance.direction2[myIndex].z + (infoSG[myIndex].tf_bulletClone[4].right.z * 0.2f);
+        */
+    }
+
+    public void ActionBullet_SMG()
+    {
+        var clone = GetBulletFromPool(myIndex);
+        Transform tf_clone = clone.transform;
+
+        infoSMG[myIndex].vt_bulletPattern[0].x = tf_clone.forward.x - (tf_clone.right.x * infoSMG[myIndex].accuracy);
+        infoSMG[myIndex].vt_bulletPattern[0].z = tf_clone.forward.z - (tf_clone.right.z * infoSMG[myIndex].accuracy);
+        infoSMG[myIndex].vt_bulletPattern[1].x = tf_clone.forward.x;
+        infoSMG[myIndex].vt_bulletPattern[1].z = tf_clone.forward.z;
+        infoSMG[myIndex].vt_bulletPattern[2].x = tf_clone.forward.x + (tf_clone.right.x * infoSMG[myIndex].accuracy);
+        infoSMG[myIndex].vt_bulletPattern[2].z = tf_clone.forward.z + (tf_clone.right.z * infoSMG[myIndex].accuracy);
+
+        tf_clone.localRotation = Quaternion.LookRotation(infoSMG[myIndex].vt_bulletPattern[infoSMG[myIndex].bulletPatternIndex]);
+        clone.GetComponent<Rigidbody>().AddForce(infoSMG[myIndex].vt_bulletPattern[infoSMG[myIndex].bulletPatternIndex] * infoSMG[myIndex].speed, ForceMode.Acceleration);
+
+        switch (infoSMG[myIndex].bulletPatternIndex)
+        {
+            case 0:
+                infoSMG[myIndex].bulletPatternIndex = 1;
+                //Debug.Log("중");
+                break;
+            case 1:
+                if (infoSMG[myIndex].prevBulletPatternIndex == 1)
+                {
+                    infoSMG[myIndex].bulletPatternIndex = 0;
+                    infoSMG[myIndex].prevBulletPatternIndex = 2;
+                    //Debug.Log("좌");
+                }
+                else if (infoSMG[myIndex].prevBulletPatternIndex == 2)
+                {
+                    infoSMG[myIndex].bulletPatternIndex = 2;
+                    infoSMG[myIndex].prevBulletPatternIndex = 1;
+                    //Debug.Log("우");
+                }
+                break;
+            case 2:
+                infoSMG[myIndex].bulletPatternIndex = 1;
+                //Debug.Log("중");
+                break;
+        }
+
+        /*
+         infoAR[myIndex].vt_bulletPattern[0].x = PlayersManager.instance.direction2[myIndex].x - (tf_clone.right.x * infoAR[myIndex].accuracy);
+        infoAR[myIndex].vt_bulletPattern[0].z = PlayersManager.instance.direction2[myIndex].z - (tf_clone.right.z * infoAR[myIndex].accuracy);
+        infoAR[myIndex].vt_bulletPattern[1].x = PlayersManager.instance.direction2[myIndex].x;
+        infoAR[myIndex].vt_bulletPattern[1].z = PlayersManager.instance.direction2[myIndex].z;
+        infoAR[myIndex].vt_bulletPattern[2].x = PlayersManager.instance.direction2[myIndex].x + (tf_clone.right.x * infoAR[myIndex].accuracy);
+        infoAR[myIndex].vt_bulletPattern[2].z = PlayersManager.instance.direction2[myIndex].z + (tf_clone.right.z * infoAR[myIndex].accuracy);
         */
     }
 }
