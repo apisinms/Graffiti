@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.IO;
 using UnityEngine;
+using static C_Global;
 
 
 /// <summary>
@@ -51,7 +52,7 @@ public partial class NetworkManager : MonoBehaviour
                 instance.br = new BinaryReader(tcpClient.GetStream());
                 instance.bw = new BinaryWriter(tcpClient.GetStream());
 
-                queue = new Queue<C_Global.QueueInfo>();    // 처리되야할 작업들을 담을 큐 생성
+                queue = new Queue<QueueInfo>();    // 처리되야할 작업들을 담을 큐 생성
 
                 ThreadManager.GetInstance.Init();
             }
@@ -83,7 +84,7 @@ public partial class NetworkManager : MonoBehaviour
     private void RecvProcess()
     {
         // 큐에 저장된 패킷을 꺼내온다.
-        C_Global.QueueInfo info = queue.Dequeue();
+        QueueInfo info = queue.Dequeue();
 
         // 얻어온 패킷으로 state, protocol, result를 각각 추출한다.
         GetProtocol(info.packet, out state, out protocol, out result);
@@ -211,7 +212,6 @@ public partial class NetworkManager : MonoBehaviour
                                                 WeaponPacket weapon = new WeaponPacket();
 
                                                 UnPackPacket(info.packet, out playerNum, ref weapon);
-
                                                 bridge.SetWeapon(playerNum, ref weapon);
                                             }
                                         }
@@ -235,8 +235,8 @@ public partial class NetworkManager : MonoBehaviour
                                             lock (key)
                                             {
                                                 UnPackPacket(info.packet, ref tmpPosPacket);
-                                                bridge.OnMoveSuccess(ref tmpPosPacket);
-                                            }
+												bridge.OnMoveSuccess(ref tmpPosPacket);
+											}
                                         }
                                         break;
 
@@ -270,6 +270,8 @@ public partial class NetworkManager : MonoBehaviour
                                                 byte playerBit = 0;
                                                 UnPackPacket(info.packet, out playerBit);
 
+												/// 매개변수로 playerBit 보내고, 
+
                                                 // 다른 클라의 위치 요청 프로토콜
                                                 PROTOCOL reqProtocol = SetProtocol(
                                                       STATE_PROTOCOL.INGAME_STATE,
@@ -279,7 +281,7 @@ public partial class NetworkManager : MonoBehaviour
                                                 // 마스크 만들어서 어떤 플레이어가 같은 섹터에 있는지 확인하고, 오브젝트를 켜고 끔
                                                 byte bitMask = (byte)PLAYER_BIT.PLAYER_1;
                                                 int packetSize;
-                                                for (int i = 0; i < C_Global.MAX_PLAYER; i++, bitMask >>= 1)
+                                                for (int i = 0; i < MAX_PLAYER; i++, bitMask >>= 1)
                                                 {
                                                     // 본인은 걍 건너 뜀
                                                     if ((myPlayerNum - 1) == i)

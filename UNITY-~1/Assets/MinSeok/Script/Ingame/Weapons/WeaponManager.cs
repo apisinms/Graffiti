@@ -114,7 +114,8 @@ public partial class WeaponManager : MonoBehaviour
         curActionCor = new Coroutine[_num];
 
         // !!!!!!!!!!! 서버에서 받은데이터로 초기화해야함  임의로 속성값부여해둠. !!!!!!!!!!
-        for (int i = 0; i < _num; i++)
+        /*
+		 *for (int i = 0; i < _num; i++)
         {
             if (myIndex == i) //내인덱스들의 초기화
             {
@@ -135,6 +136,7 @@ public partial class WeaponManager : MonoBehaviour
             {
                 int index;
                 curActionCor[i] = null;
+
                 mainWeapon[i] = _WEAPONS.AR; //셀렉트웨폰에서 선택했던 무기를 서버에서 받아야함.
                 subWeapon[i] = _WEAPONS.GRENADE;
 
@@ -142,11 +144,12 @@ public partial class WeaponManager : MonoBehaviour
                 obj_mainWeapon[i] = Instantiate(obj_weaponPrefabsList[index], PlayersManager.instance.obj_players[i].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
                 obj_mainWeapon[i].transform.SetParent(PlayersManager.instance.obj_players[i].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
 
-               // index = (int)subWeapon[i] - 1; //보조무기의 생성
+				//index = (int)subWeapon[i] - 1; //보조무기의 생성
                 //obj_subWeapon[i] = Instantiate(obj_weaponPrefabsList[index], PlayersManager.instance.obj_players[i].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
                 //obj_subWeapon[i].transform.SetParent(PlayersManager.instance.obj_players[i].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
             }
         }
+		*/
     }
     void Initialization_Attribute(int _num)
     {
@@ -197,4 +200,16 @@ public partial class WeaponManager : MonoBehaviour
         }
 
     }
+
+	public void CreateWeapon(int _idx)
+	{
+		//mainWeapon[_idx] = _WEAPONS.AR; //셀렉트웨폰에서 선택했던 무기를 서버에서 받아야함.
+		//subWeapon[_idx] = _WEAPONS.GRENADE;
+
+		curActionCor[_idx] = null;
+
+		int weaponIndex = (int)mainWeapon[_idx]; //주무기의 생성
+		obj_mainWeapon[_idx] = Instantiate(obj_weaponPrefabsList[weaponIndex], PlayersManager.instance.obj_players[_idx].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
+		obj_mainWeapon[_idx].transform.SetParent(PlayersManager.instance.obj_players[_idx].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
+	}
 }

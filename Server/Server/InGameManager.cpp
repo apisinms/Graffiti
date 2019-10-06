@@ -37,6 +37,22 @@ void InGameManager::PackPacket(char* _setptr, const int &_sec, int& _size)
 	_size = _size + sizeof(_sec);
 }
 
+void InGameManager::PackPacket(char* _setptr, int _num, Weapon* _struct, int& _size)
+{
+	char* ptr = _setptr;
+	_size = 0;
+
+	// 플레이어 넘버
+	memcpy(ptr, &_num, sizeof(_num));
+	ptr = ptr + sizeof(_num);
+	_size = _size + sizeof(_num);
+
+	// 총 종류 패킷
+	memcpy(ptr, _struct, sizeof(Weapon));
+	ptr = ptr + sizeof(Weapon);
+	_size = _size + sizeof(Weapon);
+}
+
 void InGameManager::PackPacket(char* _setptr, PositionPacket& _struct, int& _size)
 {
 	char* ptr = _setptr;
@@ -148,7 +164,7 @@ bool InGameManager::WeaponSelectProcess(C_ClientInfo* _ptr, char* _buf)
 			_ptr->GetPlayerInfo()->GetWeapon()->subW);
 	}
 
-	// 프로토콜 세팅(인게임 상태로)
+	// 1. 시작 프로토콜 세팅(인게임 상태로)
 	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::START_PROTOCOL, itemSelect);
 
 	// 패킹 및 전송
@@ -165,6 +181,9 @@ bool InGameManager::WeaponSelectProcess(C_ClientInfo* _ptr, char* _buf)
 
 bool InGameManager::InitProcess(C_ClientInfo* _ptr, char* _buf)
 {
+	PROTOCOL_INGAME protocol;
+	char buf[BUFSIZE] = { 0, };
+	int packetSize = 0;
 	PositionPacket tmpPos;
 	UnPackPacket(_buf, tmpPos);
 
@@ -187,6 +206,16 @@ bool InGameManager::InitProcess(C_ClientInfo* _ptr, char* _buf)
 
 	else
 		printf("유효하지 않은 인덱스!! %d, %d\n", getIdx.i, getIdx.j);
+
+
+
+	// 모든 플레이어에게 자신이 선택한 무기정보를 패킹
+	list<C_ClientInfo*> playerList = _ptr->GetRoom()->GetPlayerList();
+	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::WEAPON_PROTOCOL, RESULT_INGAME::NOTIFY_WEAPON);
+	PackPacket(buf, _ptr->GetPlayerInfo()->GetPlayerNum(), _ptr->GetPlayerInfo()->GetWeapon(), packetSize);
+
+	// 보내줌
+	ListSendPacket(playerList, nullptr, protocol, buf, packetSize, false);
 
 	return true;
 }

@@ -116,14 +116,6 @@ public partial class NetworkManager : MonoBehaviour
         NODATA = ((Int64)0x1 << 24)
     };
 
-    enum PLAYER_BIT : byte
-    {
-        PLAYER_1 = (1 << 3),
-        PLAYER_2 = (1 << 2),
-        PLAYER_3 = (1 << 1),
-        PLAYER_4 = (1 << 0),
-    }
-
     struct _User_Info
     {
         public string id;

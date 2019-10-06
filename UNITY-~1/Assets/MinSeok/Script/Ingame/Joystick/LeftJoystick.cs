@@ -9,7 +9,7 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
 {
     public Image img_joystick_back;
     public Image img_joystick_stick;
-    private static bool isLeftDrag;
+	private static bool isLeftDrag;
     public static bool LeftTouch { get { return isLeftDrag; } }
 
     protected struct _Joystick
@@ -30,16 +30,18 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
 
         float can = transform.parent.GetComponent<RectTransform>().localScale.x; // 캔버스 크기에대한 반지름 조절.
         left_joystick.maxMoveArea *= can;
-    }
+
+		isLeftDrag = false;
+	}
 
     public void DragStart()
     {
         StateManager.instance.Circuit(true);
 
 #if NETWORK
-      // 처음 터치할 때만
-      if (LeftJoystick.LeftTouch == false && RightJoystick.RightTouch == false)
-         PlayersManager.instance.StartMoveCoroutine();
+		// 처음 터치할 때만
+		if (LeftJoystick.LeftTouch == false && RightJoystick.RightTouch == false)
+			BridgeClientToServer.instance.StartMoveCoroutine();
 #endif
         isLeftDrag = true;
     }
@@ -94,7 +96,7 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
 #if NETWORK
       // 둘 다 터치 뗐을 때만
       if (LeftJoystick.LeftTouch == false && RightJoystick.RightTouch == false)
-       PlayersManager.instance.StopMoveCoroutine();
+			BridgeClientToServer.instance.StopMoveCoroutine();
 #endif
-    }
+	}
 }

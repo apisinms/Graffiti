@@ -6,7 +6,7 @@ class C_ClientInfo;
 class InGameManager
 {
 #ifdef DEBUG
-	static const int WEAPON_SELTIME = 1 + 1;	// 무기 선택 시간(초 단위)
+	static const int WEAPON_SELTIME = 10 + 1;	// 무기 선택 시간(초 단위)
 #else
 	static const int WEAPON_SELTIME = 30 + 1;	// 무기 선택 시간(초 단위)
 #endif
@@ -29,6 +29,9 @@ class InGameManager
 		// INGAME_PROTOCOL 공통
 		INGAME_SUCCESS = ((__int64)0x1 << 33),
 		INGAME_FAIL    = ((__int64)0x1 << 32),
+
+		// WEAPON_PROTOCOL 개별
+		NOTIFY_WEAPON = ((__int64)0x1 << 31),	// 무기를 알려줌
 
 		// MOVE_PROTOCOL 개별
 		ENTER_SECTOR        = ((__int64)0x1 << 31),		// 섹터 진입
@@ -53,6 +56,7 @@ public:
 
 private:
 	void PackPacket(char* _setptr, const int &_sec, int& _size);
+	void PackPacket(char* _setptr, int _num, Weapon* _struct, int& _size);
 	void PackPacket(char* _setptr, PositionPacket& _struct, int& _size);
 	void UnPackPacket(char* _getBuf, int& _num);
 	void UnPackPacket(char* _getBuf, PositionPacket& _struct);

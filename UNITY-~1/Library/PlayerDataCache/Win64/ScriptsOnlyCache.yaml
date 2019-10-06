@@ -1,6 +1,7 @@
 ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
+    - BridgeClientToServer
     - BulletCollision
     - C_Encrypt
     - CameraControl
@@ -10,7 +11,6 @@ ScriptsOnlyBuild:
     - InputInfoManager
     - JoystickManager
     - LeftJoystick
-    - MoveManager
     - NetworkManager
     - PlayersManager
     - RightJoystick
@@ -81,6 +81,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 95
       Script: {instanceID: 0}
+    - Class: 96
+      Script: {instanceID: 0}
     - Class: 104
       Script: {instanceID: 0}
     - Class: 108
@@ -108,33 +110,33 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9644}
     - Class: 114
-      Script: {instanceID: 9798}
+      Script: {instanceID: 9800}
     - Class: 114
-      Script: {instanceID: 9830}
+      Script: {instanceID: 9832}
     - Class: 114
-      Script: {instanceID: 9928}
+      Script: {instanceID: 9930}
     - Class: 114
-      Script: {instanceID: 9938}
+      Script: {instanceID: 9940}
     - Class: 114
-      Script: {instanceID: 10046}
+      Script: {instanceID: 10048}
     - Class: 114
-      Script: {instanceID: 10070}
+      Script: {instanceID: 10072}
     - Class: 114
-      Script: {instanceID: 10090}
+      Script: {instanceID: 10092}
     - Class: 114
-      Script: {instanceID: 10110}
+      Script: {instanceID: 10112}
     - Class: 114
-      Script: {instanceID: 10160}
+      Script: {instanceID: 10162}
     - Class: 114
-      Script: {instanceID: 10326}
+      Script: {instanceID: 10330}
     - Class: 114
-      Script: {instanceID: 10356}
+      Script: {instanceID: 10360}
     - Class: 114
-      Script: {instanceID: 10364}
+      Script: {instanceID: 10368}
     - Class: 114
-      Script: {instanceID: 10412}
+      Script: {instanceID: 10416}
     - Class: 114
-      Script: {instanceID: 10560}
+      Script: {instanceID: 10564}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -201,11 +203,11 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9440}
     - Class: 114
-      Script: {instanceID: 9486}
+      Script: {instanceID: 9488}
     - Class: 114
-      Script: {instanceID: 9894}
+      Script: {instanceID: 9896}
     - Class: 114
-      Script: {instanceID: 10528}
+      Script: {instanceID: 10532}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -260,11 +262,13 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9440}
     - Class: 114
-      Script: {instanceID: 9810}
+      Script: {instanceID: 9668}
     - Class: 114
-      Script: {instanceID: 9940}
+      Script: {instanceID: 9812}
     - Class: 114
-      Script: {instanceID: 10108}
+      Script: {instanceID: 9942}
+    - Class: 114
+      Script: {instanceID: 10110}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -319,7 +323,7 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9440}
     - Class: 114
-      Script: {instanceID: 9818}
+      Script: {instanceID: 9820}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -379,12 +383,6 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: ActivationTrack
-  - hash:
-      serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: sample
   - hash:
       serializedVersion: 2
       Hash: cf9f5cf2c3145a37ac07f00e50e460f9
@@ -595,12 +593,6 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: btn_quit
-  - hash:
-      serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: NewBehaviourScript
   - hash:
       serializedVersion: 2
       Hash: cf9f5cf2c3145a37ac07f00e50e460f9
@@ -825,6 +817,12 @@ ScriptsOnlyBuild:
     className: TMP_SubMeshUI
   - hash:
       serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: BridgeClientToServer
+  - hash:
+      serializedVersion: 2
       Hash: 780e8f682b3221346c034a6712a0fd25
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
@@ -889,12 +887,6 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: SelectWeapons
-  - hash:
-      serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: MoveManager
   - hash:
       serializedVersion: 2
       Hash: b3ab2106268377ffe25dd18ac23dca28
@@ -1183,4 +1175,4 @@ ScriptsOnlyBuild:
   - Assets/Scenes/MainGame.unity
   - Assets/Scenes/MainMenu.unity
   - Assets/Scenes/SelectWeapons.unity
-  playerPath: "C:/Users/kgl87/OneDrive/\uBC14\uD0D5 \uD654\uBA74/\uADF8\uB77C\uBE44TTi/Graffiti.exe"
+  playerPath: C:/Users/Kimtler/Desktop/NETWORK/Graffiti.exe

@@ -21,7 +21,9 @@ public partial class BridgeClientToServer : MonoBehaviour
         //무기정보 저장
         WeaponManager.instance.mainWeapon[_playerNum - 1] = (_WEAPONS)_weapon.mainW;
         WeaponManager.instance.subWeapon[_playerNum - 1] = (_WEAPONS)_weapon.subW;
-    } 
+
+		WeaponManager.instance.CreateWeapon(_playerNum - 1);
+	} 
 
     // 섹터 진입시
     public void EnterSectorProcess(ref PositionPacket _packet)
