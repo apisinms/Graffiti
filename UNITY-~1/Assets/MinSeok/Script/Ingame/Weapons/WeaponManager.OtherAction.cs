@@ -90,27 +90,27 @@ public partial class WeaponManager : MonoBehaviour
             infoSG[_index].tf_bulletClone[i] = infoSG[_index].obj_bulletClone[i].transform;
         }
 
-        infoSG[_index].vt_bulletPattern[0, 0].x = (infoSG[_index].tf_bulletClone[0].forward.x - infoSG[_index].tf_bulletClone[0].right.x * 0.2f) - (infoSG[_index].tf_bulletClone[0].right.x * 0.4f);
-        infoSG[_index].vt_bulletPattern[0, 0].z = (infoSG[_index].tf_bulletClone[0].forward.z - infoSG[_index].tf_bulletClone[0].right.z * 0.2f) - (infoSG[_index].tf_bulletClone[0].right.z * 0.4f);
-        infoSG[_index].vt_bulletPattern[0, 1].x = (infoSG[_index].tf_bulletClone[1].forward.x - infoSG[_index].tf_bulletClone[1].right.x * 0.2f) - (infoSG[_index].tf_bulletClone[1].right.x * 0.2f);
-        infoSG[_index].vt_bulletPattern[0, 1].z = (infoSG[_index].tf_bulletClone[1].forward.z - infoSG[_index].tf_bulletClone[1].right.z * 0.2f) - (infoSG[_index].tf_bulletClone[1].right.z * 0.2f);
+        infoSG[_index].vt_bulletPattern[0, 0].x = (infoSG[_index].tf_bulletClone[0].forward.x - infoSG[_index].tf_bulletClone[0].right.x * 0.2f) - (infoSG[_index].tf_bulletClone[0].right.x * 0.2f);
+        infoSG[_index].vt_bulletPattern[0, 0].z = (infoSG[_index].tf_bulletClone[0].forward.z - infoSG[_index].tf_bulletClone[0].right.z * 0.2f) - (infoSG[_index].tf_bulletClone[0].right.z * 0.2f);
+        infoSG[_index].vt_bulletPattern[0, 1].x = (infoSG[_index].tf_bulletClone[1].forward.x - infoSG[_index].tf_bulletClone[1].right.x * 0.2f) - (infoSG[_index].tf_bulletClone[1].right.x * 0.1f);
+        infoSG[_index].vt_bulletPattern[0, 1].z = (infoSG[_index].tf_bulletClone[1].forward.z - infoSG[_index].tf_bulletClone[1].right.z * 0.2f) - (infoSG[_index].tf_bulletClone[1].right.z * 0.1f);
         infoSG[_index].vt_bulletPattern[0, 2].x = (infoSG[_index].tf_bulletClone[2].forward.x - infoSG[_index].tf_bulletClone[2].right.x * 0.2f);
         infoSG[_index].vt_bulletPattern[0, 2].z = (infoSG[_index].tf_bulletClone[2].forward.z - infoSG[_index].tf_bulletClone[2].right.z * 0.2f);
-        infoSG[_index].vt_bulletPattern[0, 3].x = (infoSG[_index].tf_bulletClone[3].forward.x - infoSG[_index].tf_bulletClone[3].right.x * 0.2f) + (infoSG[_index].tf_bulletClone[3].right.x * 0.2f);
-        infoSG[_index].vt_bulletPattern[0, 3].z = (infoSG[_index].tf_bulletClone[3].forward.z - infoSG[_index].tf_bulletClone[3].right.z * 0.2f) + (infoSG[_index].tf_bulletClone[3].right.z * 0.2f);
-        infoSG[_index].vt_bulletPattern[0, 4].x = (infoSG[_index].tf_bulletClone[4].forward.x - infoSG[_index].tf_bulletClone[4].right.x * 0.2f) + (infoSG[_index].tf_bulletClone[4].right.x * 0.4f);
-        infoSG[_index].vt_bulletPattern[0, 4].z = (infoSG[_index].tf_bulletClone[4].forward.z - infoSG[_index].tf_bulletClone[4].right.z * 0.2f) + (infoSG[_index].tf_bulletClone[4].right.z * 0.4f);
+        infoSG[_index].vt_bulletPattern[0, 3].x = (infoSG[_index].tf_bulletClone[3].forward.x - infoSG[_index].tf_bulletClone[3].right.x * 0.2f) + (infoSG[_index].tf_bulletClone[3].right.x * 0.1f);
+        infoSG[_index].vt_bulletPattern[0, 3].z = (infoSG[_index].tf_bulletClone[3].forward.z - infoSG[_index].tf_bulletClone[3].right.z * 0.2f) + (infoSG[_index].tf_bulletClone[3].right.z * 0.1f);
+        infoSG[_index].vt_bulletPattern[0, 4].x = (infoSG[_index].tf_bulletClone[4].forward.x - infoSG[_index].tf_bulletClone[4].right.x * 0.2f) + (infoSG[_index].tf_bulletClone[4].right.x * 0.2f);
+        infoSG[_index].vt_bulletPattern[0, 4].z = (infoSG[_index].tf_bulletClone[4].forward.z - infoSG[_index].tf_bulletClone[4].right.z * 0.2f) + (infoSG[_index].tf_bulletClone[4].right.z * 0.2f);
                                        
-        infoSG[_index].vt_bulletPattern[1, 0].x = (infoSG[_index].tf_bulletClone[0].forward.x + infoSG[_index].tf_bulletClone[0].right.x * 0.2f) - (infoSG[_index].tf_bulletClone[0].right.x * 0.4f);
-        infoSG[_index].vt_bulletPattern[1, 0].z = (infoSG[_index].tf_bulletClone[0].forward.z + infoSG[_index].tf_bulletClone[0].right.z * 0.2f) - (infoSG[_index].tf_bulletClone[0].right.z * 0.4f);
-        infoSG[_index].vt_bulletPattern[1, 1].x = (infoSG[_index].tf_bulletClone[1].forward.x + infoSG[_index].tf_bulletClone[1].right.x * 0.2f) - (infoSG[_index].tf_bulletClone[1].right.x * 0.2f);
-        infoSG[_index].vt_bulletPattern[1, 1].z = (infoSG[_index].tf_bulletClone[1].forward.z + infoSG[_index].tf_bulletClone[1].right.z * 0.2f) - (infoSG[_index].tf_bulletClone[1].right.z * 0.2f);
+        infoSG[_index].vt_bulletPattern[1, 0].x = (infoSG[_index].tf_bulletClone[0].forward.x + infoSG[_index].tf_bulletClone[0].right.x * 0.2f) - (infoSG[_index].tf_bulletClone[0].right.x * 0.2f);
+        infoSG[_index].vt_bulletPattern[1, 0].z = (infoSG[_index].tf_bulletClone[0].forward.z + infoSG[_index].tf_bulletClone[0].right.z * 0.2f) - (infoSG[_index].tf_bulletClone[0].right.z * 0.2f);
+        infoSG[_index].vt_bulletPattern[1, 1].x = (infoSG[_index].tf_bulletClone[1].forward.x + infoSG[_index].tf_bulletClone[1].right.x * 0.2f) - (infoSG[_index].tf_bulletClone[1].right.x * 0.1f);
+        infoSG[_index].vt_bulletPattern[1, 1].z = (infoSG[_index].tf_bulletClone[1].forward.z + infoSG[_index].tf_bulletClone[1].right.z * 0.2f) - (infoSG[_index].tf_bulletClone[1].right.z * 0.1f);
         infoSG[_index].vt_bulletPattern[1, 2].x = (infoSG[_index].tf_bulletClone[2].forward.x + infoSG[_index].tf_bulletClone[2].right.x * 0.2f);
         infoSG[_index].vt_bulletPattern[1, 2].z = (infoSG[_index].tf_bulletClone[2].forward.z + infoSG[_index].tf_bulletClone[2].right.z * 0.2f);
-        infoSG[_index].vt_bulletPattern[1, 3].x = (infoSG[_index].tf_bulletClone[3].forward.x + infoSG[_index].tf_bulletClone[3].right.x * 0.2f) + (infoSG[_index].tf_bulletClone[3].right.x * 0.2f);
-        infoSG[_index].vt_bulletPattern[1, 3].z = (infoSG[_index].tf_bulletClone[3].forward.z + infoSG[_index].tf_bulletClone[3].right.z * 0.2f) + (infoSG[_index].tf_bulletClone[3].right.z * 0.2f);
-        infoSG[_index].vt_bulletPattern[1, 4].x = (infoSG[_index].tf_bulletClone[4].forward.x + infoSG[_index].tf_bulletClone[4].right.x * 0.2f) + (infoSG[_index].tf_bulletClone[4].right.x * 0.4f);
-        infoSG[_index].vt_bulletPattern[1, 4].z = (infoSG[_index].tf_bulletClone[4].forward.z + infoSG[_index].tf_bulletClone[4].right.z * 0.2f) + (infoSG[_index].tf_bulletClone[4].right.z * 0.4f);
+        infoSG[_index].vt_bulletPattern[1, 3].x = (infoSG[_index].tf_bulletClone[3].forward.x + infoSG[_index].tf_bulletClone[3].right.x * 0.2f) + (infoSG[_index].tf_bulletClone[3].right.x * 0.1f);
+        infoSG[_index].vt_bulletPattern[1, 3].z = (infoSG[_index].tf_bulletClone[3].forward.z + infoSG[_index].tf_bulletClone[3].right.z * 0.2f) + (infoSG[_index].tf_bulletClone[3].right.z * 0.1f);
+        infoSG[_index].vt_bulletPattern[1, 4].x = (infoSG[_index].tf_bulletClone[4].forward.x + infoSG[_index].tf_bulletClone[4].right.x * 0.2f) + (infoSG[_index].tf_bulletClone[4].right.x * 0.2f);
+        infoSG[_index].vt_bulletPattern[1, 4].z = (infoSG[_index].tf_bulletClone[4].forward.z + infoSG[_index].tf_bulletClone[4].right.z * 0.2f) + (infoSG[_index].tf_bulletClone[4].right.z * 0.2f);
 
         for (int i = 0; i < infoSG[_index].obj_bulletClone.Length; i++)
         {

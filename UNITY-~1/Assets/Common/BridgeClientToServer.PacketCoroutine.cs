@@ -6,14 +6,13 @@ using UnityEngine;
 public partial class BridgeClientToServer : MonoBehaviour
 {
     #region PACKET_COROUTINE
-    private IEnumerator moveCor;
+    private Coroutine moveCor = null;
     #endregion
 
     private void Initialization_PacketCoroutine()
     {
 #if NETWORK
       networkManager = NetworkManager.instance;
-      moveCor = MovePlayer();
 #endif
     }
 
@@ -31,7 +30,10 @@ public partial class BridgeClientToServer : MonoBehaviour
 
     public void StartMoveCoroutine()
     {
-        StartCoroutine(moveCor);
+        if(moveCor != null)
+            StopCoroutine(moveCor);
+
+        moveCor = StartCoroutine(MovePlayer());
     }
 
     public void StopMoveCoroutine()

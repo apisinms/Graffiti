@@ -29,6 +29,9 @@ public class State_Shot : MonoBehaviour, IActionState
             if (PlayersManager.instance.curCor != null)
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
             PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.ActionIdle());
+
+            if (WeaponManager.instance.curActionCor[myIndex] != null)
+                WeaponManager.instance.StopCoroutine(WeaponManager.instance.curActionCor[myIndex]);
         }
     }
 

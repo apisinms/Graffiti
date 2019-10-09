@@ -26,6 +26,7 @@ public partial class BridgeClientToServer : MonoBehaviour
 
 #if NETWORK
         //////////////////////// 테스트용(상대팀 끄기) ////////////////////
+        /*
         switch (myIndex)
         {
             case 0:
@@ -40,6 +41,7 @@ public partial class BridgeClientToServer : MonoBehaviour
                 playersManager.obj_players[1].SetActive(false);
                 break;
         }
+        */
 #endif
 
         curPlayerPos = new Transform[C_Global.MAX_PLAYER];

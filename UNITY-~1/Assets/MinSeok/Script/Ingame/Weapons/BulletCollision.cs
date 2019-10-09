@@ -16,6 +16,7 @@ public class BulletCollision : MonoBehaviour
     {
         //총알이 만들어지고 발사전 첫프레임에 쏜 플레이어의 상태를 저장시킴. 이렇게안하면 총알이 날아가는중에
         //쏜플레이어 상태가 샷이 아니게되면(쏘고 바로조준떼거나) 사정거리 적용이 풀려버려서 우주끝까지 총알이날아감
+        /*
         for (int i = 0; i < C_Global.MAX_PLAYER; i++)
         {
             if (i == myIndex)
@@ -23,9 +24,13 @@ public class BulletCollision : MonoBehaviour
             else
                 prevActionState[i] = (_ACTION_STATE)NetworkManager.instance.GetActionState(i);
         } 
+        */
+        prevActionState[myIndex] = PlayersManager.instance.actionState[myIndex];
     }
     private void Update()
     {
+        CheckBulletRange(myIndex);
+        /*
         for (int i = 0; i < C_Global.MAX_PLAYER; i++)
         {
             //총알이 쐇을때의 플레이어 상태가 샷일때만 사정거리 검사진행
@@ -34,6 +39,7 @@ public class BulletCollision : MonoBehaviour
 
             CheckBulletRange(i);
         } 
+        */
     }
 
     public void CheckBulletRange(int _index)
@@ -42,7 +48,6 @@ public class BulletCollision : MonoBehaviour
         {
             case _WEAPONS.AR:
                 {
-                    Debug.Log(Vector3.Distance(this.transform.position, PlayersManager.instance.obj_players[_index].transform.position));
                     if (Vector3.Distance(this.transform.position, PlayersManager.instance.obj_players[_index].transform.position) >= WeaponManager.instance.infoAR[_index].range)
                         WeaponManager.instance.ReturnBulletToPool(gameObject, _index);
                 }
@@ -64,7 +69,8 @@ public class BulletCollision : MonoBehaviour
         }   
     }
 
-    private void OnTriggerEnter(Collider other)
+
+    private void OnTriggerStay(Collider other)
     {
         //총알끼리는 충돌체크x, 내총알에 내가맞는것도x
         if (other.gameObject.CompareTag("Bullet"))
@@ -72,27 +78,21 @@ public class BulletCollision : MonoBehaviour
 
         if (this.transform.parent.CompareTag("BulletPool1"))
         {
-            WeaponManager.instance.ReturnBulletToPool(gameObject, 0);
             //if (other.gameObject.CompareTag("Player1"))
             //return;
+            WeaponManager.instance.ReturnBulletToPool(gameObject, 0);
         }
         else if (this.transform.parent.CompareTag("BulletPool2"))
         {
             WeaponManager.instance.ReturnBulletToPool(gameObject, 1);
-            //if (other.gameObject.CompareTag("Player2"))
-                //return;
         }
         else if (this.transform.parent.CompareTag("BulletPool3"))
         {
             WeaponManager.instance.ReturnBulletToPool(gameObject, 2);
-            //if (other.gameObject.CompareTag("Player3"))
-                //return;
         }
         else if (this.transform.parent.CompareTag("BulletPool4"))
         {
             WeaponManager.instance.ReturnBulletToPool(gameObject, 3);
-            //if (other.gameObject.CompareTag("Player4"))
-                //return;
         }
     }
 }

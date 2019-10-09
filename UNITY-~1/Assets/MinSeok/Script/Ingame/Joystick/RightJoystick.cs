@@ -71,7 +71,7 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
             case 0:
                 if (isStep0 == false)
                 {
-                    StateManager.instance.Aim(false);
+                    StateManager.instance.Shot(false);
                     isStep0 = true;
 
                     #if NETWORK
@@ -87,8 +87,8 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
             case 1:
                 if (isStep1 == false)
                 {
-                    StateManager.instance.Shot(false);
                     StateManager.instance.Aim(true);
+                    StateManager.instance.Shot(false);
                     isStep1 = true;
 
                     #if NETWORK
