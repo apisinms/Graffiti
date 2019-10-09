@@ -8,8 +8,8 @@ public partial class WeaponManager : MonoBehaviour
 
     public IEnumerator ActionBullet(int _index)
     {
-        if (_index == myIndex)
-            yield break;
+        //if (_index == myIndex)
+            //yield break;
 
         switch (mainWeapon[_index])
         {

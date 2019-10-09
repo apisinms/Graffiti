@@ -10,7 +10,7 @@ public class C_Global
     public const int MAX_PLAYER = 4;    // 플레이어 수
 
     public const float interpolation_Pos = 0.175f;
-    public const float interpolation_Rot = 20.0f;
+    public const float interpolation_Rot = 50.0f;
     public const float amingSpeed = 0.35f;
 
     public const float camPosY = 7.0f;

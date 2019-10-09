@@ -14,6 +14,7 @@
 #include <process.h>
 #include <locale.h>
 #include <mstcpip.h>
+//#include <cmath>
 
 // STL
 #include <list>
@@ -44,3 +45,6 @@
 
 // state
 #include "C_State.h"
+
+// Database
+#include "DatabaseManager.h"

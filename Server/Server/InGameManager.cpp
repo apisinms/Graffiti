@@ -20,6 +20,15 @@ void InGameManager::Destroy()
 
 void InGameManager::Init()
 {
+	// 무기 정보를 얻어옴
+	WeaponInfo* weaponPtr;
+	while ((weaponPtr = DatabaseManager::GetInstance()->LoadWeaponInfo()) != nullptr)
+		weaponInfoList.emplace_front(weaponPtr);
+
+	// 게임 정보를 얻어옴
+	GameInfo* gamePtr;
+	while ((gamePtr = DatabaseManager::GetInstance()->LoadGameInfo()) != nullptr)
+		gameInfoList.emplace_front(gamePtr);
 }
 
 void InGameManager::End()
@@ -230,6 +239,7 @@ bool InGameManager::MoveProcess(C_ClientInfo* _ptr, char* _buf)
 	PositionPacket movedPos;
 	UnPackPacket(_buf, movedPos);
 	printf("%d ,%f, %f, %f, %d\n", movedPos.playerNum, movedPos.posX, movedPos.posZ, movedPos.rotY, movedPos.action);
+	printf("패킷 %d회 보냄\n", ++numOfPacketSent);
 
 	// 만약 이동할 수 없는 정도의 속도로 갑자기 빠르게 움직인다면 그냥 다 무시하고 해당 클라한테만 강제 포지션 셋팅 패킷을 보낸다.
 #ifdef DEBUG	// 나중에 릴리즈할때 ifdef를 ifndef로 바꾸면 됨

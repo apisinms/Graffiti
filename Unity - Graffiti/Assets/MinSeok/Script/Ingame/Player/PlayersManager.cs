@@ -83,19 +83,19 @@ public partial class PlayersManager : MonoBehaviour
 
     void Initialization(int _num) //클라이언트 자체에서 그냥 초기화. 어차피 서버에서 정보가 있으니까 이렇게함.
     {
-        obj_players = new GameObject[C_Global.MAX_PLAYER];
-        tf_players = new Transform[C_Global.MAX_PLAYER];
+        obj_players    = new GameObject[C_Global.MAX_PLAYER];
+        tf_players     = new Transform[C_Global.MAX_PLAYER];
         am_animePlayer = new Animator[C_Global.MAX_PLAYER];
-        speed = new float[C_Global.MAX_PLAYER];
-        hp = new float[C_Global.MAX_PLAYER];
-        maxSpeed = new float[C_Global.MAX_PLAYER];
-        maxHp = new float[C_Global.MAX_PLAYER];
-        direction = new Vector3[C_Global.MAX_PLAYER];
-        direction2 = new Vector3[C_Global.MAX_PLAYER];
-        actionState = new _ACTION_STATE[C_Global.MAX_PLAYER];
+        speed          = new float[C_Global.MAX_PLAYER];
+        hp             = new float[C_Global.MAX_PLAYER];
+        maxSpeed       = new float[C_Global.MAX_PLAYER];
+        maxHp          = new float[C_Global.MAX_PLAYER];
+        direction      = new Vector3[C_Global.MAX_PLAYER];
+        direction2     = new Vector3[C_Global.MAX_PLAYER];
+        actionState    = new _ACTION_STATE[C_Global.MAX_PLAYER];
         attributeState = new _ATTRIBUTE_STATE[C_Global.MAX_PLAYER];
-        lastPosX = new float[C_Global.MAX_PLAYER];
-        lastPosZ = new float[C_Global.MAX_PLAYER];
+        lastPosX       = new float[C_Global.MAX_PLAYER];
+        lastPosZ       = new float[C_Global.MAX_PLAYER];
 
         //재생중이였던 이전 코루틴.
         curCor = null;

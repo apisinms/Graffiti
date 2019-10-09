@@ -47,6 +47,16 @@ void UtilityManager::UTF8ToUnicode(char* _strUTF8, wchar_t* _strUnicode)
 	MultiByteToWideChar(CP_UTF8, 0, _strUTF8, (int)strlen(_strUTF8), _strUnicode, nLen);
 }
 
+float UtilityManager::GetDotDistanceNoSqrt(float _posX1, float _posZ1, float _posX2, float _posZ2)
+{
+	return ((_posX2 - _posX1) * (_posX2 - _posX1)) + ((_posZ2 - _posZ1) * (_posZ2 - _posZ1));
+}
+
+float UtilityManager::GetDotDistanceWithSqrt(float _posX1, float _posZ1, float _posX2, float _posZ2)
+{
+	return sqrt(((_posX2 - _posX1) * (_posX2 - _posX1)) + ((_posZ2 - _posZ1) * (_posZ2 - _posZ1)));
+}
+
 //{
 //	// 멀티바이트 -> 유니코드
 //	int UtilityManager::MultiByteToUnicode(char* _strMultibyte, wchar_t* _strUnicode)

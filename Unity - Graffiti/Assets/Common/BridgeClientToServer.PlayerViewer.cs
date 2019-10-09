@@ -68,8 +68,8 @@ public partial class BridgeClientToServer : MonoBehaviour
         for (int i = 0; i < curPlayerPos.Length; i++)
         {
             // 자기 제외하고
-            if (myIndex == i)
-                continue;
+            //if (myIndex == i)
+                //continue;
 
             pos.x = networkManager.GetPosX(i);
             //pos.y = curPlayerPos[i].localPosition.y;
@@ -89,7 +89,7 @@ public partial class BridgeClientToServer : MonoBehaviour
                             if (WeaponManager.instance.curActionCor[i] != null)
                                 StopCoroutine(WeaponManager.instance.curActionCor[i]);
 
-                            //StopCoroutine(WeaponManager.instance.ActionBullet(i));
+                            StopCoroutine(WeaponManager.instance.ActionBullet(i));
                             isStartShotCor[i] = false;
                         }
 
@@ -103,7 +103,7 @@ public partial class BridgeClientToServer : MonoBehaviour
                             if (WeaponManager.instance.curActionCor[i] != null)
                                 StopCoroutine(WeaponManager.instance.curActionCor[i]);
 
-                            //StopCoroutine(WeaponManager.instance.ActionBullet(i));
+                            StopCoroutine(WeaponManager.instance.ActionBullet(i));
                             isStartShotCor[i] = false;
                         }
 
@@ -117,7 +117,7 @@ public partial class BridgeClientToServer : MonoBehaviour
                             if (WeaponManager.instance.curActionCor[i] != null)
                                 StopCoroutine(WeaponManager.instance.curActionCor[i]);
 
-                            //StopCoroutine(WeaponManager.instance.ActionBullet(i));
+                            StopCoroutine(WeaponManager.instance.ActionBullet(i));
                             isStartShotCor[i] = false;
                         }
 
@@ -126,8 +126,8 @@ public partial class BridgeClientToServer : MonoBehaviour
                 case _ACTION_STATE.SHOT:
                     {
 						playersManager.Action_AimingNormal(i, pos, networkManager.GetRotY(i)); //조준애니메이션은 계속하고.
-
-                        if (isStartShotCor[i] == false) //샷만 중복실행 방지하면서 코루틴 1회실행.
+																							   
+						if (isStartShotCor[i] == false) //샷만 중복실행 방지하면서 코루틴 1회실행.
                         {
                             if (WeaponManager.instance.curActionCor[i] != null)
                                 StopCoroutine(WeaponManager.instance.curActionCor[i]); //이전꺼 멈추고
@@ -148,7 +148,7 @@ public partial class BridgeClientToServer : MonoBehaviour
                             if (WeaponManager.instance.curActionCor[i] != null)
                                 StopCoroutine(WeaponManager.instance.curActionCor[i]);
 
-                            //StopCoroutine(WeaponManager.instance.ActionBullet(i));
+                            StopCoroutine(WeaponManager.instance.ActionBullet(i));
                             isStartShotCor[i] = false;
                         }
 

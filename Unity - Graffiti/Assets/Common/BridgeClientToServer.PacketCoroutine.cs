@@ -43,4 +43,12 @@ public partial class BridgeClientToServer : MonoBehaviour
 
         StopCoroutine(moveCor);
     }
+
+	// 패킷을 1회 보내준다.
+	public void SendPacket()
+	{
+		networkManager.SendPosition(playersManager.tf_players[myIndex].localPosition.x,
+		playersManager.tf_players[myIndex].localPosition.z,
+		playersManager.tf_players[myIndex].localEulerAngles.y, playersManager.speed[myIndex], playersManager.actionState[myIndex]);
+	}
 }

@@ -31,8 +31,8 @@ public partial class PlayersManager : MonoBehaviour
             Anime_Circuit(myIndex);
             BlockCollisionEachOther();
 
-            tf_players[myIndex].localRotation = Quaternion.LookRotation(direction[myIndex]);
-            tf_players[myIndex].Translate(direction[myIndex] * speed[myIndex] * Time.smoothDeltaTime, Space.World);
+			tf_players[myIndex].localRotation = Quaternion.LookRotation(direction[myIndex]);
+			tf_players[myIndex].Translate(direction[myIndex] * speed[myIndex] * Time.smoothDeltaTime, Space.World);
             yield return null;
         }
     }

@@ -9,12 +9,13 @@ using namespace std;
 
 #define SERVERPORT		10823
 
-#define IDSIZE			255
-#define PWSIZE			255
-#define NICKNAMESIZE	255
-#define MSGSIZE			512
+#define IDSIZE				255
+#define PWSIZE				255
+#define NICKNAMESIZE		255
+#define MSGSIZE				512
+#define WEAPON_NAME_SIZE	32
 
-#define MAX_PLAYER		2
+#define MAX_PLAYER		1
 
 #define THREAD_END		-777
 
@@ -171,6 +172,28 @@ public:
 	void FocusOn() { isFocus = true; }
 	void FocusOff() { isFocus = false; }
 	bool GetFocus() { return isFocus; }
+};
+
+struct WeaponInfo
+{
+	int num;			// 무기 번호
+	int numOfPattern;	// 패턴 갯수
+	int maxAmmo;		// 최대 총알
+	float fireRate;		// 발사 속도
+	float damage;		// 데미지
+	float accuracy;		// 정확도
+	float range;		// 사정거리
+	float speed;		// 탄속
+	TCHAR weaponName[WEAPON_NAME_SIZE];	// 무기 이름
+};
+
+struct GameInfo
+{
+	int gameType;		// 게임 타입(나중에 모드가 여러 개 생길 수도 있으니)
+	float maxSpeed;		// 최대 이동속도
+	float maxHealth;	// 최대 체력
+	int responTime;		// 리스폰 시간
+	int gameTime;		// 게임 시간(ex 180초)
 };
 const float PlayerInfo::MAX_SPEED = 4.0f;
 

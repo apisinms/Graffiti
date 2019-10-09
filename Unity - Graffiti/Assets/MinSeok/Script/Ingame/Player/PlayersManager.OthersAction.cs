@@ -69,8 +69,8 @@ public partial class PlayersManager : MonoBehaviour
 
     public void Action_AimingNormal(int _index, Vector3 _pos, float _roty) //제자리 조준
     {
-        if (myIndex == _index)
-            return;
+        //if (myIndex == _index)
+            //return;
 
         if (tf_players[_index].localPosition.x != _pos.x ||
            tf_players[_index].localPosition.z != _pos.z)

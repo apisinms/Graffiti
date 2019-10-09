@@ -192,7 +192,7 @@ public partial class WeaponManager : MonoBehaviour
             infoSMG[i].prevBulletPatternIndex      = 1;
             infoSMG[i].curAmmo  = 25;
             infoSMG[i].maxAmmo = 25;
-            infoSMG[i].fireRate     = 0.07f;
+            infoSMG[i].fireRate     = 0.1f;
             infoSMG[i].damage    = 0.5f;
             infoSMG[i].accuracy   = 0.1f;
             infoSMG[i].range       = 15.0f;
