@@ -44,7 +44,23 @@ void DatabaseManager::End()
 	mysql_close(instance->connPtr);
 }
 
-UserInfo* DatabaseManager::LoadData()
+bool DatabaseManager::QueryToMySQL(const char* _query)
+{
+	stat = mysql_query(connPtr, _query);
+	if (stat != 0)
+	{
+		LogManager::GetInstance()->ErrorPrintf(mysql_error(&conn));
+		//LogManager::GetInstance()->ErrQuitMsgBox(mysql_error(&conn));
+
+		return false;
+	}
+
+	result = mysql_store_result(connPtr);
+
+	return true;
+}
+
+UserInfo* DatabaseManager::LoadUserInfo()
 {
 	static bool isLoad = false;
 
@@ -52,15 +68,9 @@ UserInfo* DatabaseManager::LoadData()
 
 	if (isLoad == false)
 	{
-		// 쿼리문을 mysql에 전송한다.(리턴값이 0이아니면 오류)
-		stat = mysql_query(connPtr, "SELECT * FROM tbl_userinfo");
-		if (stat != 0)
-			LogManager::GetInstance()->ErrorPrintf(mysql_error(&conn));
-		//LogManager::GetInstance()->ErrQuitMsgBox(mysql_error(&conn));
-
-		result = mysql_store_result(connPtr);
-
-		isLoad = true;
+		// mysql에 테이블 정보를 모두 가져오라고 요청한다.
+		if(QueryToMySQL("SELECT * FROM tbl_userinfo") == true)
+			isLoad = true;
 	}
 
 	row = mysql_fetch_row(result);
@@ -72,6 +82,7 @@ UserInfo* DatabaseManager::LoadData()
 		return nullptr;
 	}
 
+	// 아직 row가 존재하면 user정보 셋팅
 	else
 	{
 		UserInfo info;
@@ -89,7 +100,7 @@ UserInfo* DatabaseManager::LoadData()
 	}
 }
 
-void DatabaseManager::InsertData(UserInfo* _userInfo)
+void DatabaseManager::InsertUserInfo(UserInfo* _userInfo)
 {
 	IC_CS cs;
 
@@ -108,4 +119,106 @@ void DatabaseManager::InsertData(UserInfo* _userInfo)
 	if (stat != 0)
 		LogManager::GetInstance()->ErrorPrintf(mysql_error(&conn));
 		//LogManager::GetInstance()->ErrQuitMsgBox(mysql_error(&conn));
+}
+
+WeaponInfo* DatabaseManager::LoadWeaponInfo()
+{
+	static bool isLoad = false;
+
+	IC_CS cs;
+
+	if (isLoad == false)
+	{
+		// mysql에 테이블 정보를 모두 가져오라고 요청한다.
+		if (QueryToMySQL("SELECT * FROM tbl_weaponinfo") == true)
+			isLoad = true;
+	}
+
+	row = mysql_fetch_row(result);
+
+	if (row == nullptr)
+	{
+		mysql_free_result(result);	// 결과 메모리 반납
+
+		return nullptr;
+	}
+
+	// 아직 row가 존재하면 무기정보 셋팅
+	else
+	{
+		WeaponInfo info;
+		memset(&info, 0, sizeof(WeaponInfo));
+
+		info.num = atoi(row[0]);
+		info.numOfPattern = atoi(row[1]);
+		info.maxAmmo = atoi(row[2]);
+		info.fireRate = atof(row[3]);
+		info.damage = atof(row[4]);
+		info.accuracy = atof(row[5]);
+		info.range = atof(row[6]);
+		info.speed = atof(row[7]);
+		UtilityManager::GetInstance()->UTF8ToUnicode(row[8], info.weaponName);
+
+		printf("[무기정보] %ls\n", info.weaponName);
+		printf("무기번호:%d\n", info.num);
+		printf("패턴갯수:%d\n", info.numOfPattern);
+		printf("최대총알:%d\n", info.maxAmmo);
+		printf("발사주기:%f\n", info.fireRate);
+		printf("데미지 :%f\n", info.damage);
+		printf("정확도 :%f\n", info.accuracy);
+		printf("사정거리:%f\n", info.range);
+		printf("탄속    :%f\n\n", info.speed);
+
+		// 동적 할당 후 리턴
+		WeaponInfo* ptr = new WeaponInfo(info);
+
+		return ptr;
+	}
+}
+
+GameInfo* DatabaseManager::LoadGameInfo()
+{
+	static bool isLoad = false;
+
+	IC_CS cs;
+
+	if (isLoad == false)
+	{
+		// mysql에 테이블 정보를 모두 가져오라고 요청한다.
+		if (QueryToMySQL("SELECT * FROM tbl_gameinfo") == true)
+			isLoad = true;
+	}
+
+	row = mysql_fetch_row(result);
+
+	if (row == nullptr)
+	{
+		mysql_free_result(result);	// 결과 메모리 반납
+
+		return nullptr;
+	}
+
+	// 아직 row가 존재하면 무기정보 셋팅
+	else
+	{
+		GameInfo info;
+		memset(&info, 0, sizeof(GameInfo));
+
+		info.gameType = atoi(row[0]);
+		info.maxSpeed = atof(row[1]);
+		info.maxHealth = atof(row[2]);
+		info.responTime = atoi(row[3]);
+		info.gameTime = atoi(row[4]);
+
+		printf("[게임정보] %d\n", info.gameType);
+		printf("최대속도:%f\n", info.gameType);
+		printf("최대체력:%f\n", info.maxHealth);
+		printf("리스폰 :%d\n", info.responTime);
+		printf("주어진 게임시간:%d\n\n", info.gameTime);
+
+		// 동적 할당 후 리턴
+		GameInfo* ptr = new GameInfo(info);
+
+		return ptr;
+	}
 }

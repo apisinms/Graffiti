@@ -52,6 +52,7 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
 
     private void Update()
     {
+        //Debug.Log(PlayersManager.instance.actionState[myIndex]);
         //Debug.Log(PlayersManager.instance.direction2[myIndex]);
     }
     public void Drag(BaseEventData _Data)
@@ -72,6 +73,10 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
                 {
                     StateManager.instance.Aim(false);
                     isStep0 = true;
+
+                    #if NETWORK
+                    BridgeClientToServer.instance.SendPacketOnce();
+                    #endif
                 }
                 isStep1 = false; isStep2 = false;
 
@@ -85,6 +90,10 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
                     StateManager.instance.Shot(false);
                     StateManager.instance.Aim(true);
                     isStep1 = true;
+
+                    #if NETWORK
+                    BridgeClientToServer.instance.SendPacketOnce();
+                    #endif
                 }
                 isStep0 = false; isStep2 = false;
 
@@ -96,6 +105,10 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
                 {
                     StateManager.instance.Shot(true);
                     isStep2 = true;
+
+                    #if NETWORK
+                    BridgeClientToServer.instance.SendPacketOnce();
+                    #endif
                 }
                 isStep0 = false; isStep1 = false;
 

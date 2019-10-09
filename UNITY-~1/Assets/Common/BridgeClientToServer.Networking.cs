@@ -112,4 +112,12 @@ public partial class BridgeClientToServer : MonoBehaviour
         if (PlayersManager.instance.obj_players[_quitPlayerNum - 1].activeSelf == true)
             PlayersManager.instance.obj_players[_quitPlayerNum - 1].SetActive(false);
     }
+
+    //쐇을때 무조건 1번의 패킷을 보내야됨. 보정용
+    public void SendPacketOnce()
+    {
+        networkManager.SendPosition(playersManager.tf_players[myIndex].localPosition.x,
+        playersManager.tf_players[myIndex].localPosition.z,
+        playersManager.tf_players[myIndex].localEulerAngles.y, playersManager.speed[myIndex], playersManager.actionState[myIndex]);
+    }
 }

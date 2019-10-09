@@ -6,10 +6,14 @@ class C_ClientInfo;
 class InGameManager
 {
 #ifdef DEBUG
-	static const int WEAPON_SELTIME = 10 + 1;	// 무기 선택 시간(초 단위)
+	static const int WEAPON_SELTIME = 5 + 1;	// 무기 선택 시간(초 단위)
+	int numOfPacketSent             = 0;		// 패킷 보낸 횟수
 #else
 	static const int WEAPON_SELTIME = 30 + 1;	// 무기 선택 시간(초 단위)
 #endif
+
+	list<WeaponInfo*> weaponInfoList;	// 보관할 무기 정보리스트
+	list<GameInfo*> gameInfoList;		// 보관할 게임 정보리스트
 
 	// 53~34
 	enum PROTOCOL_INGAME : __int64

@@ -67,10 +67,8 @@ public class State_Aim : MonoBehaviour, IActionState
             PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.ActionAim());
 
             if (WeaponManager.instance.curActionCor[myIndex] != null)
-              WeaponManager.instance.StopCoroutine(WeaponManager.instance.curActionCor[myIndex]);
+                WeaponManager.instance.StopCoroutine(WeaponManager.instance.curActionCor[myIndex]);
             WeaponManager.instance.curActionCor[myIndex] = WeaponManager.instance.StartCoroutine(WeaponManager.instance.ActionBullet());
-
-            //BulletCollision.instance.curCheckRangeCor = BulletCollision.instance.StartCoroutine(BulletCollision.instance.CheckBulletRange()); 
         }
     }
 }

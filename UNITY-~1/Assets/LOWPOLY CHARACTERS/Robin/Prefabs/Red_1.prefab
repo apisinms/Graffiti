@@ -7591,7 +7591,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7248235133012816969}
   - component: {fileID: 7248235133003291633}
-  - component: {fileID: 3431429968267363329}
+  - component: {fileID: 1035351856476579658}
   m_Layer: 0
   m_Name: Red_1
   m_TagString: Untagged
@@ -7636,13 +7636,13 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 631d39da348af0a4aa58b6123f0ae03d, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!136 &3431429968267363329
+--- !u!136 &1035351856476579658
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

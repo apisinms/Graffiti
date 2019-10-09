@@ -8,6 +8,14 @@
   C_Socket.cpp
   ChatManager.cpp
   DatabaseManager.cpp
+e:\unity\projects\forgithub\graffiti\server\server\databasemanager.cpp(155): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\unity\projects\forgithub\graffiti\server\server\databasemanager.cpp(156): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\unity\projects\forgithub\graffiti\server\server\databasemanager.cpp(157): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\unity\projects\forgithub\graffiti\server\server\databasemanager.cpp(158): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\unity\projects\forgithub\graffiti\server\server\databasemanager.cpp(159): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\unity\projects\forgithub\graffiti\server\server\databasemanager.cpp(208): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\unity\projects\forgithub\graffiti\server\server\databasemanager.cpp(209): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+e:\unity\projects\forgithub\graffiti\server\server\databasemanager.cpp(214): warning C4477: 'printf' : 서식 문자열 '%f'에 'double' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'int'입니다.
   InGameManager.cpp
   LobbyManager.cpp
   LogManager.cpp
@@ -19,4 +27,4 @@
   SessionManager.cpp
   UtilityManager.cpp
   코드를 생성하고 있습니다...
-  Server.vcxproj -> C:\_PROGRAMMING_\_Portfolio\Graffiti\Server\x64\Debug\Server.exe
+  Server.vcxproj -> E:\Unity\Projects\forGitHub\Graffiti\Server\x64\Debug\Server.exe

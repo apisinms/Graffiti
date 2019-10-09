@@ -17,7 +17,12 @@ public class BulletCollision : MonoBehaviour
         //총알이 만들어지고 발사전 첫프레임에 쏜 플레이어의 상태를 저장시킴. 이렇게안하면 총알이 날아가는중에
         //쏜플레이어 상태가 샷이 아니게되면(쏘고 바로조준떼거나) 사정거리 적용이 풀려버려서 우주끝까지 총알이날아감
         for (int i = 0; i < C_Global.MAX_PLAYER; i++)
-            prevActionState[i] = PlayersManager.instance.actionState[i];
+        {
+            if (i == myIndex)
+                prevActionState[i] = PlayersManager.instance.actionState[myIndex];
+            else
+                prevActionState[i] = (_ACTION_STATE)NetworkManager.instance.GetActionState(i);
+        } 
     }
     private void Update()
     {
@@ -28,7 +33,7 @@ public class BulletCollision : MonoBehaviour
                 continue;
 
             CheckBulletRange(i);
-        }
+        } 
     }
 
     public void CheckBulletRange(int _index)
@@ -37,8 +42,9 @@ public class BulletCollision : MonoBehaviour
         {
             case _WEAPONS.AR:
                 {
+                    Debug.Log(Vector3.Distance(this.transform.position, PlayersManager.instance.obj_players[_index].transform.position));
                     if (Vector3.Distance(this.transform.position, PlayersManager.instance.obj_players[_index].transform.position) >= WeaponManager.instance.infoAR[_index].range)
-                                WeaponManager.instance.ReturnBulletToPool(gameObject, _index);
+                        WeaponManager.instance.ReturnBulletToPool(gameObject, _index);
                 }
                 break;
 

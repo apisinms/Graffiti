@@ -19,7 +19,7 @@ void LoginManager::Init()
 	joinList = new C_List<UserInfo*>();
 
 	UserInfo* ptr;
-	while ((ptr = DatabaseManager::GetInstance()->LoadData()) != nullptr)
+	while ((ptr = DatabaseManager::GetInstance()->LoadUserInfo()) != nullptr)
 		joinList->Insert(ptr);
 }
 void LoginManager::End()
@@ -175,7 +175,7 @@ bool LoginManager::JoinProcess(C_ClientInfo* _ptr, char* _buf)
 		_tcscpy_s(msg, MSGSIZE, JOIN_SUCCESS_MSG);
 
 		// DB에 추가하고, 회원가입 리스트에 넣는다.
-		DatabaseManager::GetInstance()->InsertData(ptr);
+		DatabaseManager::GetInstance()->InsertUserInfo(ptr);
 		joinList->Insert(_ptr->GetUserInfo());
 	}
 	break;

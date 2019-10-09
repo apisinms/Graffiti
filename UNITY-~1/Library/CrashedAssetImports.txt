@@ -1,1 +1,0 @@
-Assets/MinSeok/Animation/PlayerMovement/Aiming_Foward.fbx

@@ -36,10 +36,14 @@ public partial class BridgeClientToServer : MonoBehaviour
 
     public void StopMoveCoroutine()
     {
+        /*
         // 코루틴 정지시에 마지막 위치를 보내준다.
         networkManager.SendPosition(playersManager.tf_players[myIndex].localPosition.x,
             playersManager.tf_players[myIndex].localPosition.z,
             playersManager.tf_players[myIndex].localEulerAngles.y, playersManager.speed[myIndex], playersManager.actionState[myIndex]);
+            */
+        
+        SendPacketOnce();
 
         StopCoroutine(moveCor);
     }

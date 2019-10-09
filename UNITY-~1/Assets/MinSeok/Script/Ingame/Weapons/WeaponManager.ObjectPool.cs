@@ -37,7 +37,7 @@ public partial class WeaponManager : MonoBehaviour
                 break;
             }
         }
-       // obj_bulletClone.transform.GetChild(0).GetComponent<TrailRenderer>().Clear();
+
         return obj_bulletClone;
     }
 

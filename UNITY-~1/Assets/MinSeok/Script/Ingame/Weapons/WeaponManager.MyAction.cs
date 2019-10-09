@@ -11,7 +11,7 @@ public partial class WeaponManager : MonoBehaviour
     }
     private void Update()
     {
-           // Debug.Log(Vector3.Distance(sample);
+
     }
 
     public IEnumerator ActionBullet()
@@ -159,7 +159,7 @@ public partial class WeaponManager : MonoBehaviour
     {
         var clone = GetBulletFromPool(myIndex);
         Transform tf_clone = clone.transform;
-
+      
         infoSMG[myIndex].vt_bulletPattern[0].x = tf_clone.forward.x - (tf_clone.right.x * infoSMG[myIndex].accuracy);
         infoSMG[myIndex].vt_bulletPattern[0].z = tf_clone.forward.z - (tf_clone.right.z * infoSMG[myIndex].accuracy);
         infoSMG[myIndex].vt_bulletPattern[1].x = tf_clone.forward.x;

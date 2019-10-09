@@ -45,8 +45,6 @@ public class State_Shot : MonoBehaviour, IActionState
             if (WeaponManager.instance.curActionCor[myIndex] != null)
                 WeaponManager.instance.StopCoroutine(WeaponManager.instance.curActionCor[myIndex]);
             WeaponManager.instance.curActionCor[myIndex] = WeaponManager.instance.StartCoroutine(WeaponManager.instance.ActionBullet());
-
-            //BulletCollision.instance.curCheckRangeCor = BulletCollision.instance.StartCoroutine(BulletCollision.instance.CheckBulletRange());
         }
     }
 
@@ -62,9 +60,6 @@ public class State_Shot : MonoBehaviour, IActionState
           
             if (WeaponManager.instance.curActionCor[myIndex] != null)
                 WeaponManager.instance.StopCoroutine(WeaponManager.instance.curActionCor[myIndex]);
-            /*
-            if (BulletCollision.instance.curCheckRangeCor != null)
-                BulletCollision.instance.StopCoroutine(BulletCollision.instance.curCheckRangeCor); */
         }
     }
 
@@ -80,9 +75,6 @@ public class State_Shot : MonoBehaviour, IActionState
 
             if (WeaponManager.instance.curActionCor[myIndex] != null)
                 WeaponManager.instance.StopCoroutine(WeaponManager.instance.curActionCor[myIndex]);
-            /*
-            if (BulletCollision.instance.curCheckRangeCor != null)
-                BulletCollision.instance.StopCoroutine(BulletCollision.instance.curCheckRangeCor); */
         }
     }
 }

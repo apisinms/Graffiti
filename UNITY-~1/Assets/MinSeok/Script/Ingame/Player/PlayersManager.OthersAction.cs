@@ -51,7 +51,7 @@ public partial class PlayersManager : MonoBehaviour
 
         // 서버에서 넘겨져온 속도를 가져옴
         speed[_index] = networkManager.GetSpeed(_index);
-        Debug.Log("노멀서킷속도" + speed[_index]);
+        //Debug.Log("노멀서킷속도" + speed[_index]);
         Anime_Circuit(_index);
 
         tf_players[_index].localPosition = Vector3.MoveTowards(tf_players[_index].localPosition, _pos,
@@ -98,7 +98,7 @@ public partial class PlayersManager : MonoBehaviour
 
         // 서버에서 넘겨져온 속도를 가져옴
         speed[_index] = networkManager.GetSpeed(_index);
-        Debug.Log("에이밍서킷속도:" + speed[_index]);
+        //Debug.Log("에이밍서킷속도:" + speed[_index]);
 
         //좌측조이스틱 위로일때.         우측조이스틱의 방향에따라서 애니메이션을 달리함.
         if ((new Vector3(0, Mathf.Atan2(direction[_index].x, direction[_index].z) * Mathf.Rad2Deg, 0).y >= -30.0f) &&

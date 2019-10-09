@@ -112,31 +112,29 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9800}
     - Class: 114
-      Script: {instanceID: 9832}
+      Script: {instanceID: 9928}
     - Class: 114
-      Script: {instanceID: 9930}
+      Script: {instanceID: 9938}
     - Class: 114
-      Script: {instanceID: 9940}
+      Script: {instanceID: 10046}
     - Class: 114
-      Script: {instanceID: 10048}
+      Script: {instanceID: 10070}
     - Class: 114
-      Script: {instanceID: 10072}
+      Script: {instanceID: 10090}
     - Class: 114
-      Script: {instanceID: 10092}
+      Script: {instanceID: 10110}
     - Class: 114
-      Script: {instanceID: 10112}
+      Script: {instanceID: 10160}
     - Class: 114
-      Script: {instanceID: 10162}
+      Script: {instanceID: 10328}
     - Class: 114
-      Script: {instanceID: 10330}
+      Script: {instanceID: 10358}
     - Class: 114
-      Script: {instanceID: 10360}
+      Script: {instanceID: 10366}
     - Class: 114
-      Script: {instanceID: 10368}
+      Script: {instanceID: 10414}
     - Class: 114
-      Script: {instanceID: 10416}
-    - Class: 114
-      Script: {instanceID: 10564}
+      Script: {instanceID: 10562}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -148,6 +146,10 @@ ScriptsOnlyBuild:
     - Class: 137
       Script: {instanceID: 0}
     - Class: 157
+      Script: {instanceID: 0}
+    - Class: 198
+      Script: {instanceID: 0}
+    - Class: 199
       Script: {instanceID: 0}
     - Class: 213
       Script: {instanceID: 0}
@@ -205,9 +207,9 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9488}
     - Class: 114
-      Script: {instanceID: 9896}
+      Script: {instanceID: 9894}
     - Class: 114
-      Script: {instanceID: 10532}
+      Script: {instanceID: 10530}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -266,9 +268,9 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9812}
     - Class: 114
-      Script: {instanceID: 9942}
+      Script: {instanceID: 9940}
     - Class: 114
-      Script: {instanceID: 10110}
+      Script: {instanceID: 10108}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -1175,4 +1177,4 @@ ScriptsOnlyBuild:
   - Assets/Scenes/MainGame.unity
   - Assets/Scenes/MainMenu.unity
   - Assets/Scenes/SelectWeapons.unity
-  playerPath: C:/Users/Kimtler/Desktop/NETWORK/Graffiti.exe
+  playerPath: "E:/\uADF8\uB798\uD53C\uD2F0\uBE4C\uB4DC/Graffiti.exe"
