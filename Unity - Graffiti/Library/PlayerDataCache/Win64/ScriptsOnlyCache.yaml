@@ -5,7 +5,6 @@ ScriptsOnlyBuild:
     - BulletCollision
     - C_Encrypt
     - CameraControl
-    - ClientSectorManager
     - Customizable
     - GameManager
     - InputInfoManager
@@ -114,8 +113,6 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9928}
     - Class: 114
-      Script: {instanceID: 9938}
-    - Class: 114
       Script: {instanceID: 10046}
     - Class: 114
       Script: {instanceID: 10070}
@@ -135,8 +132,6 @@ ScriptsOnlyBuild:
       Script: {instanceID: 10414}
     - Class: 114
       Script: {instanceID: 10562}
-    - Class: 114
-      Script: {instanceID: 13864}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -148,6 +143,10 @@ ScriptsOnlyBuild:
     - Class: 137
       Script: {instanceID: 0}
     - Class: 157
+      Script: {instanceID: 0}
+    - Class: 198
+      Script: {instanceID: 0}
+    - Class: 199
       Script: {instanceID: 0}
     - Class: 213
       Script: {instanceID: 0}

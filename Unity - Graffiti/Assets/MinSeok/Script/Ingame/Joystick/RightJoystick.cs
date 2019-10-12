@@ -52,6 +52,7 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
 
     private void Update()
     {
+        //Debug.Log(PlayersManager.instance.actionState[myIndex]);
         //Debug.Log(PlayersManager.instance.direction2[myIndex]);
     }
     public void Drag(BaseEventData _Data)
@@ -70,8 +71,12 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
             case 0:
                 if (isStep0 == false)
                 {
-                    StateManager.instance.Aim(false);
+                    StateManager.instance.Shot(false);
                     isStep0 = true;
+
+                    #if NETWORK
+                    BridgeClientToServer.instance.SendPacketOnce();
+                    #endif
                 }
                 isStep1 = false; isStep2 = false;
 
@@ -82,10 +87,13 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
             case 1:
                 if (isStep1 == false)
                 {
-					//StateManager.instance.Shot(false);
-					//StateManager.instance.Aim(true);
-					StateManager.instance.SetState(State_Aim.GetStateInstance());
-					isStep1 = true;
+                    StateManager.instance.Aim(true);
+                    StateManager.instance.Shot(false);
+                    isStep1 = true;
+
+                    #if NETWORK
+                    BridgeClientToServer.instance.SendPacketOnce();
+                    #endif
                 }
                 isStep0 = false; isStep2 = false;
 
@@ -95,12 +103,12 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
             case 2:
                 if (isStep2 == false)
                 {
-					//StateManager.instance.Shot(true);
-					StateManager.instance.SetState(State_Shot.GetStateInstance());
+                    StateManager.instance.Shot(true);
                     isStep2 = true;
 
-					// 발사가 시작되면 무조건 처음 패킷을 서버로 보낸다.
-					BridgeClientToServer.instance.SendPacket();
+                    #if NETWORK
+                    BridgeClientToServer.instance.SendPacketOnce();
+                    #endif
                 }
                 isStep0 = false; isStep1 = false;
 

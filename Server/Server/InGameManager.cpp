@@ -173,8 +173,12 @@ bool InGameManager::WeaponSelectProcess(C_ClientInfo* _ptr, char* _buf)
 			_ptr->GetPlayerInfo()->GetWeapon()->subW);
 	}
 
+
+	/// 여기에 게임 정보 + 무기들의 정보를 보내주자 패킷 하나로 퉁 쳐서
 	// 1. 시작 프로토콜 세팅(인게임 상태로)
 	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::START_PROTOCOL, itemSelect);
+
+
 
 	// 패킹 및 전송
 	_ptr->SendPacket(protocol, buf, packetSize);
@@ -242,7 +246,7 @@ bool InGameManager::MoveProcess(C_ClientInfo* _ptr, char* _buf)
 	printf("패킷 %d회 보냄\n", ++numOfPacketSent);
 
 	// 만약 이동할 수 없는 정도의 속도로 갑자기 빠르게 움직인다면 그냥 다 무시하고 해당 클라한테만 강제 포지션 셋팅 패킷을 보낸다.
-#ifdef DEBUG	// 나중에 릴리즈할때 ifdef를 ifndef로 바꾸면 됨
+#ifndef DEBUG	// 나중에 릴리즈할때 ifdef를 ifndef로 바꾸면 됨
 	if (movedPos.speed > PlayerInfo::MAX_SPEED ||
 		abs(_ptr->GetPlayerInfo()->GetPosition()->posX - movedPos.posX) > 0.1f ||
 		abs(_ptr->GetPlayerInfo()->GetPosition()->posZ - movedPos.posZ) > 0.1f)

@@ -6,14 +6,13 @@ using UnityEngine;
 public partial class BridgeClientToServer : MonoBehaviour
 {
     #region PACKET_COROUTINE
-    private IEnumerator moveCor;
+    private Coroutine moveCor = null;
     #endregion
 
     private void Initialization_PacketCoroutine()
     {
 #if NETWORK
       networkManager = NetworkManager.instance;
-      moveCor = MovePlayer();
 #endif
     }
 
@@ -31,24 +30,23 @@ public partial class BridgeClientToServer : MonoBehaviour
 
     public void StartMoveCoroutine()
     {
-        StartCoroutine(moveCor);
+        if(moveCor != null)
+            StopCoroutine(moveCor);
+
+        moveCor = StartCoroutine(MovePlayer());
     }
 
     public void StopMoveCoroutine()
     {
+        /*
         // 코루틴 정지시에 마지막 위치를 보내준다.
         networkManager.SendPosition(playersManager.tf_players[myIndex].localPosition.x,
             playersManager.tf_players[myIndex].localPosition.z,
             playersManager.tf_players[myIndex].localEulerAngles.y, playersManager.speed[myIndex], playersManager.actionState[myIndex]);
+            */
+        
+        SendPacketOnce();
 
         StopCoroutine(moveCor);
     }
-
-	// 패킷을 1회 보내준다.
-	public void SendPacket()
-	{
-		networkManager.SendPosition(playersManager.tf_players[myIndex].localPosition.x,
-		playersManager.tf_players[myIndex].localPosition.z,
-		playersManager.tf_players[myIndex].localEulerAngles.y, playersManager.speed[myIndex], playersManager.actionState[myIndex]);
-	}
 }

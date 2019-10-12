@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static NetworkManager;
@@ -45,8 +46,45 @@ public partial class BridgeClientToServer : MonoBehaviour
     // 섹터 아웃시
     public void ExitSectorProcess(ref PositionPacket _packet)
     {
-        PlayersManager.instance.obj_players[_packet.playerNum - 1].SetActive(false);   // 끄고
+		PlayersManager.instance.obj_players[_packet.playerNum - 1].SetActive(false);   // 끄고
     }
+
+	public void UpdatePlayerProcess(byte _playerBit)
+	{
+		//Array.Clear(playerInSector, 0, playerInSector.Length);	// 섹터에 있는 플레이어 갱신해야되니까 다 지우고 시작.
+
+		// 마스크 만들어서 어떤 플레이어가 같은 섹터에 있는지 확인하고, 오브젝트를 켜고 끔
+		byte bitMask = (byte)C_Global.PLAYER_BIT.PLAYER_1;
+		for (int i = 0; i < C_Global.MAX_PLAYER; i++, bitMask >>= 1)
+		{
+			// 본인은 걍 건너 뜀
+			if ((networkManager.MyPlayerNum - 1) == i)
+				continue;
+
+			// 섹터에 포함되어있는 플레이어인데
+			if ((_playerBit & bitMask) > 0)
+			{
+				//playerInSector[i] = true;   // 포함되어 있으면 이 플레이어 true로 만듦
+
+				// 꺼져있는 플레이어라면 위치를 넘버로 요청한다.(얘네들만 갱신해주면 됨)
+				if (PlayersManager.instance.obj_players[i].activeSelf == false)
+					networkManager.RequestOtherPlayerPos(i + 1);
+
+				// 이미 켜져있으면 굳이 얻어올 필요 없음
+				else
+					continue;
+			}
+
+			// 섹터에 포함되어 있지 않다면 오브젝트를 꺼준다.(오브젝트가 켜진 경우만)
+			else
+			{
+				//playerInSector[i] = false;
+
+				if (PlayersManager.instance.obj_players[i].activeSelf == true)
+					PlayersManager.instance.obj_players[i].SetActive(false);
+			}
+		}
+	}
 
     // 플레이어 위치, 카메라 강제 세팅
     public void ForceMoveProcess(ref PositionPacket _packet)
@@ -111,5 +149,13 @@ public partial class BridgeClientToServer : MonoBehaviour
     {
         if (PlayersManager.instance.obj_players[_quitPlayerNum - 1].activeSelf == true)
             PlayersManager.instance.obj_players[_quitPlayerNum - 1].SetActive(false);
+    }
+
+    //쐇을때 무조건 1번의 패킷을 보내야됨. 보정용
+    public void SendPacketOnce()
+    {
+        networkManager.SendPosition(playersManager.tf_players[myIndex].localPosition.x,
+        playersManager.tf_players[myIndex].localPosition.z,
+        playersManager.tf_players[myIndex].localEulerAngles.y, playersManager.speed[myIndex], playersManager.actionState[myIndex]);
     }
 }

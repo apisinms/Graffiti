@@ -31,8 +31,8 @@ public partial class PlayersManager : MonoBehaviour
             Anime_Circuit(myIndex);
             BlockCollisionEachOther();
 
-			tf_players[myIndex].localRotation = Quaternion.LookRotation(direction[myIndex]);
-			tf_players[myIndex].Translate(direction[myIndex] * speed[myIndex] * Time.smoothDeltaTime, Space.World);
+            tf_players[myIndex].localRotation = Quaternion.LookRotation(direction[myIndex]);
+            tf_players[myIndex].Translate(direction[myIndex] * speed[myIndex] * Time.smoothDeltaTime, Space.World);
             yield return null;
         }
     }
@@ -42,10 +42,11 @@ public partial class PlayersManager : MonoBehaviour
         while (true)
         {
             Anime_Aiming_Idle(myIndex);
-            tf_players[myIndex].localRotation = Quaternion.LookRotation(direction2[myIndex]);
-            //GameObject tmp = GameObject.Find("Image_sample");
-            //Vector3 vt_tmp = new Vector3(tf_players[myIndex].forward.y, 90, tf_players[myIndex].forward.z);
-           // tmp.transform.rotation = Quaternion.LookRotation(vt_tmp);
+
+            tf_players[myIndex].localRotation = Quaternion.Lerp(tf_players[myIndex].localRotation,
+Quaternion.LookRotation(direction2[myIndex]), Time.smoothDeltaTime * 6.0f);
+
+            //tf_players[myIndex].localRotation = Quaternion.LookRotation(direction2[myIndex]);
             yield return null;
         }
     }

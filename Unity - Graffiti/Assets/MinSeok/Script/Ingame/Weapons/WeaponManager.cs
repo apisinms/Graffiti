@@ -103,7 +103,9 @@ public partial class WeaponManager : MonoBehaviour
 
         Initialization(C_Global.MAX_PLAYER);
         Initialization_Attribute(C_Global.MAX_PLAYER);
-    }
+
+		bulletTag[0] = "Bullet1"; bulletTag[1] = "Bullet2"; bulletTag[2] = "Bullet3"; bulletTag[3] = "Bullet4";
+	}
 
     void Initialization(int _num)
     {
@@ -192,7 +194,7 @@ public partial class WeaponManager : MonoBehaviour
             infoSMG[i].prevBulletPatternIndex      = 1;
             infoSMG[i].curAmmo  = 25;
             infoSMG[i].maxAmmo = 25;
-            infoSMG[i].fireRate     = 0.1f;
+            infoSMG[i].fireRate     = 0.07f;
             infoSMG[i].damage    = 0.5f;
             infoSMG[i].accuracy   = 0.1f;
             infoSMG[i].range       = 15.0f;

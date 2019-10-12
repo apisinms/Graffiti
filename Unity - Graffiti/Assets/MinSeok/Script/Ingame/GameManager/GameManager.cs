@@ -15,7 +15,10 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraControl>();
+
+#if NETWORK
 		BridgeClientToServer.instance.Initialization_PlayerViewer();	// 게임 시작시 플레이어 뷰어 셋팅
+#endif
 	}
 
     void Awake()

@@ -8742,7 +8742,7 @@ GameObject:
   - component: {fileID: 5858655771946809252}
   - component: {fileID: 5858655771955861532}
   m_Layer: 0
-  m_Name: Robin
+  m_Name: Born
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8785,7 +8785,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 631d39da348af0a4aa58b6123f0ae03d, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1

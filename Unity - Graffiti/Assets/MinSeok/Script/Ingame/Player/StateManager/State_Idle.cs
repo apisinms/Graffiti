@@ -5,6 +5,12 @@ using UnityEngine;
 public class State_Idle : MonoBehaviour, IActionState
 {
     private static State_Idle instance;
+    private int myIndex { get; set; }
+
+    private void Start()
+    {
+        myIndex = GameManager.instance.myIndex;
+    }
 
     public static State_Idle GetStateInstance()
     {
@@ -38,6 +44,21 @@ public class State_Idle : MonoBehaviour, IActionState
         }
     }
 
+    public void Shot(bool _value)
+    {
+        if (_value == true)
+        {
+            StateManager.instance.SetState(State_Shot.GetStateInstance()); //스테이트객체 갱신. 
+
+            if (PlayersManager.instance.curCor != null)
+                PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
+            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.ActionAim());
+
+            if (WeaponManager.instance.curActionCor[myIndex] != null)
+                WeaponManager.instance.StopCoroutine(WeaponManager.instance.curActionCor[myIndex]);
+            WeaponManager.instance.curActionCor[myIndex] = WeaponManager.instance.StartCoroutine(WeaponManager.instance.ActionBullet());
+        }
+    }
+
     public void Idle(bool _value) { }
-    public void Shot(bool _value) { }
 }

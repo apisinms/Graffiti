@@ -4,14 +4,9 @@ using UnityEngine;
 
 public partial class WeaponManager : MonoBehaviour
 {
-    private void Start()
-    {
-        for(int i=0; i<C_Global.MAX_PLAYER; i++) //모든플레이어들의 총알풀 생성.
-            CreateBulletPool(i, 30);
-    }
     private void Update()
     {
-           // Debug.Log(Vector3.Distance(sample);
+
     }
 
     public IEnumerator ActionBullet()
@@ -104,27 +99,27 @@ public partial class WeaponManager : MonoBehaviour
             infoSG[myIndex].tf_bulletClone[i] = infoSG[myIndex].obj_bulletClone[i].transform;
         }
 
-        infoSG[myIndex].vt_bulletPattern[0, 0].x = (infoSG[myIndex].tf_bulletClone[0].forward.x - infoSG[myIndex].tf_bulletClone[0].right.x * 0.2f) - (infoSG[myIndex].tf_bulletClone[0].right.x * 0.4f);
-        infoSG[myIndex].vt_bulletPattern[0, 0].z = (infoSG[myIndex].tf_bulletClone[0].forward.z - infoSG[myIndex].tf_bulletClone[0].right.z * 0.2f) - (infoSG[myIndex].tf_bulletClone[0].right.z * 0.4f);
-        infoSG[myIndex].vt_bulletPattern[0, 1].x = (infoSG[myIndex].tf_bulletClone[1].forward.x - infoSG[myIndex].tf_bulletClone[1].right.x * 0.2f) - (infoSG[myIndex].tf_bulletClone[1].right.x * 0.2f);
-        infoSG[myIndex].vt_bulletPattern[0, 1].z = (infoSG[myIndex].tf_bulletClone[1].forward.z - infoSG[myIndex].tf_bulletClone[1].right.z * 0.2f) - (infoSG[myIndex].tf_bulletClone[1].right.z * 0.2f);    
+        infoSG[myIndex].vt_bulletPattern[0, 0].x = (infoSG[myIndex].tf_bulletClone[0].forward.x - infoSG[myIndex].tf_bulletClone[0].right.x * 0.2f) - (infoSG[myIndex].tf_bulletClone[0].right.x * 0.2f);
+        infoSG[myIndex].vt_bulletPattern[0, 0].z = (infoSG[myIndex].tf_bulletClone[0].forward.z - infoSG[myIndex].tf_bulletClone[0].right.z * 0.2f) - (infoSG[myIndex].tf_bulletClone[0].right.z * 0.2f);
+        infoSG[myIndex].vt_bulletPattern[0, 1].x = (infoSG[myIndex].tf_bulletClone[1].forward.x - infoSG[myIndex].tf_bulletClone[1].right.x * 0.2f) - (infoSG[myIndex].tf_bulletClone[1].right.x * 0.1f);
+        infoSG[myIndex].vt_bulletPattern[0, 1].z = (infoSG[myIndex].tf_bulletClone[1].forward.z - infoSG[myIndex].tf_bulletClone[1].right.z * 0.2f) - (infoSG[myIndex].tf_bulletClone[1].right.z * 0.1f);    
         infoSG[myIndex].vt_bulletPattern[0, 2].x = (infoSG[myIndex].tf_bulletClone[2].forward.x - infoSG[myIndex].tf_bulletClone[2].right.x * 0.2f);
         infoSG[myIndex].vt_bulletPattern[0, 2].z = (infoSG[myIndex].tf_bulletClone[2].forward.z - infoSG[myIndex].tf_bulletClone[2].right.z * 0.2f);
-        infoSG[myIndex].vt_bulletPattern[0, 3].x = (infoSG[myIndex].tf_bulletClone[3].forward.x - infoSG[myIndex].tf_bulletClone[3].right.x * 0.2f) + (infoSG[myIndex].tf_bulletClone[3].right.x * 0.2f);
-        infoSG[myIndex].vt_bulletPattern[0, 3].z = (infoSG[myIndex].tf_bulletClone[3].forward.z - infoSG[myIndex].tf_bulletClone[3].right.z * 0.2f) + (infoSG[myIndex].tf_bulletClone[3].right.z * 0.2f);
-        infoSG[myIndex].vt_bulletPattern[0, 4].x = (infoSG[myIndex].tf_bulletClone[4].forward.x - infoSG[myIndex].tf_bulletClone[4].right.x * 0.2f) + (infoSG[myIndex].tf_bulletClone[4].right.x * 0.4f);
-        infoSG[myIndex].vt_bulletPattern[0, 4].z = (infoSG[myIndex].tf_bulletClone[4].forward.z - infoSG[myIndex].tf_bulletClone[4].right.z * 0.2f) + (infoSG[myIndex].tf_bulletClone[4].right.z * 0.4f);
+        infoSG[myIndex].vt_bulletPattern[0, 3].x = (infoSG[myIndex].tf_bulletClone[3].forward.x - infoSG[myIndex].tf_bulletClone[3].right.x * 0.2f) + (infoSG[myIndex].tf_bulletClone[3].right.x * 0.1f);
+        infoSG[myIndex].vt_bulletPattern[0, 3].z = (infoSG[myIndex].tf_bulletClone[3].forward.z - infoSG[myIndex].tf_bulletClone[3].right.z * 0.2f) + (infoSG[myIndex].tf_bulletClone[3].right.z * 0.1f);
+        infoSG[myIndex].vt_bulletPattern[0, 4].x = (infoSG[myIndex].tf_bulletClone[4].forward.x - infoSG[myIndex].tf_bulletClone[4].right.x * 0.2f) + (infoSG[myIndex].tf_bulletClone[4].right.x * 0.2f);
+        infoSG[myIndex].vt_bulletPattern[0, 4].z = (infoSG[myIndex].tf_bulletClone[4].forward.z - infoSG[myIndex].tf_bulletClone[4].right.z * 0.2f) + (infoSG[myIndex].tf_bulletClone[4].right.z * 0.2f);
 
-        infoSG[myIndex].vt_bulletPattern[1, 0].x = (infoSG[myIndex].tf_bulletClone[0].forward.x + infoSG[myIndex].tf_bulletClone[0].right.x * 0.2f) - (infoSG[myIndex].tf_bulletClone[0].right.x * 0.4f);
-        infoSG[myIndex].vt_bulletPattern[1, 0].z = (infoSG[myIndex].tf_bulletClone[0].forward.z + infoSG[myIndex].tf_bulletClone[0].right.z * 0.2f) - (infoSG[myIndex].tf_bulletClone[0].right.z * 0.4f);
-        infoSG[myIndex].vt_bulletPattern[1, 1].x = (infoSG[myIndex].tf_bulletClone[1].forward.x + infoSG[myIndex].tf_bulletClone[1].right.x * 0.2f) - (infoSG[myIndex].tf_bulletClone[1].right.x * 0.2f);
-        infoSG[myIndex].vt_bulletPattern[1, 1].z = (infoSG[myIndex].tf_bulletClone[1].forward.z + infoSG[myIndex].tf_bulletClone[1].right.z * 0.2f) - (infoSG[myIndex].tf_bulletClone[1].right.z * 0.2f);
+        infoSG[myIndex].vt_bulletPattern[1, 0].x = (infoSG[myIndex].tf_bulletClone[0].forward.x + infoSG[myIndex].tf_bulletClone[0].right.x * 0.2f) - (infoSG[myIndex].tf_bulletClone[0].right.x * 0.2f);
+        infoSG[myIndex].vt_bulletPattern[1, 0].z = (infoSG[myIndex].tf_bulletClone[0].forward.z + infoSG[myIndex].tf_bulletClone[0].right.z * 0.2f) - (infoSG[myIndex].tf_bulletClone[0].right.z * 0.2f);
+        infoSG[myIndex].vt_bulletPattern[1, 1].x = (infoSG[myIndex].tf_bulletClone[1].forward.x + infoSG[myIndex].tf_bulletClone[1].right.x * 0.2f) - (infoSG[myIndex].tf_bulletClone[1].right.x * 0.1f);
+        infoSG[myIndex].vt_bulletPattern[1, 1].z = (infoSG[myIndex].tf_bulletClone[1].forward.z + infoSG[myIndex].tf_bulletClone[1].right.z * 0.2f) - (infoSG[myIndex].tf_bulletClone[1].right.z * 0.1f);
         infoSG[myIndex].vt_bulletPattern[1, 2].x = (infoSG[myIndex].tf_bulletClone[2].forward.x + infoSG[myIndex].tf_bulletClone[2].right.x * 0.2f);
         infoSG[myIndex].vt_bulletPattern[1, 2].z = (infoSG[myIndex].tf_bulletClone[2].forward.z + infoSG[myIndex].tf_bulletClone[2].right.z * 0.2f);
-        infoSG[myIndex].vt_bulletPattern[1, 3].x = (infoSG[myIndex].tf_bulletClone[3].forward.x + infoSG[myIndex].tf_bulletClone[3].right.x * 0.2f) + (infoSG[myIndex].tf_bulletClone[3].right.x * 0.2f);
-        infoSG[myIndex].vt_bulletPattern[1, 3].z = (infoSG[myIndex].tf_bulletClone[3].forward.z + infoSG[myIndex].tf_bulletClone[3].right.z * 0.2f) + (infoSG[myIndex].tf_bulletClone[3].right.z * 0.2f);
-        infoSG[myIndex].vt_bulletPattern[1, 4].x = (infoSG[myIndex].tf_bulletClone[4].forward.x + infoSG[myIndex].tf_bulletClone[4].right.x * 0.2f) + (infoSG[myIndex].tf_bulletClone[4].right.x * 0.4f);
-        infoSG[myIndex].vt_bulletPattern[1, 4].z = (infoSG[myIndex].tf_bulletClone[4].forward.z + infoSG[myIndex].tf_bulletClone[4].right.z * 0.2f) + (infoSG[myIndex].tf_bulletClone[4].right.z * 0.4f);
+        infoSG[myIndex].vt_bulletPattern[1, 3].x = (infoSG[myIndex].tf_bulletClone[3].forward.x + infoSG[myIndex].tf_bulletClone[3].right.x * 0.2f) + (infoSG[myIndex].tf_bulletClone[3].right.x * 0.1f);
+        infoSG[myIndex].vt_bulletPattern[1, 3].z = (infoSG[myIndex].tf_bulletClone[3].forward.z + infoSG[myIndex].tf_bulletClone[3].right.z * 0.2f) + (infoSG[myIndex].tf_bulletClone[3].right.z * 0.1f);
+        infoSG[myIndex].vt_bulletPattern[1, 4].x = (infoSG[myIndex].tf_bulletClone[4].forward.x + infoSG[myIndex].tf_bulletClone[4].right.x * 0.2f) + (infoSG[myIndex].tf_bulletClone[4].right.x * 0.2f);
+        infoSG[myIndex].vt_bulletPattern[1, 4].z = (infoSG[myIndex].tf_bulletClone[4].forward.z + infoSG[myIndex].tf_bulletClone[4].right.z * 0.2f) + (infoSG[myIndex].tf_bulletClone[4].right.z * 0.2f);
 
         for (int i = 0; i < infoSG[myIndex].obj_bulletClone.Length; i++)
         {
@@ -159,7 +154,7 @@ public partial class WeaponManager : MonoBehaviour
     {
         var clone = GetBulletFromPool(myIndex);
         Transform tf_clone = clone.transform;
-
+      
         infoSMG[myIndex].vt_bulletPattern[0].x = tf_clone.forward.x - (tf_clone.right.x * infoSMG[myIndex].accuracy);
         infoSMG[myIndex].vt_bulletPattern[0].z = tf_clone.forward.z - (tf_clone.right.z * infoSMG[myIndex].accuracy);
         infoSMG[myIndex].vt_bulletPattern[1].x = tf_clone.forward.x;
