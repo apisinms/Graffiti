@@ -14,19 +14,19 @@ public partial class BridgeClientToServer : MonoBehaviour
 
     public void Initialization_PlayerViewer()
     {
-		myIndex = GameManager.instance.myIndex;
-		playersManager = PlayersManager.instance;
+        myIndex = GameManager.instance.myIndex;
+        playersManager = PlayersManager.instance;
 
 #if NETWORK
-		//////////////// 게임 시작 시 최초로 1회 내 위치정보를 서버로 전송해야함 /////////////////
-		networkManager.SendPosition(playersManager.tf_players[myIndex].localPosition.x,
+        //////////////// 게임 시작 시 최초로 1회 내 위치정보를 서버로 전송해야함 /////////////////
+        networkManager.SendPosition(playersManager.tf_players[myIndex].localPosition.x,
              playersManager.tf_players[myIndex].localPosition.z,
              playersManager.tf_players[myIndex].localEulerAngles.y, playersManager.speed[myIndex], playersManager.actionState[myIndex], true);
 #endif
 
 #if NETWORK
         //////////////////////// 테스트용(상대팀 끄기) ////////////////////
-        /*
+        
         switch (myIndex)
         {
             case 0:
@@ -41,7 +41,6 @@ public partial class BridgeClientToServer : MonoBehaviour
                 playersManager.obj_players[1].SetActive(false);
                 break;
         }
-        */
 #endif
 
         curPlayerPos = new Transform[C_Global.MAX_PLAYER];
@@ -53,13 +52,13 @@ public partial class BridgeClientToServer : MonoBehaviour
         isStartShotCor = new bool[C_Global.MAX_PLAYER]; //샷 코루틴 중복실행 방지.
 
 #if NETWORK
-      // 초기값 설정 
-      for (int i = 0; i < C_Global.MAX_PLAYER; i++)
-      {
-         networkManager.SetPosX(i, curPlayerPos[i].localPosition.x);
-         networkManager.SetPosZ(i, curPlayerPos[i].localPosition.z);
-         networkManager.SetPosPlayerNum(i, i + 1);
-      }
+        // 초기값 설정 
+        for (int i = 0; i < C_Global.MAX_PLAYER; i++)
+        {
+            networkManager.SetPosX(i, curPlayerPos[i].localPosition.x);
+            networkManager.SetPosZ(i, curPlayerPos[i].localPosition.z);
+            networkManager.SetPosPlayerNum(i, i + 1);
+        }
 #endif
     }
 
@@ -68,8 +67,8 @@ public partial class BridgeClientToServer : MonoBehaviour
 #if NETWORK
         for (int i = 0; i < curPlayerPos.Length; i++)
         {
-            // 자기 제외하고
-            if (myIndex == i)
+            // 자기 또는 섹터에 없는 플레이어 제외하고
+            if (myIndex == i || playersManager.obj_players[i].activeSelf == false)
                 continue;
 
             pos.x = networkManager.GetPosX(i);
@@ -87,10 +86,10 @@ public partial class BridgeClientToServer : MonoBehaviour
 
                         if (isStartShotCor[i] == true)
                         {
-                            if (WeaponManager.instance.curActionCor[i] != null)
-                                StopCoroutine(WeaponManager.instance.curActionCor[i]);
+                            if (WeaponManager.instance.curMainActionCor[i] != null)
+                                StopCoroutine(WeaponManager.instance.curMainActionCor[i]);
+                            EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, i);
 
-                            //StopCoroutine(WeaponManager.instance.ActionBullet(i));
                             isStartShotCor[i] = false;
                         }
 
@@ -98,13 +97,14 @@ public partial class BridgeClientToServer : MonoBehaviour
                     break;
                 case _ACTION_STATE.CIR:
                     {
-						playersManager.Action_CircuitNormal(i, pos, networkManager.GetRotY(i));
+                        playersManager.Action_CircuitNormal(i, pos, networkManager.GetRotY(i));
+
                         if (isStartShotCor[i] == true)
                         {
-                            if (WeaponManager.instance.curActionCor[i] != null)
-                                StopCoroutine(WeaponManager.instance.curActionCor[i]);
+                            if (WeaponManager.instance.curMainActionCor[i] != null)
+                                StopCoroutine(WeaponManager.instance.curMainActionCor[i]);
+                            EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, i);
 
-                            //StopCoroutine(WeaponManager.instance.ActionBullet(i));
                             isStartShotCor[i] = false;
                         }
 
@@ -112,42 +112,44 @@ public partial class BridgeClientToServer : MonoBehaviour
                     break;
                 case _ACTION_STATE.AIM:
                     {
-						playersManager.Action_AimingNormal(i, pos, networkManager.GetRotY(i));
+                        playersManager.Action_AimingNormal(i, pos, networkManager.GetRotY(i));
                         if (isStartShotCor[i] == true)
                         {
-                            if (WeaponManager.instance.curActionCor[i] != null)
-                                StopCoroutine(WeaponManager.instance.curActionCor[i]);
+                            if (WeaponManager.instance.curMainActionCor[i] != null)
+                                StopCoroutine(WeaponManager.instance.curMainActionCor[i]);
+                            EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, i);
 
-                            //StopCoroutine(WeaponManager.instance.ActionBullet(i));
                             isStartShotCor[i] = false;
                         }
 
                     }
                     break;
                 case _ACTION_STATE.SHOT:
-                    { 
-						playersManager.Action_AimingNormal(i, pos, networkManager.GetRotY(i)); //조준애니메이션은 계속하고.
+                    {
+                        playersManager.Action_AimingNormal(i, pos, networkManager.GetRotY(i)); //조준애니메이션은 계속하고.
 
-                        if (isStartShotCor[i] == false) //샷만 중복실행 방지하면서 코루틴 1회실행.
+                        if (isStartShotCor[i] == false)
                         {
-                            if (WeaponManager.instance.curActionCor[i] != null)
-                                StopCoroutine(WeaponManager.instance.curActionCor[i]); //이전꺼 멈추고
+                            if (WeaponManager.instance.curMainActionCor[i] != null)
+                                StopCoroutine(WeaponManager.instance.curMainActionCor[i]); //이전꺼 멈추고
 
-                            WeaponManager.instance.curActionCor[i] = StartCoroutine(WeaponManager.instance.ActionBullet(i));
+                            WeaponManager.instance.curMainActionCor[i] = StartCoroutine(WeaponManager.instance.ActionFire(i));
+                            EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, i);
+
                             isStartShotCor[i] = true;
                         }
                     }
                     break;
                 case _ACTION_STATE.CIR_AIM:
                     {
-						playersManager.Action_AimingWithCircuit(i, pos, networkManager.GetRotY(i));
+                        playersManager.Action_AimingWithCircuit(i, pos, networkManager.GetRotY(i));
 
                         if (isStartShotCor[i] == true)
                         {
-                            if (WeaponManager.instance.curActionCor[i] != null)
-                                StopCoroutine(WeaponManager.instance.curActionCor[i]);
+                            if (WeaponManager.instance.curMainActionCor[i] != null)
+                                StopCoroutine(WeaponManager.instance.curMainActionCor[i]);
+                            EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, i);
 
-                            //StopCoroutine(WeaponManager.instance.ActionBullet(i));
                             isStartShotCor[i] = false;
                         }
 
@@ -155,18 +157,20 @@ public partial class BridgeClientToServer : MonoBehaviour
                     break;
                 case _ACTION_STATE.CIR_AIM_SHOT:
                     {
-						playersManager.Action_AimingWithCircuit(i, pos, networkManager.GetRotY(i)); //조준이동 애니메이션은 계속하고.
+                        playersManager.Action_AimingWithCircuit(i, pos, networkManager.GetRotY(i)); //조준이동 애니메이션은 계속하고.
 
-                        if (isStartShotCor[i] == false) //샷만 중복실행 방지하면서 코루틴 1회실행.
+                        if (isStartShotCor[i] == false)
                         {
-                            if (WeaponManager.instance.curActionCor[i] != null)
-                                StopCoroutine(WeaponManager.instance.curActionCor[i]);
+                            if (WeaponManager.instance.curMainActionCor[i] != null)
+                                StopCoroutine(WeaponManager.instance.curMainActionCor[i]);
 
-                            WeaponManager.instance.curActionCor[i] = StartCoroutine(WeaponManager.instance.ActionBullet(i));
+                            WeaponManager.instance.curMainActionCor[i] = StartCoroutine(WeaponManager.instance.ActionFire(i));
+                            EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, i);
+
                             isStartShotCor[i] = true;
                         }
+                        break;
                     }
-                    break;
             }
         }
 #endif

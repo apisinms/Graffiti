@@ -236,7 +236,7 @@ public partial class NetworkManager : MonoBehaviour
                                             {
                                                 UnPackPacket(info.packet, ref tmpPosPacket);
 												bridge.OnMoveSuccess(ref tmpPosPacket);
-											}
+                                            }
                                         }
                                         break;
 
@@ -246,7 +246,7 @@ public partial class NetworkManager : MonoBehaviour
                                             lock (key)
                                             {
                                                 UnPackPacket(info.packet, ref tmpPosPacket);
-                                                bridge.EnterSectorProcess(ref tmpPosPacket);                                       
+                                                bridge.EnterSectorProcess(ref tmpPosPacket);
                                             }
                                         }
                                         break;
@@ -270,46 +270,7 @@ public partial class NetworkManager : MonoBehaviour
                                                 byte playerBit = 0;
                                                 UnPackPacket(info.packet, out playerBit);
 
-												/// 매개변수로 playerBit 보내고, 
-
-                                                // 다른 클라의 위치 요청 프로토콜
-                                                PROTOCOL reqProtocol = SetProtocol(
-                                                      STATE_PROTOCOL.INGAME_STATE,
-                                                      PROTOCOL.MOVE_PROTOCOL,
-                                                      RESULT.GET_OTHERPLAYER_POS);
-
-                                                // 마스크 만들어서 어떤 플레이어가 같은 섹터에 있는지 확인하고, 오브젝트를 켜고 끔
-                                                byte bitMask = (byte)PLAYER_BIT.PLAYER_1;
-                                                int packetSize;
-                                                for (int i = 0; i < MAX_PLAYER; i++, bitMask >>= 1)
-                                                {
-                                                    // 본인은 걍 건너 뜀
-                                                    if ((myPlayerNum - 1) == i)
-                                                        continue;
-
-                                                    // 섹터에 포함되어있는 플레이어인데
-                                                    if ((playerBit & bitMask) > 0)
-                                                    {
-                                                        // 꺼져있는 플레이어라면 위치를 넘버로 요청한다.(얘네들만 갱신해주면 됨)
-                                                        if (PlayersManager.instance.obj_players[i].activeSelf == false)
-                                                        {
-                                                            PackPacket(ref sendBuf, reqProtocol, (i + 1), out packetSize);
-                                                            bw.Write(sendBuf, 0, packetSize);
-                                                        }
-
-                                                        // 켜져있다면 굳이 위치를 받아올 필요 없다.
-                                                        else
-                                                            continue;
-
-                                                    }
-
-                                                    // 섹터에 포함되어 있지 않다면 오브젝트를 꺼준다.(오브젝트가 켜진 경우만)
-                                                    else
-                                                    {
-                                                        if (PlayersManager.instance.obj_players[i].activeSelf == true)
-                                                            PlayersManager.instance.obj_players[i].SetActive(false);
-                                                    }
-                                                }
+                                                bridge.UpdatePlayerProcess(playerBit);
                                             }
                                         }
                                         break;
@@ -330,6 +291,7 @@ public partial class NetworkManager : MonoBehaviour
                                             {
                                                 UnPackPacket(info.packet, ref tmpPosPacket);            // 패킷을 받고
                                                 bridge.GetOtherPlayerPos(ref tmpPosPacket);
+                                                
                                             }
                                         }
                                         break;
@@ -365,6 +327,22 @@ public partial class NetworkManager : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    // 다른 플레이어 위치 얻기 요청
+    public void RequestOtherPlayerPos(int _playerNum)
+    {
+        int packetSize = 0;
+
+        // 다른 클라의 위치 요청 프로토콜
+        PROTOCOL reqProtocol = SetProtocol(
+             STATE_PROTOCOL.INGAME_STATE,
+             PROTOCOL.MOVE_PROTOCOL,
+             RESULT.GET_OTHERPLAYER_POS);
+
+        // 플레이어라면 위치를 요청한다.
+        PackPacket(ref sendBuf, reqProtocol, _playerNum, out packetSize);
+        bw.Write(sendBuf, 0, packetSize);
     }
 
     private void OnApplicationQuit()

@@ -66,11 +66,10 @@ public class State_AimCircuit : MonoBehaviour, IActionState
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
             PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.ActionAimCircuit());
 
-            if (WeaponManager.instance.curActionCor[myIndex] != null)
-                WeaponManager.instance.StopCoroutine(WeaponManager.instance.curActionCor[myIndex]);
-            WeaponManager.instance.curActionCor[myIndex] = WeaponManager.instance.StartCoroutine(WeaponManager.instance.ActionBullet());
-
-            //BulletCollision.instance.curCheckRangeCor = BulletCollision.instance.StartCoroutine(BulletCollision.instance.CheckBulletRange()); 
+            if (WeaponManager.instance.curMainActionCor[myIndex] != null)
+                WeaponManager.instance.StopCoroutine(WeaponManager.instance.curMainActionCor[myIndex]);
+            WeaponManager.instance.curMainActionCor[myIndex] = WeaponManager.instance.StartCoroutine(WeaponManager.instance.ActionFire(myIndex));
+            EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, myIndex);
         }
     }
 }

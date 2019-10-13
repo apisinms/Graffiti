@@ -16,6 +16,13 @@ TagManager:
   - BulletPool2
   - BulletPool3
   - BulletPool4
+  - Bullet1
+  - Bullet2
+  - Bullet3
+  - Bullet4
+  - Effects
+  - Concrete
+  - Iron
   layers:
   - Default
   - TransparentFX

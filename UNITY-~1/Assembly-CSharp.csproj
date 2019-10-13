@@ -62,19 +62,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Assets\LOWPOLY CHARACTERS\AdvancedCustomizer\Scripts\CharacterCustomizer.cs" />
+    <Compile Include="Assets\Assets\LOWPOLY CHARACTERS\AdvancedCustomizer\Scripts\CharacterGender.cs" />
+    <Compile Include="Assets\Assets\LOWPOLY CHARACTERS\AdvancedCustomizer\Scripts\Clothes.cs" />
+    <Compile Include="Assets\Assets\LOWPOLY CHARACTERS\AdvancedCustomizer\Scripts\ClothesType.cs" />
+    <Compile Include="Assets\Assets\LOWPOLY CHARACTERS\AdvancedCustomizer\Scripts\SkinPart.cs" />
+    <Compile Include="Assets\Assets\LOWPOLY CHARACTERS\Overview\Script\Customizable.cs" />
+    <Compile Include="Assets\Assets\LOWPOLY CHARACTERS\Overview\Script\DragToRotate.cs" />
     <Compile Include="Assets\Common\BridgeClientToServer.cs" />
     <Compile Include="Assets\Common\BridgeClientToServer.Networking.cs" />
     <Compile Include="Assets\Common\BridgeClientToServer.PacketCoroutine.cs" />
     <Compile Include="Assets\Common\BridgeClientToServer.PlayerViewer.cs" />
-    <Compile Include="Assets\LOWPOLY CHARACTERS\AdvancedCustomizer\Scripts\CharacterCustomizer.cs" />
-    <Compile Include="Assets\LOWPOLY CHARACTERS\AdvancedCustomizer\Scripts\CharacterGender.cs" />
-    <Compile Include="Assets\LOWPOLY CHARACTERS\AdvancedCustomizer\Scripts\Clothes.cs" />
-    <Compile Include="Assets\LOWPOLY CHARACTERS\AdvancedCustomizer\Scripts\ClothesType.cs" />
-    <Compile Include="Assets\LOWPOLY CHARACTERS\AdvancedCustomizer\Scripts\SkinPart.cs" />
-    <Compile Include="Assets\LOWPOLY CHARACTERS\Overview\Script\Customizable.cs" />
-    <Compile Include="Assets\LOWPOLY CHARACTERS\Overview\Script\DragToRotate.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\CameraControl.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\ClientSectorManager.cs" />
+    <Compile Include="Assets\MinSeok\Script\Ingame\Effect\EffectManager.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\GameManager\GameManager.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\Joystick\JoystickManager.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\Joystick\LeftJoystick.cs" />
@@ -92,10 +93,11 @@
     <Compile Include="Assets\MinSeok\Script\Ingame\Player\StateManager\State_Shot.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\Player\StateManager\StateManager.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\Weapons\BulletCollision.cs" />
+    <Compile Include="Assets\MinSeok\Script\Ingame\Weapons\MainWeapons\Main_AR.cs" />
+    <Compile Include="Assets\MinSeok\Script\Ingame\Weapons\MainWeapons\Main_SG.cs" />
+    <Compile Include="Assets\MinSeok\Script\Ingame\Weapons\MainWeapons\Main_SMG.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\Weapons\WeaponManager.cs" />
-    <Compile Include="Assets\MinSeok\Script\Ingame\Weapons\WeaponManager.MyAction.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\Weapons\WeaponManager.ObjectPool.cs" />
-    <Compile Include="Assets\MinSeok\Script\Ingame\Weapons\WeaponManager.OtherAction.cs" />
     <Compile Include="Assets\MinSeok\Script\Login_Join\InputInfoManager.cs" />
     <Compile Include="Assets\MinSeok\Script\MainMenu\btn_option.cs" />
     <Compile Include="Assets\MinSeok\Script\MainMenu\btn_quit.cs" />
@@ -113,8 +115,9 @@
     <Compile Include="Assets\Minsung\Scripts\ThreadManager.cs" />
     <Compile Include="Assets\Scripts\SimpleCameraController.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
-    <None Include="Assets\LOWPOLY CHARACTERS\Overview\Font\Raleway\OFL.txt" />
-    <None Include="Assets\LOWPOLY CHARACTERS\AdvancedCustomizer\Clothes\Important.txt" />
+    <None Include="Assets\Assets\LOWPOLY CHARACTERS\Overview\Font\Raleway\OFL.txt" />
+    <None Include="Assets\Assets\LOWPOLY CHARACTERS\AdvancedCustomizer\Clothes\Important.txt" />
+    <None Include="Assets\Assets\JMO Assets\WarFX\Shaders\WFX_S Particle Add A8.shader" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>E:/Unity/Projects/forGitHub/Graffiti/UNITY-~1/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

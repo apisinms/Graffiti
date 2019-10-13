@@ -7,17 +7,30 @@ public partial class WeaponManager : MonoBehaviour
     #region BULLET_POOL
     public GameObject[] obj_bulletPool;
     public List<GameObject>[] list_bulletPool; //총알을 가져오는 풀
-    public Transform[] tf_firstPos { get; set; }
+    public Transform[] tf_bulletFirstPos { get; set; }
+
+    public readonly string[] bulletTag = new string[4];
     #endregion
+
+    #region COLLISION_EFFECT_POOL
+
+    #endregion
+
+    private void Start()
+    {
+        for (int i = 0; i < C_Global.MAX_PLAYER; i++) //모든플레이어들의 총알풀 생성.
+            CreateBulletPool(i, 30);
+    }
 
     public void CreateBulletPool(int _index, int _bulletNum)
     {
-        tf_firstPos[_index] = obj_weaponPrefabsList[5].transform;
+        tf_bulletFirstPos[_index] = obj_weaponPrefabsList[5].transform;
 
         for (int i=0; i<_bulletNum; i++) //알을 만들어놓고 리스트에 박아둠
         {
             var obj_bulletClone = Instantiate(obj_weaponPrefabsList[5], PlayersManager.instance.obj_players[_index].transform) as GameObject;
             obj_bulletClone.SetActive(false);
+            obj_bulletClone.gameObject.tag = bulletTag[_index];
             list_bulletPool[_index].Add(obj_bulletClone);
         }
     }
@@ -43,6 +56,9 @@ public partial class WeaponManager : MonoBehaviour
 
     public void ReturnBulletToPool(GameObject _obj_bullet, int _index)
     {
+        if (list_bulletPool[_index].Count >= 30)
+            return;
+
         //물리초기화.
         _obj_bullet.GetComponent<Rigidbody>().isKinematic = true;
         _obj_bullet.GetComponent<Rigidbody>().isKinematic = false; 
@@ -51,10 +67,10 @@ public partial class WeaponManager : MonoBehaviour
 
         //다시 비활성화후 트랜스폼 원상복구후 풀로 복귀.
         _obj_bullet.SetActive(false);
-        _obj_bullet.transform.SetParent(PlayersManager.instance.obj_players[_index].transform);
-        _obj_bullet.transform.localPosition = tf_firstPos[_index].localPosition;
-        _obj_bullet.transform.localRotation = tf_firstPos[_index].localRotation;
-        _obj_bullet.transform.localScale = tf_firstPos[_index].localScale;
+        _obj_bullet.transform.SetParent(PlayersManager.instance.obj_players[_index].transform); 
+        _obj_bullet.transform.localPosition = tf_bulletFirstPos[_index].localPosition;
+        _obj_bullet.transform.localRotation = tf_bulletFirstPos[_index].localRotation;
+        _obj_bullet.transform.localScale = tf_bulletFirstPos[_index].localScale;
         list_bulletPool[_index].Add(_obj_bullet);
     }
 }

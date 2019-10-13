@@ -10,10 +10,22 @@ public class GameManager : MonoBehaviour
     public int myIndex { get; set; }
     public string myTag { get; set; }
     public bool myFocus { get; set; }
+
+    public struct _Game_Info
+    {
+        public int gameMode { get; set; }
+        public int responeTime { get; set; }
+        public int gameTime { get; set; }
+    }
+    public _Game_Info gameInfo;
+
     public CameraControl mainCamera;    // 메인 카메라
 
+    //	private static bool isLeftDrag;
+    //public static bool LeftTouch { get { return isLeftDrag; } }
+
     private void Start()
-    {
+    {     
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraControl>();
 		BridgeClientToServer.instance.Initialization_PlayerViewer();	// 게임 시작시 플레이어 뷰어 셋팅
 	}
@@ -26,6 +38,10 @@ public class GameManager : MonoBehaviour
         //obj_players = new GameObject[4];
         playersTag[0] = "Player1"; playersTag[1] = "Player2";
         playersTag[2] = "Player3"; playersTag[3] = "Player4";
+
+        gameInfo.gameMode = 0;
+        gameInfo.gameTime = 120;
+        gameInfo.responeTime = 5;
 
 #if NETWORK
         myNetworkNum = NetworkManager.instance.MyPlayerNum;
