@@ -1,27 +1,81 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    [StructLayout(LayoutKind.Sequential)]
+    public struct GameInfo
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int gameType;       // 게임 타입(나중에 모드가 여러 개 생길 수도 있으니)
+
+        [MarshalAs(UnmanagedType.R4)]
+        public float maxSpeed;     // 최대 이동속도
+
+        [MarshalAs(UnmanagedType.R4)]
+        public float maxHealth;    // 최대 체력
+
+        [MarshalAs(UnmanagedType.I4)]
+        public int responTime;     // 리스폰 시간
+
+        [MarshalAs(UnmanagedType.I4)]
+        public int gameTime;       // 게임 시간(ex 180초)
+
+        public byte[] Serialize()
+        {
+            // allocate a byte array for the struct data
+            var buffer = new byte[Marshal.SizeOf(typeof(GameInfo))];
+
+            // Allocate a GCHandle and get the array pointer
+            var gch = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+            var pBuffer = gch.AddrOfPinnedObject();
+
+            // copy data from struct to array and unpin the gc pointer
+            Marshal.StructureToPtr(this, pBuffer, false);
+            gch.Free();
+
+            return buffer;
+        }
+        public void Deserialize(ref byte[] data)
+        {
+            var gch = GCHandle.Alloc(data, GCHandleType.Pinned);
+            this = (GameInfo)Marshal.PtrToStructure(gch.AddrOfPinnedObject(), typeof(GameInfo));
+            gch.Free();
+        }
+    };
+    public GameInfo gameInfo;
+
     public static GameManager instance;
     public readonly string[] playersTag = new string[C_Global.MAX_PLAYER];
     public int myNetworkNum { get; set; }
     public int myIndex { get; set; }
     public string myTag { get; set; }
     public bool myFocus { get; set; }
+
+    public int CarSeed { get; set; }
+
     public CameraControl mainCamera;    // 메인 카메라
+
+    //	private static bool isLeftDrag;
+    //public static bool LeftTouch { get { return isLeftDrag; } }
 
     private void Start()
     {
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraControl>();
 
 #if NETWORK
-		BridgeClientToServer.instance.Initialization_PlayerViewer();	// 게임 시작시 플레이어 뷰어 셋팅
+		BridgeClientToServer.instance.Initialization_PlayerViewer();    // 게임 시작시 플레이어 뷰어 셋팅
+        
+		// 필요한 게임 정보를 브릿지에서 얻어옴
+        CarSeed = BridgeClientToServer.instance.GetTempCarSeed;
+        gameInfo = BridgeClientToServer.instance.GetTempGameInfo;
 #endif
 	}
 
-    void Awake()
+	void Awake()
     {
         if (instance == null)
             instance = this;
@@ -30,14 +84,21 @@ public class GameManager : MonoBehaviour
         playersTag[0] = "Player1"; playersTag[1] = "Player2";
         playersTag[2] = "Player3"; playersTag[3] = "Player4";
 
+        gameInfo.gameType = 0;
+        gameInfo.gameTime = 180;
+        gameInfo.responTime = 5;
+        CarSeed = 0;
+
 #if NETWORK
         myNetworkNum = NetworkManager.instance.MyPlayerNum;
         myIndex = myNetworkNum - 1;
+
+		Random.seed = CarSeed;	// 시드값을 awake에서 해줘야 첫 자동차도 타이밍이 맞음
 #else
         myNetworkNum = 1; //예시로 번호부여함.  서버에서 샌드된번호로 해야함.
         myIndex = myNetworkNum - 1;
 #endif
-        myTag = playersTag[myIndex]; //내 태그등록
+		myTag = playersTag[myIndex]; //내 태그등록
         myFocus = true;             // 포커스 On
 
         myTag = playersTag[myIndex]; //내 태그등록
@@ -75,4 +136,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
+
+	public Image loadingImage;
+	public void SetLoadingImage(int _allPlayerLoaded)
+	{
+		if (_allPlayerLoaded == 1)
+		{
+			loadingImage.enabled = false;
+			StartCoroutine(GameObject.Find("Spawner").GetComponent<PathCreation.Examples.PathSpawner>().SpawnPrefabs());
+		}
+
+		else
+			loadingImage.enabled = true;
+	}
 }

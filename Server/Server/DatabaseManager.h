@@ -32,6 +32,16 @@ public:
 	static DatabaseManager* GetInstance();
 	static void Destroy();
 
+private:
+	int numOfUserInfoRows;	// 유저정보 행 수
+	int numOfGameInfoRows;	// 게임정보 행 수
+	int numOfWeaponRows;	// 무기정보 행 수
+
+public:
+	int GetNumOfUserInfoRows() { return numOfUserInfoRows; }
+	int GetNumOfGameRows() { return numOfGameInfoRows; }
+	int GetNumOfWeaponRows() { return numOfWeaponRows; }
+
 public:
 	void Init();
 	void End();

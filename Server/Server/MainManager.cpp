@@ -8,6 +8,7 @@
 #include "RoomManager.h"
 #include "MatchManager.h"
 #include "InGameManager.h"
+#include "RandomManager.h"
 //#include <locale.h>
 
 // 초기화
@@ -46,6 +47,7 @@ void MainManager::Init()
 	listenSock->Listen(SOMAXCONN);
 
 	IOCP_Init();
+	RandomManager::GetInstance()->Init();
 	LogManager::GetInstance()->Init();
 	UtilityManager::GetInstance()->Init();
 	C_Encrypt::GetInstance()->Init();
@@ -74,6 +76,7 @@ void MainManager::End()
 	C_Encrypt::GetInstance()->End();
 	UtilityManager::GetInstance()->End();
 	LogManager::GetInstance()->End();
+	RandomManager::GetInstance()->End();
 	IOCP_End();
 }
 
@@ -112,6 +115,7 @@ void MainManager::Destroy()
 	C_Encrypt::GetInstance()->Destroy();
 	UtilityManager::GetInstance()->Destroy();
 	LogManager::GetInstance()->Destroy();
+	RandomManager::GetInstance()->Destroy();
 
 	MessageBeep(0);	// 잘 종료되나 메시지비프 울림
 	delete instance;

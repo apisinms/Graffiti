@@ -25,25 +25,55 @@ public class JoystickManager : MonoBehaviour
     {
         int index;
 
-        switch(_index)
+        switch (_index)
         {
             case 1:
                 WeaponManager.instance.mainWeapon[myIndex] = _WEAPONS.AR;
+                WeaponManager.instance.SetMainWeapon(Main_AR.GetMainWeaponInstance(), myIndex);
                 break;
             case 2:
                 WeaponManager.instance.mainWeapon[myIndex] = _WEAPONS.SG;
+                WeaponManager.instance.SetMainWeapon(Main_SG.GetMainWeaponInstance(), myIndex);
                 break;
             case 3:
                 WeaponManager.instance.mainWeapon[myIndex] = _WEAPONS.SMG;
+                WeaponManager.instance.SetMainWeapon(Main_SMG.GetMainWeaponInstance(), myIndex);
                 break;
         }
-        Destroy(WeaponManager.instance.obj_mainWeapon[myIndex]);
-        index = (int)WeaponManager.instance.mainWeapon[myIndex]; //주무기의 생성
-        WeaponManager.instance.obj_mainWeapon[myIndex] = Instantiate(WeaponManager.instance.obj_weaponPrefabsList[index], PlayersManager.instance.obj_players[myIndex].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
-        WeaponManager.instance.obj_mainWeapon[myIndex].transform.SetParent(PlayersManager.instance.obj_players[myIndex].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
+
+        if (EffectManager.instance.ps_tmpMuzzle[myIndex].body.body != null)
+            Destroy(EffectManager.instance.ps_tmpMuzzle[myIndex].body.body.gameObject);
+
+        switch (WeaponManager.instance.mainWeapon[myIndex])
+        {
+            case _WEAPONS.AR:
+                EffectManager.instance.ps_tmpMuzzle[myIndex].body.body = Instantiate(EffectManager.instance.ps_muzzlePrefebsList[1], PlayersManager.instance.obj_players[myIndex].transform) as ParticleSystem;
+                break;
+            case _WEAPONS.SG:
+                EffectManager.instance.ps_tmpMuzzle[myIndex].body.body = Instantiate(EffectManager.instance.ps_muzzlePrefebsList[0], PlayersManager.instance.obj_players[myIndex].transform) as ParticleSystem;
+                break;
+            case _WEAPONS.SMG:
+                EffectManager.instance.ps_tmpMuzzle[myIndex].body.body = Instantiate(EffectManager.instance.ps_muzzlePrefebsList[2], PlayersManager.instance.obj_players[myIndex].transform) as ParticleSystem;
+                break;
+        }
+
+        EffectManager.instance.ps_tmpMuzzle[myIndex].glow.body = EffectManager.instance.ps_tmpMuzzle[myIndex].body.body.transform.GetChild(0).GetComponent<ParticleSystem>();
+        EffectManager.instance.ps_tmpMuzzle[myIndex].plane2.body = EffectManager.instance.ps_tmpMuzzle[myIndex].body.body.transform.GetChild(1).GetComponent<ParticleSystem>();
+        EffectManager.instance.ps_tmpMuzzle[myIndex].plane3.body = EffectManager.instance.ps_tmpMuzzle[myIndex].body.body.transform.GetChild(2).GetComponent<ParticleSystem>();
+        EffectManager.instance.ps_tmpMuzzle[myIndex].plane4.body = EffectManager.instance.ps_tmpMuzzle[myIndex].body.body.transform.GetChild(3).GetComponent<ParticleSystem>();
+        EffectManager.instance.ps_tmpMuzzle[myIndex].spark.body = EffectManager.instance.ps_tmpMuzzle[myIndex].body.body.transform.GetChild(4).GetComponent<ParticleSystem>();
+        //ps_tmpSpark[i] = Instantiate(ps_spark, GameObject.FindGameObjectWithTag("Effects").transform);
+
+        EffectManager.instance.ps_tmpMuzzle[myIndex].body.option = EffectManager.instance.ps_tmpMuzzle[myIndex].body.body.main;
+        EffectManager.instance.ps_tmpMuzzle[myIndex].glow.option = EffectManager.instance.ps_tmpMuzzle[myIndex].glow.body.main;
+        EffectManager.instance.ps_tmpMuzzle[myIndex].plane2.option = EffectManager.instance.ps_tmpMuzzle[myIndex].plane2.body.main;
+        EffectManager.instance.ps_tmpMuzzle[myIndex].plane3.option = EffectManager.instance.ps_tmpMuzzle[myIndex].plane3.body.main;
+        EffectManager.instance.ps_tmpMuzzle[myIndex].plane4.option = EffectManager.instance.ps_tmpMuzzle[myIndex].plane4.body.main;
+        EffectManager.instance.ps_tmpMuzzle[myIndex].spark.option = EffectManager.instance.ps_tmpMuzzle[myIndex].spark.body.main;
     }
     void Update()
     {
+
             //    if (Input.GetKeyDown(KeyCode.Space))
 
             //Debug.Log(MyPlayerManager.instance.myActionState);

@@ -30,8 +30,9 @@ public class State_Shot : MonoBehaviour, IActionState
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
             PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.ActionIdle());
 
-            if (WeaponManager.instance.curActionCor[myIndex] != null)
-                WeaponManager.instance.StopCoroutine(WeaponManager.instance.curActionCor[myIndex]);
+            if (WeaponManager.instance.curMainActionCor[myIndex] != null)
+                WeaponManager.instance.StopCoroutine(WeaponManager.instance.curMainActionCor[myIndex]);
+            EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, myIndex);
         }
     }
 
@@ -45,9 +46,10 @@ public class State_Shot : MonoBehaviour, IActionState
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
             PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.ActionAimCircuit());
 
-            if (WeaponManager.instance.curActionCor[myIndex] != null)
-                WeaponManager.instance.StopCoroutine(WeaponManager.instance.curActionCor[myIndex]);
-            WeaponManager.instance.curActionCor[myIndex] = WeaponManager.instance.StartCoroutine(WeaponManager.instance.ActionBullet());
+            if (WeaponManager.instance.curMainActionCor[myIndex] != null)
+                WeaponManager.instance.StopCoroutine(WeaponManager.instance.curMainActionCor[myIndex]);
+            WeaponManager.instance.curMainActionCor[myIndex] = WeaponManager.instance.StartCoroutine(WeaponManager.instance.ActionFire(myIndex));
+            EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, myIndex);
         }
     }
 
@@ -61,8 +63,9 @@ public class State_Shot : MonoBehaviour, IActionState
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
             PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.ActionIdle());
           
-            if (WeaponManager.instance.curActionCor[myIndex] != null)
-                WeaponManager.instance.StopCoroutine(WeaponManager.instance.curActionCor[myIndex]);
+            if (WeaponManager.instance.curMainActionCor[myIndex] != null)
+                WeaponManager.instance.StopCoroutine(WeaponManager.instance.curMainActionCor[myIndex]);
+            EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, myIndex);
         }
     }
 
@@ -76,8 +79,9 @@ public class State_Shot : MonoBehaviour, IActionState
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
             PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.ActionAim());
 
-            if (WeaponManager.instance.curActionCor[myIndex] != null)
-                WeaponManager.instance.StopCoroutine(WeaponManager.instance.curActionCor[myIndex]);
+            if (WeaponManager.instance.curMainActionCor[myIndex] != null)
+                WeaponManager.instance.StopCoroutine(WeaponManager.instance.curMainActionCor[myIndex]);
+            EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, myIndex);
         }
     }
 }

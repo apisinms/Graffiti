@@ -63,7 +63,23 @@ public partial class NetworkManager : MonoBehaviour
             return false;
     }
 
-    PositionPacket position = new PositionPacket();
+	// 서버로 Loading 됐다는 프로토콜을 보내준다.
+	public void SendLoadingComplete()
+	{
+		int packetSize = 0;
+
+		// 로딩 완료 프로토콜
+		PROTOCOL loadingProtocol = SetProtocol(
+			 STATE_PROTOCOL.INGAME_STATE,
+			 PROTOCOL.LOADING_PROTOCOL,
+			 RESULT.INGAME_SUCCESS);
+
+		// 로딩 완료 전송
+		PackPacket(ref sendBuf, loadingProtocol, out packetSize);
+		bw.Write(sendBuf, 0, packetSize);
+	}
+
+	PositionPacket position = new PositionPacket();
     public void SendPosition(float _posX, float _posZ, float _rotY, float _speed, _ACTION_STATE _action, bool _isInit = false)
     {
         // 초기 위치 보낼 때

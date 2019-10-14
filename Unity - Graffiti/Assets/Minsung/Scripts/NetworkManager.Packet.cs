@@ -309,7 +309,8 @@ public partial class NetworkManager : MonoBehaviour
 
         _struct.Deserialize(ref posByte);
     }
-    private void UnPackPacket(byte[] _buf, out byte _playerBit)
+
+	private void UnPackPacket(byte[] _buf, out byte _playerBit)
     {
         int offset = sizeof(PROTOCOL);
 
@@ -371,5 +372,57 @@ public partial class NetworkManager : MonoBehaviour
 
         // 이제 다시 string으로 변환
         _str1 = ByteToString(arrStrByte);
+    }
+
+    private void UnPackPacket(byte[] _buf, out int _carSeed, ref GameManager.GameInfo _gameInfo, ref WeaponManager.WeaponInfo[] _weapons)
+    {
+        // 1. carSeed 받음
+        byte[] arrNum = new byte[sizeof(int)];
+
+        int offset = sizeof(PROTOCOL);
+
+        // 일단 byte 배열로 받고
+        Buffer.BlockCopy(_buf, offset, arrNum, 0, sizeof(int));
+
+        // 이제 다시 int로 변환
+        _carSeed = BitConverter.ToInt32(arrNum, 0);
+        offset += sizeof(int);
+
+
+        // 2. GameInfo 받음
+        byte[] posByte = new byte[Marshal.SizeOf(_gameInfo)];
+        Buffer.BlockCopy(_buf, offset, posByte, 0, Marshal.SizeOf(_gameInfo));
+
+        _gameInfo.Deserialize(ref posByte);
+        offset += Marshal.SizeOf(_gameInfo);
+
+
+
+        // 3. Weapon 갯수 받음
+        arrNum = new byte[sizeof(int)];
+
+        // 일단 byte 배열로 받고
+        Buffer.BlockCopy(_buf, offset, arrNum, 0, sizeof(int));
+
+        // 이제 다시 int로 변환
+        int numOfWeapon = BitConverter.ToInt32(arrNum, 0);
+        offset += sizeof(int);
+
+        // 받은 만큼 배열 할당
+        _weapons = new WeaponManager.WeaponInfo[numOfWeapon];
+
+
+        // 4. WeaponInfo를 위에서 받은 갯수만큼 받아서 _weaponInfo 배열에 저장함
+        WeaponManager.WeaponInfo weapon = new WeaponManager.WeaponInfo();
+        for (int i = 0; i < numOfWeapon; i++)
+        {
+            posByte = new byte[Marshal.SizeOf(weapon)];
+            Buffer.BlockCopy(_buf, offset, posByte, 0, Marshal.SizeOf(weapon));
+
+            weapon.Deserialize(ref posByte);
+
+            _weapons[i] = weapon;
+            offset += Marshal.SizeOf(weapon);
+        }
     }
 }

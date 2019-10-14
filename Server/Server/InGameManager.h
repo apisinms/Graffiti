@@ -6,14 +6,16 @@ class C_ClientInfo;
 class InGameManager
 {
 #ifdef DEBUG
-	static const int WEAPON_SELTIME = 5 + 1;	// 무기 선택 시간(초 단위)
+	static const int WEAPON_SELTIME = 1 + 1;	// 무기 선택 시간(초 단위)
 	int numOfPacketSent             = 0;		// 패킷 보낸 횟수
 #else
 	static const int WEAPON_SELTIME = 30 + 1;	// 무기 선택 시간(초 단위)
 #endif
 
-	list<WeaponInfo*> weaponInfoList;	// 보관할 무기 정보리스트
-	list<GameInfo*> gameInfoList;		// 보관할 게임 정보리스트
+	//list<WeaponInfo*> weaponInfoList;	// 보관할 무기 정보리스트
+	//list<GameInfo*> gameInfoList;		// 보관할 게임 정보리스트
+	vector<WeaponInfo*> weaponInfo;		// 보관할 무기 정보 벡터
+	vector<GameInfo*> gameInfo;			// 보관할 게임 정보 벡터
 
 	// 53~34
 	enum PROTOCOL_INGAME : __int64
@@ -21,8 +23,9 @@ class InGameManager
 		TIMER_PROTOCOL        = ((__int64)0x1 << 53),	// 1초마다 보내는 타이머
 		WEAPON_PROTOCOL       = ((__int64)0x1 << 52),	// 서버측:무기선택받아옴, 클라측:무기선택보내옴
 		START_PROTOCOL        = ((__int64)0x1 << 51),	// 게임 시작 프로토콜
-		MOVE_PROTOCOL		  = ((__int64)0x1 << 50),	// 이동 프로토콜
-		FOCUS_PROTOCOL        = ((__int64)0x1 << 49),	// 포커스 프로토콜
+		LOADING_PROTOCOL      = ((__int64)0x1 << 50),	// 로딩 여부 프로토콜
+		MOVE_PROTOCOL		  = ((__int64)0x1 << 49),	// 이동 프로토콜
+		FOCUS_PROTOCOL        = ((__int64)0x1 << 48),	// 포커스 프로토콜
 
 		DISCONNECT_PROTOCOL   = ((__int64)0x1 << 34),	// 접속 끊김 프로토콜
 	};
@@ -59,11 +62,12 @@ public:
 	static void Destroy();
 
 private:
-	void PackPacket(char* _setptr, const int &_sec, int& _size);
+	void PackPacket(char* _setptr, const int _num, int& _size);
 	void PackPacket(char* _setptr, int _num, Weapon* _struct, int& _size);
-	void PackPacket(char* _setptr, PositionPacket& _struct, int& _size);
+	void PackPacket(char* _setptr, IngamePacket& _struct, int& _size);
+	void PackPacket(char* _setptr, int _carSeed, GameInfo* &_gameInfo, vector<WeaponInfo*>& _weaponInfo, int& _size);
 	void UnPackPacket(char* _getBuf, int& _num);
-	void UnPackPacket(char* _getBuf, PositionPacket& _struct);
+	void UnPackPacket(char* _getBuf, IngamePacket& _struct);
 	void UnPackPacket(char* _getBuf, Weapon* &_weapon);
 
 	void GetProtocol(PROTOCOL_INGAME& _protocol);		// 프로토콜을 얻음
@@ -72,6 +76,7 @@ private:
 
 	PROTOCOL_INGAME GetBufferAndProtocol(C_ClientInfo* _ptr, char* _buf);	// buf와 Protocol을 동시에 얻는 함수
 	bool WeaponSelectProcess(C_ClientInfo* _ptr, char* _buf);
+	bool LoadingProcess(C_ClientInfo* _ptr, char* _buf);
 	bool InitProcess(C_ClientInfo* _ptr, char* _buf);
 	bool MoveProcess(C_ClientInfo* _ptr, char* _buf);
 	bool GetPosProcess(C_ClientInfo* _ptr, char* _buf);		// 위치를 얻어주는 함수
@@ -79,6 +84,7 @@ private:
 
 public:
 	bool CanISelectWeapon(C_ClientInfo* _ptr);	// 무기 선택
+	bool LoadingSuccess(C_ClientInfo* _ptr);	// 로딩 성공 처리
 	bool CanIStart(C_ClientInfo* _ptr);			// 시작 시 초기화
 	bool CanIMove(C_ClientInfo* _ptr);			// 이동
 	bool CanIChangeFocus(C_ClientInfo* _ptr);	// 포커스 변경

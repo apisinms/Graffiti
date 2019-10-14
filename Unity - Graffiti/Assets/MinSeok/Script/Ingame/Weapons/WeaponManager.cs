@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 /*
@@ -19,15 +19,80 @@ public enum _WEAPONS : sbyte
     SUB_MAX_LENGTH,
 }
 */
-public partial class WeaponManager : MonoBehaviour
+public interface IMainWeaponType
 {
+    IEnumerator ActionFire(int _index);
+    void CheckFireRange(GameObject _obj_bullet, int _index);
+}
+
+public class WeaponManager : MonoBehaviour, IMainWeaponType
+{
+    public const int WEAPON_NAME_SIZE = 32; // 무기 이름 길이
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    public struct WeaponInfo
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int num;            // 무기 번호
+
+        [MarshalAs(UnmanagedType.I4)]
+        public int numOfPattern;   // 패턴 갯수
+
+        [MarshalAs(UnmanagedType.I4)]
+        public int maxAmmo;        // 최대 총알
+
+        [MarshalAs(UnmanagedType.R4)]
+        public float fireRate;     // 발사 속도
+
+        [MarshalAs(UnmanagedType.R4)]
+        public float damage;       // 데미지
+
+        [MarshalAs(UnmanagedType.R4)]
+        public float accuracy;     // 정확도
+
+        [MarshalAs(UnmanagedType.R4)]
+        public float range;        // 사정거리
+
+        [MarshalAs(UnmanagedType.R4)]
+        public float speed;        // 탄속
+
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = WEAPON_NAME_SIZE)]
+        public string weaponName; // 무기 이름
+
+        public byte[] Serialize()
+        {
+            // allocate a byte array for the struct data
+            var buffer = new byte[Marshal.SizeOf(typeof(WeaponInfo))];
+
+            // Allocate a GCHandle and get the array pointer
+            var gch = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+            var pBuffer = gch.AddrOfPinnedObject();
+
+            // copy data from struct to array and unpin the gc pointer
+            Marshal.StructureToPtr(this, pBuffer, false);
+            gch.Free();
+
+            return buffer;
+        }
+        public void Deserialize(ref byte[] data)
+        {
+            var gch = GCHandle.Alloc(data, GCHandleType.Pinned);
+            this = (WeaponInfo)Marshal.PtrToStructure(gch.AddrOfPinnedObject(), typeof(WeaponInfo));
+            gch.Free();
+        }
+    };
+
     public static WeaponManager instance;
-    public readonly string[] weaponsTag = new string[3];
-    public int myIndex { get; set; } //가독성을위해 하나 더만들어줌
+    public IMainWeaponType[] mainWeaponType { get; set; }
+    public Component[] cn_mainWeaponList { get; set; }
+    public GameObject obj_mainWeaponList;
     public GameObject[] obj_weaponPrefabsList = new GameObject[6];
 
-    #region WEAPONS_ACTION
-    public Coroutine[] curActionCor { get; set; }
+    public readonly string[] weaponsTag = new string[3];
+    public int myIndex { get; set; } //가독성을위해 하나 더만들어줌
+
+    #region WEAPONS_COR
+    public Coroutine[] curMainActionCor { get; set; }
     #endregion
 
     #region WEAPONS_TYPE
@@ -35,63 +100,14 @@ public partial class WeaponManager : MonoBehaviour
     public _WEAPONS[] subWeapon { get; set; }
     public GameObject[] obj_mainWeapon { get; set; }
     public GameObject[] obj_subWeapon { get; set; }
-
-    #region AR
-    public struct _INFO_AR
-    {
-        public Vector3[] vt_bulletPattern;
-        public int bulletPatternIndex;
-        public int prevBulletPatternIndex;
-
-        public int curAmmo;
-        public int maxAmmo;
-        public float fireRate;
-        public float damage;
-        public float accuracy;
-        public float range;
-        public float speed;
-    }
-    public _INFO_AR[] infoAR { get; set; }
     #endregion
 
-    #region SG
-    public struct _INFO_SG
-    {
-        public GameObject[] obj_bulletClone;
-        public Transform[] tf_bulletClone;
-        public Vector3[,] vt_bulletPattern;
-        public int bulletPatternIndex;
-
-        public int curAmmo;
-        public int maxAmmo;
-        public float fireRate;
-        public float damage;
-        public float accuracy;
-        public float range;
-        public float speed;
-    }
-    public _INFO_SG[] infoSG { get; set; }
+    // 공용으로 사용하는 무기의 속성(정보)
+    #region WEAPON_INFO
+    public WeaponInfo weaponInfoAR;      // AR 정보(공용)
+    public WeaponInfo weaponInfoSG;      // SG 정보(공용)
+    public WeaponInfo weaponInfoSMG;   // SMG 정보(공용)
     #endregion
-
-    #region SMG
-    public struct _INFO_SMG
-    {
-        public Vector3[] vt_bulletPattern;
-        public int bulletPatternIndex;
-        public int prevBulletPatternIndex;
-
-        public int curAmmo;
-        public int maxAmmo;
-        public float fireRate;
-        public float damage;
-        public float accuracy;
-        public float range;
-        public float speed;
-    }
-    public _INFO_SMG[] infoSMG { get; set; }
-    #endregion
-    #endregion
-
 
     void Awake()
     {
@@ -99,13 +115,46 @@ public partial class WeaponManager : MonoBehaviour
             instance = this;
 
         myIndex = GameManager.instance.myIndex;
+        mainWeaponType = new IMainWeaponType[C_Global.MAX_PLAYER];
+
         weaponsTag[0] = "Ar"; weaponsTag[1] = "Sg"; weaponsTag[2] = "Smg";
-
+        
+        cn_mainWeaponList = obj_mainWeaponList.GetComponents<Component>();
+    
         Initialization(C_Global.MAX_PLAYER);
-        Initialization_Attribute(C_Global.MAX_PLAYER);
+    }
 
-		bulletTag[0] = "Bullet1"; bulletTag[1] = "Bullet2"; bulletTag[2] = "Bullet3"; bulletTag[3] = "Bullet4";
-	}
+    void Start()
+    {
+#if NETWORK
+        WeaponInfo[] weapons = BridgeClientToServer.instance.GetTempWeapons;
+
+        for (int i = 0; i < weapons.Length; i++)
+        {
+            switch (weapons[i].weaponName.ToString())
+            {
+                case "AR":
+                    weaponInfoAR = weapons[i];
+                    break;
+
+                case "SG":
+                    weaponInfoSG = weapons[i];
+                    break;
+
+                case "SMG":
+                    weaponInfoSMG = weapons[i];
+                    break;
+
+                ///////// 보조무기
+                case "TRAP":
+                    break;
+
+                case "GRENADE":
+                    break;
+            }
+        }
+#endif
+    }
 
     void Initialization(int _num)
     {
@@ -113,105 +162,41 @@ public partial class WeaponManager : MonoBehaviour
         obj_subWeapon = new GameObject[_num];
         mainWeapon = new _WEAPONS[_num];
         subWeapon = new _WEAPONS[_num];
-        curActionCor = new Coroutine[_num];
-
-        // !!!!!!!!!!! 서버에서 받은데이터로 초기화해야함  임의로 속성값부여해둠. !!!!!!!!!!
-        /*
-		 *for (int i = 0; i < _num; i++)
-        {
-            if (myIndex == i) //내인덱스들의 초기화
-            {
-                int index;
-                curActionCor[i] = null;
-                mainWeapon[i] = _WEAPONS.SMG; //셀렉트웨폰에서 선택했던 무기를 서버에서 받아야함.
-                subWeapon[i] = _WEAPONS.GRENADE;
-
-                index = (int)mainWeapon[i]; //주무기의 생성
-                obj_mainWeapon[i] = Instantiate(obj_weaponPrefabsList[index], PlayersManager.instance.obj_players[myIndex].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
-                obj_mainWeapon[i].transform.SetParent(PlayersManager.instance.obj_players[myIndex].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
-
-                //index = (int)subWeapon[i] - 1; //보조무기의 생성
-                //obj_subWeapon[i] = Instantiate(obj_weaponPrefabsList[index], PlayersManager.instance.obj_players[myIndex].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
-                //obj_subWeapon[i].transform.SetParent(PlayersManager.instance.obj_players[myIndex].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
-            }
-            else //나머지 3명 인덱스의 초기화
-            {
-                int index;
-                curActionCor[i] = null;
-
-                mainWeapon[i] = _WEAPONS.AR; //셀렉트웨폰에서 선택했던 무기를 서버에서 받아야함.
-                subWeapon[i] = _WEAPONS.GRENADE;
-
-                index = (int)mainWeapon[i]; //주무기의 생성
-                obj_mainWeapon[i] = Instantiate(obj_weaponPrefabsList[index], PlayersManager.instance.obj_players[i].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
-                obj_mainWeapon[i].transform.SetParent(PlayersManager.instance.obj_players[i].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
-
-				//index = (int)subWeapon[i] - 1; //보조무기의 생성
-                //obj_subWeapon[i] = Instantiate(obj_weaponPrefabsList[index], PlayersManager.instance.obj_players[i].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
-                //obj_subWeapon[i].transform.SetParent(PlayersManager.instance.obj_players[i].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
-            }
-        }
-		*/
-    }
-    void Initialization_Attribute(int _num)
-    {
-        list_bulletPool = new List<GameObject>[_num];
-        tf_firstPos = new Transform[_num];
-
-        infoAR    = new _INFO_AR[_num];
-        infoSG    = new _INFO_SG[_num];
-        infoSMG = new _INFO_SMG[_num];
+        curMainActionCor = new Coroutine[_num];
 
         for (int i = 0; i < _num; i++)
-        {
-            list_bulletPool[i] = new List<GameObject>();
-
-            infoAR[i].vt_bulletPattern              = new Vector3[3];
-            infoAR[i].bulletPatternIndex           = 1;
-            infoAR[i].prevBulletPatternIndex     = 2;
-            infoAR[i].curAmmo   = 30;
-            infoAR[i].maxAmmo  = 30;
-            infoAR[i].fireRate     = 0.14f;
-            infoAR[i].damage    = 1.0f;
-            infoAR[i].accuracy    = 0.06f;
-            infoAR[i].range       = 20.0f;
-            infoAR[i].speed       = 2000.0f;
-
-            infoSG[i].obj_bulletClone = new GameObject[5];
-            infoSG[i].tf_bulletClone = new Transform[5];
-            infoSG[i].vt_bulletPattern = new Vector3[2, 5];
-            infoSG[i].bulletPatternIndex = 0;
-            infoSG[i].curAmmo        = 2;
-            infoSG[i].maxAmmo       = 2;
-            infoSG[i].fireRate           = 0;
-            infoSG[i].damage          = 1.5f;
-            infoSG[i].accuracy          = 0.25f;
-            infoSG[i].range             = 10.0f;
-            infoSG[i].speed             = 2300.0f;
-
-            infoSMG[i].vt_bulletPattern              = new Vector3[3];
-            infoSMG[i].bulletPatternIndex           = 2;
-            infoSMG[i].prevBulletPatternIndex      = 1;
-            infoSMG[i].curAmmo  = 25;
-            infoSMG[i].maxAmmo = 25;
-            infoSMG[i].fireRate     = 0.07f;
-            infoSMG[i].damage    = 0.5f;
-            infoSMG[i].accuracy   = 0.1f;
-            infoSMG[i].range       = 15.0f;
-            infoSMG[i].speed        = 1200.0f;
-        }
-
+            curMainActionCor[i] = null;
     }
 
-	public void CreateWeapon(int _idx)
-	{
-		//mainWeapon[_idx] = _WEAPONS.AR; //셀렉트웨폰에서 선택했던 무기를 서버에서 받아야함.
-		//subWeapon[_idx] = _WEAPONS.GRENADE;
+    public void SetMainWeapon(IMainWeaponType _weaponType, int _index)
+    {
+        mainWeaponType[_index] = _weaponType; //내 상태 업데이트.
 
-		curActionCor[_idx] = null;
+        int weaponIndex = (int)mainWeapon[_index]; //주무기의 생성
 
-		int weaponIndex = (int)mainWeapon[_idx]; //주무기의 생성
-		obj_mainWeapon[_idx] = Instantiate(obj_weaponPrefabsList[weaponIndex], PlayersManager.instance.obj_players[_idx].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
-		obj_mainWeapon[_idx].transform.SetParent(PlayersManager.instance.obj_players[_idx].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
-	}
+        if(obj_mainWeapon[_index] != null) //가지고있던 총오브젝트를 지우고
+            Destroy(obj_mainWeapon[_index]);
+      
+        obj_mainWeapon[_index] = Instantiate(obj_weaponPrefabsList[weaponIndex], PlayersManager.instance.obj_players[_index].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
+		obj_mainWeapon[_index].transform.SetParent(PlayersManager.instance.obj_players[_index].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
+    }
+
+    /* 보조무기 마찬가지로
+    public void SetSubWeapon(IMainWeaponType _weaponType, int _index)
+    {
+        //index = (int)subWeapon[i] - 1; //보조무기의 생성
+        //obj_subWeapon[i] = Instantiate(obj_weaponPrefabsList[index], PlayersManager.instance.obj_players[myIndex].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
+        //obj_subWeapon[i].transform.SetParent(PlayersManager.instance.obj_players[myIndex].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
+    }
+    */
+
+    public IEnumerator ActionFire(int _index) //선택된 총의 파이어액션
+    {
+        yield return mainWeaponType[_index].ActionFire(_index);
+    }
+
+    public void CheckFireRange(GameObject _obj_bullet, int _index) //선택된 총의 사거리검사
+    {
+        mainWeaponType[_index].CheckFireRange(_obj_bullet, _index);
+    }
 }

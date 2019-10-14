@@ -14,7 +14,7 @@ using UnityEngine;
 public partial class NetworkManager : MonoBehaviour
 {
     // 서버 IP와 포트
-    //private static IPAddress serverIP = IPAddress.Parse("183.97.255.52");
+    //private static IPAddress serverIP = IPAddress.Parse("127.0.0.1");
     private static IPAddress serverIP = IPAddress.Parse("121.164.136.204");
     private static int serverPort = 10823;
 
@@ -64,12 +64,12 @@ public partial class NetworkManager : MonoBehaviour
         CHAT_PROTOCOL = ((Int64)0x1 << 52),
 
         // InGameState
-        TIMER_PROTOCOL = ((Int64)0x1 << 53),      // 타이머 프로토콜(1초씩 받음)
+        TIMER_PROTOCOL  = ((Int64)0x1 << 53),      // 타이머 프로토콜(1초씩 받음)
         WEAPON_PROTOCOL = ((Int64)0x1 << 52),      // 무기 전송 프로토콜
-        START_PROTOCOL = ((Int64)0x1 << 51),      // 게임 시작 프로토콜
-        MOVE_PROTOCOL = ((Int64)0x1 << 50),      // 이동 프로토콜
-        FOCUS_PROTOCOL = ((Int64)0x1 << 49),      // 포커스 프로토콜
-        ALIVE_PROTOCOL = ((Int64)0x1 << 48),      // 연결되어있는지 확인하는
+        START_PROTOCOL  = ((Int64)0x1 << 51),      // 게임 시작 프로토콜
+		LOADING_PROTOCOL= ((Int64)0x1 << 50),		// 로딩 여부 프로토콜
+		MOVE_PROTOCOL   = ((Int64)0x1 << 49),      // 이동 프로토콜
+        FOCUS_PROTOCOL  = ((Int64)0x1 << 48),      // 포커스 프로토콜
 
         DISCONNECT_PROTOCOL = ((Int64)0x1 << 34), // 접속 끊김 프로토콜
 

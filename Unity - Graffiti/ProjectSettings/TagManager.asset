@@ -20,6 +20,11 @@ TagManager:
   - Bullet2
   - Bullet3
   - Bullet4
+  - Effects
+  - ConcretePool1
+  - IronPool1
+  - Concrete1
+  - Iron1
   layers:
   - Default
   - TransparentFX
@@ -29,7 +34,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Bullet
   - 
   - 
   - 

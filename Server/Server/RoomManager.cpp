@@ -12,6 +12,7 @@ RoomInfo::RoomInfo(C_ClientInfo** _playerList, int _numOfPlayer)
 	roomStatus = ROOMSTATUS::ROOM_NONE;	// 방 생성시 초기 상태는 아무 상태도아님
 
 	numOfPlayer = _numOfPlayer;
+	carSeed = 0;			// 자동차 씨드
 
 	// 방 플레이어 리스트에 추가
 	for (int i = 0; i < numOfPlayer; i++)
@@ -23,7 +24,7 @@ RoomInfo::RoomInfo(C_ClientInfo** _playerList, int _numOfPlayer)
 bool RoomInfo::LeaveRoom(C_ClientInfo* _player)
 {	
 	// 내가 나간다는 것을 같은 방에 있는 플레이어들에게 보내줌
-	if (InGameManager::GetInstance()->LeaveProcess(_player, _player->GetPlayerInfo()->GetPosition()->playerNum) == true)
+	if (InGameManager::GetInstance()->LeaveProcess(_player, _player->GetPlayerInfo()->GetIngamePacket()->playerNum) == true)
 	{
 		// 방 인원수를 감소하고, 자신의 흔적을 지운다.
 		numOfPlayer--;					// 방 인원수 감소
