@@ -5,7 +5,8 @@ using System.Net.Sockets;
 using System.IO;
 using UnityEngine;
 using static C_Global;
-
+using static GameManager;
+using static WeaponManager;
 
 /// <summary>
 /// NetworkManager_Networking.cs파일
@@ -222,6 +223,22 @@ public partial class NetworkManager : MonoBehaviour
 
                         // 게임 시작 프로토콜
                         case PROTOCOL.START_PROTOCOL:
+                            {
+                                // result 생략
+
+                                lock (key)
+                                {
+                                    // 모든 게임 정보를 받아가지고 옴
+                                    int carSeed = 0;
+                                    GameInfo gameInfo = new GameInfo();
+                                    WeaponInfo[] weapons = null;
+
+                                    UnPackPacket(info.packet, out carSeed, ref gameInfo, ref weapons);
+
+                                    // 받은 정보를 브릿지에 세팅함
+                                    bridge.SetGameInfoToBridge(carSeed, ref gameInfo, ref weapons);
+                                }
+                            }
                             break;
 
                         // 움직임 프로토콜

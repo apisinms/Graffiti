@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Assets\Assets\LOWPOLY CHARACTERS\AdvancedCustomizer\Scripts\Editor\CharacterCustomizerEditor.cs" />
     <Compile Include="Assets\Assets\LOWPOLY CHARACTERS\AdvancedCustomizer\Scripts\Editor\ClothesCreator.cs" />
+    <Compile Include="Assets\Gwangil\PathCreator\Examples\Scripts\Editor\PathSceneToolEditor.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>E:/Unity/Projects/forGitHub/Graffiti/UNITY-~1/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
@@ -661,6 +662,14 @@
     <ProjectReference Include="Assembly-CSharp.csproj">
       <Project>{87F658B0-F93F-E036-8680-32247D607F41}</Project>
       <Name>Assembly-CSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="PathCreator.csproj">
+      <Project>{6A100D23-56A5-514C-FB0E-7F85EE06AAF4}</Project>
+      <Name>PathCreator</Name>
+    </ProjectReference>
+    <ProjectReference Include="PathCreatorEditor.csproj">
+      <Project>{8A078451-271C-597A-A650-E74E08345E70}</Project>
+      <Name>PathCreatorEditor</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

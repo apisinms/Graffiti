@@ -2,14 +2,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static GameManager;
 using static NetworkManager;
+using static WeaponManager;
 
 //          BridgeClientToServer.Networking
 public partial class BridgeClientToServer : MonoBehaviour
 {
     private Vector3 tmpVec;
     private Vector3 tmpAngle;
- 
+    private int tmpCarSeed;
+    private GameInfo tmpGameInfo;
+    private WeaponInfo[] tmpWeapons;
+
+    public int GetTempCarSeed { get { return tmpCarSeed; } }
+    public GameInfo GetTempGameInfo { get { return tmpGameInfo; } }
+    public WeaponInfo[] GetTempWeapons { get { return tmpWeapons; } }
+
     public void Initialization_Networking()
     {
         tmpVec = new Vector3();
@@ -45,7 +54,15 @@ public partial class BridgeClientToServer : MonoBehaviour
         */
 
         EffectManager.instance.InitializeMuzzle(index);
-    } 
+    }
+
+    // 최초에 무기정보, 게임정보, 자동차 씨드를 bridg의 멤버로 설정(GameManager가 인스턴스 생성되고 나서 저장해야되므로;)
+    public void SetGameInfoToBridge(int _carSeed, ref GameInfo _gameInfo, ref WeaponInfo[] _weapons)
+    {
+        tmpCarSeed = _carSeed;
+        tmpGameInfo = _gameInfo;
+        tmpWeapons = _weapons;
+    }
 
     // 섹터 진입시
     public void EnterSectorProcess(ref PositionPacket _packet)

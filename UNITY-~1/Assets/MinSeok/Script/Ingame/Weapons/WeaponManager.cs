@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 /*
@@ -26,6 +27,61 @@ public interface IMainWeaponType
 
 public class WeaponManager : MonoBehaviour, IMainWeaponType
 {
+    public const int WEAPON_NAME_SIZE = 32; // 무기 이름 길이
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    public struct WeaponInfo
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int num;            // 무기 번호
+
+        [MarshalAs(UnmanagedType.I4)]
+        public int numOfPattern;   // 패턴 갯수
+
+        [MarshalAs(UnmanagedType.I4)]
+        public int maxAmmo;        // 최대 총알
+
+        [MarshalAs(UnmanagedType.R4)]
+        public float fireRate;     // 발사 속도
+
+        [MarshalAs(UnmanagedType.R4)]
+        public float damage;       // 데미지
+
+        [MarshalAs(UnmanagedType.R4)]
+        public float accuracy;     // 정확도
+
+        [MarshalAs(UnmanagedType.R4)]
+        public float range;        // 사정거리
+
+        [MarshalAs(UnmanagedType.R4)]
+        public float speed;        // 탄속
+
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = WEAPON_NAME_SIZE)]
+        public string weaponName; // 무기 이름
+
+        public byte[] Serialize()
+        {
+            // allocate a byte array for the struct data
+            var buffer = new byte[Marshal.SizeOf(typeof(WeaponInfo))];
+
+            // Allocate a GCHandle and get the array pointer
+            var gch = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+            var pBuffer = gch.AddrOfPinnedObject();
+
+            // copy data from struct to array and unpin the gc pointer
+            Marshal.StructureToPtr(this, pBuffer, false);
+            gch.Free();
+
+            return buffer;
+        }
+        public void Deserialize(ref byte[] data)
+        {
+            var gch = GCHandle.Alloc(data, GCHandleType.Pinned);
+            this = (WeaponInfo)Marshal.PtrToStructure(gch.AddrOfPinnedObject(), typeof(WeaponInfo));
+            gch.Free();
+        }
+    };
+
     public static WeaponManager instance;
     public IMainWeaponType[] mainWeaponType { get; set; }
     public Component[] cn_mainWeaponList { get; set; }
@@ -38,12 +94,19 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
     #region WEAPONS_COR
     public Coroutine[] curMainActionCor { get; set; }
     #endregion
-   
+
     #region WEAPONS_TYPE
     public _WEAPONS[] mainWeapon { get; set; }
     public _WEAPONS[] subWeapon { get; set; }
     public GameObject[] obj_mainWeapon { get; set; }
     public GameObject[] obj_subWeapon { get; set; }
+    #endregion
+
+    // 공용으로 사용하는 무기의 속성(정보)
+    #region WEAPON_INFO
+    public WeaponInfo weaponInfoAR;      // AR 정보(공용)
+    public WeaponInfo weaponInfoSG;      // SG 정보(공용)
+    public WeaponInfo weaponInfoSMG;   // SMG 정보(공용)
     #endregion
 
     void Awake()
@@ -59,6 +122,38 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
         cn_mainWeaponList = obj_mainWeaponList.GetComponents<Component>();
     
         Initialization(C_Global.MAX_PLAYER);
+    }
+
+    void Start()
+    {
+#if NETWORK
+        WeaponInfo[] weapons = BridgeClientToServer.instance.GetTempWeapons;
+
+        for (int i = 0; i < weapons.Length; i++)
+        {
+            switch (weapons[i].weaponName.ToString())
+            {
+                case "AR":
+                    weaponInfoAR = weapons[i];
+                    break;
+
+                case "SG":
+                    weaponInfoSG = weapons[i];
+                    break;
+
+                case "SMG":
+                    weaponInfoSMG = weapons[i];
+                    break;
+
+                ///////// 보조무기
+                case "TRAP":
+                    break;
+
+                case "GRENADE":
+                    break;
+            }
+        }
+#endif
     }
 
     void Initialization(int _num)

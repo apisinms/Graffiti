@@ -44,7 +44,7 @@ public partial class PoolManager : MonoBehaviour
     {
         ParticleSystem ps_effectClone = null;
 
-        for(int i=0; i < obj_collisionEffectPool.Length; i++)
+        for(int i = 0; i < obj_collisionEffectPool.Length; i++)
         {
             if (!obj_collisionEffectPool[i].CompareTag(_CollisionTag))
                 continue;

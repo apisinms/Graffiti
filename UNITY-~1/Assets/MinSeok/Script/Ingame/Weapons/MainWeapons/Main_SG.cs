@@ -5,47 +5,44 @@ using UnityEngine;
 public class Main_SG : MonoBehaviour, IMainWeaponType
 {
     public static Main_SG instance;
+    private WeaponManager weaponManager;
     private int myIndex { get; set; }
 
     #region SG
-    public struct _INFO_SG
+    public struct _PLAYER_SG_INFO
     {
         public GameObject[] obj_bulletClone;
         public Transform[] tf_bulletClone;
         public Vector3[,] vt_bulletPattern;
         public int bulletPatternIndex;
-
         public int curAmmo;
-        public int maxAmmo;
-        public float fireRate;
-        public float damage;
-        public float accuracy;
-        public float range;
-        public float speed;
     }
-    public _INFO_SG[] infoSG { get; set; }
+
+    public _PLAYER_SG_INFO[] playerSGInfo { get; set; }
     #endregion
 
     private void Start()
     {
+        weaponManager = WeaponManager.instance;
         myIndex = GameManager.instance.myIndex;
 
-        infoSG = new _INFO_SG[C_Global.MAX_PLAYER];
+        playerSGInfo = new _PLAYER_SG_INFO[C_Global.MAX_PLAYER];
 
         for (int i = 0; i < C_Global.MAX_PLAYER; i++)
         {
-            infoSG[i].obj_bulletClone = new GameObject[5];
-            infoSG[i].tf_bulletClone = new Transform[5];
-            infoSG[i].vt_bulletPattern = new Vector3[2, 5];
-            infoSG[i].bulletPatternIndex = 0;
-            infoSG[i].curAmmo = 2;
-            infoSG[i].maxAmmo = 2;
-            infoSG[i].fireRate = 0;
-            infoSG[i].damage = 1.5f;
-            infoSG[i].accuracy = 0.25f;
-            infoSG[i].range = 10.0f;
-            infoSG[i].speed = 2300.0f;
+            playerSGInfo[i].obj_bulletClone = new GameObject[5];
+            playerSGInfo[i].tf_bulletClone = new Transform[5];
+            playerSGInfo[i].vt_bulletPattern = new Vector3[2, 5];
+            playerSGInfo[i].bulletPatternIndex = 0;
+            playerSGInfo[i].curAmmo = 2;
         }
+
+        weaponManager.weaponInfoSG.maxAmmo = 30;
+        weaponManager.weaponInfoSG.fireRate = 0.14f;
+        weaponManager.weaponInfoSG.damage = 1.0f;
+        weaponManager.weaponInfoSG.accuracy = 0.06f;
+        weaponManager.weaponInfoSG.range = 20.0f;
+        weaponManager.weaponInfoSG.speed = 2000.0f;
     }
 
     public static Main_SG GetMainWeaponInstance()
@@ -60,31 +57,31 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
     {
         for (int i = 0; i < 5; i++)
         {
-            infoSG[_index].obj_bulletClone[i] = PoolManager.instance.GetBulletFromPool(_index);
-            infoSG[_index].tf_bulletClone[i] = infoSG[_index].obj_bulletClone[i].transform;
+            playerSGInfo[_index].obj_bulletClone[i] = PoolManager.instance.GetBulletFromPool(_index);
+            playerSGInfo[_index].tf_bulletClone[i] = playerSGInfo[_index].obj_bulletClone[i].transform;
         }
 
-        infoSG[_index].vt_bulletPattern[0, 0].x = (infoSG[_index].tf_bulletClone[0].forward.x - infoSG[_index].tf_bulletClone[0].right.x * 0.2f) - (infoSG[_index].tf_bulletClone[0].right.x * 0.2f);
-        infoSG[_index].vt_bulletPattern[0, 0].z = (infoSG[_index].tf_bulletClone[0].forward.z - infoSG[_index].tf_bulletClone[0].right.z * 0.2f) - (infoSG[_index].tf_bulletClone[0].right.z * 0.2f);
-        infoSG[_index].vt_bulletPattern[0, 1].x = (infoSG[_index].tf_bulletClone[1].forward.x - infoSG[_index].tf_bulletClone[1].right.x * 0.2f) - (infoSG[_index].tf_bulletClone[1].right.x * 0.1f);
-        infoSG[_index].vt_bulletPattern[0, 1].z = (infoSG[_index].tf_bulletClone[1].forward.z - infoSG[_index].tf_bulletClone[1].right.z * 0.2f) - (infoSG[_index].tf_bulletClone[1].right.z * 0.1f);
-        infoSG[_index].vt_bulletPattern[0, 2].x = (infoSG[_index].tf_bulletClone[2].forward.x - infoSG[_index].tf_bulletClone[2].right.x * 0.2f);
-        infoSG[_index].vt_bulletPattern[0, 2].z = (infoSG[_index].tf_bulletClone[2].forward.z - infoSG[_index].tf_bulletClone[2].right.z * 0.2f);
-        infoSG[_index].vt_bulletPattern[0, 3].x = (infoSG[_index].tf_bulletClone[3].forward.x - infoSG[_index].tf_bulletClone[3].right.x * 0.2f) + (infoSG[_index].tf_bulletClone[3].right.x * 0.1f);
-        infoSG[_index].vt_bulletPattern[0, 3].z = (infoSG[_index].tf_bulletClone[3].forward.z - infoSG[_index].tf_bulletClone[3].right.z * 0.2f) + (infoSG[_index].tf_bulletClone[3].right.z * 0.1f);
-        infoSG[_index].vt_bulletPattern[0, 4].x = (infoSG[_index].tf_bulletClone[4].forward.x - infoSG[_index].tf_bulletClone[4].right.x * 0.2f) + (infoSG[_index].tf_bulletClone[4].right.x * 0.2f);
-        infoSG[_index].vt_bulletPattern[0, 4].z = (infoSG[_index].tf_bulletClone[4].forward.z - infoSG[_index].tf_bulletClone[4].right.z * 0.2f) + (infoSG[_index].tf_bulletClone[4].right.z * 0.2f);
-                                                                      
-        infoSG[_index].vt_bulletPattern[1, 0].x = (infoSG[_index].tf_bulletClone[0].forward.x + infoSG[_index].tf_bulletClone[0].right.x * 0.2f) - (infoSG[_index].tf_bulletClone[0].right.x * 0.2f);
-        infoSG[_index].vt_bulletPattern[1, 0].z = (infoSG[_index].tf_bulletClone[0].forward.z + infoSG[_index].tf_bulletClone[0].right.z * 0.2f) - (infoSG[_index].tf_bulletClone[0].right.z * 0.2f);
-        infoSG[_index].vt_bulletPattern[1, 1].x = (infoSG[_index].tf_bulletClone[1].forward.x + infoSG[_index].tf_bulletClone[1].right.x * 0.2f) - (infoSG[_index].tf_bulletClone[1].right.x * 0.1f);
-        infoSG[_index].vt_bulletPattern[1, 1].z = (infoSG[_index].tf_bulletClone[1].forward.z + infoSG[_index].tf_bulletClone[1].right.z * 0.2f) - (infoSG[_index].tf_bulletClone[1].right.z * 0.1f);
-        infoSG[_index].vt_bulletPattern[1, 2].x = (infoSG[_index].tf_bulletClone[2].forward.x + infoSG[_index].tf_bulletClone[2].right.x * 0.2f);
-        infoSG[_index].vt_bulletPattern[1, 2].z = (infoSG[_index].tf_bulletClone[2].forward.z + infoSG[_index].tf_bulletClone[2].right.z * 0.2f);
-        infoSG[_index].vt_bulletPattern[1, 3].x = (infoSG[_index].tf_bulletClone[3].forward.x + infoSG[_index].tf_bulletClone[3].right.x * 0.2f) + (infoSG[_index].tf_bulletClone[3].right.x * 0.1f);
-        infoSG[_index].vt_bulletPattern[1, 3].z = (infoSG[_index].tf_bulletClone[3].forward.z + infoSG[_index].tf_bulletClone[3].right.z * 0.2f) + (infoSG[_index].tf_bulletClone[3].right.z * 0.1f);
-        infoSG[_index].vt_bulletPattern[1, 4].x = (infoSG[_index].tf_bulletClone[4].forward.x + infoSG[_index].tf_bulletClone[4].right.x * 0.2f) + (infoSG[_index].tf_bulletClone[4].right.x * 0.2f);
-        infoSG[_index].vt_bulletPattern[1, 4].z = (infoSG[_index].tf_bulletClone[4].forward.z + infoSG[_index].tf_bulletClone[4].right.z * 0.2f) + (infoSG[_index].tf_bulletClone[4].right.z * 0.2f);
+        playerSGInfo[_index].vt_bulletPattern[0, 0].x = (playerSGInfo[_index].tf_bulletClone[0].forward.x - playerSGInfo[_index].tf_bulletClone[0].right.x * 0.2f) - (playerSGInfo[_index].tf_bulletClone[0].right.x * 0.2f);
+        playerSGInfo[_index].vt_bulletPattern[0, 0].z = (playerSGInfo[_index].tf_bulletClone[0].forward.z - playerSGInfo[_index].tf_bulletClone[0].right.z * 0.2f) - (playerSGInfo[_index].tf_bulletClone[0].right.z * 0.2f);
+        playerSGInfo[_index].vt_bulletPattern[0, 1].x = (playerSGInfo[_index].tf_bulletClone[1].forward.x - playerSGInfo[_index].tf_bulletClone[1].right.x * 0.2f) - (playerSGInfo[_index].tf_bulletClone[1].right.x * 0.1f);
+        playerSGInfo[_index].vt_bulletPattern[0, 1].z = (playerSGInfo[_index].tf_bulletClone[1].forward.z - playerSGInfo[_index].tf_bulletClone[1].right.z * 0.2f) - (playerSGInfo[_index].tf_bulletClone[1].right.z * 0.1f);
+        playerSGInfo[_index].vt_bulletPattern[0, 2].x = (playerSGInfo[_index].tf_bulletClone[2].forward.x - playerSGInfo[_index].tf_bulletClone[2].right.x * 0.2f);
+        playerSGInfo[_index].vt_bulletPattern[0, 2].z = (playerSGInfo[_index].tf_bulletClone[2].forward.z - playerSGInfo[_index].tf_bulletClone[2].right.z * 0.2f);
+        playerSGInfo[_index].vt_bulletPattern[0, 3].x = (playerSGInfo[_index].tf_bulletClone[3].forward.x - playerSGInfo[_index].tf_bulletClone[3].right.x * 0.2f) + (playerSGInfo[_index].tf_bulletClone[3].right.x * 0.1f);
+        playerSGInfo[_index].vt_bulletPattern[0, 3].z = (playerSGInfo[_index].tf_bulletClone[3].forward.z - playerSGInfo[_index].tf_bulletClone[3].right.z * 0.2f) + (playerSGInfo[_index].tf_bulletClone[3].right.z * 0.1f);
+        playerSGInfo[_index].vt_bulletPattern[0, 4].x = (playerSGInfo[_index].tf_bulletClone[4].forward.x - playerSGInfo[_index].tf_bulletClone[4].right.x * 0.2f) + (playerSGInfo[_index].tf_bulletClone[4].right.x * 0.2f);
+        playerSGInfo[_index].vt_bulletPattern[0, 4].z = (playerSGInfo[_index].tf_bulletClone[4].forward.z - playerSGInfo[_index].tf_bulletClone[4].right.z * 0.2f) + (playerSGInfo[_index].tf_bulletClone[4].right.z * 0.2f);
+
+        playerSGInfo[_index].vt_bulletPattern[1, 0].x = (playerSGInfo[_index].tf_bulletClone[0].forward.x + playerSGInfo[_index].tf_bulletClone[0].right.x * 0.2f) - (playerSGInfo[_index].tf_bulletClone[0].right.x * 0.2f);
+        playerSGInfo[_index].vt_bulletPattern[1, 0].z = (playerSGInfo[_index].tf_bulletClone[0].forward.z + playerSGInfo[_index].tf_bulletClone[0].right.z * 0.2f) - (playerSGInfo[_index].tf_bulletClone[0].right.z * 0.2f);
+        playerSGInfo[_index].vt_bulletPattern[1, 1].x = (playerSGInfo[_index].tf_bulletClone[1].forward.x + playerSGInfo[_index].tf_bulletClone[1].right.x * 0.2f) - (playerSGInfo[_index].tf_bulletClone[1].right.x * 0.1f);
+        playerSGInfo[_index].vt_bulletPattern[1, 1].z = (playerSGInfo[_index].tf_bulletClone[1].forward.z + playerSGInfo[_index].tf_bulletClone[1].right.z * 0.2f) - (playerSGInfo[_index].tf_bulletClone[1].right.z * 0.1f);
+        playerSGInfo[_index].vt_bulletPattern[1, 2].x = (playerSGInfo[_index].tf_bulletClone[2].forward.x + playerSGInfo[_index].tf_bulletClone[2].right.x * 0.2f);
+        playerSGInfo[_index].vt_bulletPattern[1, 2].z = (playerSGInfo[_index].tf_bulletClone[2].forward.z + playerSGInfo[_index].tf_bulletClone[2].right.z * 0.2f);
+        playerSGInfo[_index].vt_bulletPattern[1, 3].x = (playerSGInfo[_index].tf_bulletClone[3].forward.x + playerSGInfo[_index].tf_bulletClone[3].right.x * 0.2f) + (playerSGInfo[_index].tf_bulletClone[3].right.x * 0.1f);
+        playerSGInfo[_index].vt_bulletPattern[1, 3].z = (playerSGInfo[_index].tf_bulletClone[3].forward.z + playerSGInfo[_index].tf_bulletClone[3].right.z * 0.2f) + (playerSGInfo[_index].tf_bulletClone[3].right.z * 0.1f);
+        playerSGInfo[_index].vt_bulletPattern[1, 4].x = (playerSGInfo[_index].tf_bulletClone[4].forward.x + playerSGInfo[_index].tf_bulletClone[4].right.x * 0.2f) + (playerSGInfo[_index].tf_bulletClone[4].right.x * 0.2f);
+        playerSGInfo[_index].vt_bulletPattern[1, 4].z = (playerSGInfo[_index].tf_bulletClone[4].forward.z + playerSGInfo[_index].tf_bulletClone[4].right.z * 0.2f) + (playerSGInfo[_index].tf_bulletClone[4].right.z * 0.2f);
 
         EffectManager.instance.ps_tmpMuzzle[_index].body.option.loop = false;
         EffectManager.instance.ps_tmpMuzzle[_index].glow.option.loop = false;
@@ -107,19 +104,19 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
         EffectManager.instance.ps_tmpMuzzle[_index].plane4.option.simulationSpeed = 1.7f;
         EffectManager.instance.ps_tmpMuzzle[_index].spark.option.simulationSpeed = 1.7f;
 
-        for (int i = 0; i < infoSG[_index].obj_bulletClone.Length; i++)
+        for (int i = 0; i < playerSGInfo[_index].obj_bulletClone.Length; i++)
         {
-            infoSG[_index].tf_bulletClone[i].localRotation = Quaternion.LookRotation(infoSG[_index].vt_bulletPattern[infoSG[_index].bulletPatternIndex, i]);
-            infoSG[_index].obj_bulletClone[i].GetComponent<Rigidbody>().AddForce(infoSG[_index].vt_bulletPattern[infoSG[_index].bulletPatternIndex, i] * infoSG[_index].speed, ForceMode.Acceleration);
+            playerSGInfo[_index].tf_bulletClone[i].localRotation = Quaternion.LookRotation(playerSGInfo[_index].vt_bulletPattern[playerSGInfo[_index].bulletPatternIndex, i]);
+            playerSGInfo[_index].obj_bulletClone[i].GetComponent<Rigidbody>().AddForce(playerSGInfo[_index].vt_bulletPattern[playerSGInfo[_index].bulletPatternIndex, i] * weaponManager.weaponInfoSG.speed, ForceMode.Acceleration);
         }
 
-        switch (infoSG[_index].bulletPatternIndex)
+        switch (playerSGInfo[_index].bulletPatternIndex)
         {
             case 0:
-                infoSG[_index].bulletPatternIndex = 1;
+                playerSGInfo[_index].bulletPatternIndex = 1;
                 break;
             case 1:
-                infoSG[_index].bulletPatternIndex = 0;
+                playerSGInfo[_index].bulletPatternIndex = 0;
                 break;
         }
         /*
@@ -140,7 +137,7 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
 
     public void CheckFireRange(GameObject _obj_bullet, int _index)
     {
-        if (Vector3.Distance(_obj_bullet.transform.position, PlayersManager.instance.obj_players[_index].transform.position) >= Main_SG.instance.infoSG[_index].range)
+        if (Vector3.Distance(_obj_bullet.transform.position, PlayersManager.instance.obj_players[_index].transform.position) >= Main_SG.instance.weaponManager.weaponInfoSG.range)
             PoolManager.instance.ReturnBulletToPool(_obj_bullet, _index);
     }
 }

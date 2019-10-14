@@ -5,45 +5,44 @@ using UnityEngine;
 public class Main_AR : MonoBehaviour, IMainWeaponType
 {
     public static Main_AR instance;
+    private WeaponManager weaponManager;
     private int myIndex { get; set; }
 
     #region AR
-    public struct _INFO_AR
+    public struct _PLAYER_AR_INFO   // 플레이어 각각 가지고 있어야되는 정보
     {
         public Vector3[] vt_bulletPattern;
         public int bulletPatternIndex;
         public int prevBulletPatternIndex;
 
         public int curAmmo;
-        public int maxAmmo;
-        public float fireRate;
-        public float damage;
-        public float accuracy;
-        public float range;
-        public float speed;
     }
-    public _INFO_AR[] infoAR { get; set; }
+
+    public _PLAYER_AR_INFO[] playerARInfo { get; set; }
     #endregion
 
+    // 로컬에서도 테스트 해봐야되니까 일단 Start에서 초기화는 해줌
     private void Start()
     {
+        weaponManager = WeaponManager.instance;
         myIndex = GameManager.instance.myIndex;
 
-        infoAR = new _INFO_AR[C_Global.MAX_PLAYER];
+        playerARInfo = new _PLAYER_AR_INFO[C_Global.MAX_PLAYER];
 
         for (int i = 0; i < C_Global.MAX_PLAYER; i++)
         {
-            infoAR[i].vt_bulletPattern = new Vector3[3];
-            infoAR[i].bulletPatternIndex = 1;
-            infoAR[i].prevBulletPatternIndex = 2;
-            infoAR[i].curAmmo = 30;
-            infoAR[i].maxAmmo = 30;
-            infoAR[i].fireRate = 0.14f;
-            infoAR[i].damage = 1.0f;
-            infoAR[i].accuracy = 0.06f;
-            infoAR[i].range = 20.0f;
-            infoAR[i].speed = 2000.0f;
+            playerARInfo[i].vt_bulletPattern = new Vector3[3];
+            playerARInfo[i].bulletPatternIndex = 1;
+            playerARInfo[i].prevBulletPatternIndex = 2;
+            playerARInfo[i].curAmmo = 30;
         }
+
+        weaponManager.weaponInfoAR.maxAmmo = 30;
+        weaponManager.weaponInfoAR.fireRate = 0.14f;
+        weaponManager.weaponInfoAR.damage = 1.0f;
+        weaponManager.weaponInfoAR.accuracy = 0.06f;
+        weaponManager.weaponInfoAR.range = 20.0f;
+        weaponManager.weaponInfoAR.speed = 2000.0f;
     }
 
     public static Main_AR GetMainWeaponInstance()
@@ -78,54 +77,54 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
         EffectManager.instance.ps_tmpMuzzle[_index].spark.option.simulationSpeed = 0.8f;
 
         while (true)
-        {          
+        {
             var clone = PoolManager.instance.GetBulletFromPool(_index);
             Transform tf_clone = clone.transform;
 
-            infoAR[_index].vt_bulletPattern[0].x = tf_clone.forward.x - (tf_clone.right.x * infoAR[_index].accuracy);
-            infoAR[_index].vt_bulletPattern[0].z = tf_clone.forward.z - (tf_clone.right.z * infoAR[_index].accuracy);
-            infoAR[_index].vt_bulletPattern[1].x = tf_clone.forward.x;
-            infoAR[_index].vt_bulletPattern[1].z = tf_clone.forward.z;
-            infoAR[_index].vt_bulletPattern[2].x = tf_clone.forward.x + (tf_clone.right.x * infoAR[_index].accuracy);
-            infoAR[_index].vt_bulletPattern[2].z = tf_clone.forward.z + (tf_clone.right.z * infoAR[_index].accuracy);
+            playerARInfo[_index].vt_bulletPattern[0].x = tf_clone.forward.x - (tf_clone.right.x * weaponManager.weaponInfoAR.accuracy);
+            playerARInfo[_index].vt_bulletPattern[0].z = tf_clone.forward.z - (tf_clone.right.z * weaponManager.weaponInfoAR.accuracy);
+            playerARInfo[_index].vt_bulletPattern[1].x = tf_clone.forward.x;
+            playerARInfo[_index].vt_bulletPattern[1].z = tf_clone.forward.z;
+            playerARInfo[_index].vt_bulletPattern[2].x = tf_clone.forward.x + (tf_clone.right.x * weaponManager.weaponInfoAR.accuracy);
+            playerARInfo[_index].vt_bulletPattern[2].z = tf_clone.forward.z + (tf_clone.right.z * weaponManager.weaponInfoAR.accuracy);
 
-            tf_clone.localRotation = Quaternion.LookRotation(infoAR[_index].vt_bulletPattern[infoAR[_index].bulletPatternIndex]);
-            clone.GetComponent<Rigidbody>().AddForce(infoAR[_index].vt_bulletPattern[infoAR[_index].bulletPatternIndex] * infoAR[_index].speed, ForceMode.Acceleration);
+            tf_clone.localRotation = Quaternion.LookRotation(playerARInfo[_index].vt_bulletPattern[playerARInfo[_index].bulletPatternIndex]);
+            clone.GetComponent<Rigidbody>().AddForce(playerARInfo[_index].vt_bulletPattern[playerARInfo[_index].bulletPatternIndex] * weaponManager.weaponInfoAR.speed, ForceMode.Acceleration);
 
-            switch (infoAR[_index].bulletPatternIndex)
+            switch (playerARInfo[_index].bulletPatternIndex)
             {
                 case 0:
-                    infoAR[_index].bulletPatternIndex = 1;
+                    playerARInfo[_index].bulletPatternIndex = 1;
                     //Debug.Log("중");
                     break;
                 case 1:
-                    if (infoAR[_index].prevBulletPatternIndex == 1)
+                    if (playerARInfo[_index].prevBulletPatternIndex == 1)
                     {
-                        infoAR[_index].bulletPatternIndex = 0;
-                        infoAR[_index].prevBulletPatternIndex = 2;
+                        playerARInfo[_index].bulletPatternIndex = 0;
+                        playerARInfo[_index].prevBulletPatternIndex = 2;
                         //Debug.Log("좌");
                     }
-                    else if (infoAR[_index].prevBulletPatternIndex == 2)
+                    else if (playerARInfo[_index].prevBulletPatternIndex == 2)
                     {
-                        infoAR[_index].bulletPatternIndex = 2;
-                        infoAR[_index].prevBulletPatternIndex = 1;
+                        playerARInfo[_index].bulletPatternIndex = 2;
+                        playerARInfo[_index].prevBulletPatternIndex = 1;
                         //Debug.Log("우");
                     }
                     break;
                 case 2:
-                    infoAR[_index].bulletPatternIndex = 1;
+                    playerARInfo[_index].bulletPatternIndex = 1;
                     //Debug.Log("중");
                     break;
             }
 
-            yield return YieldInstructionCache.WaitForSeconds(infoAR[_index].fireRate);
-            
+            yield return YieldInstructionCache.WaitForSeconds(weaponManager.weaponInfoAR.fireRate);
+
         }
     }
 
     public void CheckFireRange(GameObject _obj_bullet, int _index)
     {
-        if (Vector3.Distance(_obj_bullet.transform.position, PlayersManager.instance.obj_players[_index].transform.position) >= Main_AR.instance.infoAR[_index].range)
+        if (Vector3.Distance(_obj_bullet.transform.position, PlayersManager.instance.obj_players[_index].transform.position) >= Main_AR.instance.weaponManager.weaponInfoAR.range)
             PoolManager.instance.ReturnBulletToPool(_obj_bullet, _index);
     }
 }
