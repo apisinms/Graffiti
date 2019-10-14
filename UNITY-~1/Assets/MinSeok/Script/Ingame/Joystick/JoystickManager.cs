@@ -47,13 +47,13 @@ public class JoystickManager : MonoBehaviour
         switch (WeaponManager.instance.mainWeapon[myIndex])
         {
             case _WEAPONS.AR:
-                EffectManager.instance.ps_tmpMuzzle[myIndex].body.body = Instantiate(EffectManager.instance.ps_muzzleList[1], PlayersManager.instance.obj_players[myIndex].transform) as ParticleSystem;
+                EffectManager.instance.ps_tmpMuzzle[myIndex].body.body = Instantiate(EffectManager.instance.ps_muzzlePrefebsList[1], PlayersManager.instance.obj_players[myIndex].transform) as ParticleSystem;
                 break;
             case _WEAPONS.SG:
-                EffectManager.instance.ps_tmpMuzzle[myIndex].body.body = Instantiate(EffectManager.instance.ps_muzzleList[0], PlayersManager.instance.obj_players[myIndex].transform) as ParticleSystem;
+                EffectManager.instance.ps_tmpMuzzle[myIndex].body.body = Instantiate(EffectManager.instance.ps_muzzlePrefebsList[0], PlayersManager.instance.obj_players[myIndex].transform) as ParticleSystem;
                 break;
             case _WEAPONS.SMG:
-                EffectManager.instance.ps_tmpMuzzle[myIndex].body.body = Instantiate(EffectManager.instance.ps_muzzleList[2], PlayersManager.instance.obj_players[myIndex].transform) as ParticleSystem;
+                EffectManager.instance.ps_tmpMuzzle[myIndex].body.body = Instantiate(EffectManager.instance.ps_muzzlePrefebsList[2], PlayersManager.instance.obj_players[myIndex].transform) as ParticleSystem;
                 break;
         }
 

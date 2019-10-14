@@ -56,9 +56,30 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
 
     public IEnumerator ActionFire(int _index)
     {
+        EffectManager.instance.ps_tmpMuzzle[_index].body.option.loop = true;
+        EffectManager.instance.ps_tmpMuzzle[_index].glow.option.loop = true;
+        EffectManager.instance.ps_tmpMuzzle[_index].plane2.option.loop = true;
+        EffectManager.instance.ps_tmpMuzzle[_index].plane3.option.loop = true;
+        EffectManager.instance.ps_tmpMuzzle[_index].plane4.option.loop = true;
+        EffectManager.instance.ps_tmpMuzzle[_index].spark.option.loop = true;
+
+        EffectManager.instance.ps_tmpMuzzle[_index].body.option.duration = 1.0f;
+        EffectManager.instance.ps_tmpMuzzle[_index].glow.option.duration = 1.0f;
+        EffectManager.instance.ps_tmpMuzzle[_index].plane2.option.duration = 1.0f;
+        EffectManager.instance.ps_tmpMuzzle[_index].plane3.option.duration = 1.0f;
+        EffectManager.instance.ps_tmpMuzzle[_index].plane4.option.duration = 1.0f;
+        EffectManager.instance.ps_tmpMuzzle[_index].spark.option.duration = 1.0f;
+
+        EffectManager.instance.ps_tmpMuzzle[_index].body.option.simulationSpeed = 0.8f;
+        EffectManager.instance.ps_tmpMuzzle[_index].glow.option.simulationSpeed = 0.8f;
+        EffectManager.instance.ps_tmpMuzzle[_index].plane2.option.simulationSpeed = 0.8f;
+        EffectManager.instance.ps_tmpMuzzle[_index].plane3.option.simulationSpeed = 0.8f;
+        EffectManager.instance.ps_tmpMuzzle[_index].plane4.option.simulationSpeed = 0.8f;
+        EffectManager.instance.ps_tmpMuzzle[_index].spark.option.simulationSpeed = 0.8f;
+
         while (true)
         {          
-            var clone = WeaponManager.instance.GetBulletFromPool(_index);
+            var clone = PoolManager.instance.GetBulletFromPool(_index);
             Transform tf_clone = clone.transform;
 
             infoAR[_index].vt_bulletPattern[0].x = tf_clone.forward.x - (tf_clone.right.x * infoAR[_index].accuracy);
@@ -67,28 +88,6 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
             infoAR[_index].vt_bulletPattern[1].z = tf_clone.forward.z;
             infoAR[_index].vt_bulletPattern[2].x = tf_clone.forward.x + (tf_clone.right.x * infoAR[_index].accuracy);
             infoAR[_index].vt_bulletPattern[2].z = tf_clone.forward.z + (tf_clone.right.z * infoAR[_index].accuracy);
-
-            EffectManager.instance.ps_tmpMuzzle[_index].body.option.loop = true;
-            EffectManager.instance.ps_tmpMuzzle[_index].glow.option.loop = true;
-            EffectManager.instance.ps_tmpMuzzle[_index].plane2.option.loop = true;
-            EffectManager.instance.ps_tmpMuzzle[_index].plane3.option.loop = true;
-            EffectManager.instance.ps_tmpMuzzle[_index].plane4.option.loop = true;
-            EffectManager.instance.ps_tmpMuzzle[_index].spark.option.loop = true;
-
-            EffectManager.instance.ps_tmpMuzzle[_index].body.option.duration = 1.0f;
-            EffectManager.instance.ps_tmpMuzzle[_index].glow.option.duration = 1.0f; 
-            EffectManager.instance.ps_tmpMuzzle[_index].plane2.option.duration = 1.0f;
-            EffectManager.instance.ps_tmpMuzzle[_index].plane3.option.duration = 1.0f;
-            EffectManager.instance.ps_tmpMuzzle[_index].plane4.option.duration = 1.0f;
-            EffectManager.instance.ps_tmpMuzzle[_index].spark.option.duration = 1.0f;
-
-            EffectManager.instance.ps_tmpMuzzle[_index].body.option.simulationSpeed = 0.8f;
-            EffectManager.instance.ps_tmpMuzzle[_index].glow.option.simulationSpeed = 0.8f;
-            EffectManager.instance.ps_tmpMuzzle[_index].plane2.option.simulationSpeed = 0.8f;
-            EffectManager.instance.ps_tmpMuzzle[_index].plane3.option.simulationSpeed = 0.8f;
-            EffectManager.instance.ps_tmpMuzzle[_index].plane4.option.simulationSpeed = 0.8f;
-            EffectManager.instance.ps_tmpMuzzle[_index].spark.option.simulationSpeed = 0.8f;
-
 
             tf_clone.localRotation = Quaternion.LookRotation(infoAR[_index].vt_bulletPattern[infoAR[_index].bulletPatternIndex]);
             clone.GetComponent<Rigidbody>().AddForce(infoAR[_index].vt_bulletPattern[infoAR[_index].bulletPatternIndex] * infoAR[_index].speed, ForceMode.Acceleration);
@@ -127,6 +126,6 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
     public void CheckFireRange(GameObject _obj_bullet, int _index)
     {
         if (Vector3.Distance(_obj_bullet.transform.position, PlayersManager.instance.obj_players[_index].transform.position) >= Main_AR.instance.infoAR[_index].range)
-            WeaponManager.instance.ReturnBulletToPool(_obj_bullet, _index);
+            PoolManager.instance.ReturnBulletToPool(_obj_bullet, _index);
     }
 }

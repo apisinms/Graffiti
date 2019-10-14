@@ -14,7 +14,7 @@ public class EffectManager : MonoBehaviour
     public int myIndex { get; set; }
 
     #region PARTICLE_MUZZLE
-    public ParticleSystem[] ps_muzzleList;
+    public ParticleSystem[] ps_muzzlePrefebsList;
    
     public struct _PS_TmpMuzzle_Body
     {
@@ -65,7 +65,7 @@ public class EffectManager : MonoBehaviour
     public _PS_TmpMuzzle[] ps_tmpMuzzle { get; set; }
     #endregion
 
-    public ParticleSystem[] ps_sparkList;
+    public ParticleSystem[] ps_sparkPrefebsList;
     public ParticleSystem ps_tmpSpark { get; set; }
 
     private void Awake()
@@ -79,7 +79,7 @@ public class EffectManager : MonoBehaviour
         //ps_tmpSpark = new ParticleSystem[C_Global.MAX_PLAYER];
 
 #if !NETWORK
-        InitializeMuzzle(C_Global.MAX_PLAYER);
+        InitializeMuzzle2(C_Global.MAX_PLAYER);
 #endif
     }
 
@@ -99,6 +99,8 @@ public class EffectManager : MonoBehaviour
         switch(_value)
         {
             case _EFFECT_TYPE.MUZZLE:
+                ps_tmpMuzzle[_index].body.body.Stop();
+                ps_tmpMuzzle[_index].body.body.Clear();
                 ps_tmpMuzzle[_index].body.body.Play();
                 break;
             case _EFFECT_TYPE.SPARK:
@@ -127,13 +129,13 @@ public class EffectManager : MonoBehaviour
         switch (WeaponManager.instance.mainWeapon[_index])
         {
             case _WEAPONS.AR:
-                ps_tmpMuzzle[_index].body.body = Instantiate(ps_muzzleList[1], PlayersManager.instance.obj_players[_index].transform) as ParticleSystem;
+                ps_tmpMuzzle[_index].body.body = Instantiate(ps_muzzlePrefebsList[1], PlayersManager.instance.obj_players[_index].transform) as ParticleSystem;
                 break;
             case _WEAPONS.SG:
-                ps_tmpMuzzle[_index].body.body = Instantiate(ps_muzzleList[0], PlayersManager.instance.obj_players[_index].transform) as ParticleSystem;
+                ps_tmpMuzzle[_index].body.body = Instantiate(ps_muzzlePrefebsList[0], PlayersManager.instance.obj_players[_index].transform) as ParticleSystem;
                 break;
             case _WEAPONS.SMG:
-                ps_tmpMuzzle[_index].body.body = Instantiate(ps_muzzleList[2], PlayersManager.instance.obj_players[_index].transform) as ParticleSystem;
+                ps_tmpMuzzle[_index].body.body = Instantiate(ps_muzzlePrefebsList[2], PlayersManager.instance.obj_players[_index].transform) as ParticleSystem;
                 break;
         }
 
@@ -142,7 +144,6 @@ public class EffectManager : MonoBehaviour
         ps_tmpMuzzle[_index].plane3.body = ps_tmpMuzzle[_index].body.body.transform.GetChild(2).GetComponent<ParticleSystem>();
         ps_tmpMuzzle[_index].plane4.body = ps_tmpMuzzle[_index].body.body.transform.GetChild(3).GetComponent<ParticleSystem>();
         ps_tmpMuzzle[_index].spark.body = ps_tmpMuzzle[_index].body.body.transform.GetChild(4).GetComponent<ParticleSystem>();
-        //ps_tmpSpark[i] = Instantiate(ps_spark, GameObject.FindGameObjectWithTag("Effects").transform);
 
         ps_tmpMuzzle[_index].body.option = ps_tmpMuzzle[_index].body.body.main;
         ps_tmpMuzzle[_index].glow.option = ps_tmpMuzzle[_index].glow.body.main;
@@ -153,7 +154,7 @@ public class EffectManager : MonoBehaviour
     }
 
 
-    public void InitializeMuzzle(float _num)
+    public void InitializeMuzzle2(float _num)
     {
         for (int i = 0; i < C_Global.MAX_PLAYER; i++)
         {
@@ -163,13 +164,13 @@ public class EffectManager : MonoBehaviour
             switch (WeaponManager.instance.mainWeapon[i])
             {
                 case _WEAPONS.AR:
-                    ps_tmpMuzzle[i].body.body = Instantiate(ps_muzzleList[1], PlayersManager.instance.obj_players[i].transform) as ParticleSystem;
+                    ps_tmpMuzzle[i].body.body = Instantiate(ps_muzzlePrefebsList[1], PlayersManager.instance.obj_players[i].transform) as ParticleSystem;
                     break;
                 case _WEAPONS.SG:
-                    ps_tmpMuzzle[i].body.body = Instantiate(ps_muzzleList[0], PlayersManager.instance.obj_players[i].transform) as ParticleSystem;
+                    ps_tmpMuzzle[i].body.body = Instantiate(ps_muzzlePrefebsList[0], PlayersManager.instance.obj_players[i].transform) as ParticleSystem;
                     break;
                 case _WEAPONS.SMG:
-                    ps_tmpMuzzle[i].body.body = Instantiate(ps_muzzleList[2], PlayersManager.instance.obj_players[i].transform) as ParticleSystem;
+                    ps_tmpMuzzle[i].body.body = Instantiate(ps_muzzlePrefebsList[2], PlayersManager.instance.obj_players[i].transform) as ParticleSystem;
                     break;
             }
 
@@ -187,6 +188,13 @@ public class EffectManager : MonoBehaviour
             ps_tmpMuzzle[i].plane4.option = ps_tmpMuzzle[i].plane4.body.main;
             ps_tmpMuzzle[i].spark.option = ps_tmpMuzzle[i].spark.body.main;
         }
+    }
+
+    public IEnumerator CheckEffectEnd(ParticleSystem _ps_effectClone)
+    {
+        yield return YieldInstructionCache.WaitForSeconds(0.5f);
+
+        PoolManager.instance.ReturnCollisionEffectToPool(_ps_effectClone);
     }
 
 }

@@ -60,7 +60,7 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
     {
         for (int i = 0; i < 5; i++)
         {
-            infoSG[_index].obj_bulletClone[i] = WeaponManager.instance.GetBulletFromPool(_index);
+            infoSG[_index].obj_bulletClone[i] = PoolManager.instance.GetBulletFromPool(_index);
             infoSG[_index].tf_bulletClone[i] = infoSG[_index].obj_bulletClone[i].transform;
         }
 
@@ -85,7 +85,6 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
         infoSG[_index].vt_bulletPattern[1, 3].z = (infoSG[_index].tf_bulletClone[3].forward.z + infoSG[_index].tf_bulletClone[3].right.z * 0.2f) + (infoSG[_index].tf_bulletClone[3].right.z * 0.1f);
         infoSG[_index].vt_bulletPattern[1, 4].x = (infoSG[_index].tf_bulletClone[4].forward.x + infoSG[_index].tf_bulletClone[4].right.x * 0.2f) + (infoSG[_index].tf_bulletClone[4].right.x * 0.2f);
         infoSG[_index].vt_bulletPattern[1, 4].z = (infoSG[_index].tf_bulletClone[4].forward.z + infoSG[_index].tf_bulletClone[4].right.z * 0.2f) + (infoSG[_index].tf_bulletClone[4].right.z * 0.2f);
-
 
         EffectManager.instance.ps_tmpMuzzle[_index].body.option.loop = false;
         EffectManager.instance.ps_tmpMuzzle[_index].glow.option.loop = false;
@@ -142,6 +141,6 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
     public void CheckFireRange(GameObject _obj_bullet, int _index)
     {
         if (Vector3.Distance(_obj_bullet.transform.position, PlayersManager.instance.obj_players[_index].transform.position) >= Main_SG.instance.infoSG[_index].range)
-            WeaponManager.instance.ReturnBulletToPool(_obj_bullet, _index);
+            PoolManager.instance.ReturnBulletToPool(_obj_bullet, _index);
     }
 }

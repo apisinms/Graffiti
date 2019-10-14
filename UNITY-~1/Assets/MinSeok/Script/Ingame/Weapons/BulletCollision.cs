@@ -6,6 +6,7 @@ public class BulletCollision : MonoBehaviour
 {
     public int myIndex { get; set; }
     private int returnIdx;
+    private ParticleSystem ps_clone;
 
     private void Awake()
     {
@@ -28,42 +29,29 @@ public class BulletCollision : MonoBehaviour
 
     private void Update()
     {
-        WeaponManager.instance.CheckFireRange(this.gameObject, returnIdx);       
+        WeaponManager.instance.CheckFireRange(this.gameObject, returnIdx);
     }
-
-    /*
-    private void OnCollisionEnter(Collision other)
-    {
-        //Debug.Log(other.gameObject.name);
-        //총알끼리는 충돌체크x, 내총알에 내가맞는것도x
-        for (int i = 0; i < WeaponManager.instance.bulletTag.Length; i++)
-        {
-            if (other.gameObject.CompareTag(WeaponManager.instance.bulletTag[i]))
-            {
-                Debug.Log("총알충돌");
-                return;
-            }
-        }
-
-        ContactPoint contactPoint = other.contacts[0];
-
-        Instantiate(EffectManager.instance.ps_sparkList, contactPoint.point, Quaternion.LookRotation(contactPoint.normal));
-        WeaponManager.instance.ReturnBulletToPool(gameObject, returnIdx);
-    }
-    */
-
     
     private void OnTriggerEnter(Collider other)
-    {       
+    {
         //총알끼리는 충돌체크x, 내총알에 내가맞는것도x
-        for (int i = 0; i < WeaponManager.instance.bulletTag.Length; i++)
+        //  for (int i = 0; i < PoolManager.instance.bulletTag.Length; i++)
+        //    {
+        //     if (other.gameObject.CompareTag(PoolManager.instance.bulletTag[i]))
+        //         return;
+        //  }
+        if (other.CompareTag("Concrete1"))
         {
-            if (other.gameObject.CompareTag(WeaponManager.instance.bulletTag[i]))
-                return;
+            ps_clone = PoolManager.instance.GetCollisionEffectFromPool("ConcretePool1", other.ClosestPointOnBounds(this.transform.position), -this.transform.forward);
+            EffectManager.instance.StartCoroutine(EffectManager.instance.CheckEffectEnd(ps_clone));
+        }
+        else
+        {
+            ps_clone = PoolManager.instance.GetCollisionEffectFromPool("IronPool1", other.ClosestPointOnBounds(this.transform.position), -this.transform.forward);
+            EffectManager.instance.StartCoroutine(EffectManager.instance.CheckEffectEnd(ps_clone));
         }
 
-        Instantiate(EffectManager.instance.ps_sparkList[0], other.ClosestPointOnBounds(this.transform.position), Quaternion.LookRotation(-this.transform.forward));
-        WeaponManager.instance.ReturnBulletToPool(gameObject, returnIdx);
+        PoolManager.instance.ReturnBulletToPool(gameObject, returnIdx);
     }
-    
+
 }

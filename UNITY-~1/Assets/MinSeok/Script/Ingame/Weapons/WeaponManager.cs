@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /*
@@ -25,7 +24,7 @@ public interface IMainWeaponType
     void CheckFireRange(GameObject _obj_bullet, int _index);
 }
 
-public partial class WeaponManager : IMainWeaponType
+public class WeaponManager : MonoBehaviour, IMainWeaponType
 {
     public static WeaponManager instance;
     public IMainWeaponType[] mainWeaponType { get; set; }
@@ -56,8 +55,7 @@ public partial class WeaponManager : IMainWeaponType
         mainWeaponType = new IMainWeaponType[C_Global.MAX_PLAYER];
 
         weaponsTag[0] = "Ar"; weaponsTag[1] = "Sg"; weaponsTag[2] = "Smg";
-        bulletTag[0] = "Bullet1"; bulletTag[1] = "Bullet2"; bulletTag[2] = "Bullet3"; bulletTag[3] = "Bullet4";
-
+        
         cn_mainWeaponList = obj_mainWeaponList.GetComponents<Component>();
     
         Initialization(C_Global.MAX_PLAYER);
@@ -71,14 +69,8 @@ public partial class WeaponManager : IMainWeaponType
         subWeapon = new _WEAPONS[_num];
         curMainActionCor = new Coroutine[_num];
 
-        list_bulletPool = new List<GameObject>[_num];
-        tf_bulletFirstPos = new Transform[_num];
-
         for (int i = 0; i < _num; i++)
-        {
             curMainActionCor[i] = null;
-            list_bulletPool[i] = new List<GameObject>();
-        }
     }
 
     public void SetMainWeapon(IMainWeaponType _weaponType, int _index)
@@ -87,9 +79,9 @@ public partial class WeaponManager : IMainWeaponType
 
         int weaponIndex = (int)mainWeapon[_index]; //주무기의 생성
 
-        if(obj_mainWeapon[_index] != null)
+        if(obj_mainWeapon[_index] != null) //가지고있던 총오브젝트를 지우고
             Destroy(obj_mainWeapon[_index]);
-
+      
         obj_mainWeapon[_index] = Instantiate(obj_weaponPrefabsList[weaponIndex], PlayersManager.instance.obj_players[_index].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
 		obj_mainWeapon[_index].transform.SetParent(PlayersManager.instance.obj_players[_index].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetChild(0));
     }
@@ -103,12 +95,12 @@ public partial class WeaponManager : IMainWeaponType
     }
     */
 
-    public IEnumerator ActionFire(int _index)
+    public IEnumerator ActionFire(int _index) //선택된 총의 파이어액션
     {
         yield return mainWeaponType[_index].ActionFire(_index);
     }
 
-    public void CheckFireRange(GameObject _obj_bullet, int _index)
+    public void CheckFireRange(GameObject _obj_bullet, int _index) //선택된 총의 사거리검사
     {
         mainWeaponType[_index].CheckFireRange(_obj_bullet, _index);
     }
