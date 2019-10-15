@@ -24,6 +24,9 @@ public partial class BridgeClientToServer : MonoBehaviour
 				playersManager.tf_players[myIndex].localPosition.z,
 				playersManager.tf_players[myIndex].localEulerAngles.y, playersManager.speed[myIndex], playersManager.actionState[myIndex]);
 
+			/// TODO : 여기에 BulletCollisionCheck 구조체를 초기화 하는 코드를 넣는다.
+			/// WeaponManager.instance.ResetCollisionChecker();
+
             yield return YieldInstructionCache.WaitForSeconds(C_Global.packetInterval);
         }
     }

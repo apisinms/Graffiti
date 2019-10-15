@@ -254,9 +254,6 @@ public class SelectWeapons : UnityEngine.MonoBehaviour
 
 				SceneManager.LoadScene("MainGame"); //메인타이틀로 입장
 
-				// 로딩이 완료되었다고 서버로 보내준다.
-				networkManager.SendLoadingComplete();
-
 				yield break;
 			}
 

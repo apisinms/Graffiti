@@ -157,7 +157,7 @@ public partial class NetworkManager : MonoBehaviour
 
         _size += sizeof(int);   // 총 보내야 할 바이트 수 저장한다.
     }
-    private void PackPacket(ref byte[] _buf, PROTOCOL _protocol, PositionPacket _position, out int _size)
+    private void PackPacket(ref byte[] _buf, PROTOCOL _protocol, IngamePacket _packet, out int _size)
     {
 
         // 암호화된 내용을 저장할 버퍼이다.
@@ -173,9 +173,9 @@ public partial class NetworkManager : MonoBehaviour
         _size += sizeof(PROTOCOL);
 
         // 위치
-        Buffer.BlockCopy(_position.Serialize(), 0, buf, offset, Marshal.SizeOf(_position));
-        offset += Marshal.SizeOf(_position);
-        _size += Marshal.SizeOf(_position);
+        Buffer.BlockCopy(_packet.Serialize(), 0, buf, offset, Marshal.SizeOf(_packet));
+        offset += Marshal.SizeOf(_packet);
+        _size += Marshal.SizeOf(_packet);
 
         // 암호화된 내용을 encryptBuf에 저장
         C_Encrypt.instance.Encrypt(buf, encryptBuf, _size);
@@ -299,7 +299,7 @@ public partial class NetworkManager : MonoBehaviour
         _size += sizeof(int);   // 총 보내야 할 바이트 수 저장한다.
     }
 
-    private void UnPackPacket(byte[] _buf, ref PositionPacket _struct)
+    private void UnPackPacket(byte[] _buf, ref IngamePacket _struct)
     {
         int offset = sizeof(PROTOCOL);
         // 문자열 길이 만큼 생성해서 문자열을 저장함

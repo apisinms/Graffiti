@@ -72,6 +72,9 @@ public class GameManager : MonoBehaviour
 		// 필요한 게임 정보를 브릿지에서 얻어옴
         CarSeed = BridgeClientToServer.instance.GetTempCarSeed;
         gameInfo = BridgeClientToServer.instance.GetTempGameInfo;
+
+		// 로딩이 완료되었다고 서버로 보내준다.
+		NetworkManager.instance.SendLoadingComplete();
 #endif
 	}
 

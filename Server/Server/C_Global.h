@@ -63,6 +63,18 @@ struct COORD_DOUBLE
 	COORD_DOUBLE() { x = z = 0; }
 };
 
+// 총알 충돌 검사 구조체
+struct BulletCollisionChecker
+{
+	byte playerBit;
+	int playerHitCountBit;
+	BulletCollisionChecker()
+	{
+		playerBit = 0;
+		playerHitCountBit = 0;
+	}
+};
+
 struct IngamePacket
 {
 	int playerNum;
@@ -71,22 +83,27 @@ struct IngamePacket
 	float rotY;
 	float speed;
 	int action;
+	float health;
+	BulletCollisionChecker collisionCheck;
 
 	IngamePacket()
 	{
 		playerNum = 0;
 		posX = posZ = rotY = speed = 0.0f;
 		action = 0;
+		health = 0.0;
 	}
 
 	IngamePacket(IngamePacket& _pos)
 	{
-		this->playerNum = _pos.playerNum;
-		this->posX      = _pos.posX;
-		this->posZ      = _pos.posZ;
-		this->rotY      = _pos.rotY;
-		this->speed		= _pos.speed;
-		this->action    = _pos.action;
+		this->playerNum      = _pos.playerNum;
+		this->posX           = _pos.posX;
+		this->posZ           = _pos.posZ;
+		this->rotY           = _pos.rotY;
+		this->speed		     = _pos.speed;
+		this->action         = _pos.action;
+		this->health         = _pos.health;
+		this->collisionCheck = _pos.collisionCheck;
 	}
 };
 

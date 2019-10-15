@@ -21,11 +21,11 @@ namespace PathCreation.Examples
             }
         }
 
-        void Update()
+        void FixedUpdate()
         {
             if (pathCreator != null)
             {
-                distanceTravelled += speed * Time.deltaTime;
+				distanceTravelled += speed * Time.deltaTime;
                 transform.position = pathCreator.path.GetPointAtDistance(distanceTravelled, endOfPathInstruction);
                 transform.rotation = pathCreator.path.GetRotationAtDistance(distanceTravelled, endOfPathInstruction);
             }

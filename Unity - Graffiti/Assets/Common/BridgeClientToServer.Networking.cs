@@ -65,7 +65,7 @@ public partial class BridgeClientToServer : MonoBehaviour
     }
 
     // 섹터 진입시
-    public void EnterSectorProcess(ref PositionPacket _packet)
+    public void EnterSectorProcess(ref IngamePacket _packet)
     {
         PlayersManager.instance.obj_players[_packet.playerNum - 1].SetActive(true);   // 켜고
 
@@ -82,7 +82,7 @@ public partial class BridgeClientToServer : MonoBehaviour
     }
 
     // 섹터 아웃시
-    public void ExitSectorProcess(ref PositionPacket _packet)
+    public void ExitSectorProcess(ref IngamePacket _packet)
     {
         PlayersManager.instance.obj_players[_packet.playerNum - 1].SetActive(false);   // 끄고
     }
@@ -119,7 +119,7 @@ public partial class BridgeClientToServer : MonoBehaviour
     }
 
     // 플레이어 위치, 카메라 강제 세팅
-    public void ForceMoveProcess(ref PositionPacket _packet)
+    public void ForceMoveProcess(ref IngamePacket _packet)
     {
         // 스피드, 애니메이션 0으로
         _packet.speed = 0.0f;
@@ -150,7 +150,7 @@ public partial class BridgeClientToServer : MonoBehaviour
     }
 
     // 다른 플레이어 위치 정보를 얻어옴
-    public void GetOtherPlayerPos(ref PositionPacket _packet)
+    public void GetOtherPlayerPos(ref IngamePacket _packet)
     {
         networkManager.SetPosPacket(_packet.playerNum - 1, ref _packet);   // 패킷 저장해주고
 
@@ -171,7 +171,7 @@ public partial class BridgeClientToServer : MonoBehaviour
     }
 
     // 정상적인 이동시
-    public void OnMoveSuccess(ref PositionPacket _packet)
+    public void OnMoveSuccess(ref IngamePacket _packet)
     {
         networkManager.SetPosPacket(_packet.playerNum - 1, ref _packet);
     }

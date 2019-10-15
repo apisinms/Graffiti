@@ -15,7 +15,7 @@ using static WeaponManager;
 public partial class NetworkManager : MonoBehaviour
 {
     private BridgeClientToServer bridge;
-    private PositionPacket tmpPosPacket = new PositionPacket();
+    private IngamePacket tmpIngamePacket = new IngamePacket();
     private Vector3 tmpVec = new Vector3();
     private Vector3 tmpAngle = new Vector3();
 
@@ -250,7 +250,9 @@ public partial class NetworkManager : MonoBehaviour
 								{
 									int allPlayerLoaded = 0;
 									UnPackPacket(info.packet, out allPlayerLoaded);
-									GameManager.instance.SetLoadingImage(allPlayerLoaded);
+
+									if(allPlayerLoaded == 1)
+										GameManager.instance.SetLoadingImage(allPlayerLoaded);
 								}
 								
 
@@ -288,8 +290,8 @@ public partial class NetworkManager : MonoBehaviour
                                         {
                                             lock (key)
                                             {
-                                                UnPackPacket(info.packet, ref tmpPosPacket);
-												bridge.OnMoveSuccess(ref tmpPosPacket);
+                                                UnPackPacket(info.packet, ref tmpIngamePacket);
+												bridge.OnMoveSuccess(ref tmpIngamePacket);
                                             }
                                         }
                                         break;
@@ -299,8 +301,8 @@ public partial class NetworkManager : MonoBehaviour
                                         {
                                             lock (key)
                                             {
-                                                UnPackPacket(info.packet, ref tmpPosPacket);
-                                                bridge.EnterSectorProcess(ref tmpPosPacket);
+                                                UnPackPacket(info.packet, ref tmpIngamePacket);
+                                                bridge.EnterSectorProcess(ref tmpIngamePacket);
                                             }
                                         }
                                         break;
@@ -310,8 +312,8 @@ public partial class NetworkManager : MonoBehaviour
                                         {
                                             lock (key)
                                             {
-                                                UnPackPacket(info.packet, ref tmpPosPacket);    // 사실 이 부분도 int 하나만 갖고도 될 일
-                                                bridge.ExitSectorProcess(ref tmpPosPacket);
+                                                UnPackPacket(info.packet, ref tmpIngamePacket);    // 사실 이 부분도 int 하나만 갖고도 될 일
+                                                bridge.ExitSectorProcess(ref tmpIngamePacket);
                                             }
                                         }
                                         break;
@@ -333,8 +335,8 @@ public partial class NetworkManager : MonoBehaviour
                                         {
                                             lock (key)
                                             {
-                                                UnPackPacket(info.packet, ref tmpPosPacket);    // 포지션 패킷 가져옴
-                                                bridge.ForceMoveProcess(ref tmpPosPacket);
+                                                UnPackPacket(info.packet, ref tmpIngamePacket);    // 포지션 패킷 가져옴
+                                                bridge.ForceMoveProcess(ref tmpIngamePacket);
                                             }
                                         }
                                         break;
@@ -343,8 +345,8 @@ public partial class NetworkManager : MonoBehaviour
                                         {
                                             lock (key)
                                             {
-                                                UnPackPacket(info.packet, ref tmpPosPacket);            // 패킷을 받고
-                                                bridge.GetOtherPlayerPos(ref tmpPosPacket);
+                                                UnPackPacket(info.packet, ref tmpIngamePacket);            // 패킷을 받고
+                                                bridge.GetOtherPlayerPos(ref tmpIngamePacket);
                                                 
                                             }
                                         }
@@ -360,8 +362,8 @@ public partial class NetworkManager : MonoBehaviour
 
                                 lock (key)
                                 {
-                                    UnPackPacket(info.packet, ref tmpPosPacket);         // 포지션 패킷 가져옴
-                                    bridge.ForceMoveProcess(ref tmpPosPacket);
+                                    UnPackPacket(info.packet, ref tmpIngamePacket);         // 포지션 패킷 가져옴
+                                    bridge.ForceMoveProcess(ref tmpIngamePacket);
                                 }
                             }
                             break;

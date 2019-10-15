@@ -79,7 +79,7 @@ public partial class NetworkManager : MonoBehaviour
 		bw.Write(sendBuf, 0, packetSize);
 	}
 
-	PositionPacket position = new PositionPacket();
+	IngamePacket ingameSendPacket = new IngamePacket();
     public void SendPosition(float _posX, float _posZ, float _rotY, float _speed, _ACTION_STATE _action, bool _isInit = false)
     {
         // 초기 위치 보낼 때
@@ -101,17 +101,16 @@ public partial class NetworkManager : MonoBehaviour
                   RESULT.NODATA);
         }
 
-        //PositionPacket position = new PositionPacket();
-        position.playerNum = myPlayerNum;
-        position.posX = _posX;
-        position.posZ = _posZ;
-        position.rotY = _rotY;
-        position.speed = _speed;
-        position.action = (int)_action;
+		ingameSendPacket.playerNum = myPlayerNum;
+        ingameSendPacket.posX = _posX;
+        ingameSendPacket.posZ = _posZ;
+        ingameSendPacket.rotY = _rotY;
+        ingameSendPacket.speed = _speed;
+		ingameSendPacket.action = (int)_action;
 
         // 패킹 및 전송
         int packetSize;
-        PackPacket(ref sendBuf, protocol, position, out packetSize);
+        PackPacket(ref sendBuf, protocol, ingameSendPacket, out packetSize);
 
         bw.Write(sendBuf, 0, packetSize);
     }

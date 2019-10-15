@@ -123,41 +123,74 @@ public partial class NetworkManager : MonoBehaviour
         public string nickname;
     };
 
-    // 마샬링을 위한 WeaponPac
-    [StructLayout(LayoutKind.Sequential)]
-    public struct WeaponPacket
-    {
-        [MarshalAs(UnmanagedType.I1)]
-        public sbyte mainW;
+	// 총알 충돌 검사 구조체
+	[StructLayout(LayoutKind.Sequential)]
+	public struct BulletCollisionChecker
+	{
+		[MarshalAs(UnmanagedType.I1)]
+		public byte playerBit;
 
-        [MarshalAs(UnmanagedType.I1)]
-        public sbyte subW;
+		[MarshalAs(UnmanagedType.I4)]
+		public int playerHitCountBit;
 
-        public byte[] Serialize()
-        {
-            // allocate a byte array for the struct data
-            var buffer = new byte[Marshal.SizeOf(typeof(WeaponPacket))];
+		public byte[] Serialize()
+		{
+			// allocate a byte array for the struct data
+			var buffer = new byte[Marshal.SizeOf(typeof(BulletCollisionChecker))];
 
-            // Allocate a GCHandle and get the array pointer
-            var gch = GCHandle.Alloc(buffer, GCHandleType.Pinned);
-            var pBuffer = gch.AddrOfPinnedObject();
+			// Allocate a GCHandle and get the array pointer
+			var gch = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+			var pBuffer = gch.AddrOfPinnedObject();
 
-            // copy data from struct to array and unpin the gc pointer
-            Marshal.StructureToPtr(this, pBuffer, false);
-            gch.Free();
+			// copy data from struct to array and unpin the gc pointer
+			Marshal.StructureToPtr(this, pBuffer, false);
+			gch.Free();
 
-            return buffer;
-        }
-        public void Deserialize(ref byte[] data)
-        {
-            var gch = GCHandle.Alloc(data, GCHandleType.Pinned);
-            this = (WeaponPacket)Marshal.PtrToStructure(gch.AddrOfPinnedObject(), typeof(WeaponPacket));
-            gch.Free();
-        }
-    }
+			return buffer;
+		}
+		public void Deserialize(ref byte[] data)
+		{
+			var gch = GCHandle.Alloc(data, GCHandleType.Pinned);
+			this = (BulletCollisionChecker)Marshal.PtrToStructure(gch.AddrOfPinnedObject(), typeof(BulletCollisionChecker));
+			gch.Free();
+		}
+	}
 
-    [StructLayout(LayoutKind.Sequential)]
-    public struct PositionPacket
+	// 마샬링을 위한 WeaponPac
+	[StructLayout(LayoutKind.Sequential)]
+	public struct WeaponPacket
+	{
+		[MarshalAs(UnmanagedType.I1)]
+		public sbyte mainW;
+
+		[MarshalAs(UnmanagedType.I1)]
+		public sbyte subW;
+
+		public byte[] Serialize()
+		{
+			// allocate a byte array for the struct data
+			var buffer = new byte[Marshal.SizeOf(typeof(WeaponPacket))];
+
+			// Allocate a GCHandle and get the array pointer
+			var gch = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+			var pBuffer = gch.AddrOfPinnedObject();
+
+			// copy data from struct to array and unpin the gc pointer
+			Marshal.StructureToPtr(this, pBuffer, false);
+			gch.Free();
+
+			return buffer;
+		}
+		public void Deserialize(ref byte[] data)
+		{
+			var gch = GCHandle.Alloc(data, GCHandleType.Pinned);
+			this = (WeaponPacket)Marshal.PtrToStructure(gch.AddrOfPinnedObject(), typeof(WeaponPacket));
+			gch.Free();
+		}
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+    public struct IngamePacket
     {
         [MarshalAs(UnmanagedType.I4)]
         public int playerNum;
@@ -177,10 +210,17 @@ public partial class NetworkManager : MonoBehaviour
         [MarshalAs(UnmanagedType.I4)]
         public int action;
 
-        public byte[] Serialize()
+		[MarshalAs(UnmanagedType.R4)]
+		public float health;
+
+		//public BulletCollisionChecker collisionChecker;
+
+		// 총알 맞았는지 판정 구조체
+
+		public byte[] Serialize()
         {
             // allocate a byte array for the struct data
-            var buffer = new byte[Marshal.SizeOf(typeof(PositionPacket))];
+            var buffer = new byte[Marshal.SizeOf(typeof(IngamePacket))];
 
             // Allocate a GCHandle and get the array pointer
             var gch = GCHandle.Alloc(buffer, GCHandleType.Pinned);
@@ -195,12 +235,12 @@ public partial class NetworkManager : MonoBehaviour
         public void Deserialize(ref byte[] data)
         {
             var gch = GCHandle.Alloc(data, GCHandleType.Pinned);
-            this = (PositionPacket)Marshal.PtrToStructure(gch.AddrOfPinnedObject(), typeof(PositionPacket));
+            this = (IngamePacket)Marshal.PtrToStructure(gch.AddrOfPinnedObject(), typeof(IngamePacket));
             gch.Free();
         }
     }
 
-    PositionPacket[] posPacket = new PositionPacket[C_Global.MAX_PLAYER];
+	IngamePacket[] ingamePackets = new IngamePacket[C_Global.MAX_PLAYER];
 
     STATE_PROTOCOL state;   // 클라 상태
     PROTOCOL protocol;      // 프로토콜
@@ -226,14 +266,14 @@ public partial class NetworkManager : MonoBehaviour
     public BinaryReader BinaryReader { get { return br; } }
     public BinaryWriter BinaryWriter { get { return bw; } }
 
-    public PositionPacket GetPosPacket(int _idx)
+    public IngamePacket GetIngamePacket(int _idx)
     {
-        return posPacket[_idx];
+        return ingamePackets[_idx];
     }
 
-    public void SetPosPacket(int _idx, ref PositionPacket _packet)
+    public void SetPosPacket(int _idx, ref IngamePacket _packet)
     {
-        posPacket[_idx] = _packet;
+		ingamePackets[_idx] = _packet;
     }
 
     public string SysMsg
@@ -249,52 +289,52 @@ public partial class NetworkManager : MonoBehaviour
     }
     public float GetPosX(int _idx)
     {
-        return posPacket[_idx].posX;
+        return ingamePackets[_idx].posX;
     }
     public float GetPosZ(int _idx)
     {
-        return posPacket[_idx].posZ;
+        return ingamePackets[_idx].posZ;
     }
     public float GetRotY(int _idx)
     {
-        return posPacket[_idx].rotY;
+        return ingamePackets[_idx].rotY;
     }
     public float GetSpeed(int _idx)
     {
-        return posPacket[_idx].speed;
+        return ingamePackets[_idx].speed;
     }
     public float GetActionState(int _idx)
     {
-        return posPacket[_idx].action;
+        return ingamePackets[_idx].action;
     }
     public int GetPosPlayerNum(int _idx)
     {
-        return posPacket[_idx].playerNum;
+        return ingamePackets[_idx].playerNum;
     }
 
     public void SetPosX(int _idx, float _posX)
     {
-        this.posPacket[_idx].posX = _posX;
+        this.ingamePackets[_idx].posX = _posX;
     }
     public void SetPosZ(int _idx, float _posZ)
     {
-        this.posPacket[_idx].posZ = _posZ;
+        this.ingamePackets[_idx].posZ = _posZ;
     }
     public void SetRotY(int _idx, float _rotY)
     {
-        this.posPacket[_idx].rotY = _rotY;
+        this.ingamePackets[_idx].rotY = _rotY;
     }
     public void SetSpeed(int _idx, float _speed)
     {
-        this.posPacket[_idx].speed = _speed;
+        this.ingamePackets[_idx].speed = _speed;
     }
     public void SetActionState(int _idx, int _action)
     {
-        this.posPacket[_idx].action = _action;
+        this.ingamePackets[_idx].action = _action;
     }
     public void SetPosPlayerNum(int _idx, int _num)
     {
-        this.posPacket[_idx].playerNum = _num;
+        this.ingamePackets[_idx].playerNum = _num;
     }
 
     public static NetworkManager instance = null;

@@ -107,9 +107,12 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
     public WeaponInfo weaponInfoAR;      // AR 정보(공용)
     public WeaponInfo weaponInfoSG;      // SG 정보(공용)
     public WeaponInfo weaponInfoSMG;   // SMG 정보(공용)
-    #endregion
+	#endregion
 
-    void Awake()
+	// 누가, 몇 발의 총알을 맞았는지 담을 구조체. (로컬 플레이어만 쓴다)
+	private NetworkManager.BulletCollisionChecker colChecker = new NetworkManager.BulletCollisionChecker();
+
+	void Awake()
     {
         if (instance == null)
             instance = this;
@@ -199,4 +202,98 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
     {
         mainWeaponType[_index].CheckFireRange(_obj_bullet, _index);
     }
+
+
+	/////////////////////////////// BulletCollisionChecker 구조체 전용
+	public void SetCollisionChecker(string _playerTag)
+	{
+		int hitPlayerNum = SetPlayerBit(_playerTag);   // 1. 맞은 플레이어 비트 활성화
+
+		if (hitPlayerNum != -1)
+		{
+			IncPlayerHitCountBit(hitPlayerNum);
+		}
+	}
+
+	// byte형의 플레이어 비트를 활성화 함
+	public int SetPlayerBit(string _playerTag)
+	{
+		int hitPlayerNum = -1;
+		switch (_playerTag)
+		{
+			case "Player1":
+				{
+					// 나랑 같은 팀이 아니면 세팅
+					if ((myIndex + 1) != 2)
+					{
+						colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_1;
+						hitPlayerNum = 1;
+					}
+				}
+				break;
+
+
+			case "Player2":
+				{
+					// 나랑 같은 팀이 아니면 세팅
+					if ((myIndex + 1) != 1)
+					{
+						colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_2;
+						hitPlayerNum = 2;
+					}
+				}
+				break;
+
+			case "Player3":
+				{
+					// 나랑 같은 팀이 아니면 세팅
+					if ((myIndex + 1) != 4)
+					{
+						colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_3;
+						hitPlayerNum = 3;
+					}
+				}
+				break;
+
+			case "Player4":
+				{
+					// 나랑 같은 팀이 아니면 세팅
+					if ((myIndex + 1) != 3)
+					{
+						colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_4;
+						hitPlayerNum = 4;
+					}
+				}
+				break;
+		}
+
+		return hitPlayerNum;
+	}
+
+	// player의 HitCountBit(맞은 횟수 비트)를 증가한다.
+	public void IncPlayerHitCountBit(int _hitPlayerNum)
+	{
+		int Shifter = 8 * (C_Global.MAX_PLAYER - _hitPlayerNum);	// 이동 연산에 필요한 값
+
+		byte bitEraseMask = 0x00;   // 8비트 지우기 마스크(00000000)
+	   
+
+		// 1. 기존에 해당 플레이어의 hit횟수를 가져온다.
+		int beforeCount = (colChecker.playerHitCountBit) >> Shifter;    // 한 대 맞은 누적 카운트를 저장하고
+
+		// 2. 기존 플레이어의 hit 횟수를 0으로 만든다(해당 플레이어의 범위만)
+		colChecker.playerHitCountBit &= bitEraseMask << Shifter;
+
+		beforeCount++;  // 한 대 더 맞았으니 누적한다.
+
+		// 32비트를 4명의 플레이어가 8비트 단위로 끊어서 저장한다.
+		colChecker.playerHitCountBit |= beforeCount << Shifter;
+	}
+
+	// 총알 충돌 체커 구조체 초기화
+	public void ResetCollisionChecker()
+	{
+		colChecker.playerBit = 0;
+		colChecker.playerHitCountBit = 0;
+	}
 }
