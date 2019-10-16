@@ -79,11 +79,9 @@ public partial class PoolManager : MonoBehaviour
 
            // if (list_collisionEffectPool[i].Count > 60 || _ps_effect.isPlaying == false)
              //   return;
-         //   else
+            //else
             {
                 //다시 비활성화후 트랜스폼 원상복구후 풀로 복귀.
-                //_ps_effect.Stop();
-               // _ps_effect.Clear();
                 _ps_effect.gameObject.SetActive(false);
                 list_collisionEffectPool[i].Add(_ps_effect);
                 break;
