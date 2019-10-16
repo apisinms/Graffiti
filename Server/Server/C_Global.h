@@ -63,7 +63,19 @@ struct COORD_DOUBLE
 	COORD_DOUBLE() { x = z = 0; }
 };
 
-struct PositionPacket
+// 총알 충돌 검사 구조체
+struct BulletCollisionChecker
+{
+	byte playerBit;
+	int playerHitCountBit;
+	BulletCollisionChecker()
+	{
+		playerBit = 0;
+		playerHitCountBit = 0;
+	}
+};
+
+struct IngamePacket
 {
 	int playerNum;
 	float posX;
@@ -71,22 +83,27 @@ struct PositionPacket
 	float rotY;
 	float speed;
 	int action;
+	float health;
+	BulletCollisionChecker collisionCheck;
 
-	PositionPacket() 
+	IngamePacket()
 	{
 		playerNum = 0;
 		posX = posZ = rotY = speed = 0.0f;
 		action = 0;
+		health = 0.0;
 	}
 
-	PositionPacket(PositionPacket& _pos)
+	IngamePacket(IngamePacket& _pos)
 	{
-		this->playerNum = _pos.playerNum;
-		this->posX      = _pos.posX;
-		this->posZ      = _pos.posZ;
-		this->rotY      = _pos.rotY;
-		this->speed		= _pos.speed;
-		this->action    = _pos.action;
+		this->playerNum      = _pos.playerNum;
+		this->posX           = _pos.posX;
+		this->posZ           = _pos.posZ;
+		this->rotY           = _pos.rotY;
+		this->speed		     = _pos.speed;
+		this->action         = _pos.action;
+		this->health         = _pos.health;
+		this->collisionCheck = _pos.collisionCheck;
 	}
 };
 
@@ -108,21 +125,30 @@ public:
 struct PlayerInfo
 {
 private:
-	PositionPacket* position;	// 플레이어 번호 + 위치 + 로테이션 + 애니메이션
+	bool loadStatus;			// 로딩 다 됐는지 상태
+	bool isFocus;				// 기기가 Focus중인지 
+	int gameType;				// 선택한 게임 타입
+	IngamePacket* gamePacket;	// 인게임에서 사용하는 0.1초마다 주고받는 패킷 (플레이어 번호 + 위치 + 로테이션 + 애니메이션 + 체력 등)
 	INDEX index;				// 현재 플레이어의 섹터 인덱스
 	Weapon* weapon;				// 무기
 	float health;				// 체력
 	float speed;				// 속도
 	int bullet;					// 총알
-	bool isFocus;				// 기기가 Focus중인지 
 
 public:
-	static const float MAX_SPEED;
+	//static const float MAX_SPEED;
+	enum GameType
+	{
+		NORMAL,
+	};
 
 public:
 	PlayerInfo()
 	{
-		position = nullptr;
+		loadStatus = false;
+		gameType = GameType::NORMAL;		// 일단은 노멀 게임으로 셋팅
+
+		gamePacket = nullptr;
 		memset(&index, 0, sizeof(INDEX));
 		weapon = nullptr;
 
@@ -132,24 +158,29 @@ public:
 		isFocus = true;
 	}
 
-	PositionPacket* GetPosition() { return position; }
-	void SetPosition(PositionPacket* _position)
-	{
-		if (position != nullptr)
-			delete position;
+	bool GetLoadStatus() { return loadStatus; }
+	void SetLoadStatus(bool _loadStatus) { loadStatus = _loadStatus; }
+	int GetGameType() { return gameType; }
+	void SetGameType(int _gameType) { gameType = _gameType;}
 
-		position = _position;
+	IngamePacket* GetIngamePacket() { return gamePacket; }
+	void SetIngamePacket(IngamePacket* _gamePacket)
+	{
+		if (gamePacket != nullptr)
+			delete gamePacket;
+
+		gamePacket = _gamePacket;
 	}
 
 	void SetPlayerNum(int _num)
 	{
-		if (position == nullptr)
-			position = new PositionPacket();
+		if (gamePacket == nullptr)
+			gamePacket = new IngamePacket();
 
-		position->playerNum = _num;
+		gamePacket->playerNum = _num;
 	}
-	int GetPlayerNum() { return position->playerNum; }
-	int GetAnimation() { return position->action; }
+	int GetPlayerNum() { return gamePacket->playerNum; }
+	int GetAnimation() { return gamePacket->action; }
 
 	INDEX GetIndex() { return index; }
 	void SetIndex(INDEX _index) { index = _index; }
@@ -195,7 +226,7 @@ struct GameInfo
 	int responTime;		// 리스폰 시간
 	int gameTime;		// 게임 시간(ex 180초)
 };
-const float PlayerInfo::MAX_SPEED = 4.0f;
+//const float PlayerInfo::MAX_SPEED = 4.0f;
 
 enum STATE : int
 {

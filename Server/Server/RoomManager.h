@@ -27,6 +27,7 @@ private:
 	ROOMSTATUS roomStatus;			// 방의 상태
 	list<C_ClientInfo*>playerList;	// 유저들을 리스트에 저장
 	C_Sector* sector;				// 이 방의 섹터 매니저
+	int carSeed;					// 차량 씨드
 
 public:
 	RoomInfo(C_ClientInfo** _playerList, int _numOfPlayer);
@@ -45,6 +46,9 @@ public:
 
 	void SetNumOfPlayer(int _numOfPlayer) { numOfPlayer = _numOfPlayer; }
 	int GetNumOfPlayer() { return numOfPlayer; }
+
+	void SetCarSeed(int _cardSeed) { carSeed = _cardSeed; }
+	int GetCarSeed() { return carSeed; }
 
 	void SetRoomStatus(ROOMSTATUS _roomStatus) { roomStatus = _roomStatus; }
 	ROOMSTATUS GetRoomStatus() { return roomStatus; }

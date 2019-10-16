@@ -18,6 +18,9 @@ public:
 		if (InGameManager::GetInstance()->CanIStart(_ptr) == true)
 			state = STATE_INGAME;
 
+		if (InGameManager::GetInstance()->LoadingSuccess(_ptr) == true)
+			state = STATE_INGAME;
+
 		if (InGameManager::GetInstance()->CanIMove(_ptr) == true)
 			state = STATE_INGAME;
 
