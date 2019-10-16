@@ -31,7 +31,9 @@ public partial class PlayersManager : MonoBehaviour
     public static PlayersManager instance;
     private NetworkManager networkManager;
     public int myIndex { get; set; } //가독성을위해 하나 더만들어줌
-    
+    public int myTeamIndex { get; set; }
+    public int[] enemyIndex { get; set; }
+
     #region PLAYERS_ROBIN
     public GameObject[] obj_players { get; set; }
     public Transform[] tf_players { get; set; } 
@@ -43,6 +45,7 @@ public partial class PlayersManager : MonoBehaviour
     #endregion
 
     #region PLAYERS_ATTRIBUTE
+    public string[] nickname { get; set; }
     public float[] speed { get; set; }
     public float[] hp { get; set; }
     public float[] maxSpeed { get; set; }
@@ -74,10 +77,33 @@ public partial class PlayersManager : MonoBehaviour
             if (myIndex != i)
             {
                 obj_players[i] = GameObject.FindGameObjectWithTag(GameManager.instance.playersTag[i]);
-                //obj_players[i].GetComponent<CapsuleCollider>().isTrigger = true;
                 tf_players[i] = obj_players[i].GetComponent<Transform>().transform;
                 am_animePlayer[i] = obj_players[i].GetComponent<Animator>(); 
             }
+        }
+
+        switch(myIndex)
+        {
+            case 0:
+                myTeamIndex = 1;
+                enemyIndex[0] = 2;
+                enemyIndex[1] = 3;
+                break;
+            case 1:
+                myTeamIndex = 0;
+                enemyIndex[0] = 2;
+                enemyIndex[1] = 3;
+                break;
+            case 2:
+                myTeamIndex = 3;
+                enemyIndex[0] = 0;
+                enemyIndex[1] = 1;
+                break;
+            case 3:
+                myTeamIndex = 2;
+                enemyIndex[0] = 0;
+                enemyIndex[1] = 1;
+                break;
         }
     }
 
@@ -85,7 +111,9 @@ public partial class PlayersManager : MonoBehaviour
     {
         obj_players = new GameObject[C_Global.MAX_PLAYER];
         tf_players = new Transform[C_Global.MAX_PLAYER];
+        enemyIndex = new int[C_Global.MAX_PLAYER-2];
         am_animePlayer = new Animator[C_Global.MAX_PLAYER];
+        nickname = new string[C_Global.MAX_PLAYER];
         speed = new float[C_Global.MAX_PLAYER];
         hp = new float[C_Global.MAX_PLAYER];
         maxSpeed = new float[C_Global.MAX_PLAYER];

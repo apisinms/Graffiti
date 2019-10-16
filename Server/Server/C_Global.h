@@ -15,7 +15,7 @@ using namespace std;
 #define MSGSIZE				512
 #define WEAPON_NAME_SIZE	32
 
-#define MAX_PLAYER		2
+#define MAX_PLAYER		4
 
 #define THREAD_END		-777
 

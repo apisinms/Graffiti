@@ -1,8 +1,13 @@
 fileFormatVersion: 2
-guid: 5317fde2cd7d75a4d8888fd00df21599
+guid: bc260cbcbd5a8bb4398c134266a17366
 labels:
 - warfx
 - mobile
 - particles
 - weapon
 - muzzle flash
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

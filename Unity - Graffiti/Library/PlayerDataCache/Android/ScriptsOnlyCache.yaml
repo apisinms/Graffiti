@@ -1,27 +1,22 @@
 ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
-    - BridgeClientToServer
     - BulletCollision
-    - C_Encrypt
     - CameraControl
     - Customizable
     - EffectManager
     - GameManager
-    - InputInfoManager
     - JoystickManager
     - LeftJoystick
     - Main_AR
     - Main_SG
     - Main_SMG
-    - NetworkManager
     - ObjectPool
     - PathCreation.Examples.PathFollower
     - PathCreation.Examples.PathSpawner
     - PlayersManager
     - PoolManager
     - RightJoystick
-    - SelectWeapons
     - StateManager
     - State_Aim
     - State_AimCircuit
@@ -29,10 +24,8 @@ ScriptsOnlyBuild:
     - State_Circuit
     - State_Idle
     - State_Shot
+    - UIManager
     - WeaponManager
-    - btn_option
-    - btn_quit
-    - btn_start
     PathCreator.dll:
     - PathCreation.PathCreator
     UnityEditor.Graphs.dll:
@@ -50,9 +43,7 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.Button
     - UnityEngine.UI.CanvasScaler
     - UnityEngine.UI.GraphicRaycaster
-    - UnityEngine.UI.HorizontalLayoutGroup
     - UnityEngine.UI.Image
-    - UnityEngine.UI.InputField
     - UnityEngine.UI.Text
   sceneClasses:
     Assets/Scenes/MainGame.unity:
@@ -127,39 +118,41 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9820}
     - Class: 114
-      Script: {instanceID: 9942}
+      Script: {instanceID: 9904}
     - Class: 114
-      Script: {instanceID: 9962}
+      Script: {instanceID: 9944}
     - Class: 114
-      Script: {instanceID: 10046}
+      Script: {instanceID: 9964}
     - Class: 114
-      Script: {instanceID: 10094}
+      Script: {instanceID: 10048}
     - Class: 114
-      Script: {instanceID: 10118}
+      Script: {instanceID: 10096}
     - Class: 114
       Script: {instanceID: 10120}
     - Class: 114
-      Script: {instanceID: 10142}
+      Script: {instanceID: 10122}
     - Class: 114
-      Script: {instanceID: 10164}
+      Script: {instanceID: 10146}
     - Class: 114
-      Script: {instanceID: 10214}
+      Script: {instanceID: 10168}
     - Class: 114
-      Script: {instanceID: 10226}
+      Script: {instanceID: 10218}
     - Class: 114
-      Script: {instanceID: 10386}
+      Script: {instanceID: 10230}
     - Class: 114
-      Script: {instanceID: 10418}
+      Script: {instanceID: 10390}
     - Class: 114
-      Script: {instanceID: 10426}
+      Script: {instanceID: 10422}
     - Class: 114
-      Script: {instanceID: 10474}
+      Script: {instanceID: 10430}
     - Class: 114
-      Script: {instanceID: 10494}
+      Script: {instanceID: 10478}
     - Class: 114
-      Script: {instanceID: 10556}
+      Script: {instanceID: 10498}
     - Class: 114
-      Script: {instanceID: 10624}
+      Script: {instanceID: 10560}
+    - Class: 114
+      Script: {instanceID: 10628}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -187,185 +180,6 @@ ScriptsOnlyBuild:
     - Class: 258
       Script: {instanceID: 0}
     - Class: 156049354
-      Script: {instanceID: 0}
-    Assets/Scenes/MainMenu.unity:
-    - Class: 1
-      Script: {instanceID: 0}
-    - Class: 4
-      Script: {instanceID: 0}
-    - Class: 20
-      Script: {instanceID: 0}
-    - Class: 21
-      Script: {instanceID: 0}
-    - Class: 28
-      Script: {instanceID: 0}
-    - Class: 48
-      Script: {instanceID: 0}
-    - Class: 74
-      Script: {instanceID: 0}
-    - Class: 81
-      Script: {instanceID: 0}
-    - Class: 89
-      Script: {instanceID: 0}
-    - Class: 91
-      Script: {instanceID: 0}
-    - Class: 95
-      Script: {instanceID: 0}
-    - Class: 104
-      Script: {instanceID: 0}
-    - Class: 108
-      Script: {instanceID: 0}
-    - Class: 114
-      Script: {instanceID: 9392}
-    - Class: 114
-      Script: {instanceID: 9394}
-    - Class: 114
-      Script: {instanceID: 9400}
-    - Class: 114
-      Script: {instanceID: 9406}
-    - Class: 114
-      Script: {instanceID: 9414}
-    - Class: 114
-      Script: {instanceID: 9450}
-    - Class: 114
-      Script: {instanceID: 9452}
-    - Class: 114
-      Script: {instanceID: 9502}
-    - Class: 114
-      Script: {instanceID: 9920}
-    - Class: 114
-      Script: {instanceID: 10592}
-    - Class: 115
-      Script: {instanceID: 0}
-    - Class: 128
-      Script: {instanceID: 0}
-    - Class: 157
-      Script: {instanceID: 0}
-    - Class: 213
-      Script: {instanceID: 0}
-    - Class: 222
-      Script: {instanceID: 0}
-    - Class: 223
-      Script: {instanceID: 0}
-    - Class: 224
-      Script: {instanceID: 0}
-    - Class: 258
-      Script: {instanceID: 0}
-    Assets/Scenes/SampleScene.unity:
-    - Class: 1
-      Script: {instanceID: 0}
-    - Class: 4
-      Script: {instanceID: 0}
-    - Class: 20
-      Script: {instanceID: 0}
-    - Class: 21
-      Script: {instanceID: 0}
-    - Class: 28
-      Script: {instanceID: 0}
-    - Class: 48
-      Script: {instanceID: 0}
-    - Class: 81
-      Script: {instanceID: 0}
-    - Class: 89
-      Script: {instanceID: 0}
-    - Class: 104
-      Script: {instanceID: 0}
-    - Class: 108
-      Script: {instanceID: 0}
-    - Class: 114
-      Script: {instanceID: 9392}
-    - Class: 114
-      Script: {instanceID: 9394}
-    - Class: 114
-      Script: {instanceID: 9400}
-    - Class: 114
-      Script: {instanceID: 9406}
-    - Class: 114
-      Script: {instanceID: 9414}
-    - Class: 114
-      Script: {instanceID: 9416}
-    - Class: 114
-      Script: {instanceID: 9450}
-    - Class: 114
-      Script: {instanceID: 9452}
-    - Class: 114
-      Script: {instanceID: 9686}
-    - Class: 114
-      Script: {instanceID: 9832}
-    - Class: 114
-      Script: {instanceID: 9974}
-    - Class: 114
-      Script: {instanceID: 10162}
-    - Class: 115
-      Script: {instanceID: 0}
-    - Class: 128
-      Script: {instanceID: 0}
-    - Class: 157
-      Script: {instanceID: 0}
-    - Class: 213
-      Script: {instanceID: 0}
-    - Class: 222
-      Script: {instanceID: 0}
-    - Class: 223
-      Script: {instanceID: 0}
-    - Class: 224
-      Script: {instanceID: 0}
-    - Class: 258
-      Script: {instanceID: 0}
-    Assets/Scenes/SelectWeapons.unity:
-    - Class: 1
-      Script: {instanceID: 0}
-    - Class: 4
-      Script: {instanceID: 0}
-    - Class: 20
-      Script: {instanceID: 0}
-    - Class: 21
-      Script: {instanceID: 0}
-    - Class: 28
-      Script: {instanceID: 0}
-    - Class: 48
-      Script: {instanceID: 0}
-    - Class: 81
-      Script: {instanceID: 0}
-    - Class: 89
-      Script: {instanceID: 0}
-    - Class: 104
-      Script: {instanceID: 0}
-    - Class: 108
-      Script: {instanceID: 0}
-    - Class: 114
-      Script: {instanceID: 9392}
-    - Class: 114
-      Script: {instanceID: 9394}
-    - Class: 114
-      Script: {instanceID: 9400}
-    - Class: 114
-      Script: {instanceID: 9406}
-    - Class: 114
-      Script: {instanceID: 9410}
-    - Class: 114
-      Script: {instanceID: 9414}
-    - Class: 114
-      Script: {instanceID: 9450}
-    - Class: 114
-      Script: {instanceID: 9452}
-    - Class: 114
-      Script: {instanceID: 9840}
-    - Class: 115
-      Script: {instanceID: 0}
-    - Class: 128
-      Script: {instanceID: 0}
-    - Class: 157
-      Script: {instanceID: 0}
-    - Class: 213
-      Script: {instanceID: 0}
-    - Class: 222
-      Script: {instanceID: 0}
-    - Class: 223
-      Script: {instanceID: 0}
-    - Class: 224
-      Script: {instanceID: 0}
-    - Class: 258
       Script: {instanceID: 0}
   scriptHashData:
   - hash:
@@ -958,6 +772,12 @@ ScriptsOnlyBuild:
     className: SignalTrack
   - hash:
       serializedVersion: 2
+      Hash: c7b086333b48236d835fccf88683af8d
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: UIManager
+  - hash:
+      serializedVersion: 2
       Hash: b233df5c6f9cea11b87e4e515556b495
     assemblyName: Assembly-CSharp.dll
     namespaceName: PathCreation.Examples
@@ -1052,6 +872,12 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: StateManager
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: SoundManager
   - hash:
       serializedVersion: 2
       Hash: 35a9693c388776aaf487636491a20f11
@@ -1276,8 +1102,5 @@ ScriptsOnlyBuild:
     className: PlayableTrack
   platform: 13
   scenePathNames:
-  - Assets/Scenes/SampleScene.unity
   - Assets/Scenes/MainGame.unity
-  - Assets/Scenes/MainMenu.unity
-  - Assets/Scenes/SelectWeapons.unity
-  playerPath: C:/Users/Kimtler/Desktop/graffiti.apk
+  playerPath: C:/Users/GANPAN/Desktop/dd.apk
