@@ -31,8 +31,6 @@ public partial class PlayersManager : MonoBehaviour
     public static PlayersManager instance;
     private NetworkManager networkManager;
     public int myIndex { get; set; } //가독성을위해 하나 더만들어줌
-    public int myTeamIndex { get; set; }
-    public int[] enemyIndex { get; set; }
 
     #region PLAYERS_ROBIN
     public GameObject[] obj_players { get; set; }
@@ -81,37 +79,12 @@ public partial class PlayersManager : MonoBehaviour
                 am_animePlayer[i] = obj_players[i].GetComponent<Animator>(); 
             }
         }
-
-        switch(myIndex)
-        {
-            case 0:
-                myTeamIndex = 1;
-                enemyIndex[0] = 2;
-                enemyIndex[1] = 3;
-                break;
-            case 1:
-                myTeamIndex = 0;
-                enemyIndex[0] = 2;
-                enemyIndex[1] = 3;
-                break;
-            case 2:
-                myTeamIndex = 3;
-                enemyIndex[0] = 0;
-                enemyIndex[1] = 1;
-                break;
-            case 3:
-                myTeamIndex = 2;
-                enemyIndex[0] = 0;
-                enemyIndex[1] = 1;
-                break;
-        }
     }
 
     void Initialization(int _num) //클라이언트 자체에서 그냥 초기화. 어차피 서버에서 정보가 있으니까 이렇게함.
     {
         obj_players = new GameObject[C_Global.MAX_PLAYER];
         tf_players = new Transform[C_Global.MAX_PLAYER];
-        enemyIndex = new int[C_Global.MAX_PLAYER-2];
         am_animePlayer = new Animator[C_Global.MAX_PLAYER];
         nickname = new string[C_Global.MAX_PLAYER];
         speed = new float[C_Global.MAX_PLAYER];

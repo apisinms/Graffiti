@@ -39,7 +39,7 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
 
         weaponManager.weaponInfoAR.maxAmmo = 30;
         weaponManager.weaponInfoAR.fireRate = 0.14f;
-        weaponManager.weaponInfoAR.damage = 1.0f;
+        weaponManager.weaponInfoAR.damage = 0.03f;
         weaponManager.weaponInfoAR.accuracy = 0.06f;
         weaponManager.weaponInfoAR.range = 20.0f;
         weaponManager.weaponInfoAR.speed = 2000.0f;
@@ -126,5 +126,28 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
     {
         if (Vector3.Distance(_obj_bullet.transform.position, PlayersManager.instance.obj_players[_index].transform.position) >= Main_AR.instance.weaponManager.weaponInfoAR.range)
             PoolManager.instance.ReturnBulletToPool(_obj_bullet, _index);
+    }
+
+    public void ApplyDamage(int _type, int _index)
+    {
+        switch(_type)
+        {
+            case 0:
+                UIManager.instance.myHP.img_front.fillAmount -= weaponManager.weaponInfoAR.damage; //데미지만큼 피를깎음.
+                UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHP(_type, weaponManager.weaponInfoAR.damage));
+                break;
+            case 1:
+                UIManager.instance.teamHP.img_front.fillAmount -= weaponManager.weaponInfoAR.damage; //데미지만큼 피를깎음.
+                UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHP(_type, weaponManager.weaponInfoAR.damage));
+                break;
+            case 2:
+                UIManager.instance.enemyHP[0].img_front.fillAmount -= weaponManager.weaponInfoAR.damage; //데미지만큼 피를깎음.
+                UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHP(_type, weaponManager.weaponInfoAR.damage));
+                break;
+            case 3:
+                UIManager.instance.enemyHP[1].img_front.fillAmount -= weaponManager.weaponInfoAR.damage; //데미지만큼 피를깎음.
+                UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHP(_type, weaponManager.weaponInfoAR.damage));
+                break;
+        }
     }
 }

@@ -39,7 +39,7 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
 
         weaponManager.weaponInfoSG.maxAmmo = 30;
         weaponManager.weaponInfoSG.fireRate = 0.14f;
-        weaponManager.weaponInfoSG.damage = 1.0f;
+        weaponManager.weaponInfoSG.damage = 0.04f;
         weaponManager.weaponInfoSG.accuracy = 0.06f;
         weaponManager.weaponInfoSG.range = 20.0f;
         weaponManager.weaponInfoSG.speed = 2000.0f;
@@ -139,5 +139,28 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
     {
         if (Vector3.Distance(_obj_bullet.transform.position, PlayersManager.instance.obj_players[_index].transform.position) >= Main_SG.instance.weaponManager.weaponInfoSG.range)
             PoolManager.instance.ReturnBulletToPool(_obj_bullet, _index);
+    }
+
+    public void ApplyDamage(int _type, int _index) 
+    {
+        switch (_type)
+        {
+            case 0:
+                UIManager.instance.myHP.img_front.fillAmount -= weaponManager.weaponInfoSG.damage; //데미지만큼 피를깎음.
+                UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHP(_type, weaponManager.weaponInfoSG.damage));
+                break;
+            case 1:
+                UIManager.instance.teamHP.img_front.fillAmount -= weaponManager.weaponInfoSG.damage; //데미지만큼 피를깎음.
+                UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHP(_type, weaponManager.weaponInfoSG.damage));
+                break;
+            case 2:
+                UIManager.instance.enemyHP[0].img_front.fillAmount -= weaponManager.weaponInfoSG.damage; //데미지만큼 피를깎음.
+                UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHP(_type, weaponManager.weaponInfoSG.damage));
+                break;
+            case 3:
+                UIManager.instance.enemyHP[1].img_front.fillAmount -= weaponManager.weaponInfoSG.damage; //데미지만큼 피를깎음.
+                UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHP(_type, weaponManager.weaponInfoSG.damage));
+                break;
+        }
     }
 }

@@ -35,30 +35,19 @@ public class BulletCollision : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-        //총알끼리는 충돌체크x, 내총알에 내가맞는것도x
-        //  for (int i = 0; i < PoolManager.instance.bulletTag.Length; i++)
-        //    {
-        //     if (other.gameObject.CompareTag(PoolManager.instance.bulletTag[i]))
-        //         return;
-        //  }
-        if (other.CompareTag(PlayersManager.instance.obj_players[PlayersManager.instance.myIndex].tag))
-        {
-            UIManager.instance.myHP.img_front.fillAmount -= 0.02f;
-        }
-        else if(other.CompareTag(PlayersManager.instance.obj_players[PlayersManager.instance.myTeamIndex].tag))
-        {
-            UIManager.instance.teamHP.img_front.fillAmount -= 0.02f;
-        }
-        else if(other.CompareTag(PlayersManager.instance.obj_players[PlayersManager.instance.enemyIndex[0]].tag))
-        {
-            UIManager.instance.enemyHP[0].img_front.fillAmount -= 0.02f;
-        }
-        else if(other.CompareTag(PlayersManager.instance.obj_players[PlayersManager.instance.enemyIndex[1]].tag))
-        {
-            UIManager.instance.enemyHP[1].img_front.fillAmount -= 0.02f;
-        }
+        //적에게 내가맞았냐, 팀킬을했냐, 적1이냐 적2냐에따른 총알피해, 체력적용
+        //함수 _type은 피아구분, returnIdx는 총알의 주인인덱스
+        if (other.CompareTag(PlayersManager.instance.obj_players[GameManager.instance.myIndex].tag))
+            WeaponManager.instance.ApplyDamage(0, returnIdx);
+        else if (other.CompareTag(PlayersManager.instance.obj_players[GameManager.instance.myTeamIndex].tag))
+            WeaponManager.instance.ApplyDamage(1, returnIdx);
+        else if (other.CompareTag(PlayersManager.instance.obj_players[GameManager.instance.enemyIndex[0]].tag))
+            WeaponManager.instance.ApplyDamage(2, returnIdx);
+        else if (other.CompareTag(PlayersManager.instance.obj_players[GameManager.instance.enemyIndex[1]].tag))
+            WeaponManager.instance.ApplyDamage(3, returnIdx);
 
-		if (other.CompareTag("Concrete1"))
+
+        if (other.CompareTag("Concrete1"))
 		{
 			ps_clone = PoolManager.instance.GetCollisionEffectFromPool("ConcretePool1", other.ClosestPointOnBounds(this.transform.position), -this.transform.forward);
 			EffectManager.instance.StartCoroutine(EffectManager.instance.CheckEffectEnd(ps_clone));
@@ -78,3 +67,22 @@ public class BulletCollision : MonoBehaviour
 		WeaponManager.instance.SetCollisionChecker(other.tag);
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+    /*
+     *         //총알끼리는 충돌체크x, 내총알에 내가맞는것도x
+        //  for (int i = 0; i < PoolManager.instance.bulletTag.Length; i++)
+        //    {
+        //     if (other.gameObject.CompareTag(PoolManager.instance.bulletTag[i]))
+        //         return;
+        //  }
+        */

@@ -41,12 +41,15 @@ public partial class PlayersManager : MonoBehaviour
     {
         while (true)
         {
-            Anime_Aiming_Idle(myIndex);
-
-            tf_players[myIndex].localRotation = Quaternion.Lerp(tf_players[myIndex].localRotation,
-Quaternion.LookRotation(direction2[myIndex]), Time.smoothDeltaTime * 6.0f);
-
+            Anime_Aiming_Idle(myIndex);         
+            tf_players[myIndex].localRotation = Quaternion.Lerp(tf_players[myIndex].localRotation, Quaternion.LookRotation(direction2[myIndex]), Time.smoothDeltaTime * 6.0f);
             //tf_players[myIndex].localRotation = Quaternion.LookRotation(direction2[myIndex]);
+
+            //UIManager.instance.tmp.transform.localRotation = Quaternion.Euler(20, 0, tf_players[myIndex].localRotation.z);
+      
+            //Quaternion tmp = Quaternion.LookRotation(tf_players[myIndex].forward);
+            //UIManager.instance.tmp.transform.localRotation = tmp;//Quaternion.Euler(20, 0, 90 + (-tmp.y * 100));//Quaternion.Lerp(UIManager.instance.tmp.transform.localRotation, Quaternion.Euler(20, 0, 90 + (-tmp.y * 100)), Time.smoothDeltaTime * 6.0f);
+
             yield return null;
         }
     }

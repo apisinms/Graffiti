@@ -23,6 +23,7 @@ public interface IMainWeaponType
 {
     IEnumerator ActionFire(int _index);
     void CheckFireRange(GameObject _obj_bullet, int _index);
+    void ApplyDamage(int _type, int _index);
 }
 
 public class WeaponManager : MonoBehaviour, IMainWeaponType
@@ -203,9 +204,13 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
         mainWeaponType[_index].CheckFireRange(_obj_bullet, _index);
     }
 
+    public void ApplyDamage(int _type, int _index) //해당 총별로 총에 맞았을때 데미지를 실질적으로 깎음.
+    {
+        mainWeaponType[_index].ApplyDamage(_type, _index);
+    }
 
-	/////////////////////////////// BulletCollisionChecker 구조체 전용
-	public void SetCollisionChecker(string _playerTag)
+    /////////////////////////////// BulletCollisionChecker 구조체 전용
+    public void SetCollisionChecker(string _playerTag)
 	{
 		int hitPlayerNum = SetPlayerBit(_playerTag);   // 1. 맞은 플레이어 비트 활성화
 

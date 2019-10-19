@@ -25,6 +25,11 @@ TagManager:
   - IronPool1
   - Concrete1
   - Iron1
+  - Canvas
+  - EndPoint
+  - Canvas_overlay
+  - Canvas_worldSpace1
+  - Canvas_worldSpace2
   layers:
   - Default
   - TransparentFX

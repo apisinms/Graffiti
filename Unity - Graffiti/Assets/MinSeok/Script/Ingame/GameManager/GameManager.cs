@@ -52,6 +52,9 @@ public class GameManager : MonoBehaviour
     public readonly string[] playersTag = new string[C_Global.MAX_PLAYER];
     public int myNetworkNum { get; set; }
     public int myIndex { get; set; }
+    public int myTeamIndex { get; set; }
+    public int[] enemyIndex { get; set; }
+
     public string myTag { get; set; }
     public bool myFocus { get; set; }
 
@@ -83,9 +86,9 @@ public class GameManager : MonoBehaviour
         if (instance == null)
             instance = this;
 
-        //obj_players = new GameObject[4];
         playersTag[0] = "Player1"; playersTag[1] = "Player2";
         playersTag[2] = "Player3"; playersTag[3] = "Player4";
+        enemyIndex = new int[C_Global.MAX_PLAYER - 2];
 
         gameInfo.gameType = 0;
         gameInfo.gameTime = 180;
@@ -98,13 +101,35 @@ public class GameManager : MonoBehaviour
 
 		Random.seed = CarSeed;	// 시드값을 awake에서 해줘야 첫 자동차도 타이밍이 맞음
 #else
-        myNetworkNum = 1; //예시로 번호부여함.  서버에서 샌드된번호로 해야함.
+        myNetworkNum = 3; //예시로 번호부여함.  서버에서 샌드된번호로 해야함.
         myIndex = myNetworkNum - 1;
 #endif
 		myTag = playersTag[myIndex]; //내 태그등록
         myFocus = true;             // 포커스 On
 
-        myTag = playersTag[myIndex]; //내 태그등록
+        switch (myIndex)
+        {
+            case 0:
+                myTeamIndex = 1;
+                enemyIndex[0] = 2;
+                enemyIndex[1] = 3;
+                break;
+            case 1:
+                myTeamIndex = 0;
+                enemyIndex[0] = 2;
+                enemyIndex[1] = 3;
+                break;
+            case 2:
+                myTeamIndex = 3;
+                enemyIndex[0] = 0;
+                enemyIndex[1] = 1;
+                break;
+            case 3:
+                myTeamIndex = 2;
+                enemyIndex[0] = 0;
+                enemyIndex[1] = 1;
+                break;
+        }
     }
 
 
@@ -140,7 +165,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-
+    
 	public Image loadingImage;
 	public void SetLoadingImage(int _allPlayerLoaded)
 	{
@@ -153,4 +178,5 @@ public class GameManager : MonoBehaviour
 		else
 			loadingImage.enabled = true;
 	}
+    
 }
