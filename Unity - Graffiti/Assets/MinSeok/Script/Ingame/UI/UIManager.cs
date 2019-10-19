@@ -93,7 +93,7 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < nickname.Length; i++)
         {
             nickname[i].obj_parent = Instantiate(obj_prefebNickname, GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
-            //nickname[i].txt_nickname.text = "asdasd";
+            nickname[i].txt_nickname = nickname[i].obj_parent.transform.GetChild(0).GetComponent<Text>();
         }
 
 
@@ -111,7 +111,7 @@ public class UIManager : MonoBehaviour
     }
     private void Start()
     {
-       // nickname[0].txt_nickname.text = PlayersManager.instance.nickname[0] + "입니다.";
+        //nickname[0].txt_nickname.text = "asdasd";
     }
 
     // Update is called once per frame
