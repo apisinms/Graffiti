@@ -88,71 +88,71 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 9278}
+      Script: {instanceID: 9280}
     - Class: 114
-      Script: {instanceID: 9318}
+      Script: {instanceID: 9320}
     - Class: 114
-      Script: {instanceID: 9338}
-    - Class: 114
-      Script: {instanceID: 9392}
+      Script: {instanceID: 9340}
     - Class: 114
       Script: {instanceID: 9394}
     - Class: 114
-      Script: {instanceID: 9400}
+      Script: {instanceID: 9396}
     - Class: 114
       Script: {instanceID: 9402}
     - Class: 114
-      Script: {instanceID: 9406}
+      Script: {instanceID: 9404}
     - Class: 114
-      Script: {instanceID: 9414}
+      Script: {instanceID: 9408}
     - Class: 114
-      Script: {instanceID: 9450}
+      Script: {instanceID: 9416}
     - Class: 114
       Script: {instanceID: 9452}
     - Class: 114
-      Script: {instanceID: 9614}
+      Script: {instanceID: 9454}
     - Class: 114
-      Script: {instanceID: 9660}
+      Script: {instanceID: 9616}
     - Class: 114
-      Script: {instanceID: 9682}
+      Script: {instanceID: 9662}
     - Class: 114
-      Script: {instanceID: 9820}
+      Script: {instanceID: 9684}
     - Class: 114
-      Script: {instanceID: 9904}
+      Script: {instanceID: 9822}
     - Class: 114
-      Script: {instanceID: 9944}
+      Script: {instanceID: 9906}
     - Class: 114
-      Script: {instanceID: 9964}
+      Script: {instanceID: 9946}
     - Class: 114
-      Script: {instanceID: 10048}
+      Script: {instanceID: 9966}
     - Class: 114
-      Script: {instanceID: 10096}
+      Script: {instanceID: 10050}
     - Class: 114
-      Script: {instanceID: 10120}
+      Script: {instanceID: 10098}
     - Class: 114
       Script: {instanceID: 10122}
     - Class: 114
-      Script: {instanceID: 10146}
+      Script: {instanceID: 10124}
     - Class: 114
-      Script: {instanceID: 10168}
+      Script: {instanceID: 10148}
     - Class: 114
-      Script: {instanceID: 10218}
+      Script: {instanceID: 10170}
     - Class: 114
-      Script: {instanceID: 10230}
+      Script: {instanceID: 10220}
     - Class: 114
-      Script: {instanceID: 10390}
+      Script: {instanceID: 10232}
     - Class: 114
-      Script: {instanceID: 10422}
+      Script: {instanceID: 10392}
     - Class: 114
-      Script: {instanceID: 10430}
+      Script: {instanceID: 10424}
     - Class: 114
-      Script: {instanceID: 10478}
+      Script: {instanceID: 10432}
     - Class: 114
-      Script: {instanceID: 10498}
+      Script: {instanceID: 10480}
     - Class: 114
-      Script: {instanceID: 10560}
+      Script: {instanceID: 10500}
     - Class: 114
-      Script: {instanceID: 10628}
+      Script: {instanceID: 10562}
+    - Class: 114
+      Script: {instanceID: 10630}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -772,7 +772,7 @@ ScriptsOnlyBuild:
     className: SignalTrack
   - hash:
       serializedVersion: 2
-      Hash: c7b086333b48236d835fccf88683af8d
+      Hash: 7c25ce5f9e1a12e30b9f54bf9e15f347
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: UIManager
