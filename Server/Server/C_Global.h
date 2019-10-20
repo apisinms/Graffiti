@@ -29,6 +29,8 @@ using namespace std;
 #define KEEPALIVE_TIME 3000								// TIME ms마다 keep-alive 신호를 주고받는다
 #define KEEPALIVE_INTERVAL (KEEPALIVE_TIME / 20)		// Heart-beat가 없을시 INTERVAL ms마다 재전송한다(10번)
 
+#define FIRE_RATE_TIME 0.1
+
 // 플레이어 플래그
 enum PLAYER_BIT : byte
 {
@@ -84,6 +86,7 @@ struct IngamePacket
 	float speed;
 	int action;
 	float health;
+	//int bullet;
 	BulletCollisionChecker collisionCheck;
 
 	IngamePacket()
@@ -127,32 +130,22 @@ struct PlayerInfo
 private:
 	bool loadStatus;			// 로딩 다 됐는지 상태
 	bool isFocus;				// 기기가 Focus중인지 
-	int gameType;				// 선택한 게임 타입
 	IngamePacket* gamePacket;	// 인게임에서 사용하는 0.1초마다 주고받는 패킷 (플레이어 번호 + 위치 + 로테이션 + 애니메이션 + 체력 등)
 	INDEX index;				// 현재 플레이어의 섹터 인덱스
 	Weapon* weapon;				// 무기
-	float health;				// 체력
-	float speed;				// 속도
+	//float health;				// 체력
+	//float speed;				// 속도
 	int bullet;					// 총알
-
-public:
-	//static const float MAX_SPEED;
-	enum GameType
-	{
-		NORMAL,
-	};
 
 public:
 	PlayerInfo()
 	{
 		loadStatus = false;
-		gameType = GameType::NORMAL;		// 일단은 노멀 게임으로 셋팅
 
 		gamePacket = nullptr;
 		memset(&index, 0, sizeof(INDEX));
 		weapon = nullptr;
 
-		health = speed = 0.0f;
 		bullet = 0;
 
 		isFocus = true;
@@ -160,8 +153,6 @@ public:
 
 	bool GetLoadStatus() { return loadStatus; }
 	void SetLoadStatus(bool _loadStatus) { loadStatus = _loadStatus; }
-	int GetGameType() { return gameType; }
-	void SetGameType(int _gameType) { gameType = _gameType;}
 
 	IngamePacket* GetIngamePacket() { return gamePacket; }
 	void SetIngamePacket(IngamePacket* _gamePacket)
@@ -194,9 +185,6 @@ public:
 		weapon = _weapon;
 	}
 
-	float GetHealth() { return health; }
-	void SetHealth(float _health) { health = _health; }
-
 	int GetBullet() { return bullet; }
 	void SetBullet(int _bullet) { bullet = _bullet; }
 
@@ -209,6 +197,7 @@ struct WeaponInfo
 {
 	int num;			// 무기 번호
 	int numOfPattern;	// 패턴 갯수
+	int bulletPerShot;	// 한 번 쏘면 몇 발 나가는지
 	int maxAmmo;		// 최대 총알
 	float fireRate;		// 발사 속도
 	float damage;		// 데미지

@@ -20,6 +20,7 @@ public partial class PlayersManager : MonoBehaviour
         while (true)
         {
             Anime_Idle(myIndex);
+            UIManager.instance.UpdateAimDirectionImg(false);
             yield return null;
         }
     }
@@ -30,6 +31,7 @@ public partial class PlayersManager : MonoBehaviour
         {
             Anime_Circuit(myIndex);
             BlockCollisionEachOther();
+            UIManager.instance.UpdateAimDirectionImg(false);
 
             tf_players[myIndex].localRotation = Quaternion.LookRotation(direction[myIndex]);
             tf_players[myIndex].Translate(direction[myIndex] * speed[myIndex] * Time.smoothDeltaTime, Space.World);
@@ -42,10 +44,9 @@ public partial class PlayersManager : MonoBehaviour
         while (true)
         {
             Anime_Aiming_Idle(myIndex);
+            UIManager.instance.UpdateAimDirectionImg(true); //에임 조준선
 
-            tf_players[myIndex].localRotation = Quaternion.Lerp(tf_players[myIndex].localRotation,
-Quaternion.LookRotation(direction2[myIndex]), Time.smoothDeltaTime * 6.0f);
-
+            tf_players[myIndex].localRotation = Quaternion.Lerp(tf_players[myIndex].localRotation, Quaternion.LookRotation(direction2[myIndex]), Time.smoothDeltaTime * 6.0f);
             //tf_players[myIndex].localRotation = Quaternion.LookRotation(direction2[myIndex]);
             yield return null;
         }
@@ -83,7 +84,10 @@ Quaternion.LookRotation(direction2[myIndex]), Time.smoothDeltaTime * 6.0f);
             }
 
             BlockCollisionEachOther();
-            tf_players[myIndex].localRotation = Quaternion.LookRotation(direction2[myIndex]);
+            UIManager.instance.UpdateAimDirectionImg(true);
+
+            //tf_players[myIndex].localRotation = Quaternion.LookRotation(direction2[myIndex]);
+            tf_players[myIndex].localRotation = Quaternion.Lerp(tf_players[myIndex].localRotation, Quaternion.LookRotation(direction2[myIndex]), Time.smoothDeltaTime * 6.0f);
             tf_players[myIndex].Translate(direction[myIndex] * (speed[myIndex] * 0.35f) * Time.smoothDeltaTime, Space.World);
             yield return null;
         }

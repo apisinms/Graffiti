@@ -1617,3 +1617,8 @@ C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEditor
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\PathCreator.pdb
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\PathCreatorEditor.pdb
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEditor.UI.xml
+E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\Boo.Lang.dll
+E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEditor.UI.dll
+E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\PathCreator.pdb
+E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\PathCreatorEditor.pdb
+E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEditor.UI.xml

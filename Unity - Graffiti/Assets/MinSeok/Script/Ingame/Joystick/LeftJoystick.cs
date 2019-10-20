@@ -63,12 +63,12 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
         {
             img_joystick_stick.rectTransform.position = left_joystick.stickFirstPos + (left_joystick.stickDir * distance);
             //조이스틱 땡긴범위의 비율만큼 이동속도를 차등할것임.
-            PlayersManager.instance.speed[myIndex] = (PlayersManager.instance.maxSpeed[myIndex] * distance / left_joystick.maxMoveArea);
+            PlayersManager.instance.speed[myIndex] = (PlayersManager.instance.maxSpeed * distance / left_joystick.maxMoveArea);
         }
         else
         {
             img_joystick_stick.rectTransform.position = left_joystick.stickFirstPos + (left_joystick.stickDir * left_joystick.maxMoveArea);
-            PlayersManager.instance.speed[myIndex] = PlayersManager.instance.maxSpeed[myIndex]; //조이스틱을 끝까지밀면 맥스스피드.
+            PlayersManager.instance.speed[myIndex] = PlayersManager.instance.maxSpeed; //조이스틱을 끝까지밀면 맥스스피드.
         }
         
         // PlayerManager.instance.tmp = joystick[0].stickDir;

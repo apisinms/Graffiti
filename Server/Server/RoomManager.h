@@ -25,21 +25,32 @@ private:
 	void* weaponTimerHandle;		// 무기 선택 타이머 핸들
 	int numOfPlayer;				// 현재 방에 있는 플레이어 수
 	ROOMSTATUS roomStatus;			// 방의 상태
-	list<C_ClientInfo*>playerList;	// 유저들을 리스트에 저장
+	vector<C_ClientInfo*>players;	// 유저들을 벡터에 저장
 	C_Sector* sector;				// 이 방의 섹터 매니저
 	int carSeed;					// 차량 씨드
+	int gameType;					// 이 방의 게임 타입 정보
+
+public:
+	enum GameType
+	{
+		NORMAL,
+	};
+
 
 public:
 	RoomInfo(C_ClientInfo** _playerList, int _numOfPlayer);
 
 	bool LeaveRoom(C_ClientInfo* _player);
 
-	// 플레이어 리스트를 리턴해주되, 어차피 복사본이 전달되므로 원본은 영향이 없다.
-	list<C_ClientInfo*> GetPlayerList() { return playerList; }
+	// 플레이어 벡터를 리턴해주되, 어차피 복사본이 전달되므로 원본은 영향이 없다.
+	vector<C_ClientInfo*> GetPlayers() { return players; }
 
-	bool IsPlayerListEmpty() { return playerList.empty(); }
+	C_ClientInfo* GetPlayerByIndex(int _idx) {return players[_idx];}
 
-	int GetPlayerListSize() { return (int)playerList.size(); }
+	bool IsPlayerListEmpty() { return players.empty(); }
+
+	int GetGameType() { return gameType; }
+	void SetGameType(int _gameType) { gameType = _gameType; }
 
 	void SetWeaponTimerHandle(void* _handle) { weaponTimerHandle = _handle; }
 	void* GetWeaponTimerHandle() { return weaponTimerHandle; }

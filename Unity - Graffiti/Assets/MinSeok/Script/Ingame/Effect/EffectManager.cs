@@ -83,17 +83,6 @@ public class EffectManager : MonoBehaviour
 #endif
     }
 
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.P))
-        {
-            PlayEffect(_EFFECT_TYPE.MUZZLE, myIndex);
-        }
-        else if(Input.GetKeyDown(KeyCode.O))
-        {
-            StopEffect(_EFFECT_TYPE.MUZZLE, myIndex);
-        }
-    }
     public void PlayEffect(_EFFECT_TYPE _value, int _index)
     {
         switch(_value)
@@ -102,8 +91,6 @@ public class EffectManager : MonoBehaviour
                 ps_tmpMuzzle[_index].body.body.Stop();
                 ps_tmpMuzzle[_index].body.body.Clear();
                 ps_tmpMuzzle[_index].body.body.Play();
-                break;
-            case _EFFECT_TYPE.SPARK:
                 break;
         }
     }
@@ -115,8 +102,6 @@ public class EffectManager : MonoBehaviour
             case _EFFECT_TYPE.MUZZLE:
                 ps_tmpMuzzle[_index].body.body.Stop();
                 ps_tmpMuzzle[_index].body.body.Clear();
-                break;
-            case _EFFECT_TYPE.SPARK:
                 break;
         }
     }

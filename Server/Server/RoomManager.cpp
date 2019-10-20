@@ -13,10 +13,11 @@ RoomInfo::RoomInfo(C_ClientInfo** _playerList, int _numOfPlayer)
 
 	numOfPlayer = _numOfPlayer;
 	carSeed = 0;			// 자동차 씨드
+	gameType = GameType::NORMAL;	// 일단 노멀로
 
 	// 방 플레이어 리스트에 추가
 	for (int i = 0; i < numOfPlayer; i++)
-		playerList.emplace_front(_playerList[i]);
+		players.emplace_back(_playerList[i]);
 
 	sector = new C_Sector();	// 이 방의 섹터관리자 생성
 }
@@ -28,8 +29,7 @@ bool RoomInfo::LeaveRoom(C_ClientInfo* _player)
 	{
 		// 방 인원수를 감소하고, 자신의 흔적을 지운다.
 		numOfPlayer--;					// 방 인원수 감소
-		playerList.remove(_player);		// 방의 플레이어 리스트에서 제거
-
+		remove(players.begin(), players.end(), _player);		// 방의 플레이어 리스트에서 제거
 		/// 그리고 같은 팀 2명이 모두 나가면 그냥 게임 끝나야함
 
 		// 방금 나간사람이 마지막이었다면 방을 없앰
@@ -45,6 +45,10 @@ bool RoomInfo::LeaveRoom(C_ClientInfo* _player)
 
 	return false;	// 못찾은 경우
 }
+
+//C_ClientInfo* RoomInfo::GetPlayerByNum(int _playerNum)
+//{
+//}
 
 ////////////////////////// RoomManager 클래스 //////////////////////////
 RoomManager* RoomManager::instance;

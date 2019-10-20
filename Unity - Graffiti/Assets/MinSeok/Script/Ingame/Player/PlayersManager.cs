@@ -31,7 +31,7 @@ public partial class PlayersManager : MonoBehaviour
     public static PlayersManager instance;
     private NetworkManager networkManager;
     public int myIndex { get; set; } //가독성을위해 하나 더만들어줌
-    
+
     #region PLAYERS_ROBIN
     public GameObject[] obj_players { get; set; }
     public Transform[] tf_players { get; set; } 
@@ -43,10 +43,11 @@ public partial class PlayersManager : MonoBehaviour
     #endregion
 
     #region PLAYERS_ATTRIBUTE
+    public string[] nickname { get; set; }
     public float[] speed { get; set; }
     public float[] hp { get; set; }
-    public float[] maxSpeed { get; set; }
-    public float[] maxHp { get; set; }
+    public float maxSpeed { get; set; }
+    public float maxHp { get; set; }
     public Vector3[] direction { get; set; } //플레이어의 방향
     public Vector3[] direction2 { get; set; }
     #endregion
@@ -74,51 +75,61 @@ public partial class PlayersManager : MonoBehaviour
             if (myIndex != i)
             {
                 obj_players[i] = GameObject.FindGameObjectWithTag(GameManager.instance.playersTag[i]);
-                //obj_players[i].GetComponent<CapsuleCollider>().isTrigger = true;
                 tf_players[i] = obj_players[i].GetComponent<Transform>().transform;
                 am_animePlayer[i] = obj_players[i].GetComponent<Animator>(); 
             }
         }
     }
 
-    void Initialization(int _num) //클라이언트 자체에서 그냥 초기화. 어차피 서버에서 정보가 있으니까 이렇게함.
+	void Start()
+	{
+		Initialization_GameInfo();
+	}
+
+	void Initialization(int _num) //클라이언트 자체에서 그냥 초기화. 어차피 서버에서 정보가 있으니까 이렇게함.
     {
-        obj_players = new GameObject[C_Global.MAX_PLAYER];
-        tf_players = new Transform[C_Global.MAX_PLAYER];
+        obj_players    = new GameObject[C_Global.MAX_PLAYER];
+        tf_players     = new Transform[C_Global.MAX_PLAYER];
         am_animePlayer = new Animator[C_Global.MAX_PLAYER];
-        speed = new float[C_Global.MAX_PLAYER];
-        hp = new float[C_Global.MAX_PLAYER];
-        maxSpeed = new float[C_Global.MAX_PLAYER];
-        maxHp = new float[C_Global.MAX_PLAYER];
-        direction = new Vector3[C_Global.MAX_PLAYER];
-        direction2 = new Vector3[C_Global.MAX_PLAYER];
-        actionState = new _ACTION_STATE[C_Global.MAX_PLAYER];
+        nickname       = new string[C_Global.MAX_PLAYER];
+        speed          = new float[C_Global.MAX_PLAYER];
+        hp             = new float[C_Global.MAX_PLAYER];
+        direction      = new Vector3[C_Global.MAX_PLAYER];
+        direction2     = new Vector3[C_Global.MAX_PLAYER];
+        actionState    = new _ACTION_STATE[C_Global.MAX_PLAYER];
         attributeState = new _ATTRIBUTE_STATE[C_Global.MAX_PLAYER];
-        lastPosX = new float[C_Global.MAX_PLAYER];
-        lastPosZ = new float[C_Global.MAX_PLAYER];
+        lastPosX       = new float[C_Global.MAX_PLAYER];
+        lastPosZ       = new float[C_Global.MAX_PLAYER];
 
         //재생중이였던 이전 코루틴.
         curCor = null;
+	}
 
-        for (int i = 0; i < C_Global.MAX_PLAYER; i++)
+	void Initialization_GameInfo()
+	{
+#if NETWORK
+		maxSpeed = GameManager.instance.gameInfo.maxSpeed;
+		maxHp = GameManager.instance.gameInfo.maxHealth;
+
+		for (int i = 0; i < C_Global.MAX_PLAYER; i++)
+		{
+			attributeState[i] = _ATTRIBUTE_STATE.ALIVE;
+			actionState[i] = _ACTION_STATE.IDLE;
+			speed[i] = maxSpeed;
+			hp[i] = maxHp;
+		}
+#else
+		maxSpeed = 4.0f;
+		maxHp = 100.0f;
+
+		for (int i = 0; i < C_Global.MAX_PLAYER; i++)
         {
-            if (myIndex == i) //내인덱스들의 초기화
-            {
-                attributeState[i] = _ATTRIBUTE_STATE.ALIVE;
-                actionState[i] = _ACTION_STATE.IDLE;
-                speed[i] = maxSpeed[i] = 4.0f;
-                hp[i] = maxHp[i] = 100.0f;
-            }
-            else //나머지 3명 인덱스의 초기화
-            {
-                attributeState[i] = _ATTRIBUTE_STATE.ALIVE;
-                actionState[i] = _ACTION_STATE.IDLE;
-                speed[i] = maxSpeed[i] = 4.0f;
-                hp[i] = maxHp[i] = 100.0f;
-            }
+             attributeState[i] = _ATTRIBUTE_STATE.ALIVE;
+             actionState[i] = _ACTION_STATE.IDLE;
+             speed[i] = maxSpeed;
+             hp[i] = maxHp;
         }
-
-    }
-
+#endif
+	}
 }
 
