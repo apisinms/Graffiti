@@ -36,13 +36,14 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
             playerARInfo[i].prevBulletPatternIndex = 2;
             playerARInfo[i].curAmmo = 30;
         }
-
-        weaponManager.weaponInfoAR.maxAmmo = 30;
+#if !NETWORK
+		weaponManager.weaponInfoAR.maxAmmo = 30;
         weaponManager.weaponInfoAR.fireRate = 0.14f;
         weaponManager.weaponInfoAR.damage = 0.03f;
         weaponManager.weaponInfoAR.accuracy = 0.06f;
         weaponManager.weaponInfoAR.range = 20.0f;
         weaponManager.weaponInfoAR.speed = 2000.0f;
+#endif
     }
 
     public static Main_AR GetMainWeaponInstance()

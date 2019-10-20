@@ -33,8 +33,10 @@ public partial class BridgeClientToServer : MonoBehaviour
 	//기존 MoveManager의 업데이트 부분 호출
 	private void Update()
     {
-		if(playersManager != null)
+		if (playersManager != null)
+		{
 			PlayerActionViewer();
+		}
     }
 
 }

@@ -206,15 +206,16 @@ WeaponInfo* DatabaseManager::LoadWeaponInfo()
 		WeaponInfo info;
 		memset(&info, 0, sizeof(WeaponInfo));
 
-		info.num          = atoi(row[0]);
-		info.numOfPattern = atoi(row[1]);
-		info.maxAmmo      = atoi(row[2]);
-		info.fireRate     = (float)atof(row[3]);
-		info.damage       = (float)atof(row[4]);
-		info.accuracy     = (float)atof(row[5]);
-		info.range        = (float)atof(row[6]);
-		info.speed        = (float)atof(row[7]);
-		UtilityManager::GetInstance()->UTF8ToUnicode(row[8], info.weaponName);
+		info.num           = atoi(row[0]);
+		info.numOfPattern  = atoi(row[1]);
+		info.bulletPerShot = atoi(row[2]);
+		info.maxAmmo       = atoi(row[3]);
+		info.fireRate      = (float)atof(row[4]);
+		info.damage        = (float)atof(row[5]);
+		info.accuracy      = (float)atof(row[6]);
+		info.range         = (float)atof(row[7]);
+		info.speed         = (float)atof(row[8]);
+		UtilityManager::GetInstance()->UTF8ToUnicode(row[9], info.weaponName);
 
 		/*printf("[무기정보] %ls\n", info.weaponName);
 		printf("무기번호:%d\n", info.num);

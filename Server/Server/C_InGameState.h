@@ -21,7 +21,7 @@ public:
 		if (InGameManager::GetInstance()->LoadingSuccess(_ptr) == true)
 			state = STATE_INGAME;
 
-		if (InGameManager::GetInstance()->CanIMove(_ptr) == true)
+		if (InGameManager::GetInstance()->CanIUpdate(_ptr) == true)
 			state = STATE_INGAME;
 
 		if (InGameManager::GetInstance()->CanIChangeFocus(_ptr) == true)

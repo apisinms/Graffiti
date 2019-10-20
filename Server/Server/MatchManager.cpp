@@ -35,8 +35,8 @@ void MatchManager::WaitListRemove(C_ClientInfo* _ptr)
 
 bool MatchManager::MatchProcess(C_ClientInfo* _ptr)
 {
-	// 리스트에 앞에부터 넣고
-	waitList.emplace_front(_ptr);
+	// 리스트에 뒤로 넣고
+	waitList.emplace_back(_ptr);
 	
 	printf("대기 리스트에 삽입 성공 사이즈 : %d\n", (int)waitList.size());
 
@@ -49,7 +49,7 @@ bool MatchManager::MatchProcess(C_ClientInfo* _ptr)
 		for (int i = 0; i < MAX_PLAYER; i++)
 		{
 			players[i] = waitList.front();
-			waitList.pop_front();
+			waitList.pop_front();	// 앞으로 뺀다
 
 			//PlayerInfo* info = players[i]->GetPlayerInfo();
 		}

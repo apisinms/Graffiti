@@ -35,9 +35,11 @@ public class BulletCollision : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-        //적에게 내가맞았냐, 팀킬을했냐, 적1이냐 적2냐에따른 총알피해, 체력적용
-        //함수 _type은 피아구분, returnIdx는 총알의 주인인덱스
-        if (other.CompareTag(PlayersManager.instance.obj_players[GameManager.instance.myIndex].tag))
+
+#if !NETWORK
+		//적에게 내가맞았냐, 팀킬을했냐, 적1이냐 적2냐에따른 총알피해, 체력적용
+		//함수 _type은 피아구분, returnIdx는 총알의 주인인덱스
+		if (other.CompareTag(PlayersManager.instance.obj_players[GameManager.instance.myIndex].tag))
             WeaponManager.instance.ApplyDamage(0, returnIdx);
         else if (other.CompareTag(PlayersManager.instance.obj_players[GameManager.instance.myTeamIndex].tag))
             WeaponManager.instance.ApplyDamage(1, returnIdx);
@@ -45,7 +47,7 @@ public class BulletCollision : MonoBehaviour
             WeaponManager.instance.ApplyDamage(2, returnIdx);
         else if (other.CompareTag(PlayersManager.instance.obj_players[GameManager.instance.enemyIndex[1]].tag))
             WeaponManager.instance.ApplyDamage(3, returnIdx);
-
+#endif
 
         if (other.CompareTag("Concrete1"))
 		{

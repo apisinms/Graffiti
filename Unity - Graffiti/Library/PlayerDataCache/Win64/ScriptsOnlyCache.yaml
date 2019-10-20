@@ -961,7 +961,7 @@ ScriptsOnlyBuild:
     className: SignalTrack
   - hash:
       serializedVersion: 2
-      Hash: 0a2763f6c57852adf906c485c647f557
+      Hash: 7c25ce5f9e1a12e30b9f54bf9e15f347
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: UIManager
@@ -1295,4 +1295,4 @@ ScriptsOnlyBuild:
   - Assets/Scenes/MainGame.unity
   - Assets/Scenes/MainMenu.unity
   - Assets/Scenes/SelectWeapons.unity
-  playerPath: "E:/\uADF8\uB798\uD53C\uD2F0\uBE4C\uB4DC/Graffiti.exe"
+  playerPath: C:/Users/Kimtler/Desktop/NETWORK/Graffiti.exe

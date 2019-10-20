@@ -53,6 +53,18 @@ public class UIManager : MonoBehaviour
     }
     #endregion
 
+    #region LINE_AIMDIRECTION
+    public GameObject obj_prefebLine;
+    public _IMG_LINE_INFO myLine;
+    public Vector3 lineAddPos { get; set; }
+
+    public struct _IMG_LINE_INFO
+    {
+        public GameObject obj_parent;
+        public Image img_aimDirectionLine { get; set; }
+    }
+    #endregion
+
     private void Awake()
     {
         if (instance == null)
@@ -65,6 +77,8 @@ public class UIManager : MonoBehaviour
         hpAddPos = new Vector3(0, 2.2f, 1.3f);
         nickAddPos = new Vector3(0, 2.0f, 0.9f);
         circleAddPos = new Vector3(0, 0.2f, 0);
+        lineAddPos = new Vector3(0, 0.1f, 0);
+   
         curHpCor = null;
 
         myIndex = GameManager.instance.myIndex;
@@ -108,7 +122,12 @@ public class UIManager : MonoBehaviour
 
         myCircle.obj_parent = Instantiate(obj_prefebsCircle[0], GameObject.FindGameObjectWithTag("Canvas_worldSpace2").transform);
         myCircle.img_circle = myCircle.obj_parent.transform.GetChild(0).GetComponent<Image>();
+
+        myLine.obj_parent = Instantiate(obj_prefebLine, GameObject.FindGameObjectWithTag("Canvas_worldSpace2").transform);
+        myLine.img_aimDirectionLine = myLine.obj_parent.transform.GetChild(0).GetComponent<Image>();
+        myLine.obj_parent.SetActive(false);
     }
+
     private void Start()
     {
         //nickname[0].txt_nickname.text = "asdasd";
@@ -131,7 +150,10 @@ public class UIManager : MonoBehaviour
         teamCircle.obj_parent.transform.position = PlayersManager.instance.tf_players[myTeamIndex].transform.position + circleAddPos;//Camera.main.WorldToScreenPoint(PlayersManager.instance.tf_players[myTeamIndex].transform.position);
         for (int i = 0; i < enemyIndex.Length; i++)
             enemyCircle[i].obj_parent.transform.position = PlayersManager.instance.tf_players[enemyIndex[i]].transform.position + circleAddPos;
+
+        myLine.obj_parent.transform.position = PlayersManager.instance.tf_players[myIndex].transform.position + lineAddPos;
     }
+
 
     public IEnumerator DecreaseMiddleHP(int _index, float _damage) //중간 체력 img는 효과를 적용할것이다.
     {
@@ -157,4 +179,23 @@ public class UIManager : MonoBehaviour
         yield break;
     }
   
+    public void UpdateAimDirectionImg(bool _value)
+    {
+        if (_value == false && myLine.obj_parent.activeSelf == true)
+        {
+            myLine.obj_parent.SetActive(false);
+            return;
+        }
+        else if(_value == true && myLine.obj_parent.activeSelf == false)
+            myLine.obj_parent.SetActive(true);
+
+        Quaternion tmp = Quaternion.LookRotation(PlayersManager.instance.tf_players[myIndex].transform.forward);
+        myLine.obj_parent.transform.localRotation = tmp;
+        myLine.obj_parent.transform.eulerAngles = new Vector3(90, 0, myLine.obj_parent.transform.localRotation.eulerAngles.y * -1);
+    }
+
+	public void SetNickname(string _nickName, int _idx)
+	{
+		nickname[_idx].txt_nickname.text = _nickName;
+	}
 }

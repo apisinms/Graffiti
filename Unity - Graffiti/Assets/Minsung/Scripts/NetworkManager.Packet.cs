@@ -353,7 +353,40 @@ public partial class NetworkManager : MonoBehaviour
         // 이제 다시 int로 변환
         _num = BitConverter.ToInt32(arrNum, 0);
     }
-    private void UnPackPacket(byte[] _buf, out string _str1)
+
+	private void UnPackPacket(byte[] _buf, out int _num, out string _str1)
+	{
+		// 1. num
+		byte[] arrNum = new byte[sizeof(int)];
+
+		int offset = sizeof(PROTOCOL);
+
+		// 일단 byte 배열로 받고
+		Buffer.BlockCopy(_buf, offset, arrNum, 0, sizeof(int));
+		offset += sizeof(int);
+
+		// 이제 다시 int로 변환
+		_num = BitConverter.ToInt32(arrNum, 0);
+
+
+		// 2. 문자열
+		byte[] arrStrsize1 = new byte[sizeof(int)];
+		int strsize1 = 0;
+
+		// 문자열 길이
+		Buffer.BlockCopy(_buf, offset, arrStrsize1, 0, sizeof(int));
+		offset += sizeof(int);
+		strsize1 = BitConverter.ToInt32(arrStrsize1, 0);
+
+		// 문자열 길이 만큼 생성해서 문자열을 저장함
+		byte[] arrStrByte = new byte[strsize1];
+		Buffer.BlockCopy(_buf, offset, arrStrByte, 0, strsize1);
+		offset += strsize1;
+
+		// 이제 다시 string으로 변환
+		_str1 = ByteToString(arrStrByte);
+	}
+	private void UnPackPacket(byte[] _buf, out string _str1)
     {
         byte[] arrStrsize1 = new byte[sizeof(int)];
         int strsize1 = 0;

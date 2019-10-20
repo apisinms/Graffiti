@@ -22,10 +22,11 @@ class InGameManager
 	{
 		TIMER_PROTOCOL        = ((__int64)0x1 << 53),	// 1초마다 보내는 타이머
 		WEAPON_PROTOCOL       = ((__int64)0x1 << 52),	// 서버측:무기선택받아옴, 클라측:무기선택보내옴
-		START_PROTOCOL        = ((__int64)0x1 << 51),	// 게임 시작 프로토콜
-		LOADING_PROTOCOL      = ((__int64)0x1 << 50),	// 로딩 여부 프로토콜
-		MOVE_PROTOCOL		  = ((__int64)0x1 << 49),	// 이동 프로토콜
-		FOCUS_PROTOCOL        = ((__int64)0x1 << 48),	// 포커스 프로토콜
+		NICKNAME_PROTOCOL     = ((__int64)0x1 << 51),	// 본인의 닉네임을 보내줌
+		START_PROTOCOL        = ((__int64)0x1 << 50),	// 게임 시작 프로토콜
+		LOADING_PROTOCOL      = ((__int64)0x1 << 49),	// 로딩 여부 프로토콜
+		UPDATE_PROTOCOL		  = ((__int64)0x1 << 48),	// 이동 프로토콜
+		FOCUS_PROTOCOL        = ((__int64)0x1 << 47),	// 포커스 프로토콜
 
 		DISCONNECT_PROTOCOL   = ((__int64)0x1 << 34),	// 접속 끊김 프로토콜
 	};
@@ -46,6 +47,8 @@ class InGameManager
 		UPDATE_PLAYER       = ((__int64)0x1 << 29),		// 플레이어 목록 최신화
 		FORCE_MOVE          = ((__int64)0x1 << 28),		// 강제 이동
 		GET_OTHERPLAYER_POS = ((__int64)0x1 << 27),		// 다른 플레이어 포지션 얻기
+		BULLET_HIT          = ((__int64)0x1 << 26),		// 총알 맞음
+		
 
 		NODATA = ((__int64)0x1 << 24)
 	};
@@ -63,6 +66,7 @@ public:
 
 private:
 	void PackPacket(char* _setptr, const int _num, int& _size);
+	void PackPacket(char* _setptr, int _num, TCHAR* _string, int& _size);
 	void PackPacket(char* _setptr, int _num, Weapon* _struct, int& _size);
 	void PackPacket(char* _setptr, IngamePacket& _struct, int& _size);
 	void PackPacket(char* _setptr, int _carSeed, GameInfo* &_gameInfo, vector<WeaponInfo*>& _weaponInfo, int& _size);
@@ -78,19 +82,34 @@ private:
 	bool WeaponSelectProcess(C_ClientInfo* _ptr, char* _buf);
 	bool LoadingProcess(C_ClientInfo* _ptr, char* _buf);
 	bool InitProcess(C_ClientInfo* _ptr, char* _buf);
-	bool MoveProcess(C_ClientInfo* _ptr, char* _buf);
+	bool UpdateProcess(C_ClientInfo* _ptr, char* _buf);
 	bool GetPosProcess(C_ClientInfo* _ptr, char* _buf);		// 위치를 얻어주는 함수
 	bool OnFocusProcess(C_ClientInfo* _ptr);				// 포커스 On시의 처리 함수(다른 플레이어 인게임 정보 보내줌)
+
+	void InitalizePlayersInfo(RoomInfo* _room);
+
+	bool CheckMovement(C_ClientInfo* _ptr, IngamePacket& _recvPacket);
+	bool CheckIllegalMovement(C_ClientInfo* _ptr, IngamePacket& _recvPacket);
+	void IllegalSectorProcess(C_ClientInfo* _ptr, IngamePacket& _recvPacket, INDEX _beforeIdx);
+	void UpdateSectorAndSend(C_ClientInfo* _ptr, IngamePacket& _recvPacket, INDEX& _newIdx);
+
+	bool CheckBullet(C_ClientInfo* _ptr, IngamePacket& _recvPacket);
+	bool CheckBulletRange(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer);
+	bool CheckMaxFire(C_ClientInfo* _shotPlayer, int _numOfBullet);
+	int GetNumOfBullet(int _shootCountBit, byte _hitPlayerNum);
+	void BulletHitProcess(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer, int _numOfBullet);
+	void BulletDecrease(C_ClientInfo* _shotPlayer, int _numOfBullet);
 
 public:
 	bool CanISelectWeapon(C_ClientInfo* _ptr);	// 무기 선택
 	bool LoadingSuccess(C_ClientInfo* _ptr);	// 로딩 성공 처리
 	bool CanIStart(C_ClientInfo* _ptr);			// 시작 시 초기화
-	bool CanIMove(C_ClientInfo* _ptr);			// 이동
+	bool CanIUpdate(C_ClientInfo* _ptr);		// 업데이트
 	bool CanIChangeFocus(C_ClientInfo* _ptr);	// 포커스 변경
 	bool LeaveProcess(C_ClientInfo* _ptr, int _playerIndex);		// 종료 프로세스
 
-	void ListSendPacket(list<C_ClientInfo*> _list, C_ClientInfo* _exceptClient, PROTOCOL_INGAME _protocol, char* _buf, int _packetSize, bool _notFocusExcept = true);
-	
+	void ListSendPacket(list<C_ClientInfo*> _list, C_ClientInfo* _exceptClient, PROTOCOL_INGAME _protocol, char* _buf, int _packetSize, bool _notFocusExcept);
+	void ListSendPacket(vector<C_ClientInfo*> _list, C_ClientInfo* _exceptClient, PROTOCOL_INGAME _protocol, char* _buf, int _packetSize, bool _notFocusExcept);
+
 	static unsigned long __stdcall WeaponSelectTimerThread(void* _arg);	// 아이템 선택 시간을 세는 타이머 쓰레드
 };

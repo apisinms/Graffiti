@@ -39,7 +39,10 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
         [MarshalAs(UnmanagedType.I4)]
         public int numOfPattern;   // 패턴 갯수
 
-        [MarshalAs(UnmanagedType.I4)]
+		[MarshalAs(UnmanagedType.I4)]
+		public int bulletPerShot;  // 한 번 쏘면 몇 발 나가는지
+
+		[MarshalAs(UnmanagedType.I4)]
         public int maxAmmo;        // 최대 총알
 
         [MarshalAs(UnmanagedType.R4)]
@@ -107,7 +110,7 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
     #region WEAPON_INFO
     public WeaponInfo weaponInfoAR;      // AR 정보(공용)
     public WeaponInfo weaponInfoSG;      // SG 정보(공용)
-    public WeaponInfo weaponInfoSMG;   // SMG 정보(공용)
+    public WeaponInfo weaponInfoSMG;	// SMG 정보(공용)
 	#endregion
 
 	// 누가, 몇 발의 총알을 맞았는지 담을 구조체. (로컬 플레이어만 쓴다)
@@ -157,8 +160,11 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
                     break;
             }
         }
+	//// 여기 else문에 비 네트워크시 적용할 무기 정보 넣으면 됨
+#else
+
 #endif
-    }
+	}
 
     void Initialization(int _num)
     {
@@ -209,8 +215,13 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
         mainWeaponType[_index].ApplyDamage(_type, _index);
     }
 
-    /////////////////////////////// BulletCollisionChecker 구조체 전용
-    public void SetCollisionChecker(string _playerTag)
+	/////////////////////////////// BulletCollisionChecker 구조체 전용
+	public NetworkManager.BulletCollisionChecker GetCollisionChecker()
+	{
+		return colChecker;
+	}
+
+	public void SetCollisionChecker(string _playerTag)
 	{
 		int hitPlayerNum = SetPlayerBit(_playerTag);   // 1. 맞은 플레이어 비트 활성화
 
@@ -229,11 +240,11 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
 			case "Player1":
 				{
 					// 나랑 같은 팀이 아니면 세팅
-					if ((myIndex + 1) != 2)
-					{
-						colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_1;
-						hitPlayerNum = 1;
-					}
+					//if ((myIndex + 1) != 2)
+					//{
+					colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_1;
+					hitPlayerNum = 1;
+					//}
 				}
 				break;
 
@@ -241,11 +252,11 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
 			case "Player2":
 				{
 					// 나랑 같은 팀이 아니면 세팅
-					if ((myIndex + 1) != 1)
-					{
+					//if ((myIndex + 1) != 1)
+					//{
 						colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_2;
 						hitPlayerNum = 2;
-					}
+					//}
 				}
 				break;
 
@@ -278,10 +289,10 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
 	// player의 HitCountBit(맞은 횟수 비트)를 증가한다.
 	public void IncPlayerHitCountBit(int _hitPlayerNum)
 	{
-		int Shifter = 8 * (C_Global.MAX_PLAYER - _hitPlayerNum);	// 이동 연산에 필요한 값
+		int Shifter = 8 * (C_Global.MAX_PLAYER - _hitPlayerNum);    // 이동 연산에 필요한 값
 
 		byte bitEraseMask = 0x00;   // 8비트 지우기 마스크(00000000)
-	   
+
 
 		// 1. 기존에 해당 플레이어의 hit횟수를 가져온다.
 		int beforeCount = (colChecker.playerHitCountBit) >> Shifter;    // 한 대 맞은 누적 카운트를 저장하고

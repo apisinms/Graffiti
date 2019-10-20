@@ -118,7 +118,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uAE40\uBBFC\uC11D"
+  m_Text: 
 --- !u!1001 &293600878934309088
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -126,11 +126,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 293600880209303518}
     m_Modifications:
-    - target: {fileID: 7237405606200676114, guid: c73cee4aa9d48e64983191409fa21e88,
-        type: 3}
-      propertyPath: m_Name
-      value: txt_nickName
-      objectReference: {fileID: 0}
     - target: {fileID: 7237405606200676113, guid: c73cee4aa9d48e64983191409fa21e88,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -250,6 +245,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 0.120000005
+      objectReference: {fileID: 0}
+    - target: {fileID: 7237405606200676114, guid: c73cee4aa9d48e64983191409fa21e88,
+        type: 3}
+      propertyPath: m_Name
+      value: txt_nickName
+      objectReference: {fileID: 0}
+    - target: {fileID: 7237405606200676112, guid: c73cee4aa9d48e64983191409fa21e88,
+        type: 3}
+      propertyPath: m_Text
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c73cee4aa9d48e64983191409fa21e88, type: 3}

@@ -36,12 +36,14 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
 
         }
 
+#if !NETWORK
         weaponManager.weaponInfoSMG.maxAmmo = 25;
         weaponManager.weaponInfoSMG.fireRate = 0.07f;
         weaponManager.weaponInfoSMG.damage = 0.02f;
         weaponManager.weaponInfoSMG.accuracy = 0.1f;
         weaponManager.weaponInfoSMG.range = 15.0f;
         weaponManager.weaponInfoSMG.speed = 1200.0f;
+#endif
     }
 
     public static Main_SMG GetMainWeaponInstance()

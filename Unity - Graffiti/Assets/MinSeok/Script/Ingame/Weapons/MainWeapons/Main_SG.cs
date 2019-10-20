@@ -37,12 +37,14 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
             playerSGInfo[i].curAmmo = 2;
         }
 
+#if !NETWORK
         weaponManager.weaponInfoSG.maxAmmo = 30;
         weaponManager.weaponInfoSG.fireRate = 0.14f;
         weaponManager.weaponInfoSG.damage = 0.04f;
         weaponManager.weaponInfoSG.accuracy = 0.06f;
         weaponManager.weaponInfoSG.range = 20.0f;
         weaponManager.weaponInfoSG.speed = 2000.0f;
+#endif
     }
 
     public static Main_SG GetMainWeaponInstance()
