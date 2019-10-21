@@ -350,6 +350,7 @@ bool InGameManager::UpdateProcess(C_ClientInfo* _ptr, char* _buf)
 	UnPackPacket(_buf, recvPacket);
 	printf("%d ,%f, %f, %f, %d\n", recvPacket.playerNum, recvPacket.posX, recvPacket.posZ, recvPacket.rotY, recvPacket.action);
 	printf("패킷 %d회 보냄\n", ++numOfPacketSent);
+	printf("%s피:%f\n", _ptr->GetUserInfo()->id, _ptr->GetPlayerInfo()->GetIngamePacket()->health);
 
 	list<C_ClientInfo*>sendList;	// 현재 섹터 + 인접 섹터에 존재하는 플레이어 리스트
 	C_ClientInfo* exceptClient = nullptr;	// 패킷 안보낼 대상
@@ -687,6 +688,8 @@ bool InGameManager::CheckBullet(C_ClientInfo* _ptr, IngamePacket& _recvPacket)
 				{
 					int numOfBullet = GetNumOfBullet(_recvPacket.collisionCheck.playerHitCountBit, (i + 1));
 					BulletHitProcess(_ptr, hitPlayer, numOfBullet);
+					
+					printf("%s피:%f\n", hitPlayer->GetUserInfo()->id ,hitPlayer->GetPlayerInfo()->GetIngamePacket()->health);
 
 					hitPlayers.emplace_back(hitPlayer);	// 맞은놈 리스트에 추가
 

@@ -145,6 +145,9 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
 
     public void ApplyDamage(int _type, int _index) 
     {
+        UIManager.instance.hp[_type].img_front.fillAmount -= 0.06f; //데미지만큼 피를깎음.
+        UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHP(_type, 0.06f));
+        /*
         switch (_type)
         {
             case 0:
@@ -164,5 +167,6 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
                 UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHP(_type, weaponManager.weaponInfoSG.damage));
                 break;
         }
+        */
     }
 }

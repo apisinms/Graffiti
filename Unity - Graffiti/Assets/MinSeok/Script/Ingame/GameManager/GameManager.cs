@@ -52,8 +52,7 @@ public class GameManager : MonoBehaviour
     public readonly string[] playersTag = new string[C_Global.MAX_PLAYER];
     public int myNetworkNum { get; set; }
     public int myIndex { get; set; }
-    public int myTeamIndex { get; set; }
-    public int[] enemyIndex { get; set; }
+    public int[] playersIndex { get; set; }
 
     public string myTag { get; set; }
     public bool myFocus { get; set; }
@@ -94,7 +93,7 @@ public class GameManager : MonoBehaviour
 
         playersTag[0] = "Player1"; playersTag[1] = "Player2";
         playersTag[2] = "Player3"; playersTag[3] = "Player4";
-        enemyIndex = new int[C_Global.MAX_PLAYER / 2];
+        playersIndex = new int[C_Global.MAX_PLAYER];
 
 #if NETWORK
         myNetworkNum = NetworkManager.instance.MyPlayerNum;
@@ -108,27 +107,29 @@ public class GameManager : MonoBehaviour
 		myTag = playersTag[myIndex]; //내 태그등록
         myFocus = true;             // 포커스 On
 
-        switch (myIndex)
+        playersIndex[0] = myIndex;
+
+        switch (myIndex) //0은 무조건 나, 1은팀, 2, 3은 적1, 적2
         {
             case 0:
-                myTeamIndex = 1;
-                enemyIndex[0] = 2;
-                enemyIndex[1] = 3;
+                playersIndex[1] = 1;
+                playersIndex[2] = 2;
+                playersIndex[3] = 3;
                 break;
             case 1:
-                myTeamIndex = 0;
-                enemyIndex[0] = 2;
-                enemyIndex[1] = 3;
+                playersIndex[1] = 0;
+                playersIndex[2] = 2;
+                playersIndex[3] = 3;
                 break;
             case 2:
-                myTeamIndex = 3;
-                enemyIndex[0] = 0;
-                enemyIndex[1] = 1;
+                playersIndex[1] = 3;
+                playersIndex[2] = 0;
+                playersIndex[3] = 1;
                 break;
             case 3:
-                myTeamIndex = 2;
-                enemyIndex[0] = 0;
-                enemyIndex[1] = 1;
+                playersIndex[1] = 2;
+                playersIndex[2] = 0;
+                playersIndex[3] = 1;
                 break;
         }
     }

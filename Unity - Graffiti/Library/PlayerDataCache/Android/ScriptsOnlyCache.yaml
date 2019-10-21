@@ -772,7 +772,7 @@ ScriptsOnlyBuild:
     className: SignalTrack
   - hash:
       serializedVersion: 2
-      Hash: c7b086333b48236d835fccf88683af8d
+      Hash: 7c25ce5f9e1a12e30b9f54bf9e15f347
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: UIManager

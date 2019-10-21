@@ -79,6 +79,9 @@
     <Compile Include="Assets\Gwangil\PathCreator\Examples\Scripts\PathSceneTool.cs" />
     <Compile Include="Assets\Gwangil\PathCreator\Examples\Scripts\PathSpawner.cs" />
     <Compile Include="Assets\Gwangil\PathCreator\Examples\Scripts\RoadMeshCreator.cs" />
+    <Compile Include="Assets\Gwangil\Scripts\AudioManager.cs" />
+    <Compile Include="Assets\Gwangil\Scripts\BypassAudioManager.cs" />
+    <Compile Include="Assets\Gwangil\Scripts\BypassAudioSource.cs" />
     <Compile Include="Assets\Gwangil\Scripts\ObjectPool.cs" />
     <Compile Include="Assets\Gwangil\Scripts\PooledObject.cs" />
     <Compile Include="Assets\Gwangil\Scripts\Singleton.cs" />

@@ -15,7 +15,7 @@ public partial class BridgeClientToServer : MonoBehaviour
 	private GameInfo tmpGameInfo;
 	private WeaponInfo[] tmpWeapons;
 
-	public int GetTempCarSeed { get { return tmpCarSeed; } }
+    public int GetTempCarSeed { get { return tmpCarSeed; } }
 	public GameInfo GetTempGameInfo { get { return tmpGameInfo; } }
 	public WeaponInfo[] GetTempWeapons { get { return tmpWeapons; } }
 
@@ -23,7 +23,7 @@ public partial class BridgeClientToServer : MonoBehaviour
 	{
 		tmpVec = new Vector3();
 		tmpAngle = new Vector3();
-	}
+    }
 
 	// 플레이어 무기 세팅
 	public void SetWeapon(int _playerNum, ref WeaponPacket _weapon)
@@ -179,35 +179,28 @@ public partial class BridgeClientToServer : MonoBehaviour
 
 	public void BulletHitProcess(ref IngamePacket _packet)
 	{
-		if((_packet.playerNum - 1) == UIManager.instance.myIndex)
-		{
-			UIManager.instance.myHP.img_front.fillAmount = _packet.health / 100.0f;
+        for (int i = 0; i < C_Global.MAX_PLAYER; i++)
+        {
+            if ((_packet.playerNum - 1) == UIManager.instance.playersIndex[i])
+            {
+                UIManager.instance.hp[UIManager.instance.playersIndex[i]].img_front.fillAmount = _packet.health * 0.01f;
+                UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHP(UIManager.instance.playersIndex[i], _packet.health * 0.01f));
 
-			//UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHP(_packet.playerNum - 1, WeaponManager.instance.weaponInfoAR.damage));
+				// 체력이 0 이하가 되면 플레이어를 끄고, UI를 끈다. (나중에 DieProcess 같은걸 만들어서 죽는애니->조작불가->리스폰 코루틴 시작->끝나면 리스폰 지역에서 부활 등
+				if (_packet.health <= 0.0f)
+				{
+					if (_packet.playerNum - 1 != myIndex)
+					{
+						playersManager.obj_players[_packet.playerNum - 1].SetActive(false);
+						UIManager.instance.OffPlayerUI(_packet.playerNum - 1);
+					}
+				}
 
-			if (_packet.health <= 0.0f)
-				playersManager.obj_players[_packet.playerNum - 1].SetActive(false);
-		}
+				playersManager.hp[_packet.playerNum - 1] = _packet.health;	// 실제 피 세팅
+				networkManager.SetIngamePacket(_packet.playerNum - 1, ref _packet);
 
-		else if((_packet.playerNum - 1) == UIManager.instance.myTeamIndex)
-		{
-			UIManager.instance.teamHP.img_front.fillAmount = _packet.health / 100.0f;
-
-			if (_packet.health <= 0.0f)
-				playersManager.obj_players[_packet.playerNum - 1].SetActive(false);
-		}
-
-		else if((_packet.playerNum - 1) == UIManager.instance.enemyIndex[0])
-		{
-			UIManager.instance.enemyHP[0].img_front.fillAmount = _packet.health / 100.0f;
-		}
-
-		else if ((_packet.playerNum - 1) == UIManager.instance.enemyIndex[1])
-		{
-			UIManager.instance.enemyHP[1].img_front.fillAmount = _packet.health / 100.0f;
-		}
-
-		networkManager.SetIngamePacket(_packet.playerNum - 1, ref _packet);
+			}
+        }
 	}
 
 	// 정상적인 업데이트 시
@@ -220,7 +213,19 @@ public partial class BridgeClientToServer : MonoBehaviour
 	public void OnOtherPlayerDisconnected(int _quitPlayerNum)
 	{
 		if (PlayersManager.instance.obj_players[_quitPlayerNum - 1].activeSelf == true)
+		{
 			PlayersManager.instance.obj_players[_quitPlayerNum - 1].SetActive(false);
+
+			for (int i = 0; i < C_Global.MAX_PLAYER; i++)
+			{
+				if ((_quitPlayerNum - 1) == UIManager.instance.playersIndex[i])
+				{
+					UIManager.instance.OffPlayerUI(_quitPlayerNum - 1);
+
+					break;
+				}
+			}
+		}
 	}
 
 	//쐇을때 무조건 1번의 패킷을 보내야됨. 보정용
