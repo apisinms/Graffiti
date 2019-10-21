@@ -106,6 +106,7 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
         EffectManager.instance.ps_tmpMuzzle[_index].plane4.option.simulationSpeed = 1.7f;
         EffectManager.instance.ps_tmpMuzzle[_index].spark.option.simulationSpeed = 1.7f;
 
+        AudioManager.Instance.Play(1);
         for (int i = 0; i < playerSGInfo[_index].obj_bulletClone.Length; i++)
         {
             playerSGInfo[_index].tf_bulletClone[i].localRotation = Quaternion.LookRotation(playerSGInfo[_index].vt_bulletPattern[playerSGInfo[_index].bulletPatternIndex, i]);

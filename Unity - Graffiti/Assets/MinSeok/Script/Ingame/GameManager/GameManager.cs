@@ -83,10 +83,11 @@ public class GameManager : MonoBehaviour
         gameInfo.gameTime = 180;
         gameInfo.responTime = 5;
         CarSeed = 0;
+        StartCoroutine(GameObject.Find("Spawner").GetComponent<PathCreation.Examples.PathSpawner>().SpawnPrefabs());
 #endif
-	}
+    }
 
-	void Awake()
+    void Awake()
     {
         if (instance == null)
             instance = this;

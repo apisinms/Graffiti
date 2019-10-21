@@ -91,6 +91,7 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
 
             tf_clone.localRotation = Quaternion.LookRotation(playerARInfo[_index].vt_bulletPattern[playerARInfo[_index].bulletPatternIndex]);
             clone.GetComponent<Rigidbody>().AddForce(playerARInfo[_index].vt_bulletPattern[playerARInfo[_index].bulletPatternIndex] * weaponManager.weaponInfoAR.speed, ForceMode.Acceleration);
+            AudioManager.Instance.Play(0);
 
             switch (playerARInfo[_index].bulletPatternIndex)
             {

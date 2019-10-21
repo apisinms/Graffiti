@@ -1,6 +1,9 @@
 ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
+    - AndroidAudioBypass.BypassAudioManager
+    - AndroidAudioBypass.BypassAudioSource
+    - AudioManager
     - BridgeClientToServer
     - BulletCollision
     - C_Encrypt
@@ -98,71 +101,77 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 9278}
+      Script: {instanceID: 9280}
     - Class: 114
-      Script: {instanceID: 9318}
+      Script: {instanceID: 9320}
     - Class: 114
-      Script: {instanceID: 9338}
-    - Class: 114
-      Script: {instanceID: 9392}
+      Script: {instanceID: 9340}
     - Class: 114
       Script: {instanceID: 9394}
     - Class: 114
-      Script: {instanceID: 9400}
+      Script: {instanceID: 9396}
     - Class: 114
       Script: {instanceID: 9402}
     - Class: 114
-      Script: {instanceID: 9406}
+      Script: {instanceID: 9404}
     - Class: 114
-      Script: {instanceID: 9414}
+      Script: {instanceID: 9408}
     - Class: 114
-      Script: {instanceID: 9450}
+      Script: {instanceID: 9416}
     - Class: 114
       Script: {instanceID: 9452}
     - Class: 114
-      Script: {instanceID: 9614}
+      Script: {instanceID: 9454}
     - Class: 114
-      Script: {instanceID: 9660}
+      Script: {instanceID: 9616}
     - Class: 114
-      Script: {instanceID: 9682}
+      Script: {instanceID: 9662}
     - Class: 114
-      Script: {instanceID: 9820}
+      Script: {instanceID: 9684}
     - Class: 114
-      Script: {instanceID: 9904}
+      Script: {instanceID: 9802}
     - Class: 114
-      Script: {instanceID: 9944}
+      Script: {instanceID: 9822}
     - Class: 114
-      Script: {instanceID: 9964}
+      Script: {instanceID: 9826}
     - Class: 114
-      Script: {instanceID: 10048}
+      Script: {instanceID: 9910}
     - Class: 114
-      Script: {instanceID: 10096}
+      Script: {instanceID: 9950}
     - Class: 114
-      Script: {instanceID: 10120}
+      Script: {instanceID: 9970}
     - Class: 114
-      Script: {instanceID: 10122}
+      Script: {instanceID: 10054}
     - Class: 114
-      Script: {instanceID: 10146}
+      Script: {instanceID: 10102}
     - Class: 114
-      Script: {instanceID: 10168}
+      Script: {instanceID: 10126}
     - Class: 114
-      Script: {instanceID: 10218}
+      Script: {instanceID: 10128}
     - Class: 114
-      Script: {instanceID: 10230}
+      Script: {instanceID: 10152}
     - Class: 114
-      Script: {instanceID: 10390}
+      Script: {instanceID: 10174}
     - Class: 114
-      Script: {instanceID: 10422}
+      Script: {instanceID: 10224}
     - Class: 114
-      Script: {instanceID: 10430}
+      Script: {instanceID: 10236}
     - Class: 114
-      Script: {instanceID: 10478}
+      Script: {instanceID: 10396}
     - Class: 114
-      Script: {instanceID: 10498}
+      Script: {instanceID: 10428}
     - Class: 114
-      Script: {instanceID: 10560}
+      Script: {instanceID: 10436}
     - Class: 114
-      Script: {instanceID: 10628}
+      Script: {instanceID: 10438}
+    - Class: 114
+      Script: {instanceID: 10486}
+    - Class: 114
+      Script: {instanceID: 10506}
+    - Class: 114
+      Script: {instanceID: 10568}
+    - Class: 114
+      Script: {instanceID: 10638}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -219,25 +228,25 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 9392}
-    - Class: 114
       Script: {instanceID: 9394}
     - Class: 114
-      Script: {instanceID: 9400}
+      Script: {instanceID: 9396}
     - Class: 114
-      Script: {instanceID: 9406}
+      Script: {instanceID: 9402}
     - Class: 114
-      Script: {instanceID: 9414}
+      Script: {instanceID: 9408}
     - Class: 114
-      Script: {instanceID: 9450}
+      Script: {instanceID: 9416}
     - Class: 114
       Script: {instanceID: 9452}
     - Class: 114
-      Script: {instanceID: 9502}
+      Script: {instanceID: 9454}
     - Class: 114
-      Script: {instanceID: 9922}
+      Script: {instanceID: 9504}
     - Class: 114
-      Script: {instanceID: 10596}
+      Script: {instanceID: 9928}
+    - Class: 114
+      Script: {instanceID: 10604}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -276,29 +285,29 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 9392}
-    - Class: 114
       Script: {instanceID: 9394}
     - Class: 114
-      Script: {instanceID: 9400}
+      Script: {instanceID: 9396}
     - Class: 114
-      Script: {instanceID: 9406}
+      Script: {instanceID: 9402}
     - Class: 114
-      Script: {instanceID: 9414}
+      Script: {instanceID: 9408}
     - Class: 114
       Script: {instanceID: 9416}
     - Class: 114
-      Script: {instanceID: 9450}
+      Script: {instanceID: 9418}
     - Class: 114
       Script: {instanceID: 9452}
     - Class: 114
-      Script: {instanceID: 9686}
+      Script: {instanceID: 9454}
     - Class: 114
-      Script: {instanceID: 9832}
+      Script: {instanceID: 9688}
     - Class: 114
-      Script: {instanceID: 9976}
+      Script: {instanceID: 9838}
     - Class: 114
-      Script: {instanceID: 10166}
+      Script: {instanceID: 9982}
+    - Class: 114
+      Script: {instanceID: 10172}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -337,23 +346,23 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 9392}
-    - Class: 114
       Script: {instanceID: 9394}
     - Class: 114
-      Script: {instanceID: 9400}
+      Script: {instanceID: 9396}
     - Class: 114
-      Script: {instanceID: 9406}
+      Script: {instanceID: 9402}
     - Class: 114
-      Script: {instanceID: 9410}
+      Script: {instanceID: 9408}
     - Class: 114
-      Script: {instanceID: 9414}
+      Script: {instanceID: 9412}
     - Class: 114
-      Script: {instanceID: 9450}
+      Script: {instanceID: 9416}
     - Class: 114
       Script: {instanceID: 9452}
     - Class: 114
-      Script: {instanceID: 9840}
+      Script: {instanceID: 9454}
+    - Class: 114
+      Script: {instanceID: 9846}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -925,6 +934,18 @@ ScriptsOnlyBuild:
     className: ControlTrack
   - hash:
       serializedVersion: 2
+      Hash: 44bb13df57e552fd4d2607c01e2f211d
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: AndroidAudioBypass
+    className: BypassAudioSource
+  - hash:
+      serializedVersion: 2
+      Hash: 59199a4b6dc68554343ae288dd9f95cd
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: AudioManager
+  - hash:
+      serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
@@ -1205,6 +1226,12 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: State_Aim
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: AndroidAudioBypass
+    className: BypassAudioManager
   - hash:
       serializedVersion: 2
       Hash: cdc7ab9854596e212be11c572af945df

@@ -91,7 +91,8 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
 
             tf_clone.localRotation = Quaternion.LookRotation(playerSMGInfo[_index].vt_bulletPattern[playerSMGInfo[_index].bulletPatternIndex]);
             clone.GetComponent<Rigidbody>().AddForce(playerSMGInfo[_index].vt_bulletPattern[playerSMGInfo[_index].bulletPatternIndex] * weaponManager.weaponInfoSMG.speed, ForceMode.Acceleration);
-
+            AudioManager.Instance.Play(2);
+        
             switch (playerSMGInfo[_index].bulletPatternIndex)
             {
                 case 0:

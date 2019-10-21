@@ -177,69 +177,60 @@ public partial class BridgeClientToServer : MonoBehaviour
 			PlayersManager.instance.obj_players[_packet.playerNum - 1].SetActive(true);
 	}
 
-	public void BulletHitProcess(ref IngamePacket _packet)
-	{
+    public void BulletHitProcess(ref IngamePacket _packet)
+    {
         for (int i = 0; i < C_Global.MAX_PLAYER; i++)
         {
             if ((_packet.playerNum - 1) == UIManager.instance.playersIndex[i])
             {
                 UIManager.instance.hp[UIManager.instance.playersIndex[i]].img_front.fillAmount = _packet.health * 0.01f;
                 UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHP(UIManager.instance.playersIndex[i], _packet.health * 0.01f));
+                int tmp = UnityEngine.Random.Range(3, 6);
+                AudioManager.Instance.Play(tmp);
 
+                // 체력이 0 이하가 되면 플레이어를 끄고, UI를 끈다. (나중에 DieProcess 같은걸 만들어서 죽는애니->조작불가->리스폰 코루틴 시작->끝나면 리스폰 지역에서 부활 등
                 if (_packet.health <= 0.0f)
-                    playersManager.obj_players[_packet.playerNum - 1].SetActive(false);
+                {
+                    if (_packet.playerNum - 1 != myIndex)
+                    {
+                        playersManager.obj_players[_packet.playerNum - 1].SetActive(false);
+                        UIManager.instance.OffPlayerUI(_packet.playerNum - 1);
+                    }
+                }
 
+                playersManager.hp[_packet.playerNum - 1] = _packet.health;   // 실제 피 세팅
                 networkManager.SetIngamePacket(_packet.playerNum - 1, ref _packet);
+
             }
         }
-        /*
-		if((_packet.playerNum - 1) == UIManager.instance.myIndex)
-		{
-			UIManager.instance.myHP.img_front.fillAmount = _packet.health / 100.0f;
+    }
 
-			//UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHP(_packet.playerNum - 1, WeaponManager.instance.weaponInfoAR.damage));
-
-			if (_packet.health <= 0.0f)
-				playersManager.obj_players[_packet.playerNum - 1].SetActive(false);
-		}
-
-		else if((_packet.playerNum - 1) == UIManager.instance.myTeamIndex)
-		{
-			UIManager.instance.teamHP.img_front.fillAmount = _packet.health / 100.0f;
-
-			if (_packet.health <= 0.0f)
-				playersManager.obj_players[_packet.playerNum - 1].SetActive(false);
-		}
-
-		else if((_packet.playerNum - 1) == UIManager.instance.enemyIndex[0])
-		{
-			UIManager.instance.enemyHP[0].img_front.fillAmount = _packet.health / 100.0f;
-		}
-
-		else if ((_packet.playerNum - 1) == UIManager.instance.enemyIndex[1])
-		{
-			UIManager.instance.enemyHP[1].img_front.fillAmount = _packet.health / 100.0f;
-		}
-
-		networkManager.SetIngamePacket(_packet.playerNum - 1, ref _packet);
-        */
-	}
-
-	// 정상적인 업데이트 시
-	public void OnUpdate(ref IngamePacket _packet)
+    // 정상적인 업데이트 시
+    public void OnUpdate(ref IngamePacket _packet)
 	{
 		networkManager.SetIngamePacket(_packet.playerNum - 1, ref _packet);
 	}
 
-	// 다른 플레이어의 접속이 끊겼을때, 플레이어 로빈 오브젝트를 비활성화.
-	public void OnOtherPlayerDisconnected(int _quitPlayerNum)
-	{
-		if (PlayersManager.instance.obj_players[_quitPlayerNum - 1].activeSelf == true)
-			PlayersManager.instance.obj_players[_quitPlayerNum - 1].SetActive(false);
-	}
+    // 다른 플레이어의 접속이 끊겼을때, 플레이어 로빈 오브젝트를 비활성화.
+    public void OnOtherPlayerDisconnected(int _quitPlayerNum)
+    {
+        if (PlayersManager.instance.obj_players[_quitPlayerNum - 1].activeSelf == true)
+        {
+            PlayersManager.instance.obj_players[_quitPlayerNum - 1].SetActive(false);
 
-	//쐇을때 무조건 1번의 패킷을 보내야됨. 보정용
-	public void SendPacketOnce()
+            for (int i = 0; i < C_Global.MAX_PLAYER; i++)
+            {
+                if ((_quitPlayerNum - 1) == UIManager.instance.playersIndex[i])
+                {
+                    UIManager.instance.OffPlayerUI(_quitPlayerNum - 1);
+                    break;
+                }
+            }
+        }
+    }
+
+    //쐇을때 무조건 1번의 패킷을 보내야됨. 보정용
+    public void SendPacketOnce()
 	{
 		networkManager.SendIngamePacket(playersManager.tf_players[myIndex].localPosition.x,
 		playersManager.tf_players[myIndex].localPosition.z,

@@ -240,11 +240,11 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
 			case "Player1":
 				{
 					// 나랑 같은 팀이 아니면 세팅
-					//if ((myIndex + 1) != 2)
-					//{
+					if ((myIndex + 1) != 2)
+					{
 					colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_1;
 					hitPlayerNum = 1;
-					//}
+					}
 				}
 				break;
 
@@ -252,11 +252,11 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
 			case "Player2":
 				{
 					// 나랑 같은 팀이 아니면 세팅
-					//if ((myIndex + 1) != 1)
-					//{
+					if ((myIndex + 1) != 1)
+					{
 						colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_2;
 						hitPlayerNum = 2;
-					//}
+					}
 				}
 				break;
 
@@ -286,28 +286,28 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
 		return hitPlayerNum;
 	}
 
-	// player의 HitCountBit(맞은 횟수 비트)를 증가한다.
-	public void IncPlayerHitCountBit(int _hitPlayerNum)
-	{
-		int Shifter = 8 * (C_Global.MAX_PLAYER - _hitPlayerNum);    // 이동 연산에 필요한 값
+    // player의 HitCountBit(맞은 횟수 비트)를 증가한다.
+    public void IncPlayerHitCountBit(int _hitPlayerNum)
+    {
+        int Shifter = 8 * (C_Global.MAX_PLAYER - _hitPlayerNum);    // 이동 연산에 필요한 값
 
-		byte bitEraseMask = 0x00;   // 8비트 지우기 마스크(00000000)
+        byte bitEraseMask = 0x00;   // 8비트 지우기 마스크(00000000)
 
 
-		// 1. 기존에 해당 플레이어의 hit횟수를 가져온다.
-		int beforeCount = (colChecker.playerHitCountBit) >> Shifter;    // 한 대 맞은 누적 카운트를 저장하고
+        // 1. 기존에 해당 플레이어의 hit횟수를 가져온다.
+        int beforeCount = (colChecker.playerHitCountBit >> Shifter);    // 한 대 맞은 누적 카운트를 저장하고
 
-		// 2. 기존 플레이어의 hit 횟수를 0으로 만든다(해당 플레이어의 범위만)
-		colChecker.playerHitCountBit &= bitEraseMask << Shifter;
+        // 2. 기존 플레이어의 hit 횟수를 0으로 만든다(해당 플레이어의 범위만)
+        colChecker.playerHitCountBit &= (bitEraseMask << Shifter);
 
-		beforeCount++;  // 한 대 더 맞았으니 누적한다.
+        beforeCount++;  // 한 대 더 맞았으니 누적한다.
 
-		// 32비트를 4명의 플레이어가 8비트 단위로 끊어서 저장한다.
-		colChecker.playerHitCountBit |= beforeCount << Shifter;
-	}
+        // 32비트를 4명의 플레이어가 8비트 단위로 끊어서 저장한다.
+        colChecker.playerHitCountBit |= (beforeCount << Shifter);
+    }
 
-	// 총알 충돌 체커 구조체 초기화
-	public void ResetCollisionChecker()
+    // 총알 충돌 체커 구조체 초기화
+    public void ResetCollisionChecker()
 	{
 		colChecker.playerBit = 0;
 		colChecker.playerHitCountBit = 0;

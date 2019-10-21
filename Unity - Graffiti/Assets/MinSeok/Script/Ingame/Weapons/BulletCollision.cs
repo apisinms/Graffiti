@@ -42,7 +42,12 @@ public class BulletCollision : MonoBehaviour
         for(int i=0; i<C_Global.MAX_PLAYER; i++)
         {
             if (other.CompareTag(PlayersManager.instance.obj_players[GameManager.instance.playersIndex[i]].tag))
+            {
+                int tmp = UnityEngine.Random.Range(3, 6);
+                AudioManager.Instance.Play(tmp);
                 WeaponManager.instance.ApplyDamage(GameManager.instance.playersIndex[i], returnIdx);
+                break;
+            }
         }
         /*
 		if (other.CompareTag(PlayersManager.instance.obj_players[GameManager.instance.myIndex].tag))
@@ -55,19 +60,23 @@ public class BulletCollision : MonoBehaviour
             WeaponManager.instance.ApplyDamage(3, returnIdx);
             */
 #endif
+        if(!other.CompareTag("Player1") && !other.CompareTag("Player2") && !other.CompareTag("Player3") && !other.CompareTag("Player4"))
+        {
+            if (other.CompareTag("Concrete1"))
+            {
+                ps_clone = PoolManager.instance.GetCollisionEffectFromPool("ConcretePool1", other.ClosestPointOnBounds(this.transform.position), -this.transform.forward);
+                EffectManager.instance.StartCoroutine(EffectManager.instance.CheckEffectEnd(ps_clone));
+                AudioManager.Instance.Play(6);
+            }
+            else
+            {
+                ps_clone = PoolManager.instance.GetCollisionEffectFromPool("IronPool1", other.ClosestPointOnBounds(this.transform.position), -this.transform.forward);
+                EffectManager.instance.StartCoroutine(EffectManager.instance.CheckEffectEnd(ps_clone));
+                AudioManager.Instance.Play(7);
+            }
+        }
 
-        if (other.CompareTag("Concrete1"))
-		{
-			ps_clone = PoolManager.instance.GetCollisionEffectFromPool("ConcretePool1", other.ClosestPointOnBounds(this.transform.position), -this.transform.forward);
-			EffectManager.instance.StartCoroutine(EffectManager.instance.CheckEffectEnd(ps_clone));
-		}
-		else
-		{
-			ps_clone = PoolManager.instance.GetCollisionEffectFromPool("IronPool1", other.ClosestPointOnBounds(this.transform.position), -this.transform.forward);
-			EffectManager.instance.StartCoroutine(EffectManager.instance.CheckEffectEnd(ps_clone));
-		}
-
-		PoolManager.instance.ReturnBulletToPool(gameObject, returnIdx);
+        PoolManager.instance.ReturnBulletToPool(gameObject, returnIdx);
 
 		if (myIndex != returnIdx)
 			return;
