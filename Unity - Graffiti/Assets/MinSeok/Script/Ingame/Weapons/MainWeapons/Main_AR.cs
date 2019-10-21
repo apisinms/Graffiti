@@ -131,6 +131,9 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
 
     public void ApplyDamage(int _type, int _index)
     {
+        UIManager.instance.hp[_type].img_front.fillAmount -= 0.04f; //데미지만큼 피를깎음.
+        UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHP(_type, 0.04f));
+        /*
         switch(_type)
         {
             case 0:
@@ -150,5 +153,6 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
                 UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHP(_type, weaponManager.weaponInfoAR.damage));
                 break;
         }
+        */
     }
 }

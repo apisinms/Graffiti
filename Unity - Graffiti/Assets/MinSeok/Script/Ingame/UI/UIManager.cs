@@ -7,14 +7,11 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
     public int myIndex { get; set; }
-    public int myTeamIndex { get; set; }
-    public int[] enemyIndex { get; set; }
+    public int[] playersIndex { get; set; }
 
-    #region HP 
+    #region HP
     public GameObject[] obj_prefebsHP;   //0나, 1팀, 2적
-    public _IMG_HP_INFO myHP;
-    public _IMG_HP_INFO teamHP;
-    public _IMG_HP_INFO[] enemyHP;
+    public _IMG_HP_INFO[] hp;
     public Vector3 hpAddPos { get; set; }
     public Coroutine  curHpCor { get; set; }
 
@@ -41,9 +38,7 @@ public class UIManager : MonoBehaviour
 
     #region CIRCLE
     public GameObject[] obj_prefebsCircle;
-    public _IMG_CIRCLE_INFO myCircle;
-    public _IMG_CIRCLE_INFO teamCircle;
-    public _IMG_CIRCLE_INFO[] enemyCircle;
+    public _IMG_CIRCLE_INFO[] circle;
     public Vector3 circleAddPos { get; set; }
 
     public struct _IMG_CIRCLE_INFO
@@ -55,7 +50,7 @@ public class UIManager : MonoBehaviour
 
     #region LINE_AIMDIRECTION
     public GameObject obj_prefebLine;
-    public _IMG_LINE_INFO myLine;
+    public _IMG_LINE_INFO line;
     public Vector3 lineAddPos { get; set; }
 
     public struct _IMG_LINE_INFO
@@ -70,10 +65,15 @@ public class UIManager : MonoBehaviour
         if (instance == null)
             instance = this;
 
+        playersIndex = new int[C_Global.MAX_PLAYER];
+
+        myIndex = GameManager.instance.myIndex;
+        for (int i = 0; i < C_Global.MAX_PLAYER; i++)
+            playersIndex[i] = GameManager.instance.playersIndex[i];
+
         nickname = new _TXT_NICKNAME_INFO[C_Global.MAX_PLAYER];
-        enemyHP = new _IMG_HP_INFO[C_Global.MAX_PLAYER - 2];
-        enemyCircle = new _IMG_CIRCLE_INFO[C_Global.MAX_PLAYER - 2];
-        enemyIndex = new int[C_Global.MAX_PLAYER - 2];
+        hp = new _IMG_HP_INFO[C_Global.MAX_PLAYER];
+        circle = new _IMG_CIRCLE_INFO[C_Global.MAX_PLAYER];
         hpAddPos = new Vector3(0, 2.2f, 1.3f);
         nickAddPos = new Vector3(0, 2.0f, 0.9f);
         circleAddPos = new Vector3(0, 0.2f, 0);
@@ -82,27 +82,26 @@ public class UIManager : MonoBehaviour
         curHpCor = null;
 
         myIndex = GameManager.instance.myIndex;
-        myTeamIndex = GameManager.instance.myTeamIndex;
-        for (int i = 0; i < enemyIndex.Length; i++)
-            enemyIndex[i] = GameManager.instance.enemyIndex[i];
 
-        for (int i = 0; i < enemyHP.Length; i++)
+        for (int i = 0; i < hp.Length; i++)
         {
-            enemyHP[i].obj_parent = Instantiate(obj_prefebsHP[2], GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
-            enemyHP[i].img_back = enemyHP[i].obj_parent.transform.GetChild(0).GetComponent<Image>();
-            enemyHP[i].img_middle = enemyHP[i].obj_parent.transform.GetChild(1).GetComponent<Image>();
-            enemyHP[i].img_front = enemyHP[i].obj_parent.transform.GetChild(2).GetComponent<Image>();
+            if(i == playersIndex[0]) // == myIndex
+            {
+                hp[i].obj_parent = Instantiate(obj_prefebsHP[0], GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
+            }
+            else if(i == playersIndex[1]) // == teamIndex
+            {
+                hp[i].obj_parent = Instantiate(obj_prefebsHP[1], GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
+            }
+            else if (i == playersIndex[2] || i == playersIndex[3]) // == enemyIndex[0]
+            {
+                hp[i].obj_parent = Instantiate(obj_prefebsHP[2], GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
+            }
+
+            hp[i].img_back = hp[i].obj_parent.transform.GetChild(0).GetComponent<Image>();
+            hp[i].img_middle = hp[i].obj_parent.transform.GetChild(1).GetComponent<Image>();
+            hp[i].img_front = hp[i].obj_parent.transform.GetChild(2).GetComponent<Image>();
         }
-
-        teamHP.obj_parent = Instantiate(obj_prefebsHP[1], GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
-        teamHP.img_back = teamHP.obj_parent.transform.GetChild(0).GetComponent<Image>();
-        teamHP.img_middle = teamHP.obj_parent.transform.GetChild(1).GetComponent<Image>();
-        teamHP.img_front = teamHP.obj_parent.transform.GetChild(2).GetComponent<Image>();
-
-        myHP.obj_parent = Instantiate(obj_prefebsHP[0], GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
-        myHP.img_back = myHP.obj_parent.transform.GetChild(0).GetComponent<Image>();
-        myHP.img_middle = myHP.obj_parent.transform.GetChild(1).GetComponent<Image>();
-        myHP.img_front = myHP.obj_parent.transform.GetChild(2).GetComponent<Image>();
 
         for (int i = 0; i < nickname.Length; i++)
         {
@@ -110,22 +109,27 @@ public class UIManager : MonoBehaviour
             nickname[i].txt_nickname = nickname[i].obj_parent.transform.GetChild(0).GetComponent<Text>();
         }
 
-
-        for (int i = 0; i < enemyCircle.Length; i++)
+        for (int i = 0; i < circle.Length; i++)
         {
-            enemyCircle[i].obj_parent = Instantiate(obj_prefebsCircle[2], GameObject.FindGameObjectWithTag("Canvas_worldSpace2").transform);
-            enemyCircle[i].img_circle = enemyCircle[i].obj_parent.transform.GetChild(0).GetComponent<Image>();
+            if (i == playersIndex[0]) // == myIndex
+            {
+                circle[i].obj_parent = Instantiate(obj_prefebsCircle[0], GameObject.FindGameObjectWithTag("Canvas_worldSpace2").transform);
+            }
+            else if (i == playersIndex[1]) // == teamIndex
+            {
+                circle[i].obj_parent = Instantiate(obj_prefebsCircle[1], GameObject.FindGameObjectWithTag("Canvas_worldSpace2").transform);
+            }
+            else if (i == playersIndex[2] || i == playersIndex[3]) // == enemyIndex[0]
+            {
+                circle[i].obj_parent = Instantiate(obj_prefebsCircle[2], GameObject.FindGameObjectWithTag("Canvas_worldSpace2").transform);
+            }
+
+            circle[i].img_circle = circle[i].obj_parent.transform.GetChild(0).GetComponent<Image>();
         }
 
-        teamCircle.obj_parent = Instantiate(obj_prefebsCircle[1], GameObject.FindGameObjectWithTag("Canvas_worldSpace2").transform);
-        teamCircle.img_circle = teamCircle.obj_parent.transform.GetChild(0).GetComponent<Image>();
-
-        myCircle.obj_parent = Instantiate(obj_prefebsCircle[0], GameObject.FindGameObjectWithTag("Canvas_worldSpace2").transform);
-        myCircle.img_circle = myCircle.obj_parent.transform.GetChild(0).GetComponent<Image>();
-
-        myLine.obj_parent = Instantiate(obj_prefebLine, GameObject.FindGameObjectWithTag("Canvas_worldSpace2").transform);
-        myLine.img_aimDirectionLine = myLine.obj_parent.transform.GetChild(0).GetComponent<Image>();
-        myLine.obj_parent.SetActive(false);
+        line.obj_parent = Instantiate(obj_prefebLine, GameObject.FindGameObjectWithTag("Canvas_worldSpace2").transform);
+        line.img_aimDirectionLine = line.obj_parent.transform.GetChild(0).GetComponent<Image>();
+        line.obj_parent.SetActive(false);
     }
 
     private void Start()
@@ -137,30 +141,30 @@ public class UIManager : MonoBehaviour
     void Update()
     {
         for(int i=0; i<nickname.Length; i++)
-        {
-            nickname[i].obj_parent.transform.position = PlayersManager.instance.tf_players[i].transform.position + hpAddPos;
-        }
+            nickname[playersIndex[i]].obj_parent.transform.position = PlayersManager.instance.tf_players[playersIndex[i]].transform.position + hpAddPos;
 
-        myHP.obj_parent.transform.position = PlayersManager.instance.tf_players[myIndex].transform.position + nickAddPos;//Camera.main.WorldToScreenPoint(PlayersManager.instance.tf_players[myIndex].transform.position);
-        teamHP.obj_parent.transform.position = PlayersManager.instance.tf_players[myTeamIndex].transform.position + nickAddPos;//Camera.main.WorldToScreenPoint(PlayersManager.instance.tf_players[myTeamIndex].transform.position);
-        for (int i = 0; i < enemyIndex.Length; i++)
-            enemyHP[i].obj_parent.transform.position = PlayersManager.instance.tf_players[enemyIndex[i]].transform.position + nickAddPos;//Camera.main.WorldToScreenPoint(PlayersManager.instance.tf_players[enemyIndex[i]].transform.position);
+        for (int i = 0; i < hp.Length; i++)
+            hp[playersIndex[i]].obj_parent.transform.position = PlayersManager.instance.tf_players[playersIndex[i]].transform.position + nickAddPos;//Camera.main.WorldToScreenPoint(PlayersManager.instance.tf_players[enemyIndex[i]].transform.position);
 
-        myCircle.obj_parent.transform.position = PlayersManager.instance.tf_players[myIndex].transform.position + circleAddPos;
-        teamCircle.obj_parent.transform.position = PlayersManager.instance.tf_players[myTeamIndex].transform.position + circleAddPos;//Camera.main.WorldToScreenPoint(PlayersManager.instance.tf_players[myTeamIndex].transform.position);
-        for (int i = 0; i < enemyIndex.Length; i++)
-            enemyCircle[i].obj_parent.transform.position = PlayersManager.instance.tf_players[enemyIndex[i]].transform.position + circleAddPos;
+        for(int i=0; i<circle.Length; i++)
+            circle[playersIndex[i]].obj_parent.transform.position = PlayersManager.instance.tf_players[playersIndex[i]].transform.position + circleAddPos;
 
-        myLine.obj_parent.transform.position = PlayersManager.instance.tf_players[myIndex].transform.position + lineAddPos;
+        line.obj_parent.transform.position = PlayersManager.instance.tf_players[myIndex].transform.position + lineAddPos;
     }
 
 
-    public IEnumerator DecreaseMiddleHP(int _index, float _damage) //중간 체력 img는 효과를 적용할것이다.
+    public IEnumerator DecreaseMiddleHP(int _index, float _curHP) //중간 체력 img는 효과를 적용할것이다.
     {
         //Debug.Log("들어옴");
         yield return YieldInstructionCache.WaitForSeconds(0.6f);
-      
-        switch(_index)
+
+#if NETWORK
+        hp[_index].img_middle.fillAmount = _curHP;
+#else
+        hp[_index].img_middle.fillAmount -= _curHP;
+#endif
+        /*
+        switch (_index)
         {
             case 0: //내피
                 myHP.img_middle.fillAmount -= _damage;
@@ -175,27 +179,28 @@ public class UIManager : MonoBehaviour
                 enemyHP[1].img_middle.fillAmount -= _damage;
                 break;
         }
-     //   Debug.Log("나감");
+        */
+        //   Debug.Log("나감");
         yield break;
     }
   
     public void UpdateAimDirectionImg(bool _value)
     {
-        if (_value == false && myLine.obj_parent.activeSelf == true)
+        if (_value == false && line.obj_parent.activeSelf == true)
         {
-            myLine.obj_parent.SetActive(false);
+            line.obj_parent.SetActive(false);
             return;
         }
-        else if(_value == true && myLine.obj_parent.activeSelf == false)
-            myLine.obj_parent.SetActive(true);
+        else if(_value == true && line.obj_parent.activeSelf == false)
+            line.obj_parent.SetActive(true);
 
         Quaternion tmp = Quaternion.LookRotation(PlayersManager.instance.tf_players[myIndex].transform.forward);
-        myLine.obj_parent.transform.localRotation = tmp;
-        myLine.obj_parent.transform.eulerAngles = new Vector3(90, 0, myLine.obj_parent.transform.localRotation.eulerAngles.y * -1);
+        line.obj_parent.transform.localRotation = tmp;
+        line.obj_parent.transform.eulerAngles = new Vector3(90, 0, line.obj_parent.transform.localRotation.eulerAngles.y * -1);
     }
 
-	public void SetNickname(string _nickName, int _idx)
+	public void SetNickname(string _nickname, int _index)
 	{
-		nickname[_idx].txt_nickname.text = _nickName;
+		nickname[_index].txt_nickname.text = _nickname;
 	}
 }

@@ -112,7 +112,6 @@ public partial class BridgeClientToServer : MonoBehaviour
 
 							isStartShotCor[i] = false;
 						}
-
 					}
 					break;
 				case _ACTION_STATE.AIM:
@@ -126,7 +125,6 @@ public partial class BridgeClientToServer : MonoBehaviour
 
 							isStartShotCor[i] = false;
 						}
-
 					}
 					break;
 				case _ACTION_STATE.SHOT:

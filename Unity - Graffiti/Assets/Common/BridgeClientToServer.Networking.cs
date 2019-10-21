@@ -15,7 +15,7 @@ public partial class BridgeClientToServer : MonoBehaviour
 	private GameInfo tmpGameInfo;
 	private WeaponInfo[] tmpWeapons;
 
-	public int GetTempCarSeed { get { return tmpCarSeed; } }
+    public int GetTempCarSeed { get { return tmpCarSeed; } }
 	public GameInfo GetTempGameInfo { get { return tmpGameInfo; } }
 	public WeaponInfo[] GetTempWeapons { get { return tmpWeapons; } }
 
@@ -23,7 +23,7 @@ public partial class BridgeClientToServer : MonoBehaviour
 	{
 		tmpVec = new Vector3();
 		tmpAngle = new Vector3();
-	}
+    }
 
 	// 플레이어 무기 세팅
 	public void SetWeapon(int _playerNum, ref WeaponPacket _weapon)
@@ -179,6 +179,20 @@ public partial class BridgeClientToServer : MonoBehaviour
 
 	public void BulletHitProcess(ref IngamePacket _packet)
 	{
+        for (int i = 0; i < C_Global.MAX_PLAYER; i++)
+        {
+            if ((_packet.playerNum - 1) == UIManager.instance.playersIndex[i])
+            {
+                UIManager.instance.hp[UIManager.instance.playersIndex[i]].img_front.fillAmount = _packet.health * 0.01f;
+                UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHP(UIManager.instance.playersIndex[i], _packet.health * 0.01f));
+
+                if (_packet.health <= 0.0f)
+                    playersManager.obj_players[_packet.playerNum - 1].SetActive(false);
+
+                networkManager.SetIngamePacket(_packet.playerNum - 1, ref _packet);
+            }
+        }
+        /*
 		if((_packet.playerNum - 1) == UIManager.instance.myIndex)
 		{
 			UIManager.instance.myHP.img_front.fillAmount = _packet.health / 100.0f;
@@ -208,6 +222,7 @@ public partial class BridgeClientToServer : MonoBehaviour
 		}
 
 		networkManager.SetIngamePacket(_packet.playerNum - 1, ref _packet);
+        */
 	}
 
 	// 정상적인 업데이트 시
