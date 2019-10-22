@@ -134,7 +134,7 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
         infoSG[myIndex].vt_bulletDir[4].x = PlayersManager.instance.direction2[myIndex].x + (infoSG[myIndex].tf_bulletClone[4].right.x * 0.2f);
         infoSG[myIndex].vt_bulletDir[4].z = PlayersManager.instance.direction2[myIndex].z + (infoSG[myIndex].tf_bulletClone[4].right.z * 0.2f);
         */
-
+        StateManager.instance.Shot(false);
         yield break;
     }
 

@@ -46,6 +46,9 @@ public class BulletCollision : MonoBehaviour
                 int tmp = UnityEngine.Random.Range(3, 6);
                 AudioManager.Instance.Play(tmp);
                 WeaponManager.instance.ApplyDamage(GameManager.instance.playersIndex[i], returnIdx);
+
+                ps_clone = PoolManager.instance.GetCollisionEffectFromPool("BloodPool1", other.ClosestPointOnBounds(this.transform.position), this.transform.forward);
+                EffectManager.instance.StartCoroutine(EffectManager.instance.CheckEffectEnd(ps_clone));
                 break;
             }
         }
