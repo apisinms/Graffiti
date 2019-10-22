@@ -79,17 +79,16 @@ public partial class NetworkManager : MonoBehaviour
 		bw.Write(sendBuf, 0, packetSize);
 	}
 
+	PlayersManager playersManager;
 	IngamePacket ingameSendPacket = new IngamePacket();
-	public void SendIngamePacket(
-		float _posX,
-		float _posZ,
-		float _rotY,
-		float _speed,
-		_ACTION_STATE _action,
-		float _health,
-		BulletCollisionChecker _colChecker,
-		bool _isInit = false)
+	public void SendIngamePacket(BulletCollisionChecker _colChecker, bool _isInit = false)
 	{
+		if (playersManager == null)
+		{
+			playersManager = PlayersManager.instance;
+		}
+
+
 		// 초기 위치 보낼 때
 		if (_isInit == true)
 		{
@@ -109,13 +108,13 @@ public partial class NetworkManager : MonoBehaviour
 				  RESULT.NODATA);
 		}
 
-		ingameSendPacket.playerNum = myPlayerNum;
-		ingameSendPacket.posX = _posX;
-		ingameSendPacket.posZ = _posZ;
-		ingameSendPacket.rotY = _rotY;
-		ingameSendPacket.speed = _speed;
-		ingameSendPacket.action = (int)_action;
-		ingameSendPacket.health = _health;
+		ingameSendPacket.playerNum        = myPlayerNum;
+		ingameSendPacket.posX             = playersManager.tf_players[myPlayerNum - 1].localPosition.x;
+		ingameSendPacket.posZ             = playersManager.tf_players[myPlayerNum - 1].localPosition.z;
+		ingameSendPacket.rotY             = playersManager.tf_players[myPlayerNum - 1].localEulerAngles.y;
+		ingameSendPacket.speed            = playersManager.speed[myPlayerNum - 1];
+		ingameSendPacket.action           = (int)playersManager.actionState[myPlayerNum - 1];
+		ingameSendPacket.health           = playersManager.hp[myPlayerNum - 1];
 		ingameSendPacket.collisionChecker = _colChecker;
 
 		// 패킹 및 전송
@@ -141,6 +140,31 @@ public partial class NetworkManager : MonoBehaviour
 		// 패킹 및 전송
 		int packetSize;
 		PackPacket(ref sendBuf, protocol, out packetSize);
+		bw.Write(sendBuf, 0, packetSize);
+	}
+
+	public void SendRespawnPacket(ref Transform _respawnSpot)
+	{
+		// 리스폰 프로토콜 셋팅
+		protocol = SetProtocol(
+			  STATE_PROTOCOL.INGAME_STATE,
+			  PROTOCOL.UPDATE_PROTOCOL,
+			  RESULT.RESPAWN);
+
+
+		ingameSendPacket.playerNum = myPlayerNum;
+		ingameSendPacket.posX = _respawnSpot.localPosition.x;	// 내가 리스폰 할 위치를 서버에 보내준다.
+		ingameSendPacket.posZ = _respawnSpot.localPosition.z;
+		ingameSendPacket.rotY = _respawnSpot.localEulerAngles.y;
+		ingameSendPacket.speed = playersManager.speed[myPlayerNum - 1];
+		ingameSendPacket.action = (int)playersManager.actionState[myPlayerNum - 1];
+		ingameSendPacket.health = playersManager.hp[myPlayerNum - 1];
+		ingameSendPacket.collisionChecker = BulletCollisionChecker.GetDummy();	// 더미
+
+		// 패킹 및 전송
+		int packetSize;
+		PackPacket(ref sendBuf, protocol, ingameSendPacket, out packetSize);
+
 		bw.Write(sendBuf, 0, packetSize);
 	}
 }

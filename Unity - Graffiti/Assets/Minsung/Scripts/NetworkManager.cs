@@ -32,7 +32,7 @@ public partial class NetworkManager : MonoBehaviour
 	readonly static int RESULT_MASK = 0x3FF;
 
 	/// <summary>
-	/// 10(STATE_PROTOCOL) + 20(PROTOCOL) + 10(RESULT) + 24(그외)
+	/// 10(STATE_PROTOCOL) + 20(PROTOCOL) + 24(RESULT) + 10(그외)
 	/// </summary>
 	// 63 ~ 54
 	enum STATE_PROTOCOL : Int64
@@ -77,7 +77,7 @@ public partial class NetworkManager : MonoBehaviour
 		// 48 ~ 34
 	};
 
-	// 33 ~ 24
+	// 33 ~ 10
 	enum RESULT : Int64
 	{
 		//LoginState
@@ -107,15 +107,16 @@ public partial class NetworkManager : MonoBehaviour
 		NOTIFY_WEAPON = ((Int64)0x1 << 31),   // 무기를 알려줌
 
 		// UPATE_PROTOCOL 개별
-		ENTER_SECTOR = ((Int64)0x1 << 31),            // 섹터 진입
-		EXIT_SECTOR = ((Int64)0x1 << 30),            // 섹터 퇴장
-		UPDATE_PLAYER = ((Int64)0x1 << 29),            // 플레이어 목록 최신화
-		FORCE_MOVE = ((Int64)0x1 << 28),            // 강제 이동
+		ENTER_SECTOR        = ((Int64)0x1 << 31),            // 섹터 진입
+		EXIT_SECTOR         = ((Int64)0x1 << 30),            // 섹터 퇴장
+		UPDATE_PLAYER       = ((Int64)0x1 << 29),            // 플레이어 목록 최신화
+		FORCE_MOVE          = ((Int64)0x1 << 28),            // 강제 이동
 		GET_OTHERPLAYER_POS = ((Int64)0x1 << 27),            // 다른 플레이어 포지션 얻기
-		BULLET_HIT = ((Int64)0x1 << 26),      // 총알 맞음
-		
-		// ~ 25
-		NODATA = ((Int64)0x1 << 24)
+		BULLET_HIT          = ((Int64)0x1 << 26),			 // 총알 맞음
+		RESPAWN             = ((Int64)0x1 << 25),			 // 리스폰 요청 및 상대방 리스폰 수신
+
+		// ~ 11
+		NODATA = ((Int64)0x1 << 10)
 	};
 
 	struct _User_Info
@@ -134,6 +135,12 @@ public partial class NetworkManager : MonoBehaviour
 
 		[MarshalAs(UnmanagedType.I4)]
 		public int playerHitCountBit;
+
+		private static BulletCollisionChecker dummy = new BulletCollisionChecker();
+		public static BulletCollisionChecker GetDummy()
+		{
+			return dummy;
+		}
 
 		public byte[] Serialize()
 		{

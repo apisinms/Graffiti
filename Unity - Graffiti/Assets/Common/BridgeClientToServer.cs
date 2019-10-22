@@ -8,6 +8,9 @@ public partial class BridgeClientToServer : MonoBehaviour
 
     private NetworkManager networkManager;  // 접근용
     private PlayersManager playersManager; // 접근용
+    private GameManager gameManager;		// 접근용
+    private WeaponManager weaponManager;	// 접근용
+    private UIManager uiManager;			// 접근용
     public int myIndex { get; set; }
 
     private void Awake()

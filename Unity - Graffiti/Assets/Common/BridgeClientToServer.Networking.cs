@@ -31,20 +31,20 @@ public partial class BridgeClientToServer : MonoBehaviour
 		int index = _playerNum - 1;
 
 		//무기정보 저장
-		WeaponManager.instance.mainWeapon[index] = (_WEAPONS)_weapon.mainW;
-		WeaponManager.instance.subWeapon[index] = (_WEAPONS)_weapon.subW;
+		weaponManager.mainWeapon[index] = (_WEAPONS)_weapon.mainW;
+		weaponManager.subWeapon[index] = (_WEAPONS)_weapon.subW;
 
 		//주무기 세팅 스테이트패턴
-		switch (WeaponManager.instance.mainWeapon[index])
+		switch (weaponManager.mainWeapon[index])
 		{
 			case _WEAPONS.AR:
-				WeaponManager.instance.SetMainWeapon(Main_AR.GetMainWeaponInstance(), index);
+				weaponManager.SetMainWeapon(Main_AR.GetMainWeaponInstance(), index);
 				break;
 			case _WEAPONS.SG:
-				WeaponManager.instance.SetMainWeapon(Main_SG.GetMainWeaponInstance(), index);
+				weaponManager.SetMainWeapon(Main_SG.GetMainWeaponInstance(), index);
 				break;
 			case _WEAPONS.SMG:
-				WeaponManager.instance.SetMainWeapon(Main_SMG.GetMainWeaponInstance(), index);
+				weaponManager.SetMainWeapon(Main_SMG.GetMainWeaponInstance(), index);
 				break;
 		}
 
@@ -56,9 +56,9 @@ public partial class BridgeClientToServer : MonoBehaviour
 		EffectManager.instance.InitializeMuzzle(index);
 	}
 
-	public void SetOtherPlayerNickName(string _nickName, int _idx)
+	public void SetPlayerNickName(string _nickName, int _idx)
 	{
-		UIManager.instance.SetNickname(_nickName, _idx);
+		uiManager.SetNickname(_nickName, _idx);
 	}
 
 	// 최초에 무기정보, 게임정보, 자동차 씨드를 bridg의 멤버로 설정(GameManager가 인스턴스 생성되고 나서 저장해야되므로;)
@@ -74,24 +74,24 @@ public partial class BridgeClientToServer : MonoBehaviour
 	// 섹터 진입시
 	public void EnterSectorProcess(ref IngamePacket _packet)
 	{
-		PlayersManager.instance.obj_players[_packet.playerNum - 1].SetActive(true);   // 켜고
+		playersManager.obj_players[_packet.playerNum - 1].SetActive(true);   // 켜고
 
 		// 이렇게 해줘야 이전 위치랑 보간을 안해서 캐릭터가 슬라이딩 되지 않음
-		tmpVec = PlayersManager.instance.obj_players[_packet.playerNum - 1].transform.localPosition;
-		tmpAngle = PlayersManager.instance.obj_players[_packet.playerNum - 1].transform.localEulerAngles;
+		tmpVec = playersManager.obj_players[_packet.playerNum - 1].transform.localPosition;
+		tmpAngle = playersManager.obj_players[_packet.playerNum - 1].transform.localEulerAngles;
 
 		tmpVec.x = _packet.posX;
 		tmpVec.z = _packet.posZ;
 		tmpAngle.y = _packet.rotY;
 
-		PlayersManager.instance.obj_players[_packet.playerNum - 1].transform.localPosition = tmpVec;
-		PlayersManager.instance.obj_players[_packet.playerNum - 1].transform.localEulerAngles = tmpAngle;
+		playersManager.obj_players[_packet.playerNum - 1].transform.localPosition = tmpVec;
+		playersManager.obj_players[_packet.playerNum - 1].transform.localEulerAngles = tmpAngle;
 	}
 
 	// 섹터 아웃시
 	public void ExitSectorProcess(ref IngamePacket _packet)
 	{
-		PlayersManager.instance.obj_players[_packet.playerNum - 1].SetActive(false);   // 끄고
+		playersManager.obj_players[_packet.playerNum - 1].SetActive(false);   // 끄고
 	}
 
 	public void UpdatePlayerProcess(byte _playerBit)
@@ -108,7 +108,7 @@ public partial class BridgeClientToServer : MonoBehaviour
 			if ((_playerBit & bitMask) > 0)
 			{
 				// 꺼져있는 플레이어라면 위치를 넘버로 요청한다.(얘네들만 갱신해주면 됨)
-				if (PlayersManager.instance.obj_players[i].activeSelf == false)
+				if (playersManager.obj_players[i].activeSelf == false)
 					networkManager.RequestOtherPlayerPos(i + 1);
 
 				// 이미 켜져있으면 굳이 얻어올 필요 없음
@@ -119,8 +119,8 @@ public partial class BridgeClientToServer : MonoBehaviour
 			// 섹터에 포함되어 있지 않다면 오브젝트를 꺼준다.(오브젝트가 켜진 경우만)
 			else
 			{
-				if (PlayersManager.instance.obj_players[i].activeSelf == true)
-					PlayersManager.instance.obj_players[i].SetActive(false);
+				if (playersManager.obj_players[i].activeSelf == true)
+					playersManager.obj_players[i].SetActive(false);
 			}
 		}
 	}
@@ -135,8 +135,8 @@ public partial class BridgeClientToServer : MonoBehaviour
 		networkManager.SetIngamePacket(_packet.playerNum - 1, ref _packet);
 
 		// 원래 플레이어가 가지고 있던 정보를 임시 벡터에 가져옴
-		tmpVec = PlayersManager.instance.obj_players[_packet.playerNum - 1].transform.localPosition;
-		tmpAngle = PlayersManager.instance.obj_players[_packet.playerNum - 1].transform.localEulerAngles;
+		tmpVec   = playersManager.obj_players[_packet.playerNum - 1].transform.localPosition;
+		tmpAngle = playersManager.obj_players[_packet.playerNum - 1].transform.localEulerAngles;
 
 		// 변환된 값을 바로 대입
 		tmpVec.x = _packet.posX;
@@ -144,15 +144,15 @@ public partial class BridgeClientToServer : MonoBehaviour
 		tmpAngle.y = _packet.rotY;
 
 		// 러프없이 강제로 대입해버림
-		PlayersManager.instance.obj_players[_packet.playerNum - 1].transform.localPosition = tmpVec;
-		PlayersManager.instance.obj_players[_packet.playerNum - 1].transform.localEulerAngles = tmpAngle;
+		playersManager.obj_players[_packet.playerNum - 1].transform.localPosition = tmpVec;
+		playersManager.obj_players[_packet.playerNum - 1].transform.localEulerAngles = tmpAngle;
 
 		// 본인일 경우에는 카메라도 강제 셋팅 시켜준다.
 		if (_packet.playerNum == networkManager.MyPlayerNum)
 		{
 			// 카메라도 설정
-			if (GameManager.instance.mainCamera != null)
-				GameManager.instance.mainCamera.SetCameraPos(0.0f, C_Global.camPosY, C_Global.camPosZ);
+			if (gameManager.mainCamera != null)
+				gameManager.mainCamera.SetCameraPos(0.0f, C_Global.camPosY, C_Global.camPosZ);
 		}
 	}
 
@@ -162,45 +162,66 @@ public partial class BridgeClientToServer : MonoBehaviour
 		networkManager.SetIngamePacket(_packet.playerNum - 1, ref _packet);   // 패킷 저장해주고
 
 		// 플레이어 위치를 바로 대입해서 셋팅해버림
-		tmpVec = PlayersManager.instance.obj_players[_packet.playerNum - 1].transform.localPosition;
-		tmpAngle = PlayersManager.instance.obj_players[_packet.playerNum - 1].transform.localEulerAngles;
+		tmpVec   = playersManager.obj_players[_packet.playerNum - 1].transform.localPosition;
+		tmpAngle = playersManager.obj_players[_packet.playerNum - 1].transform.localEulerAngles;
 
 		tmpVec.x = _packet.posX;
 		tmpVec.z = _packet.posZ;
 		tmpAngle.y = _packet.rotY;
 
-		PlayersManager.instance.obj_players[_packet.playerNum - 1].transform.localPosition = tmpVec;
-		PlayersManager.instance.obj_players[_packet.playerNum - 1].transform.localEulerAngles = tmpAngle;
+		playersManager.obj_players[_packet.playerNum - 1].transform.localPosition = tmpVec;
+		playersManager.obj_players[_packet.playerNum - 1].transform.localEulerAngles = tmpAngle;
 
 		// 꺼져있다면 켜준다!
-		if (PlayersManager.instance.obj_players[_packet.playerNum - 1].activeSelf == false)
-			PlayersManager.instance.obj_players[_packet.playerNum - 1].SetActive(true);
+		if (playersManager.obj_players[_packet.playerNum - 1].activeSelf == false)
+			playersManager.obj_players[_packet.playerNum - 1].SetActive(true);
 	}
 
 	public void BulletHitProcess(ref IngamePacket _packet)
 	{
-        for (int i = 0; i < C_Global.MAX_PLAYER; i++)
-        {
-            if ((_packet.playerNum - 1) == UIManager.instance.playersIndex[i])
-            {
-                UIManager.instance.hp[UIManager.instance.playersIndex[i]].img_front.fillAmount = _packet.health * 0.01f;
-                UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHP(UIManager.instance.playersIndex[i], _packet.health * 0.01f));
+		int absoluteIdx = uiManager.PlayerIndexToAbsoluteIndex(_packet.playerNum - 1);
 
-				// 체력이 0 이하가 되면 플레이어를 끄고, UI를 끈다. (나중에 DieProcess 같은걸 만들어서 죽는애니->조작불가->리스폰 코루틴 시작->끝나면 리스폰 지역에서 부활 등
-				if (_packet.health <= 0.0f)
-				{
-					if (_packet.playerNum - 1 != myIndex)
-					{
-						playersManager.obj_players[_packet.playerNum - 1].SetActive(false);
-						UIManager.instance.OffPlayerUI(_packet.playerNum - 1);
-					}
-				}
+		uiManager.HealthUIChanger(absoluteIdx, _packet.health);	// 실제 체력 UI 적용
 
-				playersManager.hp[_packet.playerNum - 1] = _packet.health;	// 실제 피 세팅
-				networkManager.SetIngamePacket(_packet.playerNum - 1, ref _packet);
-
+		// 체력 0이하가 되면 죽음 처리 (나중에 DieProcess 같은걸 만들어서 죽는애니->조작불가->리스폰 코루틴 시작->끝나면 리스폰 지역에서 부활 등
+		if (_packet.health <= 0.0f && playersManager.hp[_packet.playerNum - 1] > 0.0f)		// 여러 번 피격이 들어올 수 있으니 최초 1번만 진행
+		{
+			// 내가 죽은 경우
+			if ((_packet.playerNum - 1) == myIndex)
+			{
+				gameManager.LocalPlayerDeadProcess();
 			}
-        }
+
+			// 다른 플레이어가 죽은 경우
+			else
+			{
+				//playersManager.obj_players[_packet.playerNum - 1].SetActive(false);
+				uiManager.OffPlayerUI(_packet.playerNum - 1);
+			}
+		}
+
+		playersManager.hp[_packet.playerNum - 1] = _packet.health;  // 실제 피 세팅
+		networkManager.SetIngamePacket(_packet.playerNum - 1, ref _packet);
+	}
+
+	public void RespawnProcess(ref IngamePacket _packet)
+	{
+		ForceMoveProcess(ref _packet);  // 강제 이동 실시
+		playersManager.hp[_packet.playerNum - 1] = _packet.health;			 // 실제 피 세팅
+		uiManager.HealthUIChanger(uiManager.PlayerIndexToAbsoluteIndex(_packet.playerNum - 1), _packet.health);    // 실제 체력 UI 적용
+
+		// 내가 죽었던 거면 UI 켜줌
+		if ((_packet.playerNum - 1) == myIndex)
+		{
+			uiManager.SetAliveUI();
+		}
+
+		// 다른 플레이어가 죽었던거면 체력, 서클 등 켜줌
+		else
+		{
+			int absoluteIdx = uiManager.PlayerIndexToAbsoluteIndex(_packet.playerNum - 1);
+			uiManager.OnPlayerUI(absoluteIdx);
+		}
 	}
 
 	// 정상적인 업데이트 시
@@ -212,31 +233,18 @@ public partial class BridgeClientToServer : MonoBehaviour
 	// 다른 플레이어의 접속이 끊겼을때, 플레이어 로빈 오브젝트를 비활성화.
 	public void OnOtherPlayerDisconnected(int _quitPlayerNum)
 	{
-		if (PlayersManager.instance.obj_players[_quitPlayerNum - 1].activeSelf == true)
+		if (playersManager.obj_players[_quitPlayerNum - 1].activeSelf == true)
 		{
-			PlayersManager.instance.obj_players[_quitPlayerNum - 1].SetActive(false);
+			playersManager.obj_players[_quitPlayerNum - 1].SetActive(false);
 
-			for (int i = 0; i < C_Global.MAX_PLAYER; i++)
-			{
-				if ((_quitPlayerNum - 1) == UIManager.instance.playersIndex[i])
-				{
-					UIManager.instance.OffPlayerUI(_quitPlayerNum - 1);
-
-					break;
-				}
-			}
+			int absoluteIdx = uiManager.PlayerIndexToAbsoluteIndex(_quitPlayerNum - 1);
+			uiManager.OffPlayerUI(absoluteIdx);
 		}
 	}
 
 	//쐇을때 무조건 1번의 패킷을 보내야됨. 보정용
 	public void SendPacketOnce()
 	{
-		networkManager.SendIngamePacket(playersManager.tf_players[myIndex].localPosition.x,
-		playersManager.tf_players[myIndex].localPosition.z,
-		playersManager.tf_players[myIndex].localEulerAngles.y,
-		playersManager.speed[myIndex],
-		playersManager.actionState[myIndex],
-		playersManager.hp[myIndex],
-		WeaponManager.instance.GetCollisionChecker());
+		networkManager.SendIngamePacket(weaponManager.GetCollisionChecker());
 	}
 }

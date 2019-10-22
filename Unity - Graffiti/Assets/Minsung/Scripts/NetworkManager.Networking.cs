@@ -230,7 +230,7 @@ public partial class NetworkManager : MonoBehaviour
 									string nickName;
 									UnPackPacket(info.packet, out playerNum, out nickName);
 
-									bridge.SetOtherPlayerNickName(nickName, (playerNum - 1));
+									bridge.SetPlayerNickName(nickName, (playerNum - 1));
 								}
 							}
 							break;
@@ -355,6 +355,16 @@ public partial class NetworkManager : MonoBehaviour
 											{
 												UnPackPacket(info.packet, ref tmpIngamePacket);            // 패킷을 받고
 												bridge.BulletHitProcess(ref tmpIngamePacket);
+											}
+										}
+										break;
+
+									case RESULT.RESPAWN:
+										{
+											lock(key)
+											{
+												UnPackPacket(info.packet, ref tmpIngamePacket);
+												bridge.RespawnProcess(ref tmpIngamePacket);
 											}
 										}
 										break;

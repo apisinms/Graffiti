@@ -1,2 +1,4 @@
 E:\Unity\Projects\forGitHub\Graffiti\UNITY-~1\obj\Debug\Assembly-CSharp-Editor.csprojAssemblyReference.cache
 E:\Unity\Projects\forGitHub\Graffiti\UNITY-~1\obj\Debug\Assembly-CSharp-Editor.csproj.CoreCompileInputs.cache
+C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\obj\Debug\Assembly-CSharp-Editor.csprojAssemblyReference.cache
+C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\obj\Debug\Assembly-CSharp-Editor.csproj.CoreCompileInputs.cache

@@ -1,12 +1,13 @@
 #pragma once
 #include "C_Global.h"
+#include "C_SyncCS.h"
 
 class C_ClientInfo;
 
-class InGameManager
+class InGameManager : C_SyncCS< InGameManager>
 {
 #ifdef DEBUG
-	static const int WEAPON_SELTIME = 1 + 1;	// 무기 선택 시간(초 단위)
+	static const int WEAPON_SELTIME = 5 + 1;	// 무기 선택 시간(초 단위)
 	int numOfPacketSent             = 0;		// 패킷 보낸 횟수
 #else
 	static const int WEAPON_SELTIME = 30 + 1;	// 무기 선택 시간(초 단위)
@@ -31,7 +32,7 @@ class InGameManager
 		DISCONNECT_PROTOCOL   = ((__int64)0x1 << 34),	// 접속 끊김 프로토콜
 	};
 
-   // 33~24
+   // 33~10
 	enum RESULT_INGAME : __int64
 	{
 		// INGAME_PROTOCOL 공통
@@ -41,16 +42,17 @@ class InGameManager
 		// WEAPON_PROTOCOL 개별
 		NOTIFY_WEAPON = ((__int64)0x1 << 31),	// 무기를 알려줌
 
-		// MOVE_PROTOCOL 개별
+		// UPDATE_PROTOCOL 개별
 		ENTER_SECTOR        = ((__int64)0x1 << 31),		// 섹터 진입
 		EXIT_SECTOR         = ((__int64)0x1 << 30),		// 섹터 퇴장
 		UPDATE_PLAYER       = ((__int64)0x1 << 29),		// 플레이어 목록 최신화
 		FORCE_MOVE          = ((__int64)0x1 << 28),		// 강제 이동
 		GET_OTHERPLAYER_POS = ((__int64)0x1 << 27),		// 다른 플레이어 포지션 얻기
 		BULLET_HIT          = ((__int64)0x1 << 26),		// 총알 맞음
+		RESPAWN				= ((__int64)0x1 << 25),		// 리스폰 요청 수신 및 리스폰 프로토콜 전송
 		
 
-		NODATA = ((__int64)0x1 << 24)
+		NODATA = ((__int64)0x1 << 10)
 	};
 
 private:
@@ -80,11 +82,12 @@ private:
 
 	PROTOCOL_INGAME GetBufferAndProtocol(C_ClientInfo* _ptr, char* _buf);	// buf와 Protocol을 동시에 얻는 함수
 	bool WeaponSelectProcess(C_ClientInfo* _ptr, char* _buf);
-	bool LoadingProcess(C_ClientInfo* _ptr, char* _buf);
+	bool LoadingProcess(C_ClientInfo* _ptr);
 	bool InitProcess(C_ClientInfo* _ptr, char* _buf);
 	bool UpdateProcess(C_ClientInfo* _ptr, char* _buf);
 	bool GetPosProcess(C_ClientInfo* _ptr, char* _buf);		// 위치를 얻어주는 함수
-	bool OnFocusProcess(C_ClientInfo* _ptr);				// 포커스 On시의 처리 함수(다른 플레이어 인게임 정보 보내줌)
+	bool OnFocusProcess(C_ClientInfo* _ptr);		// 포커스 On시의 처리 함수(다른 플레이어 인게임 정보 보내줌)
+	bool RespawnProcess(C_ClientInfo* _ptr, char* _buf);
 
 	void InitalizePlayersInfo(RoomInfo* _room);
 
@@ -96,10 +99,11 @@ private:
 	bool CheckBullet(C_ClientInfo* _ptr, IngamePacket& _recvPacket);
 	bool CheckBulletRange(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer);
 	bool CheckMaxFire(C_ClientInfo* _shotPlayer, int _numOfBullet);
-	int GetNumOfBullet(int _shootCountBit, byte _hitPlayerNum);
+	int GetNumOfBullet(int& _shootCountBit, byte _hitPlayerNum);
 	void BulletHitProcess(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer, int _numOfBullet);
 	void BulletDecrease(C_ClientInfo* _shotPlayer, int _numOfBullet);
 
+	void RefillBulletAndHealth(C_ClientInfo* _respawnPlayer);
 public:
 	bool CanISelectWeapon(C_ClientInfo* _ptr);	// 무기 선택
 	bool LoadingSuccess(C_ClientInfo* _ptr);	// 로딩 성공 처리

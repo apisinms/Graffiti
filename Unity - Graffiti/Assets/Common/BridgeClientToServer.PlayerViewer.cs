@@ -14,19 +14,15 @@ public partial class BridgeClientToServer : MonoBehaviour
 
 	public void Initialization_PlayerViewer()
 	{
-		myIndex = GameManager.instance.myIndex;
 		playersManager = PlayersManager.instance;
+		gameManager = GameManager.instance;
+		weaponManager = WeaponManager.instance;
+		uiManager = UIManager.instance;
+		myIndex = gameManager.myIndex;
 
 #if NETWORK
 		//////////////// 게임 시작 시 최초로 1회 내 위치정보를 서버로 전송해야함 /////////////////
-		networkManager.SendIngamePacket(playersManager.tf_players[myIndex].localPosition.x,
-			 playersManager.tf_players[myIndex].localPosition.z,
-			 playersManager.tf_players[myIndex].localEulerAngles.y,
-			 playersManager.speed[myIndex],
-			 playersManager.actionState[myIndex],
-			 playersManager.hp[myIndex],
-			 WeaponManager.instance.GetCollisionChecker(),
-			 true);
+		networkManager.SendIngamePacket(weaponManager.GetCollisionChecker(), true);
 #endif
 
 #if !NETWORK
@@ -51,7 +47,7 @@ public partial class BridgeClientToServer : MonoBehaviour
 		curPlayerPos = new Transform[C_Global.MAX_PLAYER];
 
 		for (int i = 0; i < curPlayerPos.Length; i++)
-			curPlayerPos[i] = PlayersManager.instance.obj_players[i].transform;
+			curPlayerPos[i] = playersManager.obj_players[i].transform;
 
 		pos = new Vector3();
 		isStartShotCor = new bool[C_Global.MAX_PLAYER]; //샷 코루틴 중복실행 방지.
@@ -91,8 +87,8 @@ public partial class BridgeClientToServer : MonoBehaviour
 
 						if (isStartShotCor[i] == true)
 						{
-							if (WeaponManager.instance.curMainActionCor[i] != null)
-								StopCoroutine(WeaponManager.instance.curMainActionCor[i]);
+							if (weaponManager.curMainActionCor[i] != null)
+								StopCoroutine(weaponManager.curMainActionCor[i]);
 							EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, i);
 
 							isStartShotCor[i] = false;
@@ -106,8 +102,8 @@ public partial class BridgeClientToServer : MonoBehaviour
 
 						if (isStartShotCor[i] == true)
 						{
-							if (WeaponManager.instance.curMainActionCor[i] != null)
-								StopCoroutine(WeaponManager.instance.curMainActionCor[i]);
+							if (weaponManager.curMainActionCor[i] != null)
+								StopCoroutine(weaponManager.curMainActionCor[i]);
 							EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, i);
 
 							isStartShotCor[i] = false;
@@ -119,8 +115,8 @@ public partial class BridgeClientToServer : MonoBehaviour
 						playersManager.Action_AimingNormal(i, pos, networkManager.GetRotY(i));
 						if (isStartShotCor[i] == true)
 						{
-							if (WeaponManager.instance.curMainActionCor[i] != null)
-								StopCoroutine(WeaponManager.instance.curMainActionCor[i]);
+							if (weaponManager.curMainActionCor[i] != null)
+								StopCoroutine(weaponManager.curMainActionCor[i]);
 							EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, i);
 
 							isStartShotCor[i] = false;
@@ -133,10 +129,10 @@ public partial class BridgeClientToServer : MonoBehaviour
 
 						if (isStartShotCor[i] == false)
 						{
-							if (WeaponManager.instance.curMainActionCor[i] != null)
-								StopCoroutine(WeaponManager.instance.curMainActionCor[i]); //이전꺼 멈추고
+							if (weaponManager.curMainActionCor[i] != null)
+								StopCoroutine(weaponManager.curMainActionCor[i]); //이전꺼 멈추고
 
-							WeaponManager.instance.curMainActionCor[i] = StartCoroutine(WeaponManager.instance.ActionFire(i));
+							weaponManager.curMainActionCor[i] = StartCoroutine(weaponManager.ActionFire(i));
 							EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, i);
 
 							isStartShotCor[i] = true;
@@ -164,10 +160,10 @@ public partial class BridgeClientToServer : MonoBehaviour
 
 						if (isStartShotCor[i] == false)
 						{
-							if (WeaponManager.instance.curMainActionCor[i] != null)
-								StopCoroutine(WeaponManager.instance.curMainActionCor[i]);
+							if (weaponManager.curMainActionCor[i] != null)
+								StopCoroutine(weaponManager.curMainActionCor[i]);
 
-							WeaponManager.instance.curMainActionCor[i] = StartCoroutine(WeaponManager.instance.ActionFire(i));
+							weaponManager.curMainActionCor[i] = StartCoroutine(weaponManager.ActionFire(i));
 							EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, i);
 
 							isStartShotCor[i] = true;

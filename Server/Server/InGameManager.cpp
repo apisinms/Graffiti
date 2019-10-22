@@ -250,7 +250,7 @@ bool InGameManager::WeaponSelectProcess(C_ClientInfo* _ptr, char* _buf)
 	return false;
 }
 
-bool InGameManager::LoadingProcess(C_ClientInfo* _ptr, char* _buf)
+bool InGameManager::LoadingProcess(C_ClientInfo* _ptr)
 {
 	PROTOCOL_INGAME protocol;
 	char buf[BUFSIZE] = { 0, };
@@ -264,11 +264,13 @@ bool InGameManager::LoadingProcess(C_ClientInfo* _ptr, char* _buf)
 	
 	// 3. 모든 플레이어가 레디상태인지 검사한다.
 	RESULT_INGAME result = RESULT_INGAME::INGAME_SUCCESS;	// 일단 성공했다고 가정
-	vector<C_ClientInfo*>::iterator iter = playerList.begin();
-	for (; iter != playerList.end(); ++iter)
+	C_ClientInfo* player = nullptr;
+	for (auto iter = playerList.begin(); iter != playerList.end(); ++iter)
 	{
+		player = *iter;
+
 		// 만약 모두가 로딩된게 아니라면 false이다.
-		if (((C_ClientInfo*)*iter)->GetPlayerInfo()->GetLoadStatus() == false)
+		if (player->GetPlayerInfo()->GetLoadStatus() == false)
 		{
 			result = RESULT_INGAME::INGAME_FAIL;	// 모두가 로딩아님
 			break;
@@ -350,7 +352,6 @@ bool InGameManager::UpdateProcess(C_ClientInfo* _ptr, char* _buf)
 	UnPackPacket(_buf, recvPacket);
 	printf("%d ,%f, %f, %f, %d\n", recvPacket.playerNum, recvPacket.posX, recvPacket.posZ, recvPacket.rotY, recvPacket.action);
 	printf("패킷 %d회 보냄\n", ++numOfPacketSent);
-	printf("%s피:%f\n", _ptr->GetUserInfo()->id, _ptr->GetPlayerInfo()->GetIngamePacket()->health);
 
 	list<C_ClientInfo*>sendList;	// 현재 섹터 + 인접 섹터에 존재하는 플레이어 리스트
 	C_ClientInfo* exceptClient = nullptr;	// 패킷 안보낼 대상
@@ -388,7 +389,7 @@ bool InGameManager::UpdateProcess(C_ClientInfo* _ptr, char* _buf)
 bool InGameManager::GetPosProcess(C_ClientInfo* _ptr, char* _buf)
 {
 	PROTOCOL_INGAME protocol;
-	char buf[BUFSIZE];
+	char buf[BUFSIZE] = { 0, };
 	int packetSize = 0;
 
 	// 플레이어 num을 가져온다.
@@ -421,7 +422,7 @@ bool InGameManager::GetPosProcess(C_ClientInfo* _ptr, char* _buf)
 bool InGameManager::OnFocusProcess(C_ClientInfo* _ptr)
 {
 	PROTOCOL_INGAME protocol;
-	char buf[BUFSIZE];
+	char buf[BUFSIZE] = { 0, };
 	int packetSize = 0;
 
 	// 프로토콜 세팅
@@ -447,6 +448,43 @@ bool InGameManager::OnFocusProcess(C_ClientInfo* _ptr)
 			_ptr->SendPacket(protocol, buf, packetSize);
 		}
 	}
+
+	return true;
+}
+
+bool InGameManager::RespawnProcess(C_ClientInfo* _ptr, char* _buf)
+{
+	PROTOCOL_INGAME protocol;
+	char buf[BUFSIZE] = { 0, };
+	int packetSize = 0;
+	
+	// 1. 리스폰할 위치가 담긴 패킷을 받아서 이 유저의 정보로 세팅한다.
+	IngamePacket ingamePacket;
+	UnPackPacket(_buf, ingamePacket);
+
+	IngamePacket* setPacket = new IngamePacket(ingamePacket);
+	_ptr->GetPlayerInfo()->SetIngamePacket(setPacket);
+
+	// 2. 리스폰 해야되니까 체력이랑 총알 리셋 먼저 한다.
+	RefillBulletAndHealth(_ptr);
+
+
+	/// 3. 같은 방에 있는 플레이어 리스트를 얻어온다.
+	///vector<C_ClientInfo*> playerList = _ptr->GetRoom()->GetPlayers();
+	
+
+	// 3. 같은 섹터에 있는 플레이어 리스트를 얻어온다.(리스폰 될 위치의)
+	list<C_ClientInfo*> playerList = _ptr->GetRoom()->GetSector()->GetSectorPlayerList(_ptr->GetPlayerInfo()->GetIndex());
+
+	// 4. 모든 플레이어에게 얘가 리스폰한다고 전송한다.
+	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::UPDATE_PROTOCOL, RESULT_INGAME::RESPAWN);	// 리스폰 프로토콜 세팅
+	
+	// 인게임 정보 패킹
+	memcpy(&ingamePacket, _ptr->GetPlayerInfo()->GetIngamePacket(), sizeof(IngamePacket));
+	PackPacket(buf, ingamePacket, packetSize);
+	
+	// 전송
+	ListSendPacket(playerList, nullptr, protocol, buf, packetSize, false);
 
 	return true;
 }
@@ -648,6 +686,8 @@ void InGameManager::UpdateSectorAndSend(C_ClientInfo* _ptr, IngamePacket& _recvP
 /// about bullet
 bool InGameManager::CheckBullet(C_ClientInfo* _ptr, IngamePacket& _recvPacket)
 {
+	IC_CS cs;
+
 	PROTOCOL_INGAME protocol;
 	char buf[BUFSIZE] = { 0, };
 	int packetSize = 0;
@@ -681,15 +721,22 @@ bool InGameManager::CheckBullet(C_ClientInfo* _ptr, IngamePacket& _recvPacket)
 			// 플레이어 비트가 활성화 되어 있으면
 			if ((bitMask & _recvPacket.collisionCheck.playerBit) > 0)
 			{
+				// 총알을 맞은 이 플레이어가 유효한 숫자의 총알을 맞았는지 다시 검사한다.
+				int numOfBullet = GetNumOfBullet(_recvPacket.collisionCheck.playerHitCountBit, (i + 1));
+				if (CheckMaxFire(_ptr, numOfBullet) == false)	// 유효하지 않으면 그냥 건너 뛴다.
+				{
+					continue;
+				}
+
+				// 유효한 발 수라면 사정거리 검사 -> 총알 개수 감소 -> 실제 데미지 적용 순으로 간다.
 				C_ClientInfo* hitPlayer = _ptr->GetRoom()->GetPlayerByIndex(i);
 				
 				// 사정거리 검사해서 거리이내라면 데미지를 입힌다.
 				if (CheckBulletRange(_ptr, hitPlayer) == true)
 				{
-					int numOfBullet = GetNumOfBullet(_recvPacket.collisionCheck.playerHitCountBit, (i + 1));
 					BulletHitProcess(_ptr, hitPlayer, numOfBullet);
 					
-					printf("%s피:%f\n", hitPlayer->GetUserInfo()->id ,hitPlayer->GetPlayerInfo()->GetIngamePacket()->health);
+					_tprintf(TEXT("%s피:%f\n"), hitPlayer->GetUserInfo()->nickname, hitPlayer->GetPlayerInfo()->GetIngamePacket()->health);
 
 					hitPlayers.emplace_back(hitPlayer);	// 맞은놈 리스트에 추가
 
@@ -754,25 +801,25 @@ bool InGameManager::CheckMaxFire(C_ClientInfo* _shotPlayer, int _numOfBullet)
 	bool result = false;
 
 	// 원래 0.1초당 나갈 수 있는 발 수를 계산해서 검사해야하지만 최소 1발(정수)은 보장해야하기 때문에 간단히 검사함
-	if (_numOfBullet <= shotPlayerWeapon->bulletPerShot)
+	if ( (_numOfBullet <= shotPlayerWeapon->bulletPerShot) && (_numOfBullet > 0))
 	{
 		result = true;
 	}
 
 	return result;
 }
-int InGameManager::GetNumOfBullet(int _shootCountBit, byte _hitPlayerNum)
+int InGameManager::GetNumOfBullet(int& _shootCountBit, byte _hitPlayerNum)
 {
 	int shifter = 0;
 	int bulletCount = 0;
 	int TEMP_MAX_PLAYER = 4;
+	byte bitEraseMask = 0x00;			// 8비트 지우기 마스크(00000000)
 
 	// 0이 매개변수로 넘어오면 발사된 전체 총알 갯수를 달라는 의미다.
 	if (_hitPlayerNum == 0)
 	{
 		int bulletCountBit = 0;
 
-		byte bitEraseMask = 0x00;			// 8비트 지우기 마스크(00000000)
 		bulletCountBit = _shootCountBit;	//처음 카운트 비트 값으로
 		for (int i = 1; i <= TEMP_MAX_PLAYER; i++)
 		{
@@ -781,7 +828,7 @@ int InGameManager::GetNumOfBullet(int _shootCountBit, byte _hitPlayerNum)
 			if ((bulletCountBit >> shifter) > 0)
 			{
 				bulletCount += (bulletCountBit >> shifter);
-				bulletCountBit &= bitEraseMask << shifter;	// 지금 구한 8비트를 마스크로 지워줌
+				bulletCountBit &= (bitEraseMask << shifter);	// 지금 구한 8비트를 마스크로 지워줌
 			}
 		}
 	}
@@ -790,6 +837,9 @@ int InGameManager::GetNumOfBullet(int _shootCountBit, byte _hitPlayerNum)
 	{
 		shifter = 8 * (TEMP_MAX_PLAYER - _hitPlayerNum);	// 이동 연산에 필요한 값
 		bulletCount = (_shootCountBit >> shifter);
+		
+		// 이미 맞은 것을 체크한 플레이어의 총알 갯수는 지워서 지장이 없도록 한다.
+		_shootCountBit &= (bitEraseMask << shifter);	// 지금 구한 8비트를 마스크로 지워줌
 	}
 
 	return bulletCount;
@@ -830,6 +880,17 @@ void InGameManager::BulletDecrease(C_ClientInfo* _shotPlayer, int _numOfBullet)
 	}
 }
 
+
+/// about respawn
+void InGameManager::RefillBulletAndHealth(C_ClientInfo* _respawnPlayer)
+{
+	int maxbullet = weaponInfo[_respawnPlayer->GetPlayerInfo()->GetWeapon()->mainW]->maxAmmo;
+	float maxHealth = gameInfo[_respawnPlayer->GetRoom()->GetGameType()]->maxHealth;
+
+	_respawnPlayer->GetPlayerInfo()->SetBullet(maxbullet);
+	_respawnPlayer->GetPlayerInfo()->GetIngamePacket()->health = maxHealth;
+}
+
 //////// public
 bool InGameManager::CanISelectWeapon(C_ClientInfo* _ptr)
 {
@@ -849,7 +910,7 @@ bool InGameManager::LoadingSuccess(C_ClientInfo* _ptr)
 
 	// 로딩 검사
 	if (protocol == LOADING_PROTOCOL)
-		return LoadingProcess(_ptr, buf);
+		return LoadingProcess(_ptr);
 
 	return false;
 }
@@ -880,6 +941,10 @@ bool InGameManager::CanIUpdate(C_ClientInfo* _ptr)
 			// 다른 사람 위치 요청 일시
 		case GET_OTHERPLAYER_POS:
 			return GetPosProcess(_ptr, buf);
+
+			// 리스폰 요청 시
+		case RESPAWN:
+			return RespawnProcess(_ptr, buf);
 
 			// 그냥 업데이트일 시
 		default:

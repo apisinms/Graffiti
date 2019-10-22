@@ -37,7 +37,7 @@ class LoginManager
 		PW_ERROR = ((__int64)0x1 << 30),
 
 
-		NODATA = ((__int64)0x1 << 24)
+		NODATA = ((__int64)0x1 << 10)
 	};
 
 private:

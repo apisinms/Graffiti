@@ -61,6 +61,8 @@ public class GameManager : MonoBehaviour
 
     public CameraControl mainCamera;    // 메인 카메라
 
+	private Transform respawnSpot;	// 리스폰 위치
+
     //	private static bool isLeftDrag;
     //public static bool LeftTouch { get { return isLeftDrag; } }
 
@@ -84,6 +86,8 @@ public class GameManager : MonoBehaviour
         gameInfo.responTime = 5;
         CarSeed = 0;
 #endif
+
+		respawnSpot = GameObject.Find(myTag + "_RespawnSpot").transform;	// 리스폰 위치 캐싱
 	}
 
 	void Awake()
@@ -175,6 +179,29 @@ public class GameManager : MonoBehaviour
 	{
 		loadingImage.enabled = false;
 		StartCoroutine(GameObject.Find("Spawner").GetComponent<PathCreation.Examples.PathSpawner>().SpawnPrefabs());
+	}
+
+
+
+	////////////////////////// Respawn에 관련된 메서드
+	
+	public void LocalPlayerDeadProcess()
+	{
+		UIManager.instance.SetDeadUI(); // 죽은 UI로 전환
+		StartCoroutine(RespawnWait());	// 리스폰 대기 코루틴 실행
+	}
+
+	private IEnumerator RespawnWait()
+	{
+		yield return YieldInstructionCache.WaitForSeconds((float)gameInfo.responTime);
+
+		RespawnRequest();
+	}
+
+	// 리스폰 요청 패킷
+	private void RespawnRequest()
+	{
+		NetworkManager.instance.SendRespawnPacket(ref respawnSpot);
 	}
 
 }
