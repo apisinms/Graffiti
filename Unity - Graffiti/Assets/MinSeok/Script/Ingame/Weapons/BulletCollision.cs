@@ -43,7 +43,7 @@ public class BulletCollision : MonoBehaviour
         {
             if (other.CompareTag(PlayersManager.instance.obj_players[GameManager.instance.playersIndex[i]].tag))
             {
-                int tmp = UnityEngine.Random.Range(3, 6);
+                int tmp = UnityEngine.Random.Range(3, 5);
                 AudioManager.Instance.Play(tmp);
                 WeaponManager.instance.ApplyDamage(GameManager.instance.playersIndex[i], returnIdx);
 

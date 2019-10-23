@@ -130,7 +130,6 @@
     <Compile Include="Assets\Minsung\Scripts\NetworkManager.Packet.cs" />
     <Compile Include="Assets\Minsung\Scripts\ThreadManager.cs" />
     <Compile Include="Assets\Scripts\SimpleCameraController.cs" />
-    <Compile Include="Assets\Sounds\soundTest.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <None Include="Assets\Assets\LOWPOLY CHARACTERS\Overview\Font\Raleway\OFL.txt" />
     <None Include="Assets\Assets\LOWPOLY CHARACTERS\AdvancedCustomizer\Clothes\Important.txt" />
