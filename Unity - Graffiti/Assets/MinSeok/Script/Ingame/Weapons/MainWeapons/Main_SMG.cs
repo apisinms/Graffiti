@@ -139,6 +139,14 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
 
     public void ApplyDamage(int _type, int _index)
     {
+        if (UIManager.instance.hp[_type].img_front.fillAmount <= 0)
+        {
+            PlayersManager.instance.actionState[_type] = _ACTION_STATE.DEATH;
+            PlayersManager.instance.obj_players[_type].GetComponent<CapsuleCollider>().isTrigger = true;
+            PlayersManager.instance.Action_Death(_type);
+            return;
+        }
+
         UIManager.instance.hp[_type].img_front.fillAmount -= 0.03f; //데미지만큼 피를깎음.
         UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHP(_type, 0.03f));
         /*

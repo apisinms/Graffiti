@@ -486,7 +486,6 @@ E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\Boo.Lang.Pa
 E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\Boo.Lang.Parser.dll
 E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\Boo.Lang.Useful.dll
 E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\Unity.CecilTools.dll
-E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\PathCreator.pdb
 E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEngine.xml
 E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEditor.xml
 E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEngine.AIModule.xml
@@ -558,3 +557,4 @@ E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\obj\Debug\PathCreatorEdito
 E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\obj\Debug\PathCreatorEditor.csproj.CopyComplete
 E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\obj\Debug\PathCreatorEditor.dll
 E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\obj\Debug\PathCreatorEditor.pdb
+E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\PathCreator.pdb

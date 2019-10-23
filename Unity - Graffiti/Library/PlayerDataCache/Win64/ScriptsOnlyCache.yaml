@@ -30,10 +30,17 @@ ScriptsOnlyBuild:
     - State_AimCircuit
     - State_AimCircuitShot
     - State_Circuit
+    - State_Death
     - State_Idle
     - State_Shot
     - UIManager
     - WeaponManager
+    - bl_IconItem
+    - bl_MaskHelper
+    - bl_MiniMap
+    - bl_MiniMapDragArea
+    - bl_MiniMapItem
+    - bl_WorldSpace
     - btn_option
     - btn_quit
     - btn_start
@@ -42,8 +49,10 @@ ScriptsOnlyBuild:
     UnityEditor.Graphs.dll:
     - UnityEditor.Graphs.AnimationBlendTree.Graph
     - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.AnyStateNode
     - UnityEditor.Graphs.AnimationStateMachine.Graph
     - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.StateNode
     - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.TestListCacheData
@@ -53,10 +62,15 @@ ScriptsOnlyBuild:
     - UnityEngine.EventSystems.StandaloneInputModule
     - UnityEngine.UI.Button
     - UnityEngine.UI.CanvasScaler
+    - UnityEngine.UI.ContentSizeFitter
     - UnityEngine.UI.GraphicRaycaster
     - UnityEngine.UI.HorizontalLayoutGroup
     - UnityEngine.UI.Image
     - UnityEngine.UI.InputField
+    - UnityEngine.UI.Mask
+    - UnityEngine.UI.Outline
+    - UnityEngine.UI.RawImage
+    - UnityEngine.UI.Shadow
     - UnityEngine.UI.Text
   sceneClasses:
     Assets/Scenes/MainGame.unity:
@@ -85,6 +99,14 @@ ScriptsOnlyBuild:
     - Class: 65
       Script: {instanceID: 0}
     - Class: 74
+      Script: {instanceID: 0}
+    - Class: 81
+      Script: {instanceID: 0}
+    - Class: 82
+      Script: {instanceID: 0}
+    - Class: 83
+      Script: {instanceID: 0}
+    - Class: 84
       Script: {instanceID: 0}
     - Class: 89
       Script: {instanceID: 0}
@@ -122,6 +144,26 @@ ScriptsOnlyBuild:
       Script: {instanceID: 9452}
     - Class: 114
       Script: {instanceID: 9454}
+    - Class: 114
+      Script: {instanceID: 9522}
+    - Class: 114
+      Script: {instanceID: 9524}
+    - Class: 114
+      Script: {instanceID: 9526}
+    - Class: 114
+      Script: {instanceID: 9536}
+    - Class: 114
+      Script: {instanceID: 9544}
+    - Class: 114
+      Script: {instanceID: 9552}
+    - Class: 114
+      Script: {instanceID: 9556}
+    - Class: 114
+      Script: {instanceID: 9566}
+    - Class: 114
+      Script: {instanceID: 9576}
+    - Class: 114
+      Script: {instanceID: 9582}
     - Class: 114
       Script: {instanceID: 9616}
     - Class: 114
@@ -172,6 +214,20 @@ ScriptsOnlyBuild:
       Script: {instanceID: 10568}
     - Class: 114
       Script: {instanceID: 10638}
+    - Class: 114
+      Script: {instanceID: 30354}
+    - Class: 114
+      Script: {instanceID: 914172}
+    - Class: 114
+      Script: {instanceID: 914174}
+    - Class: 114
+      Script: {instanceID: 914178}
+    - Class: 114
+      Script: {instanceID: 914186}
+    - Class: 114
+      Script: {instanceID: 914190}
+    - Class: 114
+      Script: {instanceID: 914200}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -195,6 +251,8 @@ ScriptsOnlyBuild:
     - Class: 223
       Script: {instanceID: 0}
     - Class: 224
+      Script: {instanceID: 0}
+    - Class: 225
       Script: {instanceID: 0}
     - Class: 258
       Script: {instanceID: 0}
@@ -382,7 +440,7 @@ ScriptsOnlyBuild:
   scriptHashData:
   - hash:
       serializedVersion: 2
-      Hash: 86b95e68536c731ada5075ebb0448db3
+      Hash: 665fb77a7f642e6e6a4f729ec069d1ee
     assemblyName: Assembly-CSharp.dll
     namespaceName: PathCreation.Examples
     className: PathSpawner
@@ -874,13 +932,13 @@ ScriptsOnlyBuild:
     className: TMP_SubMeshUI
   - hash:
       serializedVersion: 2
-      Hash: b0745c5a5b63eed967bd87c0bfc7c446
+      Hash: 81112f8b159af75ca610c6f1a817d064
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: ObjectPool
   - hash:
       serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+      Hash: d81f13f5afcc512bc65c1d39d24c0806
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: BridgeClientToServer
@@ -1316,6 +1374,60 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: State_Death
+  - hash:
+      serializedVersion: 2
+      Hash: 0c0aaf3004307c3d01bc3abe5b0bc748
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: bl_MiniMap
+  - hash:
+      serializedVersion: 2
+      Hash: 5343516e8efd7e9f9f504e0003298827
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: bl_WorldSpace
+  - hash:
+      serializedVersion: 2
+      Hash: c4ee4fdf3553c57a6c71f03e44d9944f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: bl_MiniMapItem
+  - hash:
+      serializedVersion: 2
+      Hash: 332d638e3f451130b430356ea65aedc9
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: bl_IconItem
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: bl_MiniMapDragArea
+  - hash:
+      serializedVersion: 2
+      Hash: e88a1132651a0a90f4c734f1c0af7b3e
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: bl_MMCompass
+  - hash:
+      serializedVersion: 2
+      Hash: ce49c4ea39214a18b79689f05b955ee8
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: bl_SnapShot
+  - hash:
+      serializedVersion: 2
+      Hash: ef22c53f2dc8087bab526b1bb4ec98ca
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: bl_MaskHelper
   platform: 19
   scenePathNames:
   - Assets/Scenes/SampleScene.unity

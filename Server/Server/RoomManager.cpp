@@ -12,7 +12,6 @@ RoomInfo::RoomInfo(C_ClientInfo** _playerList, int _numOfPlayer)
 	roomStatus = ROOMSTATUS::ROOM_NONE;	// 방 생성시 초기 상태는 아무 상태도아님
 
 	numOfPlayer = _numOfPlayer;
-	carSeed = 0;			// 자동차 씨드
 	gameType = GameType::NORMAL;	// 일단 노멀로
 
 	// 방 플레이어 리스트에 추가
@@ -29,15 +28,8 @@ bool RoomInfo::LeaveRoom(C_ClientInfo* _player)
 	{
 		// 방 인원수를 감소하고, 자신의 흔적을 지운다.
 		numOfPlayer--;					// 방 인원수 감소
-		remove(players.begin(), players.end(), _player);		// 방의 플레이어 리스트에서 제거
-		/// 그리고 같은 팀 2명이 모두 나가면 그냥 게임 끝나야함
-
-		// 방금 나간사람이 마지막이었다면 방을 없앰
-		if (numOfPlayer == 0)
-		{
-			RoomManager::GetInstance()->DeleteRoom(this);					// 방을 소멸시킨다.
-		}
-
+		players.erase(remove(players.begin(), players.end(), _player), players.end());		// 방의 플레이어 리스트에서 제거
+		
 		_player->SetRoom(nullptr);		// 플레이어의 방을 null로 설정
 
 		return true;

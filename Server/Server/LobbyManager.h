@@ -32,7 +32,7 @@ class LobbyManager
 		LOBBY_SUCCESS = ((__int64)0x1 << 33),		 // 로비에서 성공 처리
 		LOBBY_FAIL    = ((__int64)0x1 << 32),        // 로비에서 실패 처리
 
-		NODATA = ((__int64)0x1 << 24)
+		NODATA = ((__int64)0x1 << 10)
 	};
 
 private:

@@ -60,6 +60,12 @@ public class UIManager : MonoBehaviour
     }
     #endregion
 
+    #region DeadUI
+    GameObject leftJoystick;
+    GameObject rightJoystick;
+    GameObject deadPanel;
+    #endregion
+
     private void Awake()
     {
         if (instance == null)
@@ -75,6 +81,16 @@ public class UIManager : MonoBehaviour
         Initialization_Nickname();
         Initialization_Circle();
         Initialization_Line();
+    }
+
+    private void Start()
+    {
+        leftJoystick = GameObject.Find("Left");
+        rightJoystick = GameObject.Find("Right");
+
+        GameObject.Find("Canvas_overlay").transform.Find("Panel_Dead").gameObject.SetActive(true);
+        deadPanel = GameObject.Find("Panel_Dead");
+        GameObject.Find("Canvas_overlay").transform.Find("Panel_Dead").gameObject.SetActive(false);
     }
 
     void Update()
@@ -169,24 +185,6 @@ public class UIManager : MonoBehaviour
 #else
         hp[_index].img_middle.fillAmount -= _curHP;
 #endif
-        /*
-        switch (_index)
-        {
-            case 0: //내피
-                myHP.img_middle.fillAmount -= _damage;
-                break;
-            case 1: //팀피
-                teamHP.img_middle.fillAmount -= _damage;            
-                break;
-            case 2: //적1
-                enemyHP[0].img_middle.fillAmount -= _damage;
-                break;
-            case 3: //적2
-                enemyHP[1].img_middle.fillAmount -= _damage;
-                break;
-        }
-        */
-        //   Debug.Log("나감");
         yield break;
     }
 
@@ -210,19 +208,52 @@ public class UIManager : MonoBehaviour
 		nickname[_index].txt_nickname.text = _nickname;
 	}
 
+    public int PlayerIndexToAbsoluteIndex(int _playerIndex)
+    {
+        int result = 0;
+        for (int i = 0; i < C_Global.MAX_PLAYER; i++)
+        {
+            if (_playerIndex == playersIndex[i])
+            {
+                result = playersIndex[i];
+
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    public void OnPlayerUI(int _index)
+    {
+        hp[_index].obj_parent.SetActive(true);
+        nickname[_index].obj_parent.SetActive(true);
+        circle[_index].obj_parent.SetActive(true);
+    }
+
     public void OffPlayerUI(int _index)
     {
         hp[_index].obj_parent.SetActive(false);
         nickname[_index].obj_parent.SetActive(false);
         circle[_index].obj_parent.SetActive(false);
-        /*
-        hp[_index].img_back.enabled = false;
-        hp[_index].img_middle.enabled = false;
-        hp[_index].img_front.enabled = false;
+    }
 
-        nickname[_index].txt_nickname.enabled = false;
+    public void SetDeadUI()
+    {
+        leftJoystick.SetActive(false);
+        rightJoystick.SetActive(false);
+        deadPanel.SetActive(true);
+    }
+    public void SetAliveUI()
+    {
+        leftJoystick.SetActive(true);
+        rightJoystick.SetActive(true);
+        deadPanel.SetActive(false);
+    }
 
-        circle[_index].img_circle.enabled = false;
-        */
+    public void HealthUIChanger(int _idx, float _health)
+    {
+        hp[_idx].img_front.fillAmount = _health * 0.01f;
+        StartCoroutine(DecreaseMiddleHP(_idx, _health * 0.01f));
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -61,30 +62,39 @@ public class GameManager : MonoBehaviour
 
     public CameraControl mainCamera;    // 메인 카메라
 
-    //	private static bool isLeftDrag;
-    //public static bool LeftTouch { get { return isLeftDrag; } }
-
     private void Start()
     {
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraControl>();
 
 #if NETWORK
-		BridgeClientToServer.instance.Initialization_PlayerViewer();    // 게임 시작시 플레이어 뷰어 셋팅
+      BridgeClientToServer.instance.Initialization_PlayerViewer();    // 게임 시작시 플레이어 뷰어 셋팅
         
-		// 필요한 게임 정보를 브릿지에서 얻어옴
-        CarSeed = BridgeClientToServer.instance.GetTempCarSeed;
+      // 필요한 게임 정보를 브릿지에서 얻어옴
         gameInfo = BridgeClientToServer.instance.GetTempGameInfo;
 
-		// 로딩이 완료되었다고 서버로 보내준다.
-		NetworkManager.instance.SendLoadingComplete();
-
 #else
-		gameInfo.gameType = 0;
+        gameInfo.gameType = 0;
         gameInfo.gameTime = 180;
         gameInfo.responTime = 5;
         CarSeed = 0;
-        StartCoroutine(GameObject.Find("Spawner").GetComponent<PathCreation.Examples.PathSpawner>().SpawnPrefabs());
+        StartCoroutine(GameObject.Find("Spawner").GetComponent<PathCreation.Examples.PathSpawner>().Cor_SpawnPrefabs());
 #endif
+    }
+
+    private void OnEnable()
+    {
+        // 이벤트 등록하고, 로딩 완료되면 호출하게 함
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    void OnSceneLoaded(Scene _scene, LoadSceneMode _mode)
+    {
+        //로딩이 완료되었다고 서버로 보내준다.
+        NetworkManager.instance.SendLoadingComplete();
     }
 
     void Awake()
@@ -100,12 +110,11 @@ public class GameManager : MonoBehaviour
         myNetworkNum = NetworkManager.instance.MyPlayerNum;
         myIndex = myNetworkNum - 1;
 
-		//Random.InitState(CarSeed);  // 시드값을 awake에서 해줘야 첫 자동차도 타이밍이 맞음
 #else
         myNetworkNum = 3; //예시로 번호부여함.  서버에서 샌드된번호로 해야함.
         myIndex = myNetworkNum - 1;
 #endif
-		myTag = playersTag[myIndex]; //내 태그등록
+        myTag = playersTag[myIndex]; //내 태그등록
         myFocus = true;             // 포커스 On
 
         playersIndex[0] = myIndex;
@@ -167,15 +176,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public Image loadingImage;
 
-
-	public Image loadingImage;
-
-	// 로딩 완료
-	public void LoadingComplete()
-	{
-		loadingImage.enabled = false;
-		StartCoroutine(GameObject.Find("Spawner").GetComponent<PathCreation.Examples.PathSpawner>().SpawnPrefabs());
-	}
-
+    // 로딩 완료
+    public void LoadingComplete()
+    {
+        loadingImage.enabled = false;
+    }
 }

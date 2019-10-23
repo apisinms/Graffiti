@@ -46,5 +46,11 @@ namespace PathCreation.Examples
                 ObjectPool.Instance.PushToPool(index, gameObject);
             }
         }
+
+        public void ResetDistanceTravelled()
+        {
+            distanceTravelled = 0;
+        }
+
     }
 }

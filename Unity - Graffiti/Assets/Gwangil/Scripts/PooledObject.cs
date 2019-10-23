@@ -5,7 +5,6 @@ using UnityEngine;
 [System.Serializable]
 public class PooledObject
 {
-    public int index;
     public GameObject prefab = null;
     public int poolCount = 0;
     [SerializeField]

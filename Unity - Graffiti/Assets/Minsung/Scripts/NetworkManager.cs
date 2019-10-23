@@ -14,9 +14,10 @@ using UnityEngine;
 public partial class NetworkManager : MonoBehaviour
 {
 	// 서버 IP와 포트
-	//private static IPAddress serverIP = IPAddress.Parse("127.0.0.1");
+   // private static IPAddress serverIP = IPAddress.Parse("127.0.0.1");
+    private static IPAddress serverIP = IPAddress.Parse("14.32.42.101");
     //private static IPAddress serverIP = IPAddress.Parse("211.195.240.62");
-    private static IPAddress serverIP = IPAddress.Parse("121.164.148.225");
+    //private static IPAddress serverIP = IPAddress.Parse("121.164.148.225");
 
 	private static int serverPort = 10823;
 
@@ -79,48 +80,52 @@ public partial class NetworkManager : MonoBehaviour
 		// 48 ~ 34
 	};
 
-	// 33 ~ 24
-	enum RESULT : Int64
-	{
-		//LoginState
-		JOIN_SUCCESS = ((Int64)0x1 << 33),
-		LOGIN_SUCCESS = ((Int64)0x1 << 33),
-		LOGOUT_SUCCESS = ((Int64)0x1 << 33),
-		LOGOUT_FAIL = ((Int64)0x1 << 32),
+    // 33 ~ 24
+    // 33 ~ 10
+    // 33 ~ 10
+    enum RESULT : Int64
+    {
+        //LoginState
+        JOIN_SUCCESS = ((Int64)0x1 << 33),
+        LOGIN_SUCCESS = ((Int64)0x1 << 33),
+        LOGOUT_SUCCESS = ((Int64)0x1 << 33),
+        LOGOUT_FAIL = ((Int64)0x1 << 32),
 
-		// Join & Login result
-		ID_EXIST = ((Int64)0x1 << 32),
-		ID_ERROR = ((Int64)0x1 << 31),
-		PW_ERROR = ((Int64)0x1 << 30),
+        // Join & Login result
+        ID_EXIST = ((Int64)0x1 << 32),
+        ID_ERROR = ((Int64)0x1 << 31),
+        PW_ERROR = ((Int64)0x1 << 30),
 
-		// LobbyState
-		LOBBY_SUCCESS = ((Int64)0x1 << 33),     // 로비에서 성공 처리
-		LOBBY_FAIL = ((Int64)0x1 << 32),        // 로비에서 실패 처리
+        // LobbyState
+        LOBBY_SUCCESS = ((Int64)0x1 << 33),     // 로비에서 성공 처리
+        LOBBY_FAIL = ((Int64)0x1 << 32),        // 로비에서 실패 처리
 
-		// ChatState
-		LEAVE_ROOM_SUCCESS = ((Int64)0x1 << 33),
-		LEAVE_ROOM_FAIL = ((Int64)0x1 << 32),
+        // ChatState
+        LEAVE_ROOM_SUCCESS = ((Int64)0x1 << 33),
+        LEAVE_ROOM_FAIL = ((Int64)0x1 << 32),
 
-		// InGameState(공통)
-		INGAME_SUCCESS = ((Int64)0x1 << 33),
-		INGAME_FAIL = ((Int64)0x1 << 32),
+        // InGameState(공통)
+        INGAME_SUCCESS = ((Int64)0x1 << 33),
+        INGAME_FAIL = ((Int64)0x1 << 32),
 
-		// WEAPON_PROTOCOL 개별
-		NOTIFY_WEAPON = ((Int64)0x1 << 31),   // 무기를 알려줌
+        // WEAPON_PROTOCOL 개별
+        NOTIFY_WEAPON = ((Int64)0x1 << 31),   // 무기를 알려줌
 
-		// UPATE_PROTOCOL 개별
-		ENTER_SECTOR = ((Int64)0x1 << 31),            // 섹터 진입
-		EXIT_SECTOR = ((Int64)0x1 << 30),            // 섹터 퇴장
-		UPDATE_PLAYER = ((Int64)0x1 << 29),            // 플레이어 목록 최신화
-		FORCE_MOVE = ((Int64)0x1 << 28),            // 강제 이동
-		GET_OTHERPLAYER_POS = ((Int64)0x1 << 27),            // 다른 플레이어 포지션 얻기
-		BULLET_HIT = ((Int64)0x1 << 26),      // 총알 맞음
-		
-		// ~ 25
-		NODATA = ((Int64)0x1 << 24)
-	};
+        // UPATE_PROTOCOL 개별
+        ENTER_SECTOR = ((Int64)0x1 << 31),            // 섹터 진입
+        EXIT_SECTOR = ((Int64)0x1 << 30),            // 섹터 퇴장
+        UPDATE_PLAYER = ((Int64)0x1 << 29),            // 플레이어 목록 최신화
+        FORCE_MOVE = ((Int64)0x1 << 28),            // 강제 이동
+        GET_OTHERPLAYER_STATUS = ((Int64)0x1 << 27),            // 다른 플레이어 상태 얻기
+        BULLET_HIT = ((Int64)0x1 << 26),         // 총알 맞음
+        RESPAWN = ((Int64)0x1 << 25),         // 리스폰 요청 및 상대방 리스폰 수신
+        CAR_SPAWN = ((Int64)0x1 << 24),         // 자동차 스폰
 
-	struct _User_Info
+        // ~ 11
+        NODATA = ((Int64)0x1 << 10)
+    };
+
+    struct _User_Info
 	{
 		public string id;
 		public string pw;
@@ -137,7 +142,13 @@ public partial class NetworkManager : MonoBehaviour
 		[MarshalAs(UnmanagedType.I4)]
 		public int playerHitCountBit;
 
-		public byte[] Serialize()
+        private static BulletCollisionChecker dummy = new BulletCollisionChecker();
+        public static BulletCollisionChecker GetDummy()
+        {
+            return dummy;
+        }
+
+        public byte[] Serialize()
 		{
 			// allocate a byte array for the struct data
 			var buffer = new byte[Marshal.SizeOf(typeof(BulletCollisionChecker))];

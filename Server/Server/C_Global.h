@@ -25,11 +25,11 @@ using namespace std;
 #define RESULT_OFFSET 0x3FF
 #define RESULT_MASK		40
 
-// Keep-alive 설정 관련
-#define KEEPALIVE_TIME 3000								// TIME ms마다 keep-alive 신호를 주고받는다
-#define KEEPALIVE_INTERVAL (KEEPALIVE_TIME / 20)		// Heart-beat가 없을시 INTERVAL ms마다 재전송한다(10번)
+#define CAR_SPAWN_TIME	4000
 
-#define FIRE_RATE_TIME 0.1
+// Keep-alive 설정 관련
+#define KEEPALIVE_TIME 5000								// TIME ms마다 keep-alive 신호를 주고받는다
+#define KEEPALIVE_INTERVAL (KEEPALIVE_TIME / 20)		// Heart-beat가 없을시 INTERVAL ms마다 재전송한다(10번)
 
 // 플레이어 플래그
 enum PLAYER_BIT : byte
@@ -215,7 +215,14 @@ struct GameInfo
 	int responTime;		// 리스폰 시간
 	int gameTime;		// 게임 시간(ex 180초)
 };
-//const float PlayerInfo::MAX_SPEED = 4.0f;
+
+struct RespawnInfo
+{
+	int gameType;
+	int playerNum;
+	float posX;
+	float posZ;
+};
 
 enum STATE : int
 {

@@ -43,6 +43,7 @@ public class BulletCollision : MonoBehaviour
         {
             if (other.CompareTag(PlayersManager.instance.obj_players[GameManager.instance.playersIndex[i]].tag))
             {
+                bl_MiniMap.Instance.DoHitEffect();
                 int tmp = UnityEngine.Random.Range(3, 5);
                 AudioManager.Instance.Play(tmp);
                 WeaponManager.instance.ApplyDamage(GameManager.instance.playersIndex[i], returnIdx);
@@ -77,6 +78,11 @@ public class BulletCollision : MonoBehaviour
                 EffectManager.instance.StartCoroutine(EffectManager.instance.CheckEffectEnd(ps_clone));
                 AudioManager.Instance.Play(7);
             }
+        }
+        else
+        {
+            ps_clone = PoolManager.instance.GetCollisionEffectFromPool("BloodPool1", other.ClosestPointOnBounds(this.transform.position), this.transform.forward);
+            EffectManager.instance.StartCoroutine(EffectManager.instance.CheckEffectEnd(ps_clone));
         }
 
         PoolManager.instance.ReturnBulletToPool(gameObject, returnIdx);
