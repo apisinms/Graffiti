@@ -6,6 +6,14 @@ public partial class PlayersManager : MonoBehaviour
 {
     private Vector3 tmpRot = new Vector3(); // 자꾸 new해서 가비지 생성하는거 방지용
 
+    public void Action_Death(int _index)
+    {
+        if (myIndex == _index) 
+            return;
+
+        Anime_Death(_index);
+    }
+
     public void Action_Idle(int _index, Vector3 _pos)  //서있을때
     {
         if (myIndex == _index) //함수가 아더용이므로 내인덱스가 혹여라도 인풋됐을때 예외처리. 내 전용함수는 따로있다.

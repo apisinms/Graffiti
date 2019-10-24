@@ -19,6 +19,9 @@ public:
 	float GetDotDistanceNoSqrt(float _posX1, float _posZ1, float _posX2, float _posZ2);
 	float GetDotDistanceWithSqrt(float _posX1, float _posZ1, float _posX2, float _posZ2);
 
+	int IsWritableMemory(void* _memoryAddr);
+	int IsReadableMemory(void* _memoryAddr);
+
 	//{
 	//	//int MultiByteToUnicode(char* _strMultibyte, wchar_t* _strUnicode);
 	//	//void UnicodeToMultiByte(wchar_t* _strUnicode, char* _strMultibyte);

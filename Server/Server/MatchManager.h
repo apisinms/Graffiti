@@ -1,7 +1,7 @@
 #pragma once
 #include "C_ClientInfo.h"
 
-class MatchManager
+class MatchManager : public C_SyncCS<MatchManager>
 {
 	list<C_ClientInfo*> waitList;	// 매칭 대기중인 유저 리스트
 	

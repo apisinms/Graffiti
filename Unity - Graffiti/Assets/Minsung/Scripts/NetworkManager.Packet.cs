@@ -310,7 +310,7 @@ public partial class NetworkManager : MonoBehaviour
         _struct.Deserialize(ref posByte);
     }
 
-	private void UnPackPacket(byte[] _buf, out byte _playerBit)
+    private void UnPackPacket(byte[] _buf, out byte _playerBit)
     {
         int offset = sizeof(PROTOCOL);
 
@@ -354,39 +354,39 @@ public partial class NetworkManager : MonoBehaviour
         _num = BitConverter.ToInt32(arrNum, 0);
     }
 
-	private void UnPackPacket(byte[] _buf, out int _num, out string _str1)
-	{
-		// 1. num
-		byte[] arrNum = new byte[sizeof(int)];
+    private void UnPackPacket(byte[] _buf, out int _num, out string _str1)
+    {
+        // 1. num
+        byte[] arrNum = new byte[sizeof(int)];
 
-		int offset = sizeof(PROTOCOL);
+        int offset = sizeof(PROTOCOL);
 
-		// 일단 byte 배열로 받고
-		Buffer.BlockCopy(_buf, offset, arrNum, 0, sizeof(int));
-		offset += sizeof(int);
+        // 일단 byte 배열로 받고
+        Buffer.BlockCopy(_buf, offset, arrNum, 0, sizeof(int));
+        offset += sizeof(int);
 
-		// 이제 다시 int로 변환
-		_num = BitConverter.ToInt32(arrNum, 0);
+        // 이제 다시 int로 변환
+        _num = BitConverter.ToInt32(arrNum, 0);
 
 
-		// 2. 문자열
-		byte[] arrStrsize1 = new byte[sizeof(int)];
-		int strsize1 = 0;
+        // 2. 문자열
+        byte[] arrStrsize1 = new byte[sizeof(int)];
+        int strsize1 = 0;
 
-		// 문자열 길이
-		Buffer.BlockCopy(_buf, offset, arrStrsize1, 0, sizeof(int));
-		offset += sizeof(int);
-		strsize1 = BitConverter.ToInt32(arrStrsize1, 0);
+        // 문자열 길이
+        Buffer.BlockCopy(_buf, offset, arrStrsize1, 0, sizeof(int));
+        offset += sizeof(int);
+        strsize1 = BitConverter.ToInt32(arrStrsize1, 0);
 
-		// 문자열 길이 만큼 생성해서 문자열을 저장함
-		byte[] arrStrByte = new byte[strsize1];
-		Buffer.BlockCopy(_buf, offset, arrStrByte, 0, strsize1);
-		offset += strsize1;
+        // 문자열 길이 만큼 생성해서 문자열을 저장함
+        byte[] arrStrByte = new byte[strsize1];
+        Buffer.BlockCopy(_buf, offset, arrStrByte, 0, strsize1);
+        offset += strsize1;
 
-		// 이제 다시 string으로 변환
-		_str1 = ByteToString(arrStrByte);
-	}
-	private void UnPackPacket(byte[] _buf, out string _str1)
+        // 이제 다시 string으로 변환
+        _str1 = ByteToString(arrStrByte);
+    }
+    private void UnPackPacket(byte[] _buf, out string _str1)
     {
         byte[] arrStrsize1 = new byte[sizeof(int)];
         int strsize1 = 0;
@@ -407,22 +407,11 @@ public partial class NetworkManager : MonoBehaviour
         _str1 = ByteToString(arrStrByte);
     }
 
-    private void UnPackPacket(byte[] _buf, out int _carSeed, ref GameManager.GameInfo _gameInfo, ref WeaponManager.WeaponInfo[] _weapons)
+    private void UnPackPacket(byte[] _buf, ref GameManager.GameInfo _gameInfo, ref WeaponManager.WeaponInfo[] _weapons)
     {
-        // 1. carSeed 받음
-        byte[] arrNum = new byte[sizeof(int)];
-
         int offset = sizeof(PROTOCOL);
 
-        // 일단 byte 배열로 받고
-        Buffer.BlockCopy(_buf, offset, arrNum, 0, sizeof(int));
-
-        // 이제 다시 int로 변환
-        _carSeed = BitConverter.ToInt32(arrNum, 0);
-        offset += sizeof(int);
-
-
-        // 2. GameInfo 받음
+        // 1. GameInfo 받음
         byte[] posByte = new byte[Marshal.SizeOf(_gameInfo)];
         Buffer.BlockCopy(_buf, offset, posByte, 0, Marshal.SizeOf(_gameInfo));
 
@@ -431,8 +420,8 @@ public partial class NetworkManager : MonoBehaviour
 
 
 
-        // 3. Weapon 갯수 받음
-        arrNum = new byte[sizeof(int)];
+        // 2. Weapon 갯수 받음
+        byte[] arrNum = new byte[sizeof(int)];
 
         // 일단 byte 배열로 받고
         Buffer.BlockCopy(_buf, offset, arrNum, 0, sizeof(int));
@@ -445,7 +434,7 @@ public partial class NetworkManager : MonoBehaviour
         _weapons = new WeaponManager.WeaponInfo[numOfWeapon];
 
 
-        // 4. WeaponInfo를 위에서 받은 갯수만큼 받아서 _weaponInfo 배열에 저장함
+        // 3. WeaponInfo를 위에서 받은 갯수만큼 받아서 _weaponInfo 배열에 저장함
         WeaponManager.WeaponInfo weapon = new WeaponManager.WeaponInfo();
         for (int i = 0; i < numOfWeapon; i++)
         {

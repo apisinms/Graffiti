@@ -17,7 +17,8 @@ public enum _ATTRIBUTE_STATE
 public enum _ACTION_STATE //액션(움직임)의 상태
 {
     // 단일 STATE
-    IDLE   = 0, 
+    IDLE = 0,
+    DEATH,
     CIR,
     AIM, 
     SHOT,
@@ -86,7 +87,12 @@ public partial class PlayersManager : MonoBehaviour
 		Initialization_GameInfo();
 	}
 
-	void Initialization(int _num) //클라이언트 자체에서 그냥 초기화. 어차피 서버에서 정보가 있으니까 이렇게함.
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Return))
+            StateManager.instance.Idle(true);
+    }
+    void Initialization(int _num) //클라이언트 자체에서 그냥 초기화. 어차피 서버에서 정보가 있으니까 이렇게함.
     {
         obj_players    = new GameObject[C_Global.MAX_PLAYER];
         tf_players     = new Transform[C_Global.MAX_PLAYER];

@@ -13,11 +13,28 @@ public partial class PlayersManager : MonoBehaviour
     public Animator[] am_animePlayer { get; set; }
     #endregion
 
+    public void Anime_Death(int _index)
+    {
+        if (am_animePlayer[_index].GetBool("isAimingAndCurcuit") == true)
+            am_animePlayer[_index].SetBool("isAimingAndCurcuit", false);
+
+        if (am_animePlayer[_index].GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Death"))
+            return;
+
+        obj_players[_index].GetComponent<CapsuleCollider>().isTrigger = true;
+        am_animePlayer[_index].SetFloat("DeathRandom", Random.Range(0, 2));
+        am_animePlayer[_index].SetTrigger("Death");
+    }
+
     public void Anime_Idle(int _index)
     {
         if (am_animePlayer[_index].GetBool("isAimingAndCurcuit") == true)
             am_animePlayer[_index].SetBool("isAimingAndCurcuit", false);
 
+        if (am_animePlayer[_index].GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Idle"))
+            return;
+
+        obj_players[_index].GetComponent<CapsuleCollider>().isTrigger = false;
         am_animePlayer[_index].SetTrigger("Idle");
     }
     public void Anime_Circuit(int _index)

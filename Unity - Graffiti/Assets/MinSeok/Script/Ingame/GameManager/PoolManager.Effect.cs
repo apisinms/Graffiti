@@ -8,17 +8,17 @@ public partial class PoolManager : MonoBehaviour
     #region COLLISION_EFFECT_POOL
     public GameObject[] obj_collisionEffectPool;
     public List<ParticleSystem>[] list_collisionEffectPool { get; set; } //총알을 가져오는 풀
-    public readonly string[] collisionEffectTag = new string[2];
+    public readonly string[] collisionEffectTag = new string[3];
     #endregion
 
     public void Initialization_Effect(int _num)
     {
-        list_collisionEffectPool = new List<ParticleSystem>[2];
+        list_collisionEffectPool = new List<ParticleSystem>[obj_collisionEffectPool.Length];
 
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < list_collisionEffectPool.Length; i++)
             list_collisionEffectPool[i] = new List<ParticleSystem>();
 
-        collisionEffectTag[0] = "Concrete1"; collisionEffectTag[1] = "Iron1";
+        collisionEffectTag[0] = "Concrete1"; collisionEffectTag[1] = "Iron1"; collisionEffectTag[2] = "Blood1";
     }
 
     public void CreateCollisionEffectPool(int _num)

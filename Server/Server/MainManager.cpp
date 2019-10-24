@@ -160,7 +160,7 @@ void MainManager::IOCP_Read(void* _ptr, int _len)
 }
 void MainManager::IOCP_Write(void* _ptr, int _len)
 {
-	IC_CS cs;		// 동기화 필수
+	IC_CS cs;		/// 동기화 필수 (여기에서 부하를 많이 먹는데 일단 테스트로 주석처리해봤다)
 
 	C_ClientInfo* ptr = (C_ClientInfo*)_ptr;
 
@@ -183,6 +183,7 @@ void MainManager::IOCP_Write(void* _ptr, int _len)
 void MainManager::IOCP_Disconnected(void* _ptr)
 {
 	IC_CS cs;	// 동기화
+	InGameManager::IC_CS ingameManagerCS;	// 인게임 매니저도 동기화! 중요!!
 
 	C_ClientInfo* ptr = (C_ClientInfo*)_ptr;
 

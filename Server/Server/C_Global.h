@@ -25,11 +25,11 @@ using namespace std;
 #define RESULT_OFFSET 0x3FF
 #define RESULT_MASK		40
 
-// Keep-alive 설정 관련
-#define KEEPALIVE_TIME 3000								// TIME ms마다 keep-alive 신호를 주고받는다
-#define KEEPALIVE_INTERVAL (KEEPALIVE_TIME / 20)		// Heart-beat가 없을시 INTERVAL ms마다 재전송한다(10번)
+#define CAR_SPAWN_TIME	4000
 
-#define FIRE_RATE_TIME 0.1
+// Keep-alive 설정 관련
+#define KEEPALIVE_TIME 5000								// TIME ms마다 keep-alive 신호를 주고받는다
+#define KEEPALIVE_INTERVAL (KEEPALIVE_TIME / 20)		// Heart-beat가 없을시 INTERVAL ms마다 재전송한다(10번)
 
 // 플레이어 플래그
 enum PLAYER_BIT : byte
@@ -133,9 +133,10 @@ private:
 	IngamePacket* gamePacket;	// 인게임에서 사용하는 0.1초마다 주고받는 패킷 (플레이어 번호 + 위치 + 로테이션 + 애니메이션 + 체력 등)
 	INDEX index;				// 현재 플레이어의 섹터 인덱스
 	Weapon* weapon;				// 무기
-	//float health;				// 체력
-	//float speed;				// 속도
 	int bullet;					// 총알
+	float respawnPosX;			// 리스폰 x좌표
+	float respawnPosZ;			// 리스폰 z좌표
+	bool isRespawning;			// 리스폰 중인지
 
 public:
 	PlayerInfo()
@@ -149,6 +150,9 @@ public:
 		bullet = 0;
 
 		isFocus = true;
+
+		respawnPosX = respawnPosZ = 0.0f;
+		isRespawning = false;
 	}
 
 	bool GetLoadStatus() { return loadStatus; }
@@ -191,6 +195,14 @@ public:
 	void FocusOn() { isFocus = true; }
 	void FocusOff() { isFocus = false; }
 	bool GetFocus() { return isFocus; }
+
+	void SetRespawnPos(float _posX, float _posZ) { respawnPosX = _posX; respawnPosZ = _posZ; }
+	float GetRespawnPosX() { return respawnPosX; }
+	float GetRespawnPosZ() { return respawnPosZ; }
+
+	bool IsRespawning() { return isRespawning; }
+	void RespawnOn() { isRespawning = true; }
+	void RespawnOff() { isRespawning = false; }
 };
 
 struct WeaponInfo
@@ -215,7 +227,14 @@ struct GameInfo
 	int responTime;		// 리스폰 시간
 	int gameTime;		// 게임 시간(ex 180초)
 };
-//const float PlayerInfo::MAX_SPEED = 4.0f;
+
+struct RespawnInfo
+{
+	int gameType;
+	int playerNum;
+	float posX;
+	float posZ;
+};
 
 enum STATE : int
 {

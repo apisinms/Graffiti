@@ -15,7 +15,6 @@
 #include <locale.h>
 #include <mstcpip.h>
 #include <random>
-//#include <cmath>
 
 // STL
 #include <list>

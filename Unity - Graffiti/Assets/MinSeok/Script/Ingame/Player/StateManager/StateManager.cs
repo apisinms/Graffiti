@@ -23,6 +23,7 @@ using UnityEngine;
  */
 public interface IActionState
 {
+    void Death(bool _value);
     void Idle(bool _value);
     void Circuit(bool _value);
     void Aim(bool _value);
@@ -35,11 +36,6 @@ public class StateManager : MonoBehaviour, IActionState
     public GameObject obj_stateList;
     public IActionState myActionState { get; set; }
     public Component[] cn_stateList { get; set; }
-
-    private void Update()
-    {
-        //Debug.Log(myActionState);
-    }
 
     private void Awake()
     {
@@ -62,6 +58,9 @@ public class StateManager : MonoBehaviour, IActionState
             case "StateList (State_Idle)":
                 PlayersManager.instance.actionState[PlayersManager.instance.myIndex] = _ACTION_STATE.IDLE;
                 break;
+            case "StateList (State_Death)":
+                PlayersManager.instance.actionState[PlayersManager.instance.myIndex] = _ACTION_STATE.DEATH;
+                break;
             case "StateList (State_Circuit)":
                 PlayersManager.instance.actionState[PlayersManager.instance.myIndex] = _ACTION_STATE.CIR;
                 break;
@@ -80,12 +79,14 @@ public class StateManager : MonoBehaviour, IActionState
         }
     }
 
-    public void Idle(bool _value) {  myActionState.Idle(_value);  }
+    public void Death(bool _value) { myActionState.Death(_value); }
 
-    public void Circuit(bool _value) {  myActionState.Circuit(_value);  }
+    public void Idle(bool _value) { myActionState.Idle(_value); }
 
-    public void Aim(bool _value) {  myActionState.Aim(_value);  }
+    public void Circuit(bool _value) { myActionState.Circuit(_value); }
 
-    public void Shot(bool _value) {  myActionState.Shot(_value);  }
+    public void Aim(bool _value) { myActionState.Aim(_value); }
+
+    public void Shot(bool _value) { myActionState.Shot(_value); }
 
 }

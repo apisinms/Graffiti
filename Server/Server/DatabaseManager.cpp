@@ -161,12 +161,6 @@ GameInfo* DatabaseManager::LoadGameInfo()
 		info.responTime = atoi(row[3]);
 		info.gameTime = atoi(row[4]);
 
-		/*printf("[게임정보] %d\n", info.gameType);
-		printf("최대속도:%f\n", info.gameType);
-		printf("최대체력:%f\n", info.maxHealth);
-		printf("리스폰 :%d\n", info.responTime);
-		printf("주어진 게임시간:%d\n\n", info.gameTime);*/
-
 		// 동적 할당 후 리턴
 		GameInfo* ptr = new GameInfo(info);
 
@@ -187,7 +181,6 @@ WeaponInfo* DatabaseManager::LoadWeaponInfo()
 		{
 			isLoad = true;
 			numOfWeaponRows = (int)mysql_num_rows(result);	// 무기 행 정보 얻음
-			printf("무기정보 행 갯수 : %d\n", numOfWeaponRows);
 		}
 	}
 
@@ -217,18 +210,50 @@ WeaponInfo* DatabaseManager::LoadWeaponInfo()
 		info.speed         = (float)atof(row[8]);
 		UtilityManager::GetInstance()->UTF8ToUnicode(row[9], info.weaponName);
 
-		/*printf("[무기정보] %ls\n", info.weaponName);
-		printf("무기번호:%d\n", info.num);
-		printf("패턴갯수:%d\n", info.numOfPattern);
-		printf("최대총알:%d\n", info.maxAmmo);
-		printf("발사주기:%f\n", info.fireRate);
-		printf("데미지 :%f\n", info.damage);
-		printf("정확도 :%f\n", info.accuracy);
-		printf("사정거리:%f\n", info.range);
-		printf("탄속    :%f\n\n", info.speed);*/
-
 		// 동적 할당 후 리턴
 		WeaponInfo* ptr = new WeaponInfo(info);
+
+		return ptr;
+	}
+}
+
+RespawnInfo* DatabaseManager::LoadRespawnInfo()
+{
+	static bool isLoad = false;
+
+	IC_CS cs;
+
+	if (isLoad == false)
+	{
+		// mysql에 테이블 정보를 모두 가져오라고 요청한다.
+		if (QueryToMySQL("SELECT * FROM tbl_respawnspot") == true)
+		{
+			isLoad = true;
+		}
+	}
+
+	row = mysql_fetch_row(result);
+
+	if (row == nullptr)
+	{
+		mysql_free_result(result);	// 결과 메모리 반납
+
+		return nullptr;
+	}
+
+	// 아직 row가 존재하면 리스폰정보 셋팅
+	else
+	{
+		RespawnInfo info;
+		memset(&info, 0, sizeof(RespawnInfo));
+
+		info.gameType      = atoi(row[1]);
+		info.playerNum     = atoi(row[2]);
+		info.posX          = (float)atof(row[3]);
+		info.posZ          = (float)atof(row[4]);
+
+		// 동적 할당 후 리턴
+		RespawnInfo* ptr = new RespawnInfo(info);
 
 		return ptr;
 	}

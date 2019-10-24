@@ -30,6 +30,8 @@ TagManager:
   - Canvas_overlay
   - Canvas_worldSpace1
   - Canvas_worldSpace2
+  - BloodPool1
+  - Blood1
   layers:
   - Default
   - TransparentFX

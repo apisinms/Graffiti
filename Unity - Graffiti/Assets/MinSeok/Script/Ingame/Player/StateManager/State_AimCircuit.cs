@@ -15,9 +15,21 @@ public class State_AimCircuit : MonoBehaviour, IActionState
     public static State_AimCircuit GetStateInstance()
     {
         if (instance == null)
-            instance = (State_AimCircuit)StateManager.instance.cn_stateList[5];  // StateManager.instance.obj_stateList.GetComponent<State_AimCircuit>();
+            instance = (State_AimCircuit)StateManager.instance.cn_stateList[6];  // StateManager.instance.obj_stateList.GetComponent<State_AimCircuit>();
 
         return instance;
+    }
+
+    public void Death(bool _value)
+    {
+        if (_value == true)
+        {
+            StateManager.instance.SetState(State_Death.GetStateInstance());
+
+            if (PlayersManager.instance.curCor != null)
+                PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
+            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.Action_Death());;
+        }
     }
 
     public void Idle(bool _value)
@@ -28,7 +40,7 @@ public class State_AimCircuit : MonoBehaviour, IActionState
 
             if (PlayersManager.instance.curCor != null)
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
-            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.ActionIdle());
+            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.Action_Idle());
         }
     }
 
@@ -40,7 +52,7 @@ public class State_AimCircuit : MonoBehaviour, IActionState
 
             if (PlayersManager.instance.curCor != null)
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
-            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.ActionAim());
+            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.Action_Aim());
         }
     }
 
@@ -52,7 +64,7 @@ public class State_AimCircuit : MonoBehaviour, IActionState
 
             if (PlayersManager.instance.curCor != null)
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
-            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.ActionCircuit());
+            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.Action_Circuit());
         }
     }
 
@@ -64,7 +76,7 @@ public class State_AimCircuit : MonoBehaviour, IActionState
 
             if (PlayersManager.instance.curCor != null)
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
-            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.ActionAimCircuit());
+            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.Action_AimCircuit());
 
             if (WeaponManager.instance.curMainActionCor[myIndex] != null)
                 WeaponManager.instance.StopCoroutine(WeaponManager.instance.curMainActionCor[myIndex]);

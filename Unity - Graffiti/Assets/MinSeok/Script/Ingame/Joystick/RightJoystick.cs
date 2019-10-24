@@ -57,6 +57,9 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
     }
     public void Drag(BaseEventData _Data)
     {
+        if (PlayersManager.instance.actionState[myIndex] == _ACTION_STATE.DEATH)
+            return;
+
         PointerEventData data = _Data as PointerEventData;
         right_joystick.touchPos = data.position; //드래그 한곳의 위치.
 

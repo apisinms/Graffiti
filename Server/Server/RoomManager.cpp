@@ -12,7 +12,6 @@ RoomInfo::RoomInfo(C_ClientInfo** _playerList, int _numOfPlayer)
 	roomStatus = ROOMSTATUS::ROOM_NONE;	// 방 생성시 초기 상태는 아무 상태도아님
 
 	numOfPlayer = _numOfPlayer;
-	carSeed = 0;			// 자동차 씨드
 	gameType = GameType::NORMAL;	// 일단 노멀로
 
 	// 방 플레이어 리스트에 추가

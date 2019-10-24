@@ -15,7 +15,17 @@ public partial class PlayersManager : MonoBehaviour
     public Coroutine curCor { get; set; } //현재 실행중인 코루틴을 저장.
     #endregion
 
-    public IEnumerator ActionIdle()
+    public IEnumerator Action_Death()
+    {
+        while (true)
+        {
+            Anime_Death(myIndex);
+            UIManager.instance.UpdateAimDirectionImg(false);
+            yield return null;
+        }
+    }
+
+    public IEnumerator Action_Idle()
     {
         while (true)
         {
@@ -25,7 +35,7 @@ public partial class PlayersManager : MonoBehaviour
         }
     }
 
-    public IEnumerator ActionCircuit()
+    public IEnumerator Action_Circuit()
     {
         while(true)
         {
@@ -39,7 +49,7 @@ public partial class PlayersManager : MonoBehaviour
         }
     }
 
-    public IEnumerator ActionAim()
+    public IEnumerator Action_Aim()
     {
         while (true)
         {
@@ -52,7 +62,7 @@ public partial class PlayersManager : MonoBehaviour
         }
     }
 
-    public IEnumerator ActionAimCircuit()
+    public IEnumerator Action_AimCircuit()
     {
         while (true)
         {
@@ -93,13 +103,17 @@ public partial class PlayersManager : MonoBehaviour
         }
     }
 
-
+	// 노트 s10
   
     public void BlockCollisionEachOther()
     {
         for (int i = 0; i < C_Global.MAX_PLAYER; i++)
         {
-            if (myIndex == i || obj_players[i].activeSelf == false)
+            _ACTION_STATE actionState = _ACTION_STATE.IDLE;
+#if NETWORK
+            actionState = (_ACTION_STATE)networkManager.GetActionState(i);
+#endif
+            if (myIndex == i || obj_players[i].activeSelf == false || actionState == _ACTION_STATE.DEATH)
                 continue;
 
             if (Vector3.Distance(tf_players[myIndex].position, tf_players[i].position) <= 1.05f) //나랑 다른플레이어 거리로 충돌을 구함.

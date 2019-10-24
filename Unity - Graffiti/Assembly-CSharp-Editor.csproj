@@ -65,6 +65,10 @@
     <Compile Include="Assets\Assets\LOWPOLY CHARACTERS\AdvancedCustomizer\Scripts\Editor\CharacterCustomizerEditor.cs" />
     <Compile Include="Assets\Assets\LOWPOLY CHARACTERS\AdvancedCustomizer\Scripts\Editor\ClothesCreator.cs" />
     <Compile Include="Assets\Gwangil\PathCreator\Examples\Scripts\Editor\PathSceneToolEditor.cs" />
+    <Compile Include="Assets\Gwangil\UGUIMiniMap\Content\Scripts\Internal\Editor\bl_MiniMapHelperEditor.cs" />
+    <Compile Include="Assets\Gwangil\UGUIMiniMap\Content\Scripts\Internal\Editor\CustomToggleDrawer.cs" />
+    <Compile Include="Assets\Gwangil\UGUIMiniMap\Content\Scripts\Internal\Editor\LayerMaskDrawer.cs" />
+    <Compile Include="Assets\Gwangil\UGUIMiniMap\Content\Scripts\Internal\Editor\SeparatorDrawer.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/_PROGRAMMING_/_Portfolio/Graffiti/Unity - Graffiti/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>

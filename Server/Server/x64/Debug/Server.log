@@ -1,7 +1,2 @@
-﻿  C_ClientInfo.cpp
-  InGameManager.cpp
-  LobbyManager.cpp
-  MainManager.cpp
-  RoomManager.cpp
-  코드를 생성하고 있습니다...
+﻿  LobbyManager.cpp
   Server.vcxproj -> C:\_PROGRAMMING_\_Portfolio\Graffiti\Server\x64\Debug\Server.exe

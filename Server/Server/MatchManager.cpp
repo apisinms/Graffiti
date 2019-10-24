@@ -29,12 +29,16 @@ void MatchManager::Destroy()
 
 void MatchManager::WaitListRemove(C_ClientInfo* _ptr)
 {
+	IC_CS cs;
+
 	waitList.remove(_ptr);
 	wprintf(L"대기리스트 삭제 성공 : %d\n", (int)waitList.size());
 }
 
 bool MatchManager::MatchProcess(C_ClientInfo* _ptr)
 {
+	IC_CS cs;
+
 	// 리스트에 뒤로 넣고
 	waitList.emplace_back(_ptr);
 	

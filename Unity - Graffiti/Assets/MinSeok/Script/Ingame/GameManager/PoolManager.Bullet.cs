@@ -61,9 +61,9 @@ public partial class PoolManager : MonoBehaviour
             return;
 
         //물리초기화.
-        _obj_bullet.GetComponent<Rigidbody>().isKinematic = true;
-        _obj_bullet.GetComponent<Rigidbody>().isKinematic = false;
-        _obj_bullet.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Continuous; //바뀐옵션을 다시적용
+        //_obj_bullet.GetComponent<Rigidbody>().isKinematic = true;
+        //_obj_bullet.GetComponent<Rigidbody>().isKinematic = false;
+        //_obj_bullet.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Continuous; //바뀐옵션을 다시적용
         _obj_bullet.GetComponent<TrailRenderer>().Clear(); //궤적 렌더러의 위치를 초기화
 
         //다시 비활성화후 트랜스폼 원상복구후 풀로 복귀.

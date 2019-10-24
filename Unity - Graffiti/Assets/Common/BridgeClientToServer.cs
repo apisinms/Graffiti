@@ -6,11 +6,11 @@ public partial class BridgeClientToServer : MonoBehaviour
 {
     public static BridgeClientToServer instance;
 
-    private NetworkManager networkManager;  // 접근용
-    private PlayersManager playersManager; // 접근용
-    private GameManager gameManager;		// 접근용
-    private WeaponManager weaponManager;	// 접근용
-    private UIManager uiManager;			// 접근용
+    public NetworkManager networkManager;  // 접근용
+    public PlayersManager playersManager; // 접근용
+    public GameManager gameManager;      // 접근용
+    public WeaponManager weaponManager;   // 접근용
+    public UIManager uiManager;         // 접근용
     public int myIndex { get; set; }
 
     private void Awake()
@@ -21,7 +21,7 @@ public partial class BridgeClientToServer : MonoBehaviour
         }
         else
             Destroy(gameObject);
-        
+
         DontDestroyOnLoad(gameObject);
     }
 
@@ -33,13 +33,13 @@ public partial class BridgeClientToServer : MonoBehaviour
         //Initialization_PlayerViewer();
     }
 
-	//기존 MoveManager의 업데이트 부분 호출
-	private void Update()
+    //기존 MoveManager의 업데이트 부분 호출
+    private void Update()
     {
-		if (playersManager != null)
-		{
-			PlayerActionViewer();
-		}
+        if (playersManager != null)
+        {
+            PlayerActionViewer();
+        }
     }
 
 }

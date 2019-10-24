@@ -213,9 +213,9 @@ void LobbyManager::SendPacket_Room(C_ClientInfo* _ptr, char* _buf, PROTOCOL_LOBB
 	for (auto iter = playerList.begin(); iter != playerList.end(); ++iter)
 	{
 		player = *iter;
-		PackPacket(_buf, i++, packetSize);
+		PackPacket(_buf, i, packetSize);
 		player->SendPacket(_protocol, _buf, packetSize);
 
-		player->GetPlayerInfo()->SetPlayerNum(i);	// 플레이어 번호 셋팅
+		player->GetPlayerInfo()->SetPlayerNum(i++);	// 플레이어 번호 셋팅
 	}
 }

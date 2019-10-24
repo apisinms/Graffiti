@@ -22,12 +22,12 @@ class C_ClientInfo;
 struct RoomInfo
 {
 private:
-	void* weaponTimerHandle;		// 무기 선택 타이머 핸들
+	HANDLE weaponTimerHandle;		// 무기 선택 타이머 핸들
 	int numOfPlayer;				// 현재 방에 있는 플레이어 수
 	ROOMSTATUS roomStatus;			// 방의 상태
 	vector<C_ClientInfo*>players;	// 유저들을 벡터에 저장
 	C_Sector* sector;				// 이 방의 섹터 매니저
-	int carSeed;					// 차량 씨드
+	HANDLE carSpawnerHandle;		// 자동차 스포너 핸들
 	int gameType;					// 이 방의 게임 타입 정보
 
 public:
@@ -52,14 +52,14 @@ public:
 	int GetGameType() { return gameType; }
 	void SetGameType(int _gameType) { gameType = _gameType; }
 
-	void SetWeaponTimerHandle(void* _handle) { weaponTimerHandle = _handle; }
-	void* GetWeaponTimerHandle() { return weaponTimerHandle; }
+	void SetWeaponTimerHandle(HANDLE _handle) { weaponTimerHandle = _handle; }
+	HANDLE GetWeaponTimerHandle() { return weaponTimerHandle; }
 
 	void SetNumOfPlayer(int _numOfPlayer) { numOfPlayer = _numOfPlayer; }
 	int GetNumOfPlayer() { return numOfPlayer; }
 
-	void SetCarSeed(int _cardSeed) { carSeed = _cardSeed; }
-	int GetCarSeed() { return carSeed; }
+	void SetCarSpawnerHandle(HANDLE _handle) { carSpawnerHandle = _handle; }
+	HANDLE GetCarSpawnerHandle() { return carSpawnerHandle; }
 
 	void SetRoomStatus(ROOMSTATUS _roomStatus) { roomStatus = _roomStatus; }
 	ROOMSTATUS GetRoomStatus() { return roomStatus; }
