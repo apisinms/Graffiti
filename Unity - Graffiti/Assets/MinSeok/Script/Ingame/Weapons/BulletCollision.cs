@@ -7,14 +7,26 @@ public class BulletCollision : MonoBehaviour
 {
 	public int myIndex { get; set; }
 	private int returnIdx;
-	private ParticleSystem ps_clone;
 
-	private void Awake()
+    #region _PARTICLE_CLONE
+    private ParticleSystem ps_effectClone;
+    #endregion
+
+    #region _BULLET_CLONE 
+    public struct _BULLET_CLONE_INFO
+    {
+        public Transform tf_bulletClone { get; set; }
+        public Rigidbody rb_bulletClone { get; set; }
+    }
+    public _BULLET_CLONE_INFO bulletCloneInfo;
+    #endregion
+
+    private void Awake()
 	{
 		myIndex = GameManager.instance.myIndex;
 	}
 
-	private void Start()
+    private void Start()
 	{
 		if (this.gameObject.CompareTag("Bullet1"))
 			returnIdx = 0;
@@ -25,12 +37,13 @@ public class BulletCollision : MonoBehaviour
 		else if (this.gameObject.CompareTag("Bullet4"))
 			returnIdx = 3;
 
-		//prevActionState = (_ACTION_STATE)NetworkManager.instance.GetActionState(returnIdx);
-	}
+        bulletCloneInfo.tf_bulletClone = this.gameObject.GetComponent<Transform>();
+        bulletCloneInfo.rb_bulletClone = this.gameObject.GetComponent<Rigidbody>();
+    }
 
 	private void Update()
 	{
-		WeaponManager.instance.CheckFireRange(this.gameObject, returnIdx);
+		WeaponManager.instance.CheckFireRange(this.gameObject, bulletCloneInfo, returnIdx);
 	}
 
 	private void OnTriggerEnter(Collider other)
@@ -43,49 +56,40 @@ public class BulletCollision : MonoBehaviour
         {
             if (other.CompareTag(PlayersManager.instance.obj_players[GameManager.instance.playersIndex[i]].tag))
             {
-                bl_MiniMap.Instance.DoHitEffect();
+                //bl_MiniMap.Instance.DoHitEffect();
                 int tmp = UnityEngine.Random.Range(3, 5);
                 AudioManager.Instance.Play(tmp);
                 WeaponManager.instance.ApplyDamage(GameManager.instance.playersIndex[i], returnIdx);
 
-                ps_clone = PoolManager.instance.GetCollisionEffectFromPool("BloodPool1", other.ClosestPointOnBounds(this.transform.position), this.transform.forward);
-                EffectManager.instance.StartCoroutine(EffectManager.instance.CheckEffectEnd(ps_clone));
+                ps_effectClone = PoolManager.instance.GetCollisionEffectFromPool("BloodPool1", other.ClosestPointOnBounds(this.transform.position), this.transform.forward);
+                EffectManager.instance.StartCoroutine(EffectManager.instance.CheckEffectEnd(ps_effectClone));
                 break;
             }
         }
-        /*
-		if (other.CompareTag(PlayersManager.instance.obj_players[GameManager.instance.myIndex].tag))
-            WeaponManager.instance.ApplyDamage(0, returnIdx);
-        else if (other.CompareTag(PlayersManager.instance.obj_players[GameManager.instance.myTeamIndex].tag))
-            WeaponManager.instance.ApplyDamage(1, returnIdx);
-        else if (other.CompareTag(PlayersManager.instance.obj_players[GameManager.instance.enemyIndex[0]].tag))
-            WeaponManager.instance.ApplyDamage(2, returnIdx);
-        else if (other.CompareTag(PlayersManager.instance.obj_players[GameManager.instance.enemyIndex[1]].tag))
-            WeaponManager.instance.ApplyDamage(3, returnIdx);
-            */
+
 #endif
         if(!other.CompareTag("Player1") && !other.CompareTag("Player2") && !other.CompareTag("Player3") && !other.CompareTag("Player4"))
         {
             if (other.CompareTag("Concrete1"))
             {
-                ps_clone = PoolManager.instance.GetCollisionEffectFromPool("ConcretePool1", other.ClosestPointOnBounds(this.transform.position), -this.transform.forward);
-                EffectManager.instance.StartCoroutine(EffectManager.instance.CheckEffectEnd(ps_clone));
+                ps_effectClone = PoolManager.instance.GetCollisionEffectFromPool("ConcretePool1", other.ClosestPointOnBounds(this.transform.position), -this.transform.forward);
+                EffectManager.instance.StartCoroutine(EffectManager.instance.CheckEffectEnd(ps_effectClone));
                 AudioManager.Instance.Play(6);
             }
             else
             {
-                ps_clone = PoolManager.instance.GetCollisionEffectFromPool("IronPool1", other.ClosestPointOnBounds(this.transform.position), -this.transform.forward);
-                EffectManager.instance.StartCoroutine(EffectManager.instance.CheckEffectEnd(ps_clone));
+                ps_effectClone = PoolManager.instance.GetCollisionEffectFromPool("IronPool1", other.ClosestPointOnBounds(this.transform.position), -this.transform.forward);
+                EffectManager.instance.StartCoroutine(EffectManager.instance.CheckEffectEnd(ps_effectClone));
                 AudioManager.Instance.Play(7);
             }
         }
         else
         {
-            ps_clone = PoolManager.instance.GetCollisionEffectFromPool("BloodPool1", other.ClosestPointOnBounds(this.transform.position), this.transform.forward);
-            EffectManager.instance.StartCoroutine(EffectManager.instance.CheckEffectEnd(ps_clone));
+            ps_effectClone = PoolManager.instance.GetCollisionEffectFromPool("BloodPool1", other.ClosestPointOnBounds(this.transform.position), this.transform.forward);
+            EffectManager.instance.StartCoroutine(EffectManager.instance.CheckEffectEnd(ps_effectClone));
         }
 
-        PoolManager.instance.ReturnBulletToPool(gameObject, returnIdx);
+        PoolManager.instance.ReturnGunToPool(gameObject, bulletCloneInfo, returnIdx);
 
 		if (myIndex != returnIdx)
 			return;

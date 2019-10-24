@@ -32,6 +32,16 @@ TagManager:
   - Canvas_worldSpace2
   - BloodPool1
   - Blood1
+  - FX
+  - ShellPool1
+  - ShellPool2
+  - ShellPool3
+  - ShellPool4
+  - Shell
+  - Shell1
+  - Shell2
+  - Shell3
+  - Shell4
   layers:
   - Default
   - TransparentFX

@@ -47,30 +47,26 @@ public class JoystickManager : MonoBehaviour
         switch (WeaponManager.instance.mainWeapon[myIndex])
         {
             case _WEAPONS.AR:
-                EffectManager.instance.ps_tmpMuzzle[myIndex].body.body = Instantiate(EffectManager.instance.ps_muzzlePrefebsList[1], PlayersManager.instance.obj_players[myIndex].transform) as ParticleSystem;
+                EffectManager.instance.ps_tmpMuzzle[myIndex].body.body = Instantiate(EffectManager.instance.ps_muzzlePrefebsList[0], PlayersManager.instance.tf_players[myIndex].transform) as ParticleSystem;
                 break;
             case _WEAPONS.SG:
-                EffectManager.instance.ps_tmpMuzzle[myIndex].body.body = Instantiate(EffectManager.instance.ps_muzzlePrefebsList[0], PlayersManager.instance.obj_players[myIndex].transform) as ParticleSystem;
+                EffectManager.instance.ps_tmpMuzzle[myIndex].body.body = Instantiate(EffectManager.instance.ps_muzzlePrefebsList[1], PlayersManager.instance.tf_players[myIndex].transform) as ParticleSystem;
                 break;
             case _WEAPONS.SMG:
-                EffectManager.instance.ps_tmpMuzzle[myIndex].body.body = Instantiate(EffectManager.instance.ps_muzzlePrefebsList[2], PlayersManager.instance.obj_players[myIndex].transform) as ParticleSystem;
+                EffectManager.instance.ps_tmpMuzzle[myIndex].body.body = Instantiate(EffectManager.instance.ps_muzzlePrefebsList[2], PlayersManager.instance.tf_players[myIndex].transform) as ParticleSystem;
                 break;
         }
 
         EffectManager.instance.ps_tmpMuzzle[myIndex].glow.body = EffectManager.instance.ps_tmpMuzzle[myIndex].body.body.transform.GetChild(0).GetComponent<ParticleSystem>();
-        EffectManager.instance.ps_tmpMuzzle[myIndex].plane2.body = EffectManager.instance.ps_tmpMuzzle[myIndex].body.body.transform.GetChild(1).GetComponent<ParticleSystem>();
-        EffectManager.instance.ps_tmpMuzzle[myIndex].plane3.body = EffectManager.instance.ps_tmpMuzzle[myIndex].body.body.transform.GetChild(2).GetComponent<ParticleSystem>();
-        EffectManager.instance.ps_tmpMuzzle[myIndex].plane4.body = EffectManager.instance.ps_tmpMuzzle[myIndex].body.body.transform.GetChild(3).GetComponent<ParticleSystem>();
-        EffectManager.instance.ps_tmpMuzzle[myIndex].spark.body = EffectManager.instance.ps_tmpMuzzle[myIndex].body.body.transform.GetChild(4).GetComponent<ParticleSystem>();
-        //ps_tmpSpark[i] = Instantiate(ps_spark, GameObject.FindGameObjectWithTag("Effects").transform);
+        EffectManager.instance.ps_tmpMuzzle[myIndex].spike.body = EffectManager.instance.ps_tmpMuzzle[myIndex].body.body.transform.GetChild(1).GetComponent<ParticleSystem>();
+        EffectManager.instance.ps_tmpMuzzle[myIndex].flare.body = EffectManager.instance.ps_tmpMuzzle[myIndex].body.body.transform.GetChild(2).GetComponent<ParticleSystem>();
 
         EffectManager.instance.ps_tmpMuzzle[myIndex].body.option = EffectManager.instance.ps_tmpMuzzle[myIndex].body.body.main;
         EffectManager.instance.ps_tmpMuzzle[myIndex].glow.option = EffectManager.instance.ps_tmpMuzzle[myIndex].glow.body.main;
-        EffectManager.instance.ps_tmpMuzzle[myIndex].plane2.option = EffectManager.instance.ps_tmpMuzzle[myIndex].plane2.body.main;
-        EffectManager.instance.ps_tmpMuzzle[myIndex].plane3.option = EffectManager.instance.ps_tmpMuzzle[myIndex].plane3.body.main;
-        EffectManager.instance.ps_tmpMuzzle[myIndex].plane4.option = EffectManager.instance.ps_tmpMuzzle[myIndex].plane4.body.main;
-        EffectManager.instance.ps_tmpMuzzle[myIndex].spark.option = EffectManager.instance.ps_tmpMuzzle[myIndex].spark.body.main;
+        EffectManager.instance.ps_tmpMuzzle[myIndex].spike.option = EffectManager.instance.ps_tmpMuzzle[myIndex].spike.body.main;
+        EffectManager.instance.ps_tmpMuzzle[myIndex].flare.option = EffectManager.instance.ps_tmpMuzzle[myIndex].flare.body.main;
     }
+    /*
     void Update()
     {
 
@@ -123,7 +119,8 @@ public class JoystickManager : MonoBehaviour
                 case _ACTION_STATE.CIR_AIM_SHOT:
                     break;
             }
-            */
+            
         }
+*/
 
 }

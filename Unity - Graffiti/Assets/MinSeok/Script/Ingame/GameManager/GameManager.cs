@@ -111,7 +111,7 @@ public class GameManager : MonoBehaviour
         myIndex = myNetworkNum - 1;
 
 #else
-        myNetworkNum = 3; //예시로 번호부여함.  서버에서 샌드된번호로 해야함.
+        myNetworkNum = 1; //예시로 번호부여함.  서버에서 샌드된번호로 해야함.
         myIndex = myNetworkNum - 1;
 #endif
         myTag = playersTag[myIndex]; //내 태그등록
@@ -182,5 +182,11 @@ public class GameManager : MonoBehaviour
     public void LoadingComplete()
     {
         loadingImage.enabled = false;
+    }
+
+    public void SetLocalAndNetworkActionState(int _idx, _ACTION_STATE _action)
+    {
+        NetworkManager.instance.SetActionState(_idx, (int)_action);
+        PlayersManager.instance.actionState[_idx] = _action;
     }
 }

@@ -204,6 +204,7 @@ public partial class BridgeClientToServer : MonoBehaviour
             // 다른 플레이어가 죽은 경우
             else
             {
+                gameManager.SetLocalAndNetworkActionState(_packet.playerNum - 1, _ACTION_STATE.DEATH);
                 uiManager.OffPlayerUI(_packet.playerNum - 1);
             }
         }
@@ -216,12 +217,14 @@ public partial class BridgeClientToServer : MonoBehaviour
         // 내가 죽었던 거면 UI 켜줌
         if ((_packet.playerNum - 1) == myIndex)
         {
+            StateManager.instance.Idle(true);
             uiManager.SetAliveUI();
         }
 
         // 다른 플레이어가 죽었던거면 체력, 서클 등 켜줌
         else
         {
+            gameManager.SetLocalAndNetworkActionState(_packet.playerNum - 1, _ACTION_STATE.IDLE);
             int absoluteIdx = uiManager.PlayerIndexToAbsoluteIndex(_packet.playerNum - 1);
             uiManager.OnPlayerUI(absoluteIdx);
         }

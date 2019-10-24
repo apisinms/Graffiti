@@ -55,31 +55,20 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
     }
 
     public IEnumerator ActionFire(int _index)
-    {
-        EffectManager.instance.ps_tmpMuzzle[_index].body.option.loop = true;
-        EffectManager.instance.ps_tmpMuzzle[_index].glow.option.loop = true;
-        EffectManager.instance.ps_tmpMuzzle[_index].plane2.option.loop = true;
-        EffectManager.instance.ps_tmpMuzzle[_index].plane3.option.loop = true;
-        EffectManager.instance.ps_tmpMuzzle[_index].plane4.option.loop = true;
-        EffectManager.instance.ps_tmpMuzzle[_index].spark.option.loop = true;
-
-        EffectManager.instance.ps_tmpMuzzle[_index].body.option.duration = 1.0f;
-        EffectManager.instance.ps_tmpMuzzle[_index].glow.option.duration = 1.0f;
-        EffectManager.instance.ps_tmpMuzzle[_index].plane2.option.duration = 1.0f;
-        EffectManager.instance.ps_tmpMuzzle[_index].plane3.option.duration = 1.0f;
-        EffectManager.instance.ps_tmpMuzzle[_index].plane4.option.duration = 1.0f;
-        EffectManager.instance.ps_tmpMuzzle[_index].spark.option.duration = 1.0f;
-
-        EffectManager.instance.ps_tmpMuzzle[_index].body.option.simulationSpeed = 1.5f;
-        EffectManager.instance.ps_tmpMuzzle[_index].glow.option.simulationSpeed = 1.5f;
-        EffectManager.instance.ps_tmpMuzzle[_index].plane2.option.simulationSpeed = 1.5f;
-        EffectManager.instance.ps_tmpMuzzle[_index].plane3.option.simulationSpeed = 1.5f;
-        EffectManager.instance.ps_tmpMuzzle[_index].plane4.option.simulationSpeed = 1.5f;
-        EffectManager.instance.ps_tmpMuzzle[_index].spark.option.simulationSpeed = 1.5f;
-
+    {         
+        
+        EffectManager.instance.ps_tmpMuzzle[_index].body.option.simulationSpeed = 4.0f;
+        EffectManager.instance.ps_tmpMuzzle[_index].glow.option.simulationSpeed = 4.0f;
+        EffectManager.instance.ps_tmpMuzzle[_index].spike.option.simulationSpeed = 4.0f;
+        EffectManager.instance.ps_tmpMuzzle[_index].flare.option.simulationSpeed = 4.0f;
+        
+       
         while (true)
         {
             var clone = PoolManager.instance.GetBulletFromPool(_index);
+            var shellClone = PoolManager.instance.GetShellFromPool(_index);
+            PoolManager.instance.StartCoroutine(PoolManager.instance.CheckShellEnd(shellClone, _index));
+
             Transform tf_clone = clone.transform;
 
             playerSMGInfo[_index].vt_bulletPattern[0].x = tf_clone.forward.x - (tf_clone.right.x * weaponManager.weaponInfoSMG.accuracy);
@@ -131,10 +120,10 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
         }
     }
 
-    public void CheckFireRange(GameObject _obj_bullet, int _index)
+    public void CheckFireRange(GameObject _obj_bullet, BulletCollision._BULLET_CLONE_INFO _info_bullet, int _index)
     {
         if (Vector3.Distance(_obj_bullet.transform.position, PlayersManager.instance.obj_players[_index].transform.position) >= Main_SMG.instance.weaponManager.weaponInfoSMG.range)
-            PoolManager.instance.ReturnBulletToPool(_obj_bullet, _index);
+            PoolManager.instance.ReturnGunToPool(_obj_bullet, _info_bullet, _index);
     }
 
     public void ApplyDamage(int _type, int _index)

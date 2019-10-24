@@ -1098,8 +1098,8 @@ MonoBehaviour:
   HitEffectAnimator: {fileID: 5732207817178573622}
   FullMapPosition: {x: 100, y: 40, z: 0}
   FullMapRotation: {x: -0, y: 0, z: 0}
-  FullMapSize: {x: 800, y: 600}
-  LerpTransition: 8
+  FullMapSize: {x: 1280, y: 1024}
+  LerpTransition: 15
   GetWorldRect: 
   CanDragMiniMap: 0
   DragOnlyOnFullScreen: 0
@@ -1659,16 +1659,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5732207817520794655}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.7502099, y: 1.7502099, z: 1.7502099}
   m_Children: []
-  m_Father: {fileID: 5732207817753069712}
-  m_RootOrder: 1
+  m_Father: {fileID: 5732207818284484959}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 333, y: 159}
+  m_AnchoredPosition: {x: 1.7503052, y: 0.000076293945}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5732207817520794652
@@ -2220,7 +2220,6 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 5732207818284484959}
-  - {fileID: 5732207817520794654}
   m_Father: {fileID: 5732207817886237215}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2265,9 +2264,9 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0.035
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -3529,12 +3528,13 @@ RectTransform:
   - {fileID: 5732207817375836028}
   - {fileID: 5732207818189442069}
   - {fileID: 5732207818392033731}
+  - {fileID: 5732207817520794654}
   m_Father: {fileID: 5732207817753069712}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 332, y: 159}
+  m_AnchoredPosition: {x: 866, y: 447}
   m_SizeDelta: {x: 142, y: 142}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5732207818284484946

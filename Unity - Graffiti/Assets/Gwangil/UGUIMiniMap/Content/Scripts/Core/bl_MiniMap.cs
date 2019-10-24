@@ -137,7 +137,7 @@ public class bl_MiniMap : Singleton<bl_MiniMap>
     /// <summary>
     /// 
     /// </summary>
-    void Awake()
+    void Start()
     {
         GetMiniMapSize();
         MiniMapCamera = MMCamera;
@@ -145,6 +145,7 @@ public class bl_MiniMap : Singleton<bl_MiniMap>
         DefaultRotationMode = DynamicRotation;
         DeafultMapRot = m_Transform.eulerAngles;
         DefaultRotationCircle = useCompassRotation;
+        m_Target = GameObject.FindGameObjectWithTag(GameManager.instance.myTag);
         if (m_Type == RenderType.Picture) { CreateMapPlane(); }
         if (m_Mode == RenderMode.Mode3D) { ConfigureCamera3D(); }
         if (m_MapType == MapType.Target)
@@ -244,7 +245,6 @@ public class bl_MiniMap : Singleton<bl_MiniMap>
     {
         if (m_Target == null)
         {
-            m_Target = GameObject.FindGameObjectWithTag(GameManager.instance.myTag);
             return;
         }
         if (MMCamera == null)

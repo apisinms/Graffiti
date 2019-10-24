@@ -7,7 +7,7 @@ namespace PathCreation.Examples
     public class PathFollower : MonoBehaviour
     {
         public int index;
-
+        public float kNockback = 1000.0f;
         public PathCreator pathCreator;
         public EndOfPathInstruction endOfPathInstruction;
         public float speed = 5;
@@ -45,12 +45,17 @@ namespace PathCreation.Examples
                 distanceTravelled = 0;
                 ObjectPool.Instance.PushToPool(index, gameObject);
             }
+            if (other.gameObject.CompareTag("Player1") || other.gameObject.CompareTag("Player2") ||
+                other.gameObject.CompareTag("Player3") || other.gameObject.CompareTag("Player4"))
+            {
+                //Rigidbody rg = other.GetComponent<Rigidbody>();
+                //rg.AddForce(this.transform.localRotation * Vector3.forward * kNockback + Vector3.up * kNockback);
+               // bl_MiniMap.Instance.DoHitEffect();
+            }
         }
-
         public void ResetDistanceTravelled()
         {
             distanceTravelled = 0;
         }
-
     }
 }

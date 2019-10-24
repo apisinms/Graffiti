@@ -168,6 +168,7 @@ GameObject:
   - component: {fileID: 5667860125293929004}
   - component: {fileID: 5667860125293929000}
   - component: {fileID: 5667860125293929001}
+  - component: {fileID: 8158144829985926077}
   m_Layer: 0
   m_Name: NeutralobjectC_Van
   m_TagString: Untagged
@@ -252,10 +253,10 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5667860125293929007}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 1.18
-  m_Height: 5.52
+  m_Height: 5
   m_Direction: 2
   m_Center: {x: -0.0000017561022, y: 0.8805969, z: 0.11457077}
 --- !u!114 &5667860125293929000
@@ -271,6 +272,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 5
+  kNockback: 1000
   pathCreator: {fileID: 0}
   endOfPathInstruction: 2
   speed: 8
@@ -290,6 +292,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!65 &8158144829985926077
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5667860125293929007}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.92, y: 1.7831537, z: 1.82}
+  m_Center: {x: -0.000000059604645, y: 1.1358304, z: 1.72}
 --- !u!1 &5667860125421435836
 GameObject:
   m_ObjectHideFlags: 0
