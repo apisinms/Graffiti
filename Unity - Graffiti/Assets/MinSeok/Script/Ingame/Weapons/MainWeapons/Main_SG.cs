@@ -16,6 +16,7 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
         public Vector3[,] vt_bulletPattern;
         public int bulletPatternIndex;
         public int curAmmo;
+        public bool isReloading;
     }
 
     public _PLAYER_SG_INFO[] playerSGInfo { get; set; }
@@ -28,23 +29,23 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
 
         playerSGInfo = new _PLAYER_SG_INFO[C_Global.MAX_PLAYER];
 
-        for (int i = 0; i < C_Global.MAX_PLAYER; i++)
-        {
-            playerSGInfo[i].obj_bulletClone = new GameObject[5];
-            playerSGInfo[i].tf_bulletClone = new Transform[5];
-            playerSGInfo[i].vt_bulletPattern = new Vector3[2, 5];
-            playerSGInfo[i].bulletPatternIndex = 0;
-            playerSGInfo[i].curAmmo = 2;
-        }
-
 #if !NETWORK
-        weaponManager.weaponInfoSG.maxAmmo = 30;
+        weaponManager.weaponInfoSG.maxAmmo = 2;
         weaponManager.weaponInfoSG.fireRate = 0.14f;
         weaponManager.weaponInfoSG.damage = 0.04f;
         weaponManager.weaponInfoSG.accuracy = 0.06f;
         weaponManager.weaponInfoSG.range = 10.0f;
         weaponManager.weaponInfoSG.speed = 2000.0f;
 #endif
+
+        for (int i = 0; i < C_Global.MAX_PLAYER; i++)
+        {
+            playerSGInfo[i].obj_bulletClone = new GameObject[5];
+            playerSGInfo[i].tf_bulletClone = new Transform[5];
+            playerSGInfo[i].vt_bulletPattern = new Vector3[2, 5];
+            playerSGInfo[i].bulletPatternIndex = 0;
+            playerSGInfo[i].curAmmo = weaponManager.weaponInfoSG.maxAmmo;
+        }
     }
 
     public static Main_SG GetMainWeaponInstance()
@@ -57,6 +58,14 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
 
     public IEnumerator ActionFire(int _index)
     {
+        if (playerSGInfo[_index].curAmmo <= 0)
+        {
+            ReloadAmmo(_index);
+            yield break;
+        }
+
+        EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, myIndex);
+
         for (int i = 0; i < 5; i++)
         {
             playerSGInfo[_index].obj_bulletClone[i] = PoolManager.instance.GetBulletFromPool(_index);
@@ -94,6 +103,8 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
             playerSGInfo[_index].tf_bulletClone[i].localRotation = Quaternion.LookRotation(playerSGInfo[_index].vt_bulletPattern[playerSGInfo[_index].bulletPatternIndex, i]);
             playerSGInfo[_index].obj_bulletClone[i].GetComponent<Rigidbody>().AddForce(playerSGInfo[_index].vt_bulletPattern[playerSGInfo[_index].bulletPatternIndex, i] * weaponManager.weaponInfoSG.speed, ForceMode.Acceleration);
         }
+        playerSGInfo[_index].curAmmo--;
+        UIManager.instance.SetAmmoStateTxt(playerSGInfo[_index].curAmmo);
 
         switch (playerSGInfo[_index].bulletPatternIndex)
         {
@@ -103,6 +114,12 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
             case 1:
                 playerSGInfo[_index].bulletPatternIndex = 0;
                 break;
+        }
+
+        if (playerSGInfo[_index].curAmmo <= 0)
+        {
+            ReloadAmmo(_index);
+            yield break;
         }
         /*
         infoSG[myIndex].vt_bulletDir[0].x = PlayersManager.instance.direction2[myIndex].x - (infoSG[myIndex].tf_bulletClone[0].right.x * 0.2f);
@@ -125,18 +142,52 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
             PoolManager.instance.ReturnGunToPool(_obj_bullet, _info_bullet, _index);
     }
 
+    public void ReloadAmmo(int _index)
+    {
+        EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, myIndex);
+        AudioManager.Instance.Play(8);
+        StartCoroutine(Cor_ReloadAmmo(_index));
+    }
+
+    public IEnumerator Cor_ReloadAmmo(int _index)
+    {
+        playerSGInfo[_index].curAmmo = 0; //어차피 장전중엔 총을못쏘므로 총알을 0으로 만들어줌
+
+        if (playerSGInfo[_index].isReloading == false)
+        {
+            playerSGInfo[_index].isReloading = true;
+
+            Debug.Log("SG총알없음. 장전중");
+            UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadTimeImg(2.0f));
+
+            yield return YieldInstructionCache.WaitForSeconds(2.0f);
+            playerSGInfo[_index].curAmmo = weaponManager.weaponInfoSG.maxAmmo;
+            UIManager.instance.SetAmmoStateTxt(playerSGInfo[_index].curAmmo);
+            AudioManager.Instance.Play(9);
+            Debug.Log("SG장전완료");
+            playerSGInfo[_index].isReloading = false;
+
+            //장전 이전상태가 사격중이였을경우 계속 이어서쏨
+            if (PlayersManager.instance.actionState[_index] == _ACTION_STATE.SHOT ||
+                PlayersManager.instance.actionState[_index] == _ACTION_STATE.CIR_AIM_SHOT)
+            {
+                StateManager.instance.Shot(false);
+                StateManager.instance.Shot(true);
+            }
+        }
+    }
+
     public void ApplyDamage(int _type, int _index) 
     {
         if (UIManager.instance.hp[_type].img_front.fillAmount <= 0)
         {
             PlayersManager.instance.actionState[_type] = _ACTION_STATE.DEATH;
-            //PlayersManager.instance.obj_players[_type].GetComponent<CapsuleCollider>().isTrigger = true;
             PlayersManager.instance.Action_Death(_type);
             return;
         }
 
         UIManager.instance.hp[_type].img_front.fillAmount -= 0.06f; //데미지만큼 피를깎음.
-        UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHP(_type, 0.06f));
+        UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHPImg(_type, 0.06f));
         /*
         switch (_type)
         {

@@ -21,6 +21,28 @@ using UnityEngine;
  * StateManager.instance.에임() 이면 움직이면서 조준하는상태니까 에임() 함수안에 셋스테이트(에임써킷)후 내용실행. 상태는 움직이며 조준.
  * 상태의 무한반복.
  */
+
+public enum _ATTRIBUTE_STATE
+{
+    //속성상태 
+    DEAD = 0,
+    ALIVE = 1
+}
+
+public enum _ACTION_STATE //액션(움직임)의 상태
+{
+    // 단일 STATE
+    IDLE = 0,
+    DEATH,
+    CIR,
+    AIM,
+    SHOT,
+
+    // 복합 STATE
+    CIR_AIM,
+    CIR_AIM_SHOT,
+}
+
 public interface IActionState
 {
     void Death(bool _value);
@@ -79,14 +101,13 @@ public class StateManager : MonoBehaviour, IActionState
         }
     }
 
-    public void Death(bool _value) { myActionState.Death(_value); }
-
     public void Idle(bool _value) { myActionState.Idle(_value); }
+
+    public void Death(bool _value) { myActionState.Death(_value); }
 
     public void Circuit(bool _value) { myActionState.Circuit(_value); }
 
     public void Aim(bool _value) { myActionState.Aim(_value); }
 
     public void Shot(bool _value) { myActionState.Shot(_value); }
-
 }

@@ -75,11 +75,6 @@ public class State_Shot : MonoBehaviour, IActionState
             if (PlayersManager.instance.curCor != null)
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
             PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.Action_AimCircuit());
-
-            //if (WeaponManager.instance.curMainActionCor[myIndex] != null)
-                //WeaponManager.instance.StopCoroutine(WeaponManager.instance.curMainActionCor[myIndex]);
-            //WeaponManager.instance.curMainActionCor[myIndex] = WeaponManager.instance.StartCoroutine(WeaponManager.instance.ActionFire(myIndex));
-            //EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, myIndex);
         }
     }
 

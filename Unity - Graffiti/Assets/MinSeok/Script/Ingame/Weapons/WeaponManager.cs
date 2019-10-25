@@ -23,6 +23,7 @@ public interface IMainWeaponType
 {
     IEnumerator ActionFire(int _index);
     void CheckFireRange(GameObject _obj_bullet, BulletCollision._BULLET_CLONE_INFO _info_bullet, int _index);
+    void ReloadAmmo(int _index);
     void ApplyDamage(int _type, int _index);
 }
 
@@ -208,6 +209,11 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
     public void CheckFireRange(GameObject _obj_bullet, BulletCollision._BULLET_CLONE_INFO _info_bulletint, int _index) //선택된 총의 사거리검사
     {
         mainWeaponType[_index].CheckFireRange(_obj_bullet, _info_bulletint, _index);
+    }
+
+    public void ReloadAmmo(int _index)
+    {
+        mainWeaponType[_index].ReloadAmmo(_index);
     }
 
     public void ApplyDamage(int _type, int _index) //해당 총별로 총에 맞았을때 데미지를 실질적으로 깎음.

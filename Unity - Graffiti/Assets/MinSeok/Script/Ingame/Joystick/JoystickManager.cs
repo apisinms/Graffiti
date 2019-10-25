@@ -18,26 +18,35 @@ public class JoystickManager : MonoBehaviour
     void Awake()
     {
         myIndex = GameManager.instance.myIndex;
-    }
 
+       WeaponManager.instance.mainWeapon[myIndex] = _WEAPONS.SMG;
+       WeaponManager.instance.SetMainWeapon(Main_SMG.GetMainWeaponInstance(), myIndex);
+    }
 
     public void ChangeGun(int _index)
     {
-        int index;
-
         switch (_index)
         {
             case 1:
                 WeaponManager.instance.mainWeapon[myIndex] = _WEAPONS.AR;
                 WeaponManager.instance.SetMainWeapon(Main_AR.GetMainWeaponInstance(), myIndex);
+
+                UIManager.instance.weaponInfo.img_mainW.sprite = UIManager.instance.spr_mainW[0];
+                UIManager.instance.weaponInfo.txt_ammoState.text = WeaponManager.instance.weaponInfoAR.maxAmmo.ToString();
                 break;
             case 2:
                 WeaponManager.instance.mainWeapon[myIndex] = _WEAPONS.SG;
                 WeaponManager.instance.SetMainWeapon(Main_SG.GetMainWeaponInstance(), myIndex);
+
+                UIManager.instance.weaponInfo.img_mainW.sprite = UIManager.instance.spr_mainW[1];
+                UIManager.instance.weaponInfo.txt_ammoState.text = WeaponManager.instance.weaponInfoSG.maxAmmo.ToString();
                 break;
             case 3:
                 WeaponManager.instance.mainWeapon[myIndex] = _WEAPONS.SMG;
                 WeaponManager.instance.SetMainWeapon(Main_SMG.GetMainWeaponInstance(), myIndex);
+
+                UIManager.instance.weaponInfo.img_mainW.sprite = UIManager.instance.spr_mainW[2];
+                UIManager.instance.weaponInfo.txt_ammoState.text = WeaponManager.instance.weaponInfoSMG.maxAmmo.ToString();
                 break;
         }
 

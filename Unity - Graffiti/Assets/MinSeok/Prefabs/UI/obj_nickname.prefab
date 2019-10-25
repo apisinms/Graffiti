@@ -256,5 +256,20 @@ PrefabInstance:
       propertyPath: m_Text
       value: "\uAE40\uBBFC\uC11D"
       objectReference: {fileID: 0}
+    - target: {fileID: 7237405606200676112, guid: c73cee4aa9d48e64983191409fa21e88,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7237405606200676112, guid: c73cee4aa9d48e64983191409fa21e88,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7237405606200676112, guid: c73cee4aa9d48e64983191409fa21e88,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c73cee4aa9d48e64983191409fa21e88, type: 3}

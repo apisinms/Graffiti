@@ -14,8 +14,8 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
         public Vector3[] vt_bulletPattern;
         public int bulletPatternIndex;
         public int prevBulletPatternIndex;
-
         public int curAmmo;
+        public bool isReloading;
     }
 
     public _PLAYER_AR_INFO[] playerARInfo { get; set; }
@@ -29,21 +29,22 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
 
         playerARInfo = new _PLAYER_AR_INFO[C_Global.MAX_PLAYER];
 
-        for (int i = 0; i < C_Global.MAX_PLAYER; i++)
-        {
-            playerARInfo[i].vt_bulletPattern = new Vector3[3];
-            playerARInfo[i].bulletPatternIndex = 1;
-            playerARInfo[i].prevBulletPatternIndex = 2;
-            playerARInfo[i].curAmmo = 30;
-        }
 #if !NETWORK
-		weaponManager.weaponInfoAR.maxAmmo = 30;
+		weaponManager.weaponInfoAR.maxAmmo = 20;
         weaponManager.weaponInfoAR.fireRate = 0.14f;
         weaponManager.weaponInfoAR.damage = 0.03f;
         weaponManager.weaponInfoAR.accuracy = 0.06f;
         weaponManager.weaponInfoAR.range = 20.0f;
         weaponManager.weaponInfoAR.speed = 2000.0f;
 #endif
+
+        for (int i = 0; i < C_Global.MAX_PLAYER; i++)
+        {
+            playerARInfo[i].vt_bulletPattern = new Vector3[3];
+            playerARInfo[i].bulletPatternIndex = 1;
+            playerARInfo[i].prevBulletPatternIndex = 2;
+            playerARInfo[i].curAmmo = weaponManager.weaponInfoAR.maxAmmo;
+        }
     }
 
     public static Main_AR GetMainWeaponInstance()
@@ -56,15 +57,22 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
 
     public IEnumerator ActionFire(int _index)
     {
-        /*
-        EffectManager.instance.ps_tmpMuzzle[_index].body.option.simulationSpeed = 1.0f;
-        EffectManager.instance.ps_tmpMuzzle[_index].glow.option.simulationSpeed = 1.0f;
-        EffectManager.instance.ps_tmpMuzzle[_index].spike.option.simulationSpeed = 1.0f;
-        EffectManager.instance.ps_tmpMuzzle[_index].flare.option.simulationSpeed = 1.0f;
-        */
+        if (playerARInfo[_index].curAmmo <= 0)
+        {
+            ReloadAmmo(_index);
+            yield break;
+        }
+
+        EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, myIndex);
 
         while (true)
         {
+            if (playerARInfo[_index].curAmmo <= 0)
+            {
+                ReloadAmmo(_index);
+                yield break;
+            }
+
             var bulletClone = PoolManager.instance.GetBulletFromPool(_index);
             var shellClone = PoolManager.instance.GetShellFromPool(_index);
             PoolManager.instance.StartCoroutine(PoolManager.instance.CheckShellEnd(shellClone, _index));
@@ -81,6 +89,8 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
             tf_clone.localRotation = Quaternion.LookRotation(playerARInfo[_index].vt_bulletPattern[playerARInfo[_index].bulletPatternIndex]);
             bulletClone.GetComponent<Rigidbody>().AddForce(playerARInfo[_index].vt_bulletPattern[playerARInfo[_index].bulletPatternIndex] * weaponManager.weaponInfoAR.speed, ForceMode.Acceleration);
             AudioManager.Instance.Play(0);
+            playerARInfo[_index].curAmmo--;
+            UIManager.instance.SetAmmoStateTxt(playerARInfo[_index].curAmmo);
 
             switch (playerARInfo[_index].bulletPatternIndex)
             {
@@ -109,7 +119,6 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
             }
 
             yield return YieldInstructionCache.WaitForSeconds(weaponManager.weaponInfoAR.fireRate);
-
         }
     }
 
@@ -117,6 +126,41 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
     {
         if (Vector3.Distance(_obj_bullet.transform.position, PlayersManager.instance.obj_players[_index].transform.position) >= Main_AR.instance.weaponManager.weaponInfoAR.range)
             PoolManager.instance.ReturnGunToPool(_obj_bullet, _info_bullet, _index);
+    }
+
+    public void ReloadAmmo(int _index)
+    {
+        EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, myIndex);
+        AudioManager.Instance.Play(8);
+        StartCoroutine(Cor_ReloadAmmo(_index));
+    }
+
+    public IEnumerator Cor_ReloadAmmo(int _index)
+    {
+        playerARInfo[_index].curAmmo = 0; //어차피 장전중엔 총을못쏘므로 총알을 0으로 만들어줌
+
+        if (playerARInfo[_index].isReloading == false)
+        {
+            playerARInfo[_index].isReloading = true;
+
+            Debug.Log("AR총알없음. 장전중");
+            UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadTimeImg(3.0f));
+
+            yield return YieldInstructionCache.WaitForSeconds(3.0f);
+            playerARInfo[_index].curAmmo = weaponManager.weaponInfoAR.maxAmmo;
+            UIManager.instance.SetAmmoStateTxt(playerARInfo[_index].curAmmo);
+            AudioManager.Instance.Play(9);
+            Debug.Log("AR장전완료");
+            playerARInfo[_index].isReloading = false;
+
+            //장전 이전상태가 사격중이였을경우 계속 이어서쏨
+            if (PlayersManager.instance.actionState[_index] == _ACTION_STATE.SHOT ||
+                PlayersManager.instance.actionState[_index] == _ACTION_STATE.CIR_AIM_SHOT)
+            {
+                StateManager.instance.Shot(false);
+                StateManager.instance.Shot(true);
+            }
+        }
     }
 
     public void ApplyDamage(int _type, int _index)
@@ -130,27 +174,6 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
         }
 
         UIManager.instance.hp[_type].img_front.fillAmount -= 0.04f; //데미지만큼 피를깎음.
-        UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHP(_type, 0.04f));
-        /*
-        switch(_type)
-        {
-            case 0:
-                UIManager.instance.myHP.img_front.fillAmount -= weaponManager.weaponInfoAR.damage; //데미지만큼 피를깎음.
-                UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHP(_type, weaponManager.weaponInfoAR.damage));
-                break;
-            case 1:
-                UIManager.instance.teamHP.img_front.fillAmount -= weaponManager.weaponInfoAR.damage; //데미지만큼 피를깎음.
-                UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHP(_type, weaponManager.weaponInfoAR.damage));
-                break;
-            case 2:
-                UIManager.instance.enemyHP[0].img_front.fillAmount -= weaponManager.weaponInfoAR.damage; //데미지만큼 피를깎음.
-                UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHP(_type, weaponManager.weaponInfoAR.damage));
-                break;
-            case 3:
-                UIManager.instance.enemyHP[1].img_front.fillAmount -= weaponManager.weaponInfoAR.damage; //데미지만큼 피를깎음.
-                UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHP(_type, weaponManager.weaponInfoAR.damage));
-                break;
-        }
-        */
+        UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHPImg(_type, 0.04f));
     }
 }

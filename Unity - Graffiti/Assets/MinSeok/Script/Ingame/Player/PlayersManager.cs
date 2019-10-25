@@ -6,27 +6,6 @@ using UnityEngine;
  * 플레이어의 기본속성이 들어있다.
  * 분할된 클래스 내 필드들의 Awake는 여기서 한번에 이루어진다.
  */
-
-public enum _ATTRIBUTE_STATE
-{
-    //속성상태 
-    DEAD = 0,
-    ALIVE = 1
-}
-
-public enum _ACTION_STATE //액션(움직임)의 상태
-{
-    // 단일 STATE
-    IDLE = 0,
-    DEATH,
-    CIR,
-    AIM, 
-    SHOT,
-
-    // 복합 STATE
-    CIR_AIM,
-    CIR_AIM_SHOT,
-}
 public partial class PlayersManager : MonoBehaviour
 { 
     public static PlayersManager instance;
