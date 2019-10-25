@@ -60,13 +60,41 @@ public class UIManager : MonoBehaviour
     }
     #endregion
 
+    #region RELOAD_GAGE
+    public GameObject obj_prefebReloadGage;
+    public _IMG_RELOAD_INFO reloadGage;
+    public Vector3 reloadAddPos { get; set; }
+
+    public struct _IMG_RELOAD_INFO
+    {
+        public GameObject obj_parent;
+        public Image img_reload { get; set; }
+        public Image img_back { get; set; }
+        public Text txt_reloadTime { get; set; }
+    }
+    #endregion
+
+    #region WEAPON_INFO
+    public GameObject obj_prefebWeaponInfo;
+    public Sprite[] spr_mainW;
+    public _IMG_WEAPON_INFO weaponInfo;
+    public Vector3 weaponAddPos { get; set; }
+
+    public struct _IMG_WEAPON_INFO
+    {
+        public GameObject obj_parent;
+        public Image img_mainW { get; set; }
+        public Text txt_ammoState { get; set; }
+    }
+    #endregion
+
     #region DeadUI
     GameObject leftJoystick;
     GameObject rightJoystick;
     GameObject deadPanel;
-    #endregion
+	#endregion
 
-    private void Awake()
+	private void Awake()
     {
         if (instance == null)
             instance = this;
@@ -81,6 +109,8 @@ public class UIManager : MonoBehaviour
         Initialization_Nickname();
         Initialization_Circle();
         Initialization_Line();
+        Initialization_ReloadGage();
+        Initialization_WeaponInfo();
     }
 
     private void Start()
@@ -102,6 +132,8 @@ public class UIManager : MonoBehaviour
             circle[playersIndex[i]].obj_parent.transform.position = PlayersManager.instance.tf_players[playersIndex[i]].transform.position + circleAddPos;
         }
         line.obj_parent.transform.position = PlayersManager.instance.tf_players[myIndex].transform.position + lineAddPos;
+        reloadGage.obj_parent.transform.position = PlayersManager.instance.tf_players[myIndex].transform.position + reloadAddPos;
+        weaponInfo.obj_parent.transform.position = PlayersManager.instance.tf_players[myIndex].transform.position + weaponAddPos;
         /*
         for(int i=0; i<nickname.Length; i++)
             nickname[playersIndex[i]].obj_parent.transform.position = PlayersManager.instance.tf_players[playersIndex[i]].transform.position + hpAddPos;
@@ -117,7 +149,7 @@ public class UIManager : MonoBehaviour
     private void Initialization_HP()
     {
         hp = new _IMG_HP_INFO[C_Global.MAX_PLAYER];
-        hpAddPos = new Vector3(0, 2.2f, 1.3f);
+        hpAddPos = new Vector3(0, 2.1f, 1.3f);
         curHpCor = null;
 
         for (int i = 0; i < hp.Length; i++)
@@ -166,6 +198,7 @@ public class UIManager : MonoBehaviour
             circle[i].img_circle = circle[i].obj_parent.transform.GetChild(0).GetComponent<Image>();
         }
     }
+
     private void Initialization_Line()
     {
         lineAddPos = new Vector3(0, 0.1f, 0);
@@ -175,7 +208,44 @@ public class UIManager : MonoBehaviour
         line.obj_parent.SetActive(false);
     }
 
-    public IEnumerator DecreaseMiddleHP(int _index, float _curHP) //중간 체력 img는 효과를 적용할것이다.
+    private void Initialization_ReloadGage()
+    {
+        reloadAddPos = new Vector3(0, 2.5f, 2.2f);
+
+        reloadGage.obj_parent = Instantiate(obj_prefebReloadGage, GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
+        reloadGage.img_reload = reloadGage.obj_parent.transform.GetChild(0).GetComponent<Image>();
+        reloadGage.img_back = reloadGage.obj_parent.transform.GetChild(1).GetComponent<Image>();
+        reloadGage.txt_reloadTime = reloadGage.obj_parent.transform.GetChild(2).GetComponent<Text>();
+        reloadGage.obj_parent.SetActive(false);
+    }
+
+    private void Initialization_WeaponInfo()
+    {
+        weaponAddPos = new Vector3(0, 1.8f, -1.8f);
+
+        weaponInfo.obj_parent = Instantiate(obj_prefebWeaponInfo, GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
+        weaponInfo.img_mainW = weaponInfo.obj_parent.transform.GetChild(0).GetComponent<Image>();
+        weaponInfo.txt_ammoState = weaponInfo.obj_parent.transform.GetChild(1).GetComponent<Text>();
+  
+        switch (WeaponManager.instance.mainWeapon[myIndex])
+        {
+            case _WEAPONS.AR:
+                weaponInfo.img_mainW.sprite = spr_mainW[0];
+                weaponInfo.txt_ammoState.text = WeaponManager.instance.weaponInfoAR.maxAmmo.ToString();
+                break;
+            case _WEAPONS.SG:
+                weaponInfo.img_mainW.sprite = spr_mainW[1];
+                weaponInfo.txt_ammoState.text = WeaponManager.instance.weaponInfoSG.maxAmmo.ToString();
+                break;
+            case _WEAPONS.SMG:
+                weaponInfo.img_mainW.sprite = spr_mainW[2];
+                weaponInfo.txt_ammoState.text = WeaponManager.instance.weaponInfoSMG.maxAmmo.ToString();
+                break;
+        }
+  
+    }
+
+    public IEnumerator DecreaseMiddleHPImg(int _index, float _curHP) //중간 체력 img는 효과를 적용할것이다.
     {
         //Debug.Log("들어옴");
         yield return YieldInstructionCache.WaitForSeconds(0.6f);
@@ -186,6 +256,36 @@ public class UIManager : MonoBehaviour
         hp[_index].img_middle.fillAmount -= _curHP;
 #endif
         yield break;
+    }
+
+    public void ReloadAmmo_Btn() //재장전 이미지 버튼
+    {
+        WeaponManager.instance.ReloadAmmo(myIndex); //총알개수 체크후 바로 다이렉트 재장전
+    }
+    
+    public void SetAmmoStateTxt(int _num)
+    {
+        weaponInfo.txt_ammoState.text = _num.ToString();
+    }
+
+    public IEnumerator DecreaseReloadTimeImg(float _time) //중간 체력 img는 효과를 적용할것이다.
+    { 
+        reloadGage.obj_parent.SetActive(true);
+        reloadGage.txt_reloadTime.text = (_time).ToString();
+
+        while (true)
+        {
+            if (reloadGage.img_reload.fillAmount <= 0)
+            {
+                reloadGage.img_reload.fillAmount = 1.0f;
+                reloadGage.obj_parent.SetActive(false);
+                yield break;
+            }
+
+            reloadGage.img_reload.fillAmount -= Time.smoothDeltaTime / _time;
+            reloadGage.txt_reloadTime.text = (reloadGage.img_reload.fillAmount * _time).ToString();
+            yield return null;
+        }
     }
 
     public void UpdateAimDirectionImg(bool _value)
@@ -240,20 +340,23 @@ public class UIManager : MonoBehaviour
 
     public void SetDeadUI()
     {
-        leftJoystick.SetActive(false);
+		leftJoystick.GetComponent<LeftJoystick>().DragEnd();
+		rightJoystick.GetComponent<RightJoystick>().DragEnd();
+
+		leftJoystick.SetActive(false);
         rightJoystick.SetActive(false);
-        deadPanel.SetActive(true);
+        //deadPanel.SetActive(true);
     }
     public void SetAliveUI()
     {
         leftJoystick.SetActive(true);
         rightJoystick.SetActive(true);
-        deadPanel.SetActive(false);
+        //deadPanel.SetActive(false);
     }
 
     public void HealthUIChanger(int _idx, float _health)
     {
         hp[_idx].img_front.fillAmount = _health * 0.01f;
-        StartCoroutine(DecreaseMiddleHP(_idx, _health * 0.01f));
+        StartCoroutine(DecreaseMiddleHPImg(_idx, _health * 0.01f));
     }
 }

@@ -22,7 +22,7 @@ public partial class PlayersManager : MonoBehaviour
             return;
 
         obj_players[_index].GetComponent<CapsuleCollider>().isTrigger = true;
-        am_animePlayer[_index].SetFloat("DeathRandom", Random.Range(0, 2));
+        am_animePlayer[_index].SetFloat("DeathRandom", Random.Range(0, 3));
         am_animePlayer[_index].SetTrigger("Death");
     }
 

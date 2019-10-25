@@ -183,6 +183,7 @@ public class GameManager : MonoBehaviour
     {
         loadingImage.enabled = false;
     }
+
     public void SetLocalAndNetworkActionState(int _idx, _ACTION_STATE _action)
     {
         NetworkManager.instance.SetActionState(_idx, (int)_action);

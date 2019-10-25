@@ -42,14 +42,15 @@ class InGameManager : public C_SyncCS< InGameManager>
 		NOTIFY_WEAPON = ((__int64)0x1 << 31),	// 무기를 알려줌
 
 		// UPDATE_PROTOCOL 개별
-		ENTER_SECTOR           = ((__int64)0x1 << 31),		// 섹터 진입
-		EXIT_SECTOR            = ((__int64)0x1 << 30),		// 섹터 퇴장
-		UPDATE_PLAYER          = ((__int64)0x1 << 29),		// 플레이어 목록 최신화
-		FORCE_MOVE             = ((__int64)0x1 << 28),		// 강제 이동
-		GET_OTHERPLAYER_STATUS = ((__int64)0x1 << 27),		// 다른 플레이어 상태 얻기
-		BULLET_HIT             = ((__int64)0x1 << 26),		// 총알 맞음
-		RESPAWN				   = ((__int64)0x1 << 25),		// 리스폰 요청 수신 및 리스폰 프로토콜 전송
-		CAR_SPAWN			   = ((__int64)0x1 << 24),		// 자동차 스폰 
+		ENTER_SECTOR            = ((__int64)0x1 << 31),		// 섹터 진입
+		EXIT_SECTOR             = ((__int64)0x1 << 30),		// 섹터 퇴장
+		UPDATE_PLAYER           = ((__int64)0x1 << 29),		// 플레이어 목록 최신화
+		FORCE_MOVE              = ((__int64)0x1 << 28),		// 강제 이동
+		GET_OTHERPLAYER_STATUS  = ((__int64)0x1 << 27),		// 다른 플레이어 상태 얻기
+		BULLET_HIT              = ((__int64)0x1 << 26),		// 총알 맞음
+		RESPAWN				    = ((__int64)0x1 << 25),		// 리스폰 요청 수신 및 리스폰 프로토콜 전송
+		CAR_SPAWN			    = ((__int64)0x1 << 24),		// 자동차 스폰 
+		CAR_HIT					= ((__int64)0x1 << 23),		// 자동차에 치임
 
 		NODATA = ((__int64)0x1 << 10)
 	};
@@ -68,10 +69,12 @@ public:
 private:
 	void PackPacket(char* _setptr, const int _num, int& _size);
 	void PackPacket(char* _setptr, int _num, TCHAR* _string, int& _size);
+	void PackPacket(char* _setptr, int _num, float _posX, float _posZ, int& _size);
 	void PackPacket(char* _setptr, int _num, Weapon* _struct, int& _size);
 	void PackPacket(char* _setptr, IngamePacket& _struct, int& _size);
 	void PackPacket(char* _setptr, GameInfo* &_gameInfo, vector<WeaponInfo*>& _weaponInfo, int& _size);
 	void UnPackPacket(char* _getBuf, int& _num);
+	void UnPackPacket(char* _getBuf, float& _posX, float& _posZ);
 	void UnPackPacket(char* _getBuf, IngamePacket& _struct);
 	void UnPackPacket(char* _getBuf, Weapon* &_weapon);
 
@@ -86,6 +89,7 @@ private:
 	bool UpdateProcess(C_ClientInfo* _ptr, char* _buf);
 	bool GetPosProcess(C_ClientInfo* _ptr, char* _buf);		// 위치를 얻어주는 함수
 	bool OnFocusProcess(C_ClientInfo* _ptr);		// 포커스 On시의 처리 함수(다른 플레이어 인게임 정보 보내줌)
+	bool HitAndRunProcess(C_ClientInfo* _ptr, char* _buf);	// 뺑소니 당함
 
 	void InitalizePlayersInfo(RoomInfo* _room);
 

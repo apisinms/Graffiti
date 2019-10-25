@@ -76,6 +76,27 @@ void InGameManager::PackPacket(char* _setptr, int _num, TCHAR* _string, int& _si
 	_size = _size + strsize;
 }
 
+void InGameManager::PackPacket(char* _setptr, int _num, float _posX, float _posZ, int& _size)
+{
+	char* ptr = _setptr;
+	_size = 0;
+
+	// playerNum
+	memcpy(ptr, &_num, sizeof(_num));
+	ptr = ptr + sizeof(_num);
+	_size = _size + sizeof(_num);
+
+	// posX
+	memcpy(ptr, &_posX, sizeof(_posX));
+	ptr = ptr + sizeof(_posX);
+	_size = _size + sizeof(_posX);
+
+	// posZ
+	memcpy(ptr, &_posZ, sizeof(_posZ));
+	ptr = ptr + sizeof(_posZ);
+	_size = _size + sizeof(_posZ);
+}
+
 void InGameManager::PackPacket(char* _setptr, int _num, Weapon* _struct, int& _size)
 {
 	char* ptr = _setptr;
@@ -135,6 +156,19 @@ void InGameManager::UnPackPacket(char* _getBuf, int& _num)
 	// num
 	memcpy(&_num, ptr, sizeof(int));
 	ptr = ptr + sizeof(int);
+}
+
+void InGameManager::UnPackPacket(char* _getBuf, float& _posX, float& _posZ)
+{
+	char* ptr = _getBuf + sizeof(PROTOCOL_INGAME);
+
+	// X
+	memcpy(&_posX, ptr, sizeof(float));
+	ptr = ptr + sizeof(float);
+
+	// X
+	memcpy(&_posZ, ptr, sizeof(float));
+	ptr = ptr + sizeof(float);
 }
 
 void InGameManager::UnPackPacket(char* _getBuf, IngamePacket& _struct)
@@ -446,6 +480,37 @@ bool InGameManager::OnFocusProcess(C_ClientInfo* _ptr)
 		memcpy(&gamePacket, player->GetPlayerInfo()->GetIngamePacket(), sizeof(IngamePacket));
 		PackPacket(buf, gamePacket, packetSize);
 		_ptr->SendPacket(protocol, buf, packetSize);
+	}
+
+	return true;
+}
+
+bool InGameManager::HitAndRunProcess(C_ClientInfo* _ptr, char* _buf)
+{
+	PROTOCOL_INGAME protocol;
+	char buf[BUFSIZE] = { 0, };
+	int packetSize = 0;
+
+	// 어느 방향으로 얼마만한 힘으로 치였는지를 얻어온다.
+	IngamePacket pos;
+	float posX, posZ;
+	UnPackPacket(_buf, posX, posZ);
+
+	//_ptr->GetPlayerInfo()->GetIngamePacket()->health = 0.0f;	// 죽어서 피 0
+
+	// 섹터에 있는 플레이어들에게 내가 차에 치여 죽었다는 정보(힘과함께)를 보내준다
+	list<C_ClientInfo*> sendList = _ptr->GetRoom()->GetSector()->GetSectorPlayerList(_ptr->GetPlayerInfo()->GetIndex());
+	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::UPDATE_PROTOCOL, RESULT_INGAME::CAR_HIT);
+	PackPacket(buf, _ptr->GetPlayerInfo()->GetPlayerNum(), posX, posZ, packetSize);
+	ListSendPacket(sendList, _ptr, protocol, buf, packetSize, true);	// 나 빼고 전송
+
+	// 차에 치이면 이따가 리스폰 시켜줘야됨
+	if (_ptr->GetPlayerInfo()->IsRespawning() == false)
+	{
+		std::thread respawnThread(RespawnWaitAndRevive, _ptr);		// 1회용 리스폰 쓰레드 생성
+		respawnThread.detach();		// 이 쓰레드에서 손 뗌 넌 자유
+
+		_ptr->GetPlayerInfo()->RespawnOn();	// 리스폰 시작
 	}
 
 	return true;
@@ -957,6 +1022,10 @@ bool InGameManager::CanIUpdate(C_ClientInfo* _ptr)
 			// 다른 사람 상태 요청 일시
 		case GET_OTHERPLAYER_STATUS:
 			return GetPosProcess(_ptr, buf);
+
+			// 차에 치였을 시
+		case CAR_HIT:
+			return HitAndRunProcess(_ptr, buf);
 
 			// 그냥 업데이트일 시
 		default:

@@ -39,8 +39,7 @@ public class CameraControl : UnityEngine.MonoBehaviour
             cameraPos.x = obj_player.transform.position.x;
             cameraPos.y = obj_player.transform.position.y + 13f;
             cameraPos.z = obj_player.transform.position.z - 5.0f;
-            
-            
+                       
             if (PlayersManager.instance.actionState[myIndex] == _ACTION_STATE.AIM ||
                 PlayersManager.instance.actionState[myIndex] == _ACTION_STATE.CIR_AIM ||
                 PlayersManager.instance.actionState[myIndex] == _ACTION_STATE.SHOT ||

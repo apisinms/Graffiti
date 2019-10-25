@@ -24,6 +24,7 @@ public class ThreadManager
 				instance.br = NetworkManager.instance.BinaryReader;
 			}
 
+
 			return instance;
 		}
 	}

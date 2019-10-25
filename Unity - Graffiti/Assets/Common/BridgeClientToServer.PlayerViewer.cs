@@ -79,13 +79,6 @@ public partial class BridgeClientToServer : MonoBehaviour
          pos.z = networkManager.GetPosZ(i);
 
          actionState = (_ACTION_STATE)networkManager.GetActionState(i); // 변수하나파서 스테이트여기에 넣음
-     
-            if (PlayersManager.instance.hp[i] <= 0)
-            {
-                actionState = _ACTION_STATE.DEATH;
-            }
-           
-            //Debug.Log((_ACTION_STATE)networkManager.GetActionState(0) + "   " + (_ACTION_STATE)networkManager.GetActionState(1) + "   " + (_ACTION_STATE)networkManager.GetActionState(2) + "   " + (_ACTION_STATE)networkManager.GetActionState(3));
 
             switch (actionState)
             {

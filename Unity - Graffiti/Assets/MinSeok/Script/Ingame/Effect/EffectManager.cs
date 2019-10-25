@@ -28,25 +28,13 @@ public class EffectManager : MonoBehaviour
         public ParticleSystem body;
     }
 
-    public struct _PS_TmpMuzzle_Plane2
+    public struct _PS_TmpMuzzle_Spike
     {
         public ParticleSystem.MainModule option;
         public ParticleSystem body;
     }
 
-    public struct _PS_TmpMuzzle_Plane3
-    {
-        public ParticleSystem.MainModule option;
-        public ParticleSystem body;
-    }
-
-    public struct _PS_TmpMuzzle_Plane4
-    {
-        public ParticleSystem.MainModule option;
-        public ParticleSystem body;
-    }
-
-    public struct _PS_TmpMuzzle_Spark
+    public struct _PS_TmpMuzzle_Flare
     {
         public ParticleSystem.MainModule option;
         public ParticleSystem body;
@@ -56,17 +44,14 @@ public class EffectManager : MonoBehaviour
     {
         public _PS_TmpMuzzle_Body body;
         public _PS_TmpMuzzle_Glow glow;
-        public _PS_TmpMuzzle_Plane2 plane2;
-        public _PS_TmpMuzzle_Plane3 plane3;
-        public _PS_TmpMuzzle_Plane4 plane4;
-        public _PS_TmpMuzzle_Spark spark;
+        public _PS_TmpMuzzle_Spike spike;
+        public _PS_TmpMuzzle_Flare flare;
     }
 
     public _PS_TmpMuzzle[] ps_tmpMuzzle { get; set; }
     #endregion
 
     public ParticleSystem[] ps_sparkPrefebsList;
-    public ParticleSystem ps_tmpSpark { get; set; }
 
     private void Awake()
     {
@@ -76,7 +61,6 @@ public class EffectManager : MonoBehaviour
         myIndex = GameManager.instance.myIndex;
 
         ps_tmpMuzzle = new _PS_TmpMuzzle[C_Global.MAX_PLAYER];
-        //ps_tmpSpark = new ParticleSystem[C_Global.MAX_PLAYER];
 
 #if !NETWORK
         InitializeMuzzle2(C_Global.MAX_PLAYER);
@@ -114,28 +98,24 @@ public class EffectManager : MonoBehaviour
         switch (WeaponManager.instance.mainWeapon[_index])
         {
             case _WEAPONS.AR:
-                ps_tmpMuzzle[_index].body.body = Instantiate(ps_muzzlePrefebsList[1], PlayersManager.instance.obj_players[_index].transform) as ParticleSystem;
+                ps_tmpMuzzle[_index].body.body = Instantiate(ps_muzzlePrefebsList[0], PlayersManager.instance.tf_players[_index].transform) as ParticleSystem;
                 break;
             case _WEAPONS.SG:
-                ps_tmpMuzzle[_index].body.body = Instantiate(ps_muzzlePrefebsList[0], PlayersManager.instance.obj_players[_index].transform) as ParticleSystem;
+                ps_tmpMuzzle[_index].body.body = Instantiate(ps_muzzlePrefebsList[1], PlayersManager.instance.tf_players[_index].transform) as ParticleSystem;
                 break;
             case _WEAPONS.SMG:
-                ps_tmpMuzzle[_index].body.body = Instantiate(ps_muzzlePrefebsList[2], PlayersManager.instance.obj_players[_index].transform) as ParticleSystem;
+                ps_tmpMuzzle[_index].body.body = Instantiate(ps_muzzlePrefebsList[2], PlayersManager.instance.tf_players[_index].transform) as ParticleSystem;
                 break;
         }
 
         ps_tmpMuzzle[_index].glow.body = ps_tmpMuzzle[_index].body.body.transform.GetChild(0).GetComponent<ParticleSystem>();
-        ps_tmpMuzzle[_index].plane2.body = ps_tmpMuzzle[_index].body.body.transform.GetChild(1).GetComponent<ParticleSystem>();
-        ps_tmpMuzzle[_index].plane3.body = ps_tmpMuzzle[_index].body.body.transform.GetChild(2).GetComponent<ParticleSystem>();
-        ps_tmpMuzzle[_index].plane4.body = ps_tmpMuzzle[_index].body.body.transform.GetChild(3).GetComponent<ParticleSystem>();
-        ps_tmpMuzzle[_index].spark.body = ps_tmpMuzzle[_index].body.body.transform.GetChild(4).GetComponent<ParticleSystem>();
+        ps_tmpMuzzle[_index].spike.body = ps_tmpMuzzle[_index].body.body.transform.GetChild(1).GetComponent<ParticleSystem>();
+        ps_tmpMuzzle[_index].flare.body = ps_tmpMuzzle[_index].body.body.transform.GetChild(2).GetComponent<ParticleSystem>();
 
         ps_tmpMuzzle[_index].body.option = ps_tmpMuzzle[_index].body.body.main;
         ps_tmpMuzzle[_index].glow.option = ps_tmpMuzzle[_index].glow.body.main;
-        ps_tmpMuzzle[_index].plane2.option = ps_tmpMuzzle[_index].plane2.body.main;
-        ps_tmpMuzzle[_index].plane3.option = ps_tmpMuzzle[_index].plane3.body.main;
-        ps_tmpMuzzle[_index].plane4.option = ps_tmpMuzzle[_index].plane4.body.main;
-        ps_tmpMuzzle[_index].spark.option = ps_tmpMuzzle[_index].spark.body.main;
+        ps_tmpMuzzle[_index].spike.option = ps_tmpMuzzle[_index].spike.body.main;
+        ps_tmpMuzzle[_index].flare.option = ps_tmpMuzzle[_index].flare.body.main;
     }
 
 
@@ -149,29 +129,24 @@ public class EffectManager : MonoBehaviour
             switch (WeaponManager.instance.mainWeapon[i])
             {
                 case _WEAPONS.AR:
-                    ps_tmpMuzzle[i].body.body = Instantiate(ps_muzzlePrefebsList[1], PlayersManager.instance.obj_players[i].transform) as ParticleSystem;
+                    ps_tmpMuzzle[i].body.body = Instantiate(ps_muzzlePrefebsList[0], PlayersManager.instance.tf_players[i].transform) as ParticleSystem;
                     break;
                 case _WEAPONS.SG:
-                    ps_tmpMuzzle[i].body.body = Instantiate(ps_muzzlePrefebsList[0], PlayersManager.instance.obj_players[i].transform) as ParticleSystem;
+                    ps_tmpMuzzle[i].body.body = Instantiate(ps_muzzlePrefebsList[1], PlayersManager.instance.tf_players[i].transform) as ParticleSystem;
                     break;
                 case _WEAPONS.SMG:
-                    ps_tmpMuzzle[i].body.body = Instantiate(ps_muzzlePrefebsList[2], PlayersManager.instance.obj_players[i].transform) as ParticleSystem;
+                    ps_tmpMuzzle[i].body.body = Instantiate(ps_muzzlePrefebsList[2], PlayersManager.instance.tf_players[i].transform) as ParticleSystem;
                     break;
             }
 
             ps_tmpMuzzle[i].glow.body = ps_tmpMuzzle[i].body.body.transform.GetChild(0).GetComponent<ParticleSystem>();
-            ps_tmpMuzzle[i].plane2.body = ps_tmpMuzzle[i].body.body.transform.GetChild(1).GetComponent<ParticleSystem>();
-            ps_tmpMuzzle[i].plane3.body = ps_tmpMuzzle[i].body.body.transform.GetChild(2).GetComponent<ParticleSystem>();
-            ps_tmpMuzzle[i].plane4.body = ps_tmpMuzzle[i].body.body.transform.GetChild(3).GetComponent<ParticleSystem>();
-            ps_tmpMuzzle[i].spark.body = ps_tmpMuzzle[i].body.body.transform.GetChild(4).GetComponent<ParticleSystem>();
-            //ps_tmpSpark[i] = Instantiate(ps_spark, GameObject.FindGameObjectWithTag("Effects").transform);
-
+            ps_tmpMuzzle[i].spike.body = ps_tmpMuzzle[i].body.body.transform.GetChild(1).GetComponent<ParticleSystem>();
+            ps_tmpMuzzle[i].flare.body = ps_tmpMuzzle[i].body.body.transform.GetChild(2).GetComponent<ParticleSystem>();
+                               
             ps_tmpMuzzle[i].body.option = ps_tmpMuzzle[i].body.body.main;
             ps_tmpMuzzle[i].glow.option = ps_tmpMuzzle[i].glow.body.main;
-            ps_tmpMuzzle[i].plane2.option = ps_tmpMuzzle[i].plane2.body.main;
-            ps_tmpMuzzle[i].plane3.option = ps_tmpMuzzle[i].plane3.body.main;
-            ps_tmpMuzzle[i].plane4.option = ps_tmpMuzzle[i].plane4.body.main;
-            ps_tmpMuzzle[i].spark.option = ps_tmpMuzzle[i].spark.body.main;
+            ps_tmpMuzzle[i].spike.option = ps_tmpMuzzle[i].spike.body.main;
+            ps_tmpMuzzle[i].flare.option = ps_tmpMuzzle[i].flare.body.main;
         }
     }
 

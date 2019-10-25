@@ -22,8 +22,8 @@ using namespace std;
 #define PROTOCOL_OFFSET	0xFFFFF
 #define PROTOCOL_MASK	30
 
-#define RESULT_OFFSET 0x3FF
-#define RESULT_MASK		40
+#define RESULT_OFFSET	0xFFFFFF
+#define RESULT_MASK		54
 
 #define CAR_SPAWN_TIME	4000
 

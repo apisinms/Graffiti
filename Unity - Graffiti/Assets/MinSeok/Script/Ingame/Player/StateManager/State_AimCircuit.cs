@@ -81,7 +81,7 @@ public class State_AimCircuit : MonoBehaviour, IActionState
             if (WeaponManager.instance.curMainActionCor[myIndex] != null)
                 WeaponManager.instance.StopCoroutine(WeaponManager.instance.curMainActionCor[myIndex]);
             WeaponManager.instance.curMainActionCor[myIndex] = WeaponManager.instance.StartCoroutine(WeaponManager.instance.ActionFire(myIndex));
-            EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, myIndex);
+            //EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, myIndex);
         }
     }
 }

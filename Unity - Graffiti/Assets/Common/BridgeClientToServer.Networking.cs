@@ -224,10 +224,13 @@ public partial class BridgeClientToServer : MonoBehaviour
         // 다른 플레이어가 죽었던거면 체력, 서클 등 켜줌
         else
         {
-            int absoluteIdx = uiManager.PlayerIndexToAbsoluteIndex(_packet.playerNum - 1);
             gameManager.SetLocalAndNetworkActionState(_packet.playerNum - 1, _ACTION_STATE.IDLE);
+            int absoluteIdx = uiManager.PlayerIndexToAbsoluteIndex(_packet.playerNum - 1);
             uiManager.OnPlayerUI(absoluteIdx);
         }
+
+		// 남아있는 Addforce 초기화
+		playersManager.obj_players[_packet.playerNum - 1].GetComponent<Rigidbody>().velocity = Vector3.zero;
     }
 
     public void CarSpawn(int _seed)
@@ -237,8 +240,23 @@ public partial class BridgeClientToServer : MonoBehaviour
         pathSpawner.SpawnPrefabs(); // 차 생성
     }
 
-    // 정상적인 업데이트 시
-    public void OnUpdate(ref IngamePacket _packet)
+	public void OtherPlayerHitByCar(int _playerNum, float _posX, float _posZ)
+	{
+		// 맞은 놈 튕기게 하고
+		Rigidbody rigid = playersManager.obj_players[_playerNum - 1].GetComponent<Rigidbody>();
+		Vector3 force = new Vector3(_posX, 0.0f, _posZ);
+		rigid.AddForce(force);
+
+		// 상태 변경
+		gameManager.SetLocalAndNetworkActionState(_playerNum - 1, _ACTION_STATE.DEATH);
+
+		// 체력 UI 적용(차는 즉사)
+		int absoluteIdx = uiManager.PlayerIndexToAbsoluteIndex(_playerNum - 1);
+		uiManager.HealthUIChanger(absoluteIdx, 0.0f);
+	}
+
+	// 정상적인 업데이트 시
+	public void OnUpdate(ref IngamePacket _packet)
     {
         networkManager.SetIngamePacket(_packet.playerNum - 1, ref _packet);
     }

@@ -103,7 +103,7 @@ public partial class PlayersManager : MonoBehaviour
         }
     }
 
-	// 노트 s10
+
   
     public void BlockCollisionEachOther()
     {
