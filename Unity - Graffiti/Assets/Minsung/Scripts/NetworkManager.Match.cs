@@ -8,7 +8,7 @@ using UnityEngine;
 public partial class NetworkManager : MonoBehaviour
 {
 	// 매칭을 원한다고 서버로 전송
-	public void MayIMatch()
+	public void MayIMatch(int _gameType)
 	{
 		// 프로토콜 셋팅
 		protocol = SetProtocol(
@@ -16,9 +16,9 @@ public partial class NetworkManager : MonoBehaviour
 				PROTOCOL.MATCH_PROTOCOL,
 				RESULT.NODATA);
 
-		// 패킹 및 전송
+		// 패킹 및 전송(게임 타입 함께 전송)
 		int packetSize;
-		PackPacket(ref sendBuf, protocol, out packetSize);
+		PackPacket(ref sendBuf, protocol, _gameType, out packetSize);
 		bw.Write(sendBuf, 0, packetSize);
 	}
 

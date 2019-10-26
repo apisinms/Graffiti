@@ -36,4 +36,10 @@ public class C_Global
 		PLAYER_3 = (1 << 1),
 		PLAYER_4 = (1 << 0),
 	}
+
+	public enum GameType : int
+	{
+		_2vs2,
+		_1vs1,
+	}
 }

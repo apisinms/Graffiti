@@ -16,10 +16,12 @@ MatchManager* MatchManager::GetInstance()
 
 void MatchManager::Init()
 {
+	waitList = new list<C_ClientInfo*>[RoomInfo::GameType::_MAX_GAMETYPE];
 }
 
 void MatchManager::End()
 {
+	delete[]waitList;
 }
 
 void MatchManager::Destroy()
@@ -31,35 +33,61 @@ void MatchManager::WaitListRemove(C_ClientInfo* _ptr)
 {
 	IC_CS cs;
 
-	waitList.remove(_ptr);
-	wprintf(L"대기리스트 삭제 성공 : %d\n", (int)waitList.size());
+	int gameType = _ptr->GetGameType();
+	if (gameType != -1)
+	{
+		waitList[gameType].remove(_ptr);
+
+		switch ((RoomInfo::GameType)gameType)
+		{
+			case RoomInfo::GameType::_2vs2:
+			{
+				wprintf(L"2:2 대기리스트 삭제 성공 : %d\n", (int)waitList[gameType].size());
+			}
+			break;
+
+			case RoomInfo::GameType::_1vs1:
+			{
+				wprintf(L"1:1 대기리스트 삭제 성공 : %d\n", (int)waitList[gameType].size());
+			}
+			break;
+		}
+
+		_ptr->SetGameType(-1);	// -1로 설정
+	}
 }
 
 bool MatchManager::MatchProcess(C_ClientInfo* _ptr)
 {
 	IC_CS cs;
 
-	// 리스트에 뒤로 넣고
-	waitList.emplace_back(_ptr);
-	
-	printf("대기 리스트에 삽입 성공 사이즈 : %d\n", (int)waitList.size());
+	int gameType = _ptr->GetGameType();
+	int MaxPlayerOfThisGameType = 0;
+	waitList[gameType].emplace_back(_ptr);	// 리스트에 뒤로 넣고
 
-
-	// 4인이상이 됐다면 
-	if (waitList.size() >= MAX_PLAYER)
+	switch ((RoomInfo::GameType)gameType)
 	{
-		// 마지막으로 매칭을 누른 플레이어들 순서로 정보를 얻어서 배열에 저장한다.
-		C_ClientInfo* players[MAX_PLAYER];
-		for (int i = 0; i < MAX_PLAYER; i++)
+		case RoomInfo::GameType::_2vs2:
 		{
-			players[i] = waitList.front();
-			waitList.pop_front();	// 앞으로 뺀다
-
-			//PlayerInfo* info = players[i]->GetPlayerInfo();
+			printf("2:2 대기 리스트에 삽입 성공 사이즈 : %d\n", (int)waitList[gameType].size());
+			MaxPlayerOfThisGameType = _2vs2_MODE_PLAYER;
 		}
-		
-		//나랑 내 앞에를 한 팀, 그리고 남은 2명을 한 팀으로 만들어서 방을 만들고 결과 리턴
-		return RoomManager::GetInstance()->CreateRoom(players, MAX_PLAYER);
+		break;
+
+		case RoomInfo::GameType::_1vs1:
+		{
+			printf("1:1 대기 리스트에 삽입 성공 사이즈 : %d\n", (int)waitList[gameType].size());
+			MaxPlayerOfThisGameType = _1vs1_MODE_PLAYER;
+		}
+		break;
+	}
+
+	
+	// 인원수가 찼다면
+	if (waitList[gameType].size() >= MaxPlayerOfThisGameType)
+	{
+		// 지금 대기 리스트를 전달해서 방을 생성
+		return RoomManager::GetInstance()->CreateRoom(waitList[gameType], MaxPlayerOfThisGameType);
 	}
 
 	// 아직 매칭이 안잡히는 상황이라면

@@ -267,7 +267,7 @@ bool InGameManager::WeaponSelectProcess(C_ClientInfo* _ptr, char* _buf)
 	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::START_PROTOCOL, itemSelectResult);
 
 	// 2. 게임정보 + 무기정보를 패킹
-	PackPacket(buf, gameInfo.at(0), weaponInfo, packetSize);
+	PackPacket(buf, gameInfo.at(_ptr->GetRoom()->GetGameType()), weaponInfo, packetSize);
 
 	// 3. 만든 패킷을 클라에게 전송
 	_ptr->SendPacket(protocol, buf, packetSize);
@@ -368,7 +368,6 @@ bool InGameManager::InitProcess(C_ClientInfo* _ptr, char* _buf)
 
 	// 전송(본인 포함)
 	ListSendPacket(playerList, nullptr, protocol, buf, packetSize, false);
-
 
 	// 2. 모든 플레이어에게 자신의 닉네임 정보를 보내준다(본인 포함)
 	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::NICKNAME_PROTOCOL, RESULT_INGAME::NODATA);
@@ -764,7 +763,7 @@ bool InGameManager::CheckBullet(C_ClientInfo* _ptr, IngamePacket& _recvPacket)
 
 		// 2. 맞은 플레이어들이 사정거리에 있는지 검사한다.
 		byte bitMask = (byte)PLAYER_BIT::PLAYER_1;
-		for (int i = 0; i < MAX_PLAYER; i++, bitMask >>= 1)
+		for (int i = 0; i < _ptr->GetRoom()->GetMaxPlayer(); i++, bitMask >>= 1)
 		{
 			// 본인은 검사 안함
 			if (i == (_ptr->GetPlayerInfo()->GetPlayerNum() - 1))
@@ -1244,7 +1243,7 @@ void InGameManager::RespawnWaitAndRevive(C_ClientInfo* _player)
 	printf("RespawnWaitAndRevive 슬립 시작\n");
 	std::this_thread::sleep_for(
 		std::chrono::seconds(
-			gameManager->gameInfo[_player->GetRoom()->GetGameType()]->responTime
+			gameManager->gameInfo[_player->GetRoom()->GetGameType()]->respawnTime
 		));
 	printf("RespawnWaitAndRevive 슬립 종료\n");
 	
@@ -1263,6 +1262,7 @@ void InGameManager::RespawnWaitAndRevive(C_ClientInfo* _player)
 	// 얻은 패킷 정보에서 위치만 리스폰 위치로 바꿔준다.
 	packet.posX = _player->GetPlayerInfo()->GetRespawnPosX();
 	packet.posZ = _player->GetPlayerInfo()->GetRespawnPosZ();
+	packet.action = 0;	// 그리고 아이들 상태로!
 
 	// 1. 리스폰 위치로 변경된 인게임 패킷 저장
 	_player->GetPlayerInfo()->SetIngamePacket(new IngamePacket(packet));

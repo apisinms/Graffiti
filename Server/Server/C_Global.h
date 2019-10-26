@@ -15,7 +15,8 @@ using namespace std;
 #define MSGSIZE				512
 #define WEAPON_NAME_SIZE	32
 
-#define MAX_PLAYER		2
+#define _1vs1_MODE_PLAYER	2	// 1:1 게임 플레이어 수
+#define _2vs2_MODE_PLAYER	2	// 2:2 게임 플레이어 수
 
 #define THREAD_END		-777
 
@@ -26,6 +27,8 @@ using namespace std;
 #define RESULT_MASK		54
 
 #define CAR_SPAWN_TIME	4000
+
+#define MEMBER_PER_TEAM	2
 
 // Keep-alive 설정 관련
 #define KEEPALIVE_TIME 5000								// TIME ms마다 keep-alive 신호를 주고받는다
@@ -39,7 +42,6 @@ enum PLAYER_BIT : byte
 	PLAYER_3 = (1 << 1),
 	PLAYER_4 = (1 << 0),
 };
-
 
 struct INDEX
 {
@@ -128,6 +130,14 @@ public:
 	}
 };
 
+struct Score
+{
+	int numOfKill;		// 내가 몇 명 죽였는지
+	int numOfDeath;		// 내가 몇 번 죽었는지
+	int killScore;		// 킬 점수
+	int captureScore;	// 점령 점수
+};
+
 struct PlayerInfo
 {
 private:
@@ -140,6 +150,7 @@ private:
 	float respawnPosX;			// 리스폰 x좌표
 	float respawnPosZ;			// 리스폰 z좌표
 	bool isRespawning;			// 리스폰 중인지
+	Score score;				// 내 스코어
 
 public:
 	PlayerInfo()
@@ -156,6 +167,8 @@ public:
 
 		respawnPosX = respawnPosZ = 0.0f;
 		isRespawning = false;
+
+		memset(&score, 0, sizeof(Score));
 	}
 
 	bool GetLoadStatus() { return loadStatus; }
@@ -228,8 +241,10 @@ struct GameInfo
 	int gameType;		// 게임 타입(나중에 모드가 여러 개 생길 수도 있으니)
 	float maxSpeed;		// 최대 이동속도
 	float maxHealth;	// 최대 체력
-	int responTime;		// 리스폰 시간
+	int respawnTime;		// 리스폰 시간
 	int gameTime;		// 게임 시간(ex 180초)
+	int killPoint;		// 킬 점수
+	int capturePoint;	// 점령 점수
 };
 
 struct RespawnInfo

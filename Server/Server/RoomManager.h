@@ -18,28 +18,45 @@ class C_ClientInfo;
 //	}
 //};
 
+// 팀 정보
+struct TeamInfo
+{
+	vector<C_ClientInfo*> teamMemberList;	// 이 팀에 속한 플레이어들
+	int teamKillScore;						// 이 팀의 킬 스코어
+	int teamCaptureScore;					// 이 팀의 점령 스코어
+	int teamTotalScore;						// 이 팀의 킬 + 점령 스코어
+
+	TeamInfo() { memset(this, 0, sizeof(TeamInfo)); }
+};
+
+
 // 방의 정보
 struct RoomInfo
 {
 private:
 	HANDLE weaponTimerHandle;		// 무기 선택 타이머 핸들
 	int numOfPlayer;				// 현재 방에 있는 플레이어 수
+	int maxPlayer;					// 이 방 최대 플레이어 수
 	ROOMSTATUS roomStatus;			// 방의 상태
 	vector<C_ClientInfo*>players;	// 유저들을 벡터에 저장
 	C_Sector* sector;				// 이 방의 섹터 매니저
 	HANDLE carSpawnerHandle;		// 자동차 스포너 핸들
 	int gameType;					// 이 방의 게임 타입 정보
+	TeamInfo* teamInfo;				// 팀 정보
 
 public:
 	enum GameType
 	{
-		NORMAL,
+		_2vs2,
+		_1vs1,
+		
+		_MAX_GAMETYPE	// 게임 타입 개수
 	};
 
 
 public:
-	RoomInfo(C_ClientInfo** _playerList, int _numOfPlayer);
-
+	RoomInfo(int _gameType, const list<C_ClientInfo*>& _playerList, int _numOfPlayer);
+	
 	bool LeaveRoom(C_ClientInfo* _player);
 
 	// 플레이어 벡터를 리턴해주되, 어차피 복사본이 전달되므로 원본은 영향이 없다.
@@ -65,6 +82,7 @@ public:
 	ROOMSTATUS GetRoomStatus() { return roomStatus; }
 
 	C_Sector* GetSector() { return sector; }
+	int GetMaxPlayer() { return maxPlayer; }
 };
 
 class RoomManager
@@ -83,7 +101,7 @@ public:
 	void End();
 
 public:
-	bool CreateRoom(C_ClientInfo* _players[], int _numOfPlayer);
+	bool CreateRoom(list<C_ClientInfo*>_players, int _numOfPlayer);
 	bool DeleteRoom(RoomInfo* _room);
 	bool CheckLeaveRoom(C_ClientInfo* _ptr);
 };

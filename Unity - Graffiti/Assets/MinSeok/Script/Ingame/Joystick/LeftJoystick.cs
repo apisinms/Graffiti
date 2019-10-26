@@ -78,7 +78,7 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
         //tf_player.eulerAngles = new Vector3(0, Mathf.Atan2(playerDir.x, playerDir.y) * Mathf.Rad2Deg, 0); //플레이어의 방향을 바꿔줌.
     }
 
-    public  void DragEnd()
+    public void DragEnd()
     {
         img_joystick_stick.transform.position = left_joystick.stickFirstPos;
         left_joystick.stickDir = Vector3.zero; // 방향을 0으로.
@@ -98,5 +98,12 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
       if (LeftJoystick.LeftTouch == false && RightJoystick.RightTouch == false)
 			BridgeClientToServer.instance.StopMoveCoroutine();
 #endif
+	}
+
+	public void ResetDrag()
+	{
+		img_joystick_stick.transform.position = left_joystick.stickFirstPos;
+		left_joystick.stickDir = Vector3.zero; // 방향을 0으로.
+		StateManager.instance.Circuit(false);
 	}
 }

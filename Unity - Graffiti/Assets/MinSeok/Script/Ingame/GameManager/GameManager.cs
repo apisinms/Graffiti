@@ -20,12 +20,18 @@ public class GameManager : MonoBehaviour
         public float maxHealth;    // 최대 체력
 
         [MarshalAs(UnmanagedType.I4)]
-        public int responTime;     // 리스폰 시간
+        public int respawnTime;     // 리스폰 시간
 
         [MarshalAs(UnmanagedType.I4)]
         public int gameTime;       // 게임 시간(ex 180초)
 
-        public byte[] Serialize()
+		[MarshalAs(UnmanagedType.I4)]
+		public int killPoint;       // 킬 점수
+
+		[MarshalAs(UnmanagedType.I4)]
+		public int capturePoint;       // 점령 점수
+
+		public byte[] Serialize()
         {
             // allocate a byte array for the struct data
             var buffer = new byte[Marshal.SizeOf(typeof(GameInfo))];

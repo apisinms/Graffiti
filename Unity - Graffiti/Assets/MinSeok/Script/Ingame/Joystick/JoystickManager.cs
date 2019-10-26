@@ -21,7 +21,9 @@ public class JoystickManager : MonoBehaviour
 
 		//WeaponManager.instance.mainWeapon[myIndex] = _WEAPONS.SMG;
 		//WeaponManager.instance.SetMainWeapon(Main_SMG.GetMainWeaponInstance(), myIndex);
+#if !NETWORK
 		ChangeGun(1);
+#endif
 	}
 
 	public void ChangeGun(int _index)
@@ -32,7 +34,7 @@ public class JoystickManager : MonoBehaviour
 				WeaponManager.instance.mainWeapon[myIndex] = _WEAPONS.AR;
 				WeaponManager.instance.SetMainWeapon(Main_AR.GetMainWeaponInstance(), myIndex);
 
-				UIManager.instance.weaponInfo.img_mainW.sprite = UIManager.instance.spr_mainW[0];
+				//UIManager.instance.weaponInfo.img_mainW.sprite = UIManager.instance.spr_mainW[0];
 				UIManager.instance.weaponInfo.txt_ammoState.text = WeaponManager.instance.weaponInfoAR.maxAmmo.ToString();
 				break;
 			case 2:

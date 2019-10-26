@@ -7,7 +7,7 @@ class C_ClientInfo;
 class InGameManager : public C_SyncCS< InGameManager>
 {
 #ifdef DEBUG
-	static const int WEAPON_SELTIME = 5 + 1;	// 무기 선택 시간(초 단위)
+	static const int WEAPON_SELTIME = 1 + 1;	// 무기 선택 시간(초 단위)
 	int numOfPacketSent             = 0;		// 패킷 보낸 횟수
 #else
 	static const int WEAPON_SELTIME = 30 + 1;	// 무기 선택 시간(초 단위)

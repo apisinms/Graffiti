@@ -155,11 +155,13 @@ GameInfo* DatabaseManager::LoadGameInfo()
 		GameInfo info;
 		memset(&info, 0, sizeof(GameInfo));
 
-		info.gameType = atoi(row[0]);
-		info.maxSpeed = (float)atof(row[1]);
-		info.maxHealth = (float)atof(row[2]);
-		info.responTime = atoi(row[3]);
-		info.gameTime = atoi(row[4]);
+		info.gameType     = atoi(row[0]);
+		info.maxSpeed     = (float)atof(row[1]);
+		info.maxHealth    = (float)atof(row[2]);
+		info.respawnTime   = atoi(row[3]);
+		info.gameTime     = atoi(row[4]);
+		info.killPoint    = atoi(row[5]);
+		info.capturePoint = atoi(row[6]);
 
 		// 동적 할당 후 리턴
 		GameInfo* ptr = new GameInfo(info);

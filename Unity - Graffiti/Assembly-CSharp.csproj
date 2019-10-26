@@ -80,6 +80,7 @@
     <Compile Include="Assets\Gwangil\PathCreator\Examples\Scripts\PathSpawner.cs" />
     <Compile Include="Assets\Gwangil\PathCreator\Examples\Scripts\RoadMeshCreator.cs" />
     <Compile Include="Assets\Gwangil\Scripts\AudioManager.cs" />
+    <Compile Include="Assets\Gwangil\Scripts\BoundaryCollision.cs" />
     <Compile Include="Assets\Gwangil\Scripts\BypassAudioManager.cs" />
     <Compile Include="Assets\Gwangil\Scripts\BypassAudioSource.cs" />
     <Compile Include="Assets\Gwangil\Scripts\ObjectPool.cs" />

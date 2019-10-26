@@ -22,8 +22,8 @@ public partial class BridgeClientToServer : MonoBehaviour
         myIndex = gameManager.myIndex;
 
 #if NETWORK
-      //////////////// 게임 시작 시 최초로 1회 내 위치정보를 서버로 전송해야함 /////////////////
-      networkManager.SendIngamePacket(weaponManager.GetCollisionChecker(), true);
+		//////////////// 게임 시작 시 최초로 1회 내 위치정보를 서버로 전송해야함 /////////////////
+		NetworkManager.instance.SendIngamePacket(true);
 #endif
 
 #if !NETWORK
@@ -45,7 +45,7 @@ public partial class BridgeClientToServer : MonoBehaviour
         }
 #endif
 
-        curPlayerPos = new Transform[C_Global.MAX_PLAYER];
+		curPlayerPos = new Transform[C_Global.MAX_PLAYER];
 
         for (int i = 0; i < curPlayerPos.Length; i++)
             curPlayerPos[i] = playersManager.obj_players[i].transform;

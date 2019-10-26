@@ -16,7 +16,7 @@ public class btn_start : UnityEngine.MonoBehaviour
 		am_loadingBar = obj_loadingBar.GetComponent<Animator>();
 	}
 
-	public void BtnStart() //매칭버튼 눌렀을때.
+	public void BtnStart(int _gameType) //매칭버튼 눌렀을때.(2인)
 	{
 		flag = 1 - flag;
 
@@ -27,7 +27,7 @@ public class btn_start : UnityEngine.MonoBehaviour
 			am_loadingBar.SetBool("isStart", true);
 
             // 매칭이 가능한지 서버로 전송한다.
-            NetworkManager.instance.MayIMatch();
+            NetworkManager.instance.MayIMatch(_gameType);
 
             // 코루틴을 돌려서 매칭이 잡힐때까지 반복한다.
             StartCoroutine(CheckMatch());

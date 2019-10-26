@@ -57,8 +57,8 @@ public partial class BridgeClientToServer : MonoBehaviour
         EffectManager.instance.InitializeMuzzle(index);
 
 		if (index == myIndex)
-			UIManager.instance.Initialization_WeaponInfo();
-    }
+			UIManager.instance.Initialization_WeaponInfo_2();
+	}
 
     public void SetPlayerNickName(string _nickName, int _idx)
     {
@@ -277,8 +277,4 @@ public partial class BridgeClientToServer : MonoBehaviour
     }
 
     //쐇을때 무조건 1번의 패킷을 보내야됨. 보정용
-    public void SendPacketOnce()
-    {
-        networkManager.SendIngamePacket(weaponManager.GetCollisionChecker());
-    }
 }

@@ -67,11 +67,13 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
 			EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, myIndex);
 		}
 
+#if NETWORK
 		if (NetworkManager.instance.GetReloadState(_index) == true)
 		{
 			EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, _index);
 			yield break;
 		}
+#endif
 
 		EffectManager.instance.ps_tmpMuzzle[_index].body.option.simulationSpeed = 4.0f;
 		EffectManager.instance.ps_tmpMuzzle[_index].glow.option.simulationSpeed = 4.0f;
@@ -89,11 +91,13 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
 				}
 			}
 
-			if (NetworkManager.instance.GetReloadState(_index) == true)
-			{
-				EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, _index);
-				yield break;
-			}
+#if NETWORK
+		if (NetworkManager.instance.GetReloadState(_index) == true)
+		{
+			EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, _index);
+			yield break;
+		}
+#endif
 
 			var clone = PoolManager.instance.GetBulletFromPool(_index);
 			var shellClone = PoolManager.instance.GetShellFromPool(_index);
@@ -164,11 +168,11 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
         if (weaponManager.isReloading == false)
         {
 			weaponManager.isReloading = true;
-			
-			/// 여기에서 패킷 보내면 됨
-			NetworkManager.instance.SendIngamePacket(weaponManager.GetCollisionChecker());
 
-            Debug.Log("SMG총알없음. 장전중");
+			/// 여기에서 패킷 보내면 됨
+			NetworkManager.instance.SendIngamePacket();
+
+			Debug.Log("SMG총알없음. 장전중");
             UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadTimeImg(weaponManager.weaponInfoSMG.reloadTime));
 
             yield return YieldInstructionCache.WaitForSeconds(weaponManager.weaponInfoSMG.reloadTime);
@@ -178,8 +182,11 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
             Debug.Log("SMG장전완료");
 			weaponManager.isReloading = false;
 
-            //장전 이전상태가 사격중이였을경우 계속 이어서쏨
-            if (PlayersManager.instance.actionState[_index] == _ACTION_STATE.SHOT ||
+			// 한번 더 보냄
+			NetworkManager.instance.SendIngamePacket();
+
+			//장전 이전상태가 사격중이였을경우 계속 이어서쏨
+			if (PlayersManager.instance.actionState[_index] == _ACTION_STATE.SHOT ||
                 PlayersManager.instance.actionState[_index] == _ACTION_STATE.CIR_AIM_SHOT)
             {
                 StateManager.instance.Shot(false);

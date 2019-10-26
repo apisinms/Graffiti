@@ -67,11 +67,13 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
 			EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, myIndex);
 		}
 
+#if NETWORK
 		if (NetworkManager.instance.GetReloadState(_index) == true)
 		{
 			EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, _index);
 			yield break;
 		}
+#endif
 
 		while (true)
 		{
@@ -84,11 +86,13 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
 				}
 			}
 
-			if (NetworkManager.instance.GetReloadState(_index) == true)
-			{
-				EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, _index);
-				yield break;
-			}
+#if NETWORK
+		if (NetworkManager.instance.GetReloadState(_index) == true)
+		{
+			EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, _index);
+			yield break;
+		}
+#endif
 
 			var bulletClone = PoolManager.instance.GetBulletFromPool(_index);
 			var shellClone = PoolManager.instance.GetShellFromPool(_index);
@@ -165,7 +169,7 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
 			weaponManager.isReloading = true;
 
 			/// 여기에서 패킷 보내면 됨
-			NetworkManager.instance.SendIngamePacket(weaponManager.GetCollisionChecker());
+			NetworkManager.instance.SendIngamePacket();
 
 			Debug.Log("AR총알없음. 장전중");
             UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadTimeImg(weaponManager.weaponInfoAR.reloadTime));
@@ -177,8 +181,11 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
             Debug.Log("AR장전완료");
 			weaponManager.isReloading = false;
 
-            //장전 이전상태가 사격중이였을경우 계속 이어서쏨
-            if (PlayersManager.instance.actionState[_index] == _ACTION_STATE.SHOT ||
+			// 한번 더 보냄(false돼서)
+			NetworkManager.instance.SendIngamePacket();
+
+			//장전 이전상태가 사격중이였을경우 계속 이어서쏨
+			if (PlayersManager.instance.actionState[_index] == _ACTION_STATE.SHOT ||
                 PlayersManager.instance.actionState[_index] == _ACTION_STATE.CIR_AIM_SHOT)
             {
                 StateManager.instance.Shot(false);

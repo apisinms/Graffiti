@@ -92,6 +92,7 @@ public class UIManager : MonoBehaviour
 	GameObject leftJoystick;
 	GameObject rightJoystick;
 	GameObject deadPanel;
+	GameObject reloadBtn;
 	#endregion
 
 	private void Awake()
@@ -110,9 +111,9 @@ public class UIManager : MonoBehaviour
 		Initialization_Circle();
 		Initialization_Line();
 		Initialization_ReloadGage();
-
+		Initialization_WeaponInfo_1();
 #if !NETWORK
-        Initialization_WeaponInfo(); //각각의 MainAR, SG, SMG 스크립트에서.
+        Initialization_WeaponInfo_2();
 #endif
 	}
 
@@ -120,6 +121,7 @@ public class UIManager : MonoBehaviour
 	{
 		leftJoystick = GameObject.Find("Left");
 		rightJoystick = GameObject.Find("Right");
+		reloadBtn = GameObject.Find("obj_reloadBtn");
 
 		//GameObject.Find("Canvas_overlay").transform.Find("Panel_Dead").gameObject.SetActive(true);
 		//deadPanel = GameObject.Find("Panel_Dead");
@@ -138,15 +140,15 @@ public class UIManager : MonoBehaviour
 		reloadGage.obj_parent.transform.position = PlayersManager.instance.tf_players[myIndex].transform.position + reloadAddPos;
 		weaponInfo.obj_parent.transform.position = PlayersManager.instance.tf_players[myIndex].transform.position + weaponAddPos;
 		/*
-        for(int i=0; i<nickname.Length; i++)
-            nickname[playersIndex[i]].obj_parent.transform.position = PlayersManager.instance.tf_players[playersIndex[i]].transform.position + hpAddPos;
+		  for(int i=0; i<nickname.Length; i++)
+			  nickname[playersIndex[i]].obj_parent.transform.position = PlayersManager.instance.tf_players[playersIndex[i]].transform.position + hpAddPos;
 
-        for (int i = 0; i < hp.Length; i++)
-            hp[playersIndex[i]].obj_parent.transform.position = PlayersManager.instance.tf_players[playersIndex[i]].transform.position + nickAddPos;//Camera.main.WorldToScreenPoint(PlayersManager.instance.tf_players[enemyIndex[i]].transform.position);
+		  for (int i = 0; i < hp.Length; i++)
+			  hp[playersIndex[i]].obj_parent.transform.position = PlayersManager.instance.tf_players[playersIndex[i]].transform.position + nickAddPos;//Camera.main.WorldToScreenPoint(PlayersManager.instance.tf_players[enemyIndex[i]].transform.position);
 
-        for(int i=0; i<circle.Length; i++)
-            circle[playersIndex[i]].obj_parent.transform.position = PlayersManager.instance.tf_players[playersIndex[i]].transform.position + circleAddPos;
-        */
+		  for(int i=0; i<circle.Length; i++)
+			  circle[playersIndex[i]].obj_parent.transform.position = PlayersManager.instance.tf_players[playersIndex[i]].transform.position + circleAddPos;
+		  */
 	}
 
 	private void Initialization_HP()
@@ -222,14 +224,17 @@ public class UIManager : MonoBehaviour
 		reloadGage.obj_parent.SetActive(false);
 	}
 
-	public void Initialization_WeaponInfo()
+	public void Initialization_WeaponInfo_1()
 	{
 		weaponAddPos = new Vector3(0, 1.8f, -1.8f);
 
 		weaponInfo.obj_parent = Instantiate(obj_prefebWeaponInfo, GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
 		weaponInfo.img_mainW = weaponInfo.obj_parent.transform.GetChild(0).GetComponent<Image>();
 		weaponInfo.txt_ammoState = weaponInfo.obj_parent.transform.GetChild(1).GetComponent<Text>();
+	}
 
+	public void Initialization_WeaponInfo_2()
+	{
 #if NETWORK
 		switch (WeaponManager.instance.mainWeapon[myIndex])
 		{
@@ -263,7 +268,6 @@ public class UIManager : MonoBehaviour
                 break;
         }
 #endif
-
 	}
 
 	public IEnumerator DecreaseMiddleHPImg(int _index, float _curHP) //중간 체력 img는 효과를 적용할것이다.
@@ -361,14 +365,21 @@ public class UIManager : MonoBehaviour
 
 	public void SetDeadUI()
 	{
+		// 조이스틱 위치 제자리로
+		leftJoystick.GetComponent<LeftJoystick>().ResetDrag();
+		rightJoystick.GetComponent<RightJoystick>().ResetDrag();
+
 		leftJoystick.SetActive(false);
 		rightJoystick.SetActive(false);
+		reloadBtn.SetActive(false);
+		reloadGage.obj_parent.SetActive(false);
 		//deadPanel.SetActive(true);
 	}
 	public void SetAliveUI()
 	{
 		leftJoystick.SetActive(true);
 		rightJoystick.SetActive(true);
+		reloadBtn.SetActive(true);
 		//deadPanel.SetActive(false);
 	}
 

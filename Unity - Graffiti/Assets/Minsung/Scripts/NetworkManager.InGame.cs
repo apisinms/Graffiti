@@ -81,7 +81,7 @@ public partial class NetworkManager : MonoBehaviour
 
 	PlayersManager playersManager;
 	IngamePacket ingameSendPacket = new IngamePacket();
-	public void SendIngamePacket(BulletCollisionChecker _colChecker, bool _isInit = false)
+	public void SendIngamePacket(bool _isInit = false)
 	{
 		if (playersManager == null)
 		{
@@ -116,6 +116,7 @@ public partial class NetworkManager : MonoBehaviour
 		ingameSendPacket.action = (int)playersManager.actionState[myPlayerNum - 1];
 		ingameSendPacket.health = playersManager.hp[myPlayerNum - 1];
 		ingameSendPacket.isReloading = WeaponManager.instance.isReloading;
+		ingameSendPacket.collisionChecker = WeaponManager.instance.GetCollisionChecker();
 
 		// 패킹 및 전송
 		int packetSize;
