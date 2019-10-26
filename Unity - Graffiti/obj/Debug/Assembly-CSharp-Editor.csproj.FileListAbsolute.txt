@@ -216,7 +216,6 @@ E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\Boo.Lang.Pa
 E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\Boo.Lang.Parser.dll
 E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\Boo.Lang.Useful.dll
 E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\Unity.CecilTools.dll
-E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\Assembly-CSharp.pdb
 E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEngine.xml
 E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEditor.xml
 E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\Unity.Timeline.Editor.pdb
@@ -292,5 +291,3 @@ E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEditor
 E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\obj\Debug\Assembly-CSharp-Editor.csproj.CopyComplete
 E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\obj\Debug\Assembly-CSharp-Editor.dll
 E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\obj\Debug\Assembly-CSharp-Editor.pdb
-E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\PathCreator.pdb
-E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\PathCreatorEditor.pdb

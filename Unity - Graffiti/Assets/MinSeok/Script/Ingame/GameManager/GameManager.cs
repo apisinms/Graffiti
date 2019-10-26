@@ -20,10 +20,16 @@ public class GameManager : MonoBehaviour
         public float maxHealth;    // 최대 체력
 
         [MarshalAs(UnmanagedType.I4)]
-        public int responTime;     // 리스폰 시간
+        public int respawnTime;     // 리스폰 시간
 
         [MarshalAs(UnmanagedType.I4)]
         public int gameTime;       // 게임 시간(ex 180초)
+
+        [MarshalAs(UnmanagedType.I4)]
+        public int killPoint;       // 킬 점수
+
+        [MarshalAs(UnmanagedType.I4)]
+        public int capturePoint;       // 점령 점수
 
         public byte[] Serialize()
         {
@@ -67,15 +73,16 @@ public class GameManager : MonoBehaviour
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraControl>();
 
 #if NETWORK
-      BridgeClientToServer.instance.Initialization_PlayerViewer();    // 게임 시작시 플레이어 뷰어 셋팅
-        
-      // 필요한 게임 정보를 브릿지에서 얻어옴
-        gameInfo = BridgeClientToServer.instance.GetTempGameInfo;
+        BridgeClientToServer.instance.Initialization_PlayerViewer();    // 게임 시작시 플레이어 뷰어 셋팅
 
+        // 필요한 게임 정보를 브릿지에서 얻어옴
+        gameInfo = BridgeClientToServer.instance.GetTempGameInfo;
+        PlayersManager.instance.Initialization_GameInfo();    // 얻어온 정보대로 초기화
+        BridgeClientToServer.instance.Initialization_PlayerViewer();    // 게임 시작시 플레이어 뷰어 셋팅
 #else
         gameInfo.gameType = 0;
         gameInfo.gameTime = 180;
-        gameInfo.responTime = 5;
+        gameInfo.respawnTime = 5;
         CarSeed = 0;
         StartCoroutine(GameObject.Find("Spawner").GetComponent<PathCreation.Examples.PathSpawner>().Cor_SpawnPrefabs());
 #endif
@@ -94,7 +101,9 @@ public class GameManager : MonoBehaviour
     void OnSceneLoaded(Scene _scene, LoadSceneMode _mode)
     {
         //로딩이 완료되었다고 서버로 보내준다.
+#if NETWORK
         NetworkManager.instance.SendLoadingComplete();
+#endif
     }
 
     void Awake()

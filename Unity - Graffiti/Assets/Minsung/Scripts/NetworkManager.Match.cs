@@ -7,23 +7,23 @@ using UnityEngine;
 /// </summary>
 public partial class NetworkManager : MonoBehaviour
 {
-	// 매칭을 원한다고 서버로 전송
-	public void MayIMatch()
-	{
-		// 프로토콜 셋팅
-		protocol = SetProtocol(
-				STATE_PROTOCOL.LOBBY_STATE,
-				PROTOCOL.MATCH_PROTOCOL,
-				RESULT.NODATA);
+    // 매칭을 원한다고 서버로 전송
+    public void MayIMatch(int _gameType)
+    {
+        // 프로토콜 셋팅
+        protocol = SetProtocol(
+              STATE_PROTOCOL.LOBBY_STATE,
+              PROTOCOL.MATCH_PROTOCOL,
+              RESULT.NODATA);
 
-		// 패킹 및 전송
-		int packetSize;
-		PackPacket(ref sendBuf, protocol, out packetSize);
-		bw.Write(sendBuf, 0, packetSize);
-	}
+        // 패킹 및 전송(게임 타입 함께 전송)
+        int packetSize;
+        PackPacket(ref sendBuf, protocol, _gameType, out packetSize);
+        bw.Write(sendBuf, 0, packetSize);
+    }
 
-	// 매칭이 잡혔는지 조회
-	public bool CheckMatched()
+    // 매칭이 잡혔는지 조회
+    public bool CheckMatched()
 	{
 		if (state == STATE_PROTOCOL.LOBBY_STATE &&
 			protocol == PROTOCOL.GOTO_INGAME_PROTOCOL &&

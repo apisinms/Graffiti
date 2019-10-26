@@ -39,7 +39,7 @@ C_ClientInfo::C_ClientInfo(UserInfo* _userInfo, SOCKET _sock, SOCKADDR_IN _addr)
 	inGameState = new C_InGameState();
 
 	playerInfo = new PlayerInfo();	// 플레이어 정보 생성
-	//weapon = new Weapon();	// -1로 초기화
+	selectGameType = -1;		// 선택한 게임 타입
 
 	state = loginState;	// 초기 상태는 로그인 상태
 }

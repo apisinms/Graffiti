@@ -61,10 +61,12 @@ public partial class PlayersManager : MonoBehaviour
         }
     }
 
-	void Start()
-	{
-		Initialization_GameInfo();
-	}
+    private void Start()
+    {
+#if !NETWORK
+        Initialization_GameInfo();
+#endif
+    }
 
     void Initialization(int _num) //클라이언트 자체에서 그냥 초기화. 어차피 서버에서 정보가 있으니까 이렇게함.
     {
@@ -85,7 +87,7 @@ public partial class PlayersManager : MonoBehaviour
         curCor = null;
 	}
 
-	void Initialization_GameInfo()
+	public void Initialization_GameInfo()
 	{
 #if NETWORK
 		maxSpeed = GameManager.instance.gameInfo.maxSpeed;

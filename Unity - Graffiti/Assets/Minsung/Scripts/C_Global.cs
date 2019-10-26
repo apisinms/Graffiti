@@ -9,6 +9,8 @@ public class C_Global
     public const int BUFSIZE = 4096;   // 버퍼 사이즈
     public const int MAX_PLAYER = 4;    // 플레이어 수
 
+    public const float interpolation_LeftRot = 15.0f;
+    public const float interpolation_RightRot = 17.0f;
     public const float interpolation_Pos = 0.175f;
     public const float interpolation_Rot = 40.0f;
     public const float amingSpeed = 0.35f;
@@ -36,4 +38,10 @@ public class C_Global
 		PLAYER_3 = (1 << 1),
 		PLAYER_4 = (1 << 0),
 	}
+
+    public enum GameType : int
+    {
+        _2vs2,
+        _1vs1,
+    }
 }

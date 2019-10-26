@@ -66,6 +66,14 @@ void LobbyManager::UnPackPacket(char* _getBuf, TCHAR* _str1)
 	memcpy(_str1, ptr, str1size);
 	ptr = ptr + str1size;
 }
+void LobbyManager::UnPackPacket(char* _getBuf, int& _gameType)
+{
+	char* ptr = _getBuf + sizeof(PROTOCOL_LOBBY);
+
+	memcpy(&_gameType, ptr, sizeof(_gameType));
+	ptr = ptr + sizeof(_gameType);
+}
+
 
 void LobbyManager::GetProtocol(PROTOCOL_LOBBY& _protocol)
 {
@@ -108,9 +116,15 @@ bool LobbyManager::CanIMatch(C_ClientInfo* _ptr)
 	// 로비에서 매칭버튼을 눌렀다면, 매칭매니저에서 처리해야한다.
 	if (protocol == MATCH_PROTOCOL)
 	{
+		// 1. 클라에서 선택한 게임 모드를 받아서 저장 하고,
+		int gameType = 0;
+		UnPackPacket(buf, gameType);
+		_ptr->SetGameType(gameType);
+
+		// 2. 매칭이 가능한지 검사하고
 		if (MatchManager::GetInstance()->MatchProcess(_ptr) == true)
 		{
-			// 모든 플레이어들에게 인게임 상태로 진입하라는 프로토콜을 보내버림
+			// 3. 가능하면 모든 플레이어들에게 인게임 상태로 진입하라는 프로토콜을 보내버림
 			protocol = SetProtocol(LOBBY_STATE, PROTOCOL_LOBBY::GOTO_INGAME_PROTOCOL, RESULT_LOBBY::LOBBY_SUCCESS);
 			ZeroMemory(buf, sizeof(BUFSIZE));
 
@@ -174,7 +188,7 @@ bool LobbyManager::CanIGotoInGame(C_ClientInfo* _ptr)
 	// 만약 4인 매칭이 성공하여 성공했던 클라가 나에게 시작 프로토콜을 보낸다면 인게임의 무기선택 창으로 들어가야한다.
 	if (protocol == GOTO_INGAME_PROTOCOL)
 	{
-		printf("4인 매칭성공\n");
+		printf("%d인 매칭성공\n", _ptr->GetRoom()->GetMaxPlayer());
 
 		// 만약 방이 생성되고 아무런 진행도 하지 않았다면
 		if (_ptr->GetRoom()->GetRoomStatus() == ROOMSTATUS::ROOM_NONE)
@@ -213,9 +227,9 @@ void LobbyManager::SendPacket_Room(C_ClientInfo* _ptr, char* _buf, PROTOCOL_LOBB
 	for (auto iter = playerList.begin(); iter != playerList.end(); ++iter)
 	{
 		player = *iter;
-		PackPacket(_buf, i++, packetSize);
+		PackPacket(_buf, i, packetSize);
 		player->SendPacket(_protocol, _buf, packetSize);
 
-		player->GetPlayerInfo()->SetPlayerNum(i);	// 플레이어 번호 셋팅
+		player->GetPlayerInfo()->SetPlayerNum(i++);	// 플레이어 번호 셋팅
 	}
 }

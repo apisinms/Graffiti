@@ -99,4 +99,11 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
 			BridgeClientToServer.instance.StopMoveCoroutine();
 #endif
 	}
+
+    public void ResetDrag()
+    {
+        img_joystick_stick.transform.position = left_joystick.stickFirstPos;
+        left_joystick.stickDir = Vector3.zero; // 방향을 0으로.
+        StateManager.instance.Circuit(false);
+    }
 }

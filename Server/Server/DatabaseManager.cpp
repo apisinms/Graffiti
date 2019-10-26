@@ -155,11 +155,13 @@ GameInfo* DatabaseManager::LoadGameInfo()
 		GameInfo info;
 		memset(&info, 0, sizeof(GameInfo));
 
-		info.gameType = atoi(row[0]);
-		info.maxSpeed = (float)atof(row[1]);
-		info.maxHealth = (float)atof(row[2]);
-		info.responTime = atoi(row[3]);
-		info.gameTime = atoi(row[4]);
+		info.gameType     = atoi(row[0]);
+		info.maxSpeed     = (float)atof(row[1]);
+		info.maxHealth    = (float)atof(row[2]);
+		info.respawnTime   = atoi(row[3]);
+		info.gameTime     = atoi(row[4]);
+		info.killPoint    = atoi(row[5]);
+		info.capturePoint = atoi(row[6]);
 
 		// 동적 할당 후 리턴
 		GameInfo* ptr = new GameInfo(info);
@@ -199,16 +201,17 @@ WeaponInfo* DatabaseManager::LoadWeaponInfo()
 		WeaponInfo info;
 		memset(&info, 0, sizeof(WeaponInfo));
 
-		info.num           = atoi(row[0]);
-		info.numOfPattern  = atoi(row[1]);
-		info.bulletPerShot = atoi(row[2]);
-		info.maxAmmo       = atoi(row[3]);
-		info.fireRate      = (float)atof(row[4]);
-		info.damage        = (float)atof(row[5]);
-		info.accuracy      = (float)atof(row[6]);
-		info.range         = (float)atof(row[7]);
-		info.speed         = (float)atof(row[8]);
-		UtilityManager::GetInstance()->UTF8ToUnicode(row[9], info.weaponName);
+		info.num                = atoi(row[0]);
+		info.numOfPattern       = atoi(row[1]);
+		info.bulletPerShot      = atoi(row[2]);
+		info.maxAmmo            = atoi(row[3]);
+		info.fireRate           = (float)atof(row[4]);
+		info.damage             = (float)atof(row[5]);
+		info.accuracy           = (float)atof(row[6]);
+		info.range              = (float)atof(row[7]);
+		info.speed              = (float)atof(row[8]);
+		info.reloadTime         = (float)atof(row[9]);
+		UtilityManager::GetInstance()->UTF8ToUnicode(row[10], info.weaponName);
 
 		// 동적 할당 후 리턴
 		WeaponInfo* ptr = new WeaponInfo(info);

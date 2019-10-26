@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class C_Encrypt : UnityEngine.MonoBehaviour
 {
-
 	const int C1 = 52845;
 	const int C2 = 22719;
 	const int KEY = 78695;

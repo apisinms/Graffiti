@@ -9,11 +9,10 @@ c:\_programming_\_portfolio\graffiti\server\server\x64\debug\randommanager.obj
 c:\_programming_\_portfolio\graffiti\server\server\x64\debug\matchmanager.obj
 c:\_programming_\_portfolio\graffiti\server\server\x64\debug\mainmanager.obj
 c:\_programming_\_portfolio\graffiti\server\server\x64\debug\main.obj
-c:\_programming_\_portfolio\graffiti\server\server\x64\debug\logmanager.obj
 c:\_programming_\_portfolio\graffiti\server\server\x64\debug\loginmanager.obj
+c:\_programming_\_portfolio\graffiti\server\server\x64\debug\logmanager.obj
 c:\_programming_\_portfolio\graffiti\server\server\x64\debug\lobbymanager.obj
-c:\_programming_\_portfolio\graffiti\server\server\x64\debug\ingamemanager.obj
-c:\_programming_\_portfolio\graffiti\server\server\x64\debug\databasemanager.obj
+c:\_programming_\_portfolio\graffiti\server\server\x64\debug\chatmanager.obj
 c:\_programming_\_portfolio\graffiti\server\server\x64\debug\c_socket.obj
 c:\_programming_\_portfolio\graffiti\server\server\x64\debug\c_select.obj
 c:\_programming_\_portfolio\graffiti\server\server\x64\debug\c_sector.obj
@@ -21,7 +20,8 @@ c:\_programming_\_portfolio\graffiti\server\server\x64\debug\c_packet.obj
 c:\_programming_\_portfolio\graffiti\server\server\x64\debug\c_iocp.obj
 c:\_programming_\_portfolio\graffiti\server\server\x64\debug\c_encrypt.obj
 c:\_programming_\_portfolio\graffiti\server\server\x64\debug\c_clientinfo.obj
-c:\_programming_\_portfolio\graffiti\server\server\x64\debug\chatmanager.obj
+c:\_programming_\_portfolio\graffiti\server\server\x64\debug\ingamemanager.obj
+c:\_programming_\_portfolio\graffiti\server\server\x64\debug\databasemanager.obj
 c:\_programming_\_portfolio\graffiti\server\x64\debug\server.exe
 c:\_programming_\_portfolio\graffiti\server\x64\debug\server.ilk
 c:\_programming_\_portfolio\graffiti\server\x64\debug\server.pdb

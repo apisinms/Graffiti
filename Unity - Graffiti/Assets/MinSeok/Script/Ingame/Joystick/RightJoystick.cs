@@ -148,4 +148,12 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
 #endif
     }
 
+    public void ResetDrag()
+    {
+        StateManager.instance.Aim(false);
+        img_joystick_stick.transform.position = right_joystick.stickFirstPos;
+        right_joystick.stickDir = Vector3.zero; // 방향을 0으로.
+        isStep0 = true; isStep1 = false; isStep2 = false;
+    }
+
 }

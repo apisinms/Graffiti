@@ -23,7 +23,7 @@ public partial class BridgeClientToServer : MonoBehaviour
 
 #if NETWORK
       //////////////// 게임 시작 시 최초로 1회 내 위치정보를 서버로 전송해야함 /////////////////
-      networkManager.SendIngamePacket(weaponManager.GetCollisionChecker(), true);
+      networkManager.SendIngamePacket(true);
 #endif
 
 #if !NETWORK
@@ -67,18 +67,18 @@ public partial class BridgeClientToServer : MonoBehaviour
     public void PlayerActionViewer()
     {
 #if NETWORK
-      for (int i = 0; i < curPlayerPos.Length; i++)
-      {
-         // 자기 또는 섹터에 없는 플레이어 제외하고
-         if (myIndex == i || playersManager.obj_players[i].activeSelf == false)
-            continue;
+        for (int i = 0; i < curPlayerPos.Length; i++)
+        {
+            // 자기 또는 섹터에 없는 플레이어 제외하고
+            if (myIndex == i || playersManager.obj_players[i].activeSelf == false)
+                continue;
 
-         pos.x = networkManager.GetPosX(i);
-         //pos.y = curPlayerPos[i].localPosition.y;
-         pos.y = 0;
-         pos.z = networkManager.GetPosZ(i);
+            pos.x = networkManager.GetPosX(i);
+            //pos.y = curPlayerPos[i].localPosition.y;
+            pos.y = 0;
+            pos.z = networkManager.GetPosZ(i);
 
-         actionState = (_ACTION_STATE)networkManager.GetActionState(i); // 변수하나파서 스테이트여기에 넣음
+            actionState = (_ACTION_STATE)networkManager.GetActionState(i); // 변수하나파서 스테이트여기에 넣음
 
             switch (actionState)
             {
@@ -97,96 +97,95 @@ public partial class BridgeClientToServer : MonoBehaviour
                     }
                     break;
                 case _ACTION_STATE.IDLE:
-               {
-                  playersManager.Action_Idle(i, pos);
+                    {
+                        playersManager.Action_Idle(i, pos);
 
-                  if (isStartShotCor[i] == true)
-                  {
-                     if (weaponManager.curMainActionCor[i] != null)
-                        StopCoroutine(weaponManager.curMainActionCor[i]);
-                     EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, i);
+                        if (isStartShotCor[i] == true)
+                        {
+                            if (weaponManager.curMainActionCor[i] != null)
+                                StopCoroutine(weaponManager.curMainActionCor[i]);
+                            EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, i);
 
-                     isStartShotCor[i] = false;
-                  }
+                            isStartShotCor[i] = false;
+                        }
 
-               }
-               break;
-            case _ACTION_STATE.CIR:
-               {
-                  playersManager.Action_CircuitNormal(i, pos, networkManager.GetRotY(i));
+                    }
+                    break;
+                case _ACTION_STATE.CIR:
+                    {
+                        playersManager.Action_CircuitNormal(i, pos, networkManager.GetRotY(i));
 
-                  if (isStartShotCor[i] == true)
-                  {
-                     if (weaponManager.curMainActionCor[i] != null)
-                        StopCoroutine(weaponManager.curMainActionCor[i]);
-                     EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, i);
+                        if (isStartShotCor[i] == true)
+                        {
+                            if (weaponManager.curMainActionCor[i] != null)
+                                StopCoroutine(weaponManager.curMainActionCor[i]);
+                            EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, i);
 
-                     isStartShotCor[i] = false;
-                  }
-               }
-               break;
-            case _ACTION_STATE.AIM:
-               {
-                  playersManager.Action_AimingNormal(i, pos, networkManager.GetRotY(i));
-                  if (isStartShotCor[i] == true)
-                  {
-                     if (weaponManager.curMainActionCor[i] != null)
-                        StopCoroutine(weaponManager.curMainActionCor[i]);
-                     EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, i);
+                            isStartShotCor[i] = false;
+                        }
+                    }
+                    break;
+                case _ACTION_STATE.AIM:
+                    {
+                        playersManager.Action_AimingNormal(i, pos, networkManager.GetRotY(i));
 
-                     isStartShotCor[i] = false;
-                  }
-               }
-               break;
-            case _ACTION_STATE.SHOT:
-               {
-                  playersManager.Action_AimingNormal(i, pos, networkManager.GetRotY(i)); //조준애니메이션은 계속하고.
+                        if (isStartShotCor[i] == true)
+                        {
+                            if (weaponManager.curMainActionCor[i] != null)
+                                StopCoroutine(weaponManager.curMainActionCor[i]);
+                            EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, i);
 
-                  if (isStartShotCor[i] == false)
-                  {
-                     if (weaponManager.curMainActionCor[i] != null)
-                        StopCoroutine(weaponManager.curMainActionCor[i]); //이전꺼 멈추고
+                            isStartShotCor[i] = false;
+                        }
+                    }
+                    break;
+                case _ACTION_STATE.SHOT:
+                    {
+                        playersManager.Action_AimingNormal(i, pos, networkManager.GetRotY(i)); //조준애니메이션은 계속하고.
 
-                     weaponManager.curMainActionCor[i] = StartCoroutine(weaponManager.ActionFire(i));
-                     EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, i);
+                        if (isStartShotCor[i] == false)
+                        {
+                            if (weaponManager.curMainActionCor[i] != null)
+                                StopCoroutine(weaponManager.curMainActionCor[i]); //이전꺼 멈추고
+                            weaponManager.curMainActionCor[i] = StartCoroutine(weaponManager.ActionFire(i));
 
-                     isStartShotCor[i] = true;
-                  }
-               }
-               break;
-            case _ACTION_STATE.CIR_AIM:
-               {
-                  playersManager.Action_AimingWithCircuit(i, pos, networkManager.GetRotY(i));
+                            isStartShotCor[i] = true;
+                        }
+                    }
+                    break;
+                case _ACTION_STATE.CIR_AIM:
+                    {
+                        playersManager.Action_AimingWithCircuit(i, pos, networkManager.GetRotY(i));
 
-                  if (isStartShotCor[i] == true)
-                  {
-                     if (WeaponManager.instance.curMainActionCor[i] != null)
-                        StopCoroutine(WeaponManager.instance.curMainActionCor[i]);
-                     EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, i);
+                        if (isStartShotCor[i] == true)
+                        {
+                            if (WeaponManager.instance.curMainActionCor[i] != null)
+                                StopCoroutine(WeaponManager.instance.curMainActionCor[i]);
+                            EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, i);
 
-                     isStartShotCor[i] = false;
-                  }
+                            isStartShotCor[i] = false;
+                        }
 
-               }
-               break;
-            case _ACTION_STATE.CIR_AIM_SHOT:
-               {
-                  playersManager.Action_AimingWithCircuit(i, pos, networkManager.GetRotY(i)); //조준이동 애니메이션은 계속하고.
+                    }
+                    break;
+                case _ACTION_STATE.CIR_AIM_SHOT:
+                    {
+                        playersManager.Action_AimingWithCircuit(i, pos, networkManager.GetRotY(i)); //조준이동 애니메이션은 계속하고.
 
-                  if (isStartShotCor[i] == false)
-                  {
-                     if (weaponManager.curMainActionCor[i] != null)
-                        StopCoroutine(weaponManager.curMainActionCor[i]);
+                        if (isStartShotCor[i] == false)
+                        {
+                            if (weaponManager.curMainActionCor[i] != null)
+                                StopCoroutine(weaponManager.curMainActionCor[i]);
 
-                     weaponManager.curMainActionCor[i] = StartCoroutine(weaponManager.ActionFire(i));
-                     EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, i);
+                            weaponManager.curMainActionCor[i] = StartCoroutine(weaponManager.ActionFire(i));
+                            //EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, i);
 
-                     isStartShotCor[i] = true;
-                  }
-                  break;
-               }
-         }
-      }
+                            isStartShotCor[i] = true;
+                        }
+                        break;
+                    }
+            }
+        }
 #endif
     }
 }

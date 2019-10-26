@@ -19,7 +19,6 @@ SessionManager* SessionManager::GetInstance()
 	if (instance == nullptr)
 	{
 		instance = new SessionManager();
-		instance->clientList = new C_List<C_ClientInfo*>();
 	}
 
 	return instance;
@@ -33,68 +32,55 @@ void SessionManager::Destroy()
 // 받은 소켓, 주소정보로 클라이언트를 동적할당하는 함수
 bool SessionManager::AddSession(SOCKET _sock, SOCKADDR_IN _addr)
 {
-	//C_LoginState* state = new C_LoginState();
 	C_ClientInfo* ptr = new C_ClientInfo(nullptr, _sock, _addr);
-	return clientList->Insert(ptr);
+	
+	int beforeCnt = (int)clientList.size();
+	clientList.emplace_back(ptr);
+
+	// 리스트에 넣기 전 크기가 더 커졌으면 넣은게 맞으니까 true리턴, 아니면 false리턴되겠지
+	return (beforeCnt < (int)clientList.size());
 }
 
 C_ClientInfo* SessionManager::FindWithSocket(SOCKET _sock)
 {
-	C_ClientInfo* info = nullptr;   // 순회할 때 클라의 정보를 하나씩 담아서 활용할 변수
-
-	   // 만약 클라이언트 리스트가 검색중이 아니라면, 리스트를 순회하며 각 set에 셋팅을 한다.
-	if (clientList->SearchCheck() == false)
+	C_ClientInfo* client = nullptr;	// 순회할 때 클라의 정보를 하나씩 담아서 활용할 변수
+	for (auto iter = clientList.begin(); iter != clientList.end(); ++iter)
 	{
-		info = nullptr;
-		clientList->SearchStart();
-		while (1)
+		client = *iter;
+
+		if (client->GetSocket() == _sock)
 		{
-			info = clientList->SearchData();   // 클라이언트를 하나씩 받아온다.
-
-			// 끝까지 다 확인했다면 종료한다.
-			if (info == nullptr)
-				break;
-
-			if (info->GetSocket() == _sock)
-				break;
+			return client;
 		}
-		clientList->SearchEnd();
 	}
 
-	return info;
+	return nullptr;
 }
 
-bool SessionManager::Insert(C_ClientInfo* _info)
+void SessionManager::Remove(C_ClientInfo* _info)
 {
-	return clientList->Insert(_info);
+	clientList.remove(_info);
+	delete _info;
+	_info = nullptr;
 }
 
-bool SessionManager::Remove(C_ClientInfo* _info)
+int SessionManager::GetSize()
 {
-	return clientList->Remove(_info);
+	return (int)clientList.size();
 }
 
-int SessionManager::GetCount()
+bool SessionManager::IsClientExist(C_ClientInfo* _client)
 {
-	return clientList->GetCount();
-}
+	auto iter = find(clientList.begin(), clientList.end(), _client);
 
-bool SessionManager::SearchCheck()
-{
-	return clientList->SearchCheck();
-}
+	// 반복자 위치가 end가 아니면 존재하는 것
+	if (iter != clientList.end())
+	{
+		return true;
+	}
 
-void SessionManager::SearchStart()
-{
-	clientList->SearchStart();
-}
-
-C_ClientInfo* SessionManager::SearchData()
-{
-	return clientList->SearchData();
-}
-
-void SessionManager::SearchEnd()
-{
-	clientList->SearchEnd();
+	else
+	{
+		return false;
+	}
 }

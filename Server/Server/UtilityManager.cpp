@@ -57,6 +57,74 @@ float UtilityManager::GetDotDistanceWithSqrt(float _posX1, float _posZ1, float _
 	return sqrt(((_posX2 - _posX1) * (_posX2 - _posX1)) + ((_posZ2 - _posZ1) * (_posZ2 - _posZ1)));
 }
 
+int UtilityManager::IsWritableMemory(void* _memoryAddr)
+{
+	MEMORY_BASIC_INFORMATION64 memInfo = { 0, };
+	size_t result = 0;
+
+	result = VirtualQuery(_memoryAddr, (MEMORY_BASIC_INFORMATION*)&memInfo, sizeof(memInfo));
+
+	if (result == 0)	// 커널 영역인 경우 VirtualQuery 자체가 Fail함.
+	{	
+		return -1;
+	}
+
+	else if (memInfo.Protect & (PAGE_EXECUTE_READWRITE | PAGE_READWRITE))
+	{
+		return ERROR_SUCCESS;
+	}
+
+	else
+	{
+		return memInfo.Protect;
+	}
+}
+/*int UtilityManager::IsReadableMemory(void* _memoryAddr)
+{
+	//MEMORY_BASIC_INFORMATION64 memInfo = { 0, };
+	MEMORY_BASIC_INFORMATION memInfo = { 0, };
+	size_t  nResult = 0;
+
+	//nResult = VirtualQuery(_memoryAddr, (MEMORY_BASIC_INFORMATION*)&memInfo, sizeof(memInfo));
+	nResult = VirtualQuery(_memoryAddr, &memInfo, sizeof(memInfo));
+
+	if (nResult == 0) // 커널 영역인 경우 VirtualQuery 자체가 Fail함.  
+	{
+		return -1;
+	}
+
+	else if (memInfo.State & MEM_COMMIT)
+	{
+		return  ERROR_SUCCESS;
+	}
+
+	else
+	{
+		return  memInfo.State;
+	}
+}*/
+
+INT UtilityManager::IsReadableMemory(LPVOID pMemoryAddr)
+{
+	MEMORY_BASIC_INFORMATION MemInfo = { 0, };
+	SIZE_T nResult = 0;
+
+	nResult = VirtualQuery(pMemoryAddr, &MemInfo, sizeof(MemInfo));
+
+	if (nResult == 0) // 커널 영역인 경우 VirtualQuery 자체가 Fail함.  
+	{
+		return -1;
+	}
+	else if (MemInfo.State & MEM_COMMIT)
+	{
+		return  ERROR_SUCCESS;
+	}
+	else
+	{
+		return  MemInfo.State;
+	}
+}
+
 //{
 //	// 멀티바이트 -> 유니코드
 //	int UtilityManager::MultiByteToUnicode(char* _strMultibyte, wchar_t* _strUnicode)

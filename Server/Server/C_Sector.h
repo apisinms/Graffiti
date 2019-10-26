@@ -52,7 +52,7 @@ public:
 		_newIdx.i = (int)(abs(_posZ / GRID_SIZE));
 		_newIdx.j = (int)(abs(_posX / GRID_SIZE));
 
-		printf("GetIndex:%d, %d\n", _newIdx.i, _newIdx.j);
+		//printf("GetIndex:%d, %d\n", _newIdx.i, _newIdx.j);
 
 		// 섹터 범위 안에 있는 인덱스이면 true리턴.
 		if (_newIdx.i >= 0 && _newIdx.i < ROW

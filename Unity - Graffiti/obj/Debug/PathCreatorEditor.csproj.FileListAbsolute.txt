@@ -557,4 +557,3 @@ E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\obj\Debug\PathCreatorEdito
 E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\obj\Debug\PathCreatorEditor.csproj.CopyComplete
 E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\obj\Debug\PathCreatorEditor.dll
 E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\obj\Debug\PathCreatorEditor.pdb
-E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\PathCreator.pdb

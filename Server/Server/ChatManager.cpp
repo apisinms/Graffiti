@@ -91,7 +91,7 @@ bool ChatManager::LeaveRoomProcess(C_ClientInfo* _ptr, char* _buf)
 	TCHAR msg[MSGSIZE] = { 0, };
 	PROTOCOL_CHAT protocol;
 
-	char buf[BUFSIZE];		// 버퍼
+	char buf[BUFSIZE] = { 0, };		// 버퍼
 	int packetSize = 0;     // 총 사이즈
 
 	//// 로비로 돌아간 것에 성공하면 result 변경

@@ -10,7 +10,6 @@ C_Sector::C_Sector()
 	for (int i = 0; i < ROW; i++)
 	{
 		sectors[i] = new SectorInstance[COL];
-		//memset(sectors[i], 0, sizeof(SectorInstance) * COL);
 	}
 	
 

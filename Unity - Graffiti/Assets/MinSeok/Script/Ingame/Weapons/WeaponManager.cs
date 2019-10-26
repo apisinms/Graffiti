@@ -21,10 +21,11 @@ public enum _WEAPONS : sbyte
 */
 public interface IMainWeaponType
 {
-    IEnumerator ActionFire(int _index);
+	IEnumerator ActionFire(int _index);
+    IEnumerator ActionFire();
     void CheckFireRange(GameObject _obj_bullet, BulletCollision._BULLET_CLONE_INFO _info_bullet, int _index);
-    void ReloadAmmo(int _index);
-    void ApplyDamage(int _type, int _index);
+	void ReloadAmmo(int _index);
+	void ApplyDamage(int _type, int _index);
 }
 
 public class WeaponManager : MonoBehaviour, IMainWeaponType
@@ -61,7 +62,10 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
         [MarshalAs(UnmanagedType.R4)]
         public float speed;        // 탄속
 
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = WEAPON_NAME_SIZE)]
+		[MarshalAs(UnmanagedType.R4)]
+		public float reloadTime;   // 재장전 시간
+
+		[MarshalAs(UnmanagedType.ByValTStr, SizeConst = WEAPON_NAME_SIZE)]
         public string weaponName; // 무기 이름
 
         public byte[] Serialize()
@@ -117,6 +121,8 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
 	// 누가, 몇 발의 총알을 맞았는지 담을 구조체. (로컬 플레이어만 쓴다)
 	private NetworkManager.BulletCollisionChecker colChecker = new NetworkManager.BulletCollisionChecker();
 
+	public bool isReloading = false;
+
 	void Awake()
     {
         if (instance == null)
@@ -129,7 +135,7 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
         
         cn_mainWeaponList = obj_mainWeaponList.GetComponents<Component>();
     
-        Initialization(C_Global.MAX_PLAYER);
+        Initialization(C_Global.MAX_PLAYER);      
     }
 
     void Start()
@@ -165,7 +171,7 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
 #else
 
 #endif
-	}
+    }
 
     void Initialization(int _num)
     {
@@ -201,6 +207,11 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
     }
     */
 
+    public IEnumerator ActionFire()
+    {
+        yield return mainWeaponType[myIndex].ActionFire();
+    }
+
     public IEnumerator ActionFire(int _index) //선택된 총의 파이어액션
     {
         yield return mainWeaponType[_index].ActionFire(_index);
@@ -211,12 +222,12 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
         mainWeaponType[_index].CheckFireRange(_obj_bullet, _info_bulletint, _index);
     }
 
-    public void ReloadAmmo(int _index)
-    {
-        mainWeaponType[_index].ReloadAmmo(_index);
-    }
+	public void ReloadAmmo(int _index)
+	{
+		mainWeaponType[_index].ReloadAmmo(_index);
+	}
 
-    public void ApplyDamage(int _type, int _index) //해당 총별로 총에 맞았을때 데미지를 실질적으로 깎음.
+	public void ApplyDamage(int _type, int _index) //해당 총별로 총에 맞았을때 데미지를 실질적으로 깎음.
     {
         mainWeaponType[_index].ApplyDamage(_type, _index);
     }
@@ -237,44 +248,6 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
 		}
 	}
 
-    // byte형의 플레이어 비트를 활성화 함
-    public int SetPlayerBit(string _playerTag)
-    {
-        int hitPlayerNum = -1;
-        switch (_playerTag)
-        {
-            case "Player1":
-                {
-                    colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_1;
-                    hitPlayerNum = 1;
-                }
-                break;
-
-            case "Player2":
-                {
-                    colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_2;
-                    hitPlayerNum = 2;
-                }
-                break;
-
-            case "Player3":
-                {
-                    colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_3;
-                    hitPlayerNum = 3;
-                }
-                break;
-
-            case "Player4":
-                {
-                    colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_4;
-                    hitPlayerNum = 4;
-                }
-                break;
-        }
-
-        return hitPlayerNum;
-    }
-    /*
 	public int SetPlayerBit(string _playerTag)
 	{
 		int hitPlayerNum = -1;
@@ -282,54 +255,76 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
 		{
 			case "Player1":
 				{
+#if DEBUG
+					colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_1;
+					hitPlayerNum = 1;
+#else
 					// 나랑 같은 팀이 아니면 세팅
 					if ((myIndex + 1) != 2)
 					{
 					colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_1;
 					hitPlayerNum = 1;
 					}
+#endif
+
 				}
 				break;
 
 
 			case "Player2":
 				{
+#if DEBUG
+					colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_2;
+					hitPlayerNum = 2;
+#else
 					// 나랑 같은 팀이 아니면 세팅
 					if ((myIndex + 1) != 1)
 					{
 						colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_2;
 						hitPlayerNum = 2;
 					}
+#endif
 				}
 				break;
 
 			case "Player3":
 				{
+#if DEBUG
 					// 나랑 같은 팀이 아니면 세팅
 					if ((myIndex + 1) != 4)
 					{
 						colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_3;
 						hitPlayerNum = 3;
 					}
+#else
+					colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_3;
+					hitPlayerNum = 3;
+#endif
+
 				}
 				break;
 
 			case "Player4":
 				{
+#if DEBUG
 					// 나랑 같은 팀이 아니면 세팅
 					if ((myIndex + 1) != 3)
 					{
 						colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_4;
 						hitPlayerNum = 4;
 					}
+#else
+					colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_4;
+					hitPlayerNum = 4;
+#endif
+
 				}
 				break;
 		}
 
 		return hitPlayerNum;
 	}
-    */
-
+    
     // player의 HitCountBit(맞은 횟수 비트)를 증가한다.
     public void IncPlayerHitCountBit(int _hitPlayerNum)
     {
