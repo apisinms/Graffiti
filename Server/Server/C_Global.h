@@ -86,7 +86,7 @@ struct IngamePacket
 	float speed;
 	int action;
 	float health;
-	//int bullet;
+	bool isReloading;
 	BulletCollisionChecker collisionCheck;
 
 	IngamePacket()
@@ -95,6 +95,8 @@ struct IngamePacket
 		posX = posZ = rotY = speed = 0.0f;
 		action = 0;
 		health = 0.0;
+		isReloading = false;
+		memset(&collisionCheck, 0, sizeof(BulletCollisionChecker));
 	}
 
 	IngamePacket(IngamePacket& _pos)
@@ -107,6 +109,7 @@ struct IngamePacket
 		this->action         = _pos.action;
 		this->health         = _pos.health;
 		this->collisionCheck = _pos.collisionCheck;
+		this->isReloading    = false;
 	}
 };
 
@@ -216,6 +219,7 @@ struct WeaponInfo
 	float accuracy;		// 정확도
 	float range;		// 사정거리
 	float speed;		// 탄속
+	float reloadTime;	// 재장전 시간
 	TCHAR weaponName[WEAPON_NAME_SIZE];	// 무기 이름
 };
 

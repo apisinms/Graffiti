@@ -106,6 +106,8 @@ private:
 	void BulletDecrease(C_ClientInfo* _shotPlayer, int _numOfBullet);
 
 	void RefillBulletAndHealth(C_ClientInfo* _respawnPlayer);
+	void RefillBullet(C_ClientInfo* _player);
+	void RefillHealth(C_ClientInfo* _player);
 public:
 	bool CanISelectWeapon(C_ClientInfo* _ptr);	// 무기 선택
 	bool LoadingSuccess(C_ClientInfo* _ptr);	// 로딩 성공 처리

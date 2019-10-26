@@ -55,6 +55,9 @@ public partial class BridgeClientToServer : MonoBehaviour
           */
 
         EffectManager.instance.InitializeMuzzle(index);
+
+		if (index == myIndex)
+			UIManager.instance.Initialization_WeaponInfo();
     }
 
     public void SetPlayerNickName(string _nickName, int _idx)

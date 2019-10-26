@@ -82,7 +82,7 @@ public partial class BridgeClientToServer : MonoBehaviour
 
             switch (actionState)
             {
-                case _ACTION_STATE.DEATH:
+            case _ACTION_STATE.DEATH:
                     {
                         playersManager.Action_Death(i);
 
@@ -96,7 +96,7 @@ public partial class BridgeClientToServer : MonoBehaviour
                         }
                     }
                     break;
-                case _ACTION_STATE.IDLE:
+            case _ACTION_STATE.IDLE:
                {
                   playersManager.Action_Idle(i, pos);
 

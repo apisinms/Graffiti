@@ -962,14 +962,21 @@ void InGameManager::BulletDecrease(C_ClientInfo* _shotPlayer, int _numOfBullet)
 }
 
 
-/// about respawn
+/// about property
 void InGameManager::RefillBulletAndHealth(C_ClientInfo* _respawnPlayer)
 {
-	int maxbullet = weaponInfo[_respawnPlayer->GetPlayerInfo()->GetWeapon()->mainW]->maxAmmo;
-	float maxHealth = gameInfo[_respawnPlayer->GetRoom()->GetGameType()]->maxHealth;
-
-	_respawnPlayer->GetPlayerInfo()->SetBullet(maxbullet);
-	_respawnPlayer->GetPlayerInfo()->GetIngamePacket()->health = maxHealth;
+	RefillBullet(_respawnPlayer);
+	RefillHealth(_respawnPlayer);
+}
+void InGameManager::RefillBullet(C_ClientInfo* _player)
+{
+	int maxbullet = weaponInfo[_player->GetPlayerInfo()->GetWeapon()->mainW]->maxAmmo;
+	_player->GetPlayerInfo()->SetBullet(maxbullet);
+}
+void InGameManager::RefillHealth(C_ClientInfo* _player)
+{
+	float maxHealth = gameInfo[_player->GetRoom()->GetGameType()]->maxHealth;
+	_player->GetPlayerInfo()->GetIngamePacket()->health = maxHealth;
 }
 
 //////// public

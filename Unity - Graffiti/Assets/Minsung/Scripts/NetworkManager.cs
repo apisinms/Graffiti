@@ -228,6 +228,9 @@ public partial class NetworkManager : MonoBehaviour
 		[MarshalAs(UnmanagedType.R4)]
 		public float health;
 
+		[MarshalAs(UnmanagedType.I1)]
+		public bool isReloading;
+
 		// 총알 맞았는지 판정 구조체
 		public BulletCollisionChecker collisionChecker;
 
@@ -331,6 +334,11 @@ public partial class NetworkManager : MonoBehaviour
 		return ingamePackets[_idx].health;
 	}
 
+	public bool GetReloadState(int _idx)
+	{
+		return ingamePackets[_idx].isReloading;
+	}
+
 	public void SetPosX(int _idx, float _posX)
 	{
 		this.ingamePackets[_idx].posX = _posX;
@@ -358,6 +366,11 @@ public partial class NetworkManager : MonoBehaviour
 	public void SetHelath(int _idx, float _hp)
 	{
 		this.ingamePackets[_idx].health = _hp;
+	}
+
+	public void SetReloadState(int _idx, bool _reloadState)
+	{
+		ingamePackets[_idx].isReloading = _reloadState;
 	}
 
 	public static NetworkManager instance = null;

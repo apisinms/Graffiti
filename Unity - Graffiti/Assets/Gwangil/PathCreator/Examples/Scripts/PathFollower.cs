@@ -73,7 +73,6 @@ namespace PathCreation.Examples
 						bl_MiniMap.Instance.DoHitEffect();
 					}
 				}
-
 			}
 		}
 

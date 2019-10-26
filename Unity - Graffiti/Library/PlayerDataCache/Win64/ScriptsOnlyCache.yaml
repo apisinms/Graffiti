@@ -481,7 +481,7 @@ ScriptsOnlyBuild:
     className: State_Death
   - hash:
       serializedVersion: 2
-      Hash: 0f90653ade26f8b5fb03b69ad67a9fd8
+      Hash: e79201023bd4644ecd3273ee8ea5e1cf
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: WeaponManager
