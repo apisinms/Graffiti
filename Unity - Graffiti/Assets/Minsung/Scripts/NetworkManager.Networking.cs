@@ -251,7 +251,10 @@ public partial class NetworkManager : MonoBehaviour
 
 									// 받은 정보를 브릿지에 세팅함
 									bridge.SetGameInfoToBridge(ref gameInfo, ref weapons);
-								}
+
+                                    // 패킷 구조체를 플레이어 수만큼 할당
+                                    ingamePackets = new IngamePacket[gameInfo.maxPlayer];
+                                }
 							}
 							break;
 
@@ -391,7 +394,19 @@ public partial class NetworkManager : MonoBehaviour
 											}
 										}
 										break;
-								}
+                                    // 누군가가 총에 맞아 숨짐
+                                    case RESULT.KILL:
+                                        {
+                                            lock (key)
+                                            {
+                                                int killer, victim;
+
+                                                UnPackPacket(info.packet, out killer, out victim);
+                                                bridge.KillProcess(killer, victim);
+                                            }
+                                        }
+                                        break;
+                                }
 							}
 							break;
 

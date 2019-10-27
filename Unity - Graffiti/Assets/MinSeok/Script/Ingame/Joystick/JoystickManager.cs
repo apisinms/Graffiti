@@ -19,22 +19,23 @@ public class JoystickManager : MonoBehaviour
 	{
 		myIndex = GameManager.instance.myIndex;
 
-		//WeaponManager.instance.mainWeapon[myIndex] = _WEAPONS.SMG;
-		//WeaponManager.instance.SetMainWeapon(Main_SMG.GetMainWeaponInstance(), myIndex);
+        //WeaponManager.instance.mainWeapon[myIndex] = _WEAPONS.SMG;
+        //WeaponManager.instance.SetMainWeapon(Main_SMG.GetMainWeaponInstance(), myIndex);
 #if !NETWORK
-		ChangeGun(1);
+        //ChangeGun(1);
 #endif
-	}
+    }
 
-	public void ChangeGun(int _index)
+    public void ChangeGun(int _index)
 	{
+        #if !NETWORK
 		switch (_index)
 		{
 			case 1:
 				WeaponManager.instance.mainWeapon[myIndex] = _WEAPONS.AR;
 				WeaponManager.instance.SetMainWeapon(Main_AR.GetMainWeaponInstance(), myIndex);
 
-				//UIManager.instance.weaponInfo.img_mainW.sprite = UIManager.instance.spr_mainW[0];
+				UIManager.instance.weaponInfo.img_mainW.sprite = UIManager.instance.spr_mainW[0];
 				UIManager.instance.weaponInfo.txt_ammoState.text = WeaponManager.instance.weaponInfoAR.maxAmmo.ToString();
 				break;
 			case 2:
@@ -77,6 +78,7 @@ public class JoystickManager : MonoBehaviour
 		EffectManager.instance.ps_tmpMuzzle[myIndex].glow.option = EffectManager.instance.ps_tmpMuzzle[myIndex].glow.body.main;
 		EffectManager.instance.ps_tmpMuzzle[myIndex].spike.option = EffectManager.instance.ps_tmpMuzzle[myIndex].spike.body.main;
 		EffectManager.instance.ps_tmpMuzzle[myIndex].flare.option = EffectManager.instance.ps_tmpMuzzle[myIndex].flare.body.main;
+#endif
 	}
 	/*
     void Update()

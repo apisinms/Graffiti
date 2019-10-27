@@ -13,6 +13,9 @@ public class GameManager : MonoBehaviour
         [MarshalAs(UnmanagedType.I4)]
         public int gameType;       // 게임 타입(나중에 모드가 여러 개 생길 수도 있으니)
 
+        [MarshalAs(UnmanagedType.I4)]
+        public int maxPlayer;       // 최대 플레이어 수
+
         [MarshalAs(UnmanagedType.R4)]
         public float maxSpeed;     // 최대 이동속도
 
@@ -25,13 +28,13 @@ public class GameManager : MonoBehaviour
         [MarshalAs(UnmanagedType.I4)]
         public int gameTime;       // 게임 시간(ex 180초)
 
-		[MarshalAs(UnmanagedType.I4)]
-		public int killPoint;       // 킬 점수
+        [MarshalAs(UnmanagedType.I4)]
+        public int killPoint;       // 킬 점수
 
-		[MarshalAs(UnmanagedType.I4)]
-		public int capturePoint;       // 점령 점수
+        [MarshalAs(UnmanagedType.I4)]
+        public int capturePoint;       // 점령 점수
 
-		public byte[] Serialize()
+        public byte[] Serialize()
         {
             // allocate a byte array for the struct data
             var buffer = new byte[Marshal.SizeOf(typeof(GameInfo))];
@@ -56,7 +59,7 @@ public class GameManager : MonoBehaviour
     public GameInfo gameInfo;
 
     public static GameManager instance;
-    public readonly string[] playersTag = new string[C_Global.MAX_PLAYER];
+    public string[] playersTag;
     public int myNetworkNum { get; set; }
     public int myIndex { get; set; }
     public int[] playersIndex { get; set; }
@@ -67,27 +70,26 @@ public class GameManager : MonoBehaviour
     public int CarSeed { get; set; }
 
     public CameraControl mainCamera;    // 메인 카메라
+	Image loadingImage;
 
     private void Start()
     {
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraControl>();
-
 #if NETWORK
-      BridgeClientToServer.instance.Initialization_PlayerViewer();    // 게임 시작시 플레이어 뷰어 셋팅
-        
-      // 필요한 게임 정보를 브릿지에서 얻어옴
-        gameInfo = BridgeClientToServer.instance.GetTempGameInfo;
+		PlayersManager.instance.Initialization_GameInfo();              // 얻어온 정보대로 초기화
+		BridgeClientToServer.instance.Initialization_PlayerViewer();    // 게임 시작시 플레이어 뷰어 셋팅
 
+		loadingImage = GameObject.Find("loadingImage").GetComponent<Image>();
 #else
         gameInfo.gameType = 0;
         gameInfo.gameTime = 180;
-        gameInfo.responTime = 5;
+        gameInfo.respawnTime = 5;
         CarSeed = 0;
         StartCoroutine(GameObject.Find("Spawner").GetComponent<PathCreation.Examples.PathSpawner>().Cor_SpawnPrefabs());
 #endif
-    }
+	}
 
-    private void OnEnable()
+	private void OnEnable()
     {
         // 이벤트 등록하고, 로딩 완료되면 호출하게 함
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -100,7 +102,9 @@ public class GameManager : MonoBehaviour
     void OnSceneLoaded(Scene _scene, LoadSceneMode _mode)
     {
         //로딩이 완료되었다고 서버로 보내준다.
-        NetworkManager.instance.SendLoadingComplete();
+#if NETWORK
+      NetworkManager.instance.SendLoadingComplete();
+#endif
     }
 
     void Awake()
@@ -108,22 +112,38 @@ public class GameManager : MonoBehaviour
         if (instance == null)
             instance = this;
 
-        playersTag[0] = "Player1"; playersTag[1] = "Player2";
-        playersTag[2] = "Player3"; playersTag[3] = "Player4";
-        playersIndex = new int[C_Global.MAX_PLAYER];
-
 #if NETWORK
-        myNetworkNum = NetworkManager.instance.MyPlayerNum;
-        myIndex = myNetworkNum - 1;
+      gameInfo = BridgeClientToServer.instance.GetTempGameInfo;   // 필요한 게임 정보를 브릿지에서 얻어옴
+      
+      playersIndex = new int[gameInfo.maxPlayer];
+      playersTag = new string[gameInfo.maxPlayer];
 
+      myNetworkNum = NetworkManager.instance.MyPlayerNum;
+      myIndex = myNetworkNum - 1;
+
+      SetPlayerTagAndIndex(gameInfo.maxPlayer);   // 태그 및 인덱스 설정
 #else
+        gameInfo.gameType = 0;
+        gameInfo.maxPlayer = 4;
+        gameInfo.maxSpeed = 4.0f;
+        gameInfo.maxHealth = 100.0f;
+        gameInfo.respawnTime = 3;
+        gameInfo.gameTime = 300;
+        gameInfo.killPoint = 25;
+        gameInfo.capturePoint = 100;
+
+        CarSeed = 0;
+
+        playersIndex = new int[C_Global.MAX_CHARACTER];
+        playersTag = new string[C_Global.MAX_CHARACTER];
+
         myNetworkNum = 1; //예시로 번호부여함.  서버에서 샌드된번호로 해야함.
         myIndex = myNetworkNum - 1;
-#endif
-        myTag = playersTag[myIndex]; //내 태그등록
-        myFocus = true;             // 포커스 On
 
-        playersIndex[0] = myIndex;
+        for (int i = 0; i < C_Global.MAX_CHARACTER; i++)
+        {
+            playersTag[i] = "Player" + (i + 1).ToString();
+        }
 
         switch (myIndex) //0은 무조건 나, 1은팀, 2, 3은 적1, 적2
         {
@@ -132,22 +152,12 @@ public class GameManager : MonoBehaviour
                 playersIndex[2] = 2;
                 playersIndex[3] = 3;
                 break;
-            case 1:
-                playersIndex[1] = 0;
-                playersIndex[2] = 2;
-                playersIndex[3] = 3;
-                break;
-            case 2:
-                playersIndex[1] = 3;
-                playersIndex[2] = 0;
-                playersIndex[3] = 1;
-                break;
-            case 3:
-                playersIndex[1] = 2;
-                playersIndex[2] = 0;
-                playersIndex[3] = 1;
-                break;
         }
+#endif
+        myFocus = true;             // 포커스 On
+
+        playersIndex[0] = myIndex;    // 내 인덱스 설정
+        myTag = playersTag[myIndex]; // 내 태그등록
     }
 
 
@@ -182,17 +192,135 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public Image loadingImage;
 
     // 로딩 완료
     public void LoadingComplete()
     {
-        loadingImage.enabled = false;
-    }
+#if NETWORK
+		if (loadingImage != null)
+		{
+			loadingImage.enabled = false;
+		}
+
+		// 안들어온 놈들 꺼준다.
+		GameObject notConnectedCharacter;
+		for (int i = gameInfo.maxPlayer; i < C_Global.MAX_CHARACTER; i++)
+		{
+			notConnectedCharacter = GameObject.FindGameObjectWithTag("Player" + (i + 1).ToString());
+			notConnectedCharacter.SetActive(false);
+		}
+#endif
+	}
 
     public void SetLocalAndNetworkActionState(int _idx, _ACTION_STATE _action)
     {
         NetworkManager.instance.SetActionState(_idx, (int)_action);
         PlayersManager.instance.actionState[_idx] = _action;
+    }
+
+    public void SetPlayerTagAndIndex(int _num)
+    {
+        switch (gameInfo.gameType)
+        {
+            case (int)C_Global.GameType._2vs2:
+                {
+                    switch (_num)
+                    {
+                        case 2:
+                            {
+                                switch (myIndex)
+                                {
+                                    case 0:
+                                        playersIndex[1] = 1;
+                                        break;
+
+                                    case 1:
+                                        playersIndex[1] = 0;
+                                        break;
+                                }
+                            }
+                            break;
+
+                        case 3:
+                            {
+                                switch (myIndex)
+                                {
+                                    case 0:
+                                        playersIndex[1] = 1;
+                                        playersIndex[2] = 2;
+                                        break;
+
+                                    case 1:
+                                        playersIndex[1] = 0;
+                                        playersIndex[2] = 2;
+                                        break;
+
+                                    case 2:
+                                        playersIndex[1] = 0;   // 이 상황은 어쩔 수가 없음 팀이 없잖아
+                                        playersIndex[2] = 1;
+                                        break;
+                                }
+                            }
+                            break;
+
+                        case 4:
+                            {
+                                switch (myIndex)
+                                {
+                                    case 0:
+                                        playersIndex[1] = 1;
+                                        playersIndex[2] = 2;
+                                        playersIndex[3] = 3;
+                                        break;
+
+                                    case 1:
+                                        playersIndex[1] = 0;
+                                        playersIndex[2] = 2;
+                                        playersIndex[3] = 3;
+                                        break;
+
+                                    case 2:
+                                        playersIndex[1] = 3;
+                                        playersIndex[2] = 0;
+                                        playersIndex[3] = 1;
+                                        break;
+
+                                    case 3:
+                                        playersIndex[1] = 2;
+                                        playersIndex[2] = 0;
+                                        playersIndex[3] = 1;
+                                        break;
+                                }
+                            }
+                            break;
+                    }
+
+                    for (int i = 0; i < gameInfo.maxPlayer; i++)
+                    {
+                        playersTag[i] = "Player" + (i + 1).ToString();
+                    }
+                }
+                break;
+
+            case (int)C_Global.GameType._1vs1:
+                {
+                    switch (myIndex)
+                    {
+                        case 0:
+                            playersIndex[1] = 1;
+                            break;
+
+                        case 1:
+                            playersIndex[1] = 0;
+                            break;
+                    }
+
+                    // 원래 하드코딩하면 안되는데 그냥 일단 임시로
+                    playersTag[0] = "Player1";
+                    playersTag[1] = "Player3";
+                }
+                break;
+        }
+
     }
 }

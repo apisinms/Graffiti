@@ -15,8 +15,9 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
         public int bulletPatternIndex;
         public int prevBulletPatternIndex;
         public int curAmmo;
+        public float reloadTime;
+        public string mainWname;
     }
-
     public _PLAYER_AR_INFO[] playerARInfo { get; set; }
     #endregion
 
@@ -26,7 +27,7 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
         weaponManager = WeaponManager.instance;
         myIndex = GameManager.instance.myIndex;
 
-        playerARInfo = new _PLAYER_AR_INFO[C_Global.MAX_PLAYER];
+        playerARInfo = new _PLAYER_AR_INFO[GameManager.instance.gameInfo.maxPlayer];
 
 #if !NETWORK
 		weaponManager.weaponInfoAR.maxAmmo = 20;
@@ -38,12 +39,14 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
 		weaponManager.weaponInfoAR.reloadTime = 3.0f;
 #endif
 
-		for (int i = 0; i < C_Global.MAX_PLAYER; i++)
+		for (int i = 0; i < GameManager.instance.gameInfo.maxPlayer; i++)
         {
             playerARInfo[i].vt_bulletPattern = new Vector3[3];
             playerARInfo[i].bulletPatternIndex = 1;
             playerARInfo[i].prevBulletPatternIndex = 2;
             playerARInfo[i].curAmmo = weaponManager.weaponInfoAR.maxAmmo;
+            playerARInfo[i].reloadTime = weaponManager.weaponInfoAR.reloadTime;
+            playerARInfo[i].mainWname = "AR";
         }
     }
 
@@ -55,46 +58,90 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
         return instance;
     }
 
-	public IEnumerator ActionFire(int _index)
+    public IEnumerator ActionFire()
+    {     
+        while (true)
+        {
+            if (playerARInfo[myIndex].curAmmo <= 0)
+            {
+                ReloadAmmo(myIndex);
+                yield break;
+            }
+
+            EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, myIndex);
+            var bulletClone = PoolManager.instance.GetBulletFromPool(myIndex);
+            var shellClone = PoolManager.instance.GetShellFromPool(myIndex);
+            PoolManager.instance.StartCoroutine(PoolManager.instance.CheckShellEnd(shellClone, myIndex));
+
+            Transform tf_clone = bulletClone.transform;
+
+            playerARInfo[myIndex].vt_bulletPattern[0].x = tf_clone.forward.x - (tf_clone.right.x * weaponManager.weaponInfoAR.accuracy);
+            playerARInfo[myIndex].vt_bulletPattern[0].z = tf_clone.forward.z - (tf_clone.right.z * weaponManager.weaponInfoAR.accuracy);
+            playerARInfo[myIndex].vt_bulletPattern[1].x = tf_clone.forward.x;
+            playerARInfo[myIndex].vt_bulletPattern[1].z = tf_clone.forward.z;
+            playerARInfo[myIndex].vt_bulletPattern[2].x = tf_clone.forward.x + (tf_clone.right.x * weaponManager.weaponInfoAR.accuracy);
+            playerARInfo[myIndex].vt_bulletPattern[2].z = tf_clone.forward.z + (tf_clone.right.z * weaponManager.weaponInfoAR.accuracy);
+
+            tf_clone.localRotation = Quaternion.LookRotation(playerARInfo[myIndex].vt_bulletPattern[playerARInfo[myIndex].bulletPatternIndex]);
+            bulletClone.GetComponent<Rigidbody>().AddForce(playerARInfo[myIndex].vt_bulletPattern[playerARInfo[myIndex].bulletPatternIndex] * weaponManager.weaponInfoAR.speed, ForceMode.Acceleration);
+            AudioManager.Instance.Play(0);
+
+            playerARInfo[myIndex].curAmmo--;
+            UIManager.instance.SetAmmoStateTxt(playerARInfo[myIndex].curAmmo);
+
+            switch (playerARInfo[myIndex].bulletPatternIndex)
+            {
+                case 0:
+                    playerARInfo[myIndex].bulletPatternIndex = 1;
+                    //Debug.Log("중");
+                    break;
+                case 1:
+                    if (playerARInfo[myIndex].prevBulletPatternIndex == 1)
+                    {
+                        playerARInfo[myIndex].bulletPatternIndex = 0;
+                        playerARInfo[myIndex].prevBulletPatternIndex = 2;
+                        //Debug.Log("좌");
+                    }
+                    else if (playerARInfo[myIndex].prevBulletPatternIndex == 2)
+                    {
+                        playerARInfo[myIndex].bulletPatternIndex = 2;
+                        playerARInfo[myIndex].prevBulletPatternIndex = 1;
+                        //Debug.Log("우");
+                    }
+                    break;
+                case 2:
+                    playerARInfo[myIndex].bulletPatternIndex = 1;
+                    //Debug.Log("중");
+                    break;
+            }
+
+            if (playerARInfo[myIndex].curAmmo <= 0)
+            {
+                ReloadAmmo(myIndex);
+                yield break;
+            }
+
+            yield return YieldInstructionCache.WaitForSeconds(weaponManager.weaponInfoAR.fireRate);
+        }
+    }
+
+    public IEnumerator ActionFire(int _index)
 	{
-		if (_index == myIndex)
-		{
-			if (playerARInfo[_index].curAmmo <= 0)
-			{
-				ReloadAmmo(_index);
-				yield break;
-			}
-			EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, myIndex);
-		}
+        if (_index == myIndex)
+            yield break;
 
-#if NETWORK
-		if (NetworkManager.instance.GetReloadState(_index) == true)
+        while (true)
 		{
-			EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, _index);
-			yield break;
-		}
-#endif
+            #if NETWORK
+            if (NetworkManager.instance.GetReloadState(_index) == true)
+            {
+                StartDecreaseReloadGage(_index);
+                yield break;
+            }
+            #endif
 
-		while (true)
-		{
-			if (_index == myIndex)
-			{
-				if (playerARInfo[_index].curAmmo <= 0)
-				{
-					ReloadAmmo(_index);
-					yield break;
-				}
-			}
-
-#if NETWORK
-		if (NetworkManager.instance.GetReloadState(_index) == true)
-		{
-			EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, _index);
-			yield break;
-		}
-#endif
-
-			var bulletClone = PoolManager.instance.GetBulletFromPool(_index);
+            EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, _index);
+            var bulletClone = PoolManager.instance.GetBulletFromPool(_index);
 			var shellClone = PoolManager.instance.GetShellFromPool(_index);
 			PoolManager.instance.StartCoroutine(PoolManager.instance.CheckShellEnd(shellClone, _index));
 
@@ -110,12 +157,6 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
 			tf_clone.localRotation = Quaternion.LookRotation(playerARInfo[_index].vt_bulletPattern[playerARInfo[_index].bulletPatternIndex]);
 			bulletClone.GetComponent<Rigidbody>().AddForce(playerARInfo[_index].vt_bulletPattern[playerARInfo[_index].bulletPatternIndex] * weaponManager.weaponInfoAR.speed, ForceMode.Acceleration);
 			AudioManager.Instance.Play(0);
-
-			if (_index == myIndex)
-			{
-				playerARInfo[_index].curAmmo--;
-				UIManager.instance.SetAmmoStateTxt(playerARInfo[_index].curAmmo);
-			}
 
 			switch (playerARInfo[_index].bulletPatternIndex)
 			{
@@ -142,8 +183,16 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
 					//Debug.Log("중");
 					break;
 			}
+            
+            #if NETWORK
+            if (NetworkManager.instance.GetReloadState(_index) == true)
+            {
+                StartDecreaseReloadGage(_index);
+                yield break;
+            }
+            #endif
 
-			yield return YieldInstructionCache.WaitForSeconds(weaponManager.weaponInfoAR.fireRate);
+            yield return YieldInstructionCache.WaitForSeconds(weaponManager.weaponInfoAR.fireRate);
 		}
 	}
 
@@ -153,9 +202,35 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
             PoolManager.instance.ReturnGunToPool(_obj_bullet, _info_bullet, _index);
     }
 
+    private void StartDecreaseReloadGage(int _index)
+    {
+        EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, _index);
+        if (BridgeClientToServer.instance.isStartReloadGageCor[_index] == false)
+        {
+            UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadGageImg(weaponManager.weaponInfoAR.reloadTime, _index));
+            BridgeClientToServer.instance.isStartReloadGageCor[_index] = true;
+        }
+    }
+
+    public float GetReloadTime(int _index)
+    {
+        return playerARInfo[_index].reloadTime;
+    }
+
+    public string GetWeaponName(int _index)
+    {
+        return playerARInfo[_index].mainWname;
+    }
+
     public void ReloadAmmo(int _index)
     {
-        EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, myIndex);
+        #if NETWORK
+        NetworkManager.instance.SendIngamePacket();
+        #endif
+
+        if (playerARInfo[_index].curAmmo >= weaponManager.weaponInfoAR.maxAmmo) //풀탄창이면 재장전안함
+            return;
+
         AudioManager.Instance.Play(8);
         StartCoroutine(Cor_ReloadAmmo(_index));
     }
@@ -164,32 +239,41 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
     {
         playerARInfo[_index].curAmmo = 0; //어차피 장전중엔 총을못쏘므로 총알을 0으로 만들어줌
 
+        yield return YieldInstructionCache.WaitForSeconds(0.05f);
+        EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, _index);
+
         if (weaponManager.isReloading == false)
         {
-			weaponManager.isReloading = true;
-
-			/// 여기에서 패킷 보내면 됨
+            weaponManager.isReloading = true;
+            #if NETWORK
 			NetworkManager.instance.SendIngamePacket();
+            #endif
 
-			Debug.Log("AR총알없음. 장전중");
-            UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadTimeImg(weaponManager.weaponInfoAR.reloadTime));
+            UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadGageImg(weaponManager.weaponInfoAR.reloadTime, _index));
 
             yield return YieldInstructionCache.WaitForSeconds(weaponManager.weaponInfoAR.reloadTime);
+
             playerARInfo[_index].curAmmo = weaponManager.weaponInfoAR.maxAmmo;
             UIManager.instance.SetAmmoStateTxt(playerARInfo[_index].curAmmo);
             AudioManager.Instance.Play(9);
-            Debug.Log("AR장전완료");
-			weaponManager.isReloading = false;
 
-			// 한번 더 보냄(false돼서)
+            weaponManager.isReloading = false;
+            #if NETWORK
 			NetworkManager.instance.SendIngamePacket();
+            #endif
 
-			//장전 이전상태가 사격중이였을경우 계속 이어서쏨
-			if (PlayersManager.instance.actionState[_index] == _ACTION_STATE.SHOT ||
+            //장전 이전상태가 사격중이였을경우 계속 이어서쏨
+            if (PlayersManager.instance.actionState[_index] == _ACTION_STATE.SHOT ||
                 PlayersManager.instance.actionState[_index] == _ACTION_STATE.CIR_AIM_SHOT)
             {
                 StateManager.instance.Shot(false);
+                #if NETWORK
+                NetworkManager.instance.SendIngamePacket();
+                #endif
                 StateManager.instance.Shot(true);
+                #if NETWORK
+                NetworkManager.instance.SendIngamePacket();
+                #endif
             }
         }
     }

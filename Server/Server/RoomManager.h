@@ -83,6 +83,8 @@ public:
 
 	C_Sector* GetSector() { return sector; }
 	int GetMaxPlayer() { return maxPlayer; }
+
+	TeamInfo& GetTeamInfo(int _teamNum) { return teamInfo[_teamNum]; }
 };
 
 class RoomManager

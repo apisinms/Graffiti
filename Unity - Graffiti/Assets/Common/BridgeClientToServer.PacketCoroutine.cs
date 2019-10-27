@@ -19,9 +19,7 @@ public partial class BridgeClientToServer : MonoBehaviour
     {
         while (true)
         {
-			networkManager.SendIngamePacket();
-
-
+            networkManager.SendIngamePacket();
             yield return YieldInstructionCache.WaitForSeconds(C_Global.packetInterval);
         }
     }
@@ -36,8 +34,7 @@ public partial class BridgeClientToServer : MonoBehaviour
 
     public void StopMoveCoroutine()
     {
-		// 한번 더 보냄
-		networkManager.SendIngamePacket();
-		StopCoroutine(moveCor);
+        SendPacketOnce();
+        StopCoroutine(moveCor);
     }
 }

@@ -16,6 +16,8 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
         public Vector3[,] vt_bulletPattern;
         public int bulletPatternIndex;
         public int curAmmo;
+        public float reloadTime;
+        public string mainWname;
     }
 
     public _PLAYER_SG_INFO[] playerSGInfo { get; set; }
@@ -26,7 +28,7 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
         weaponManager = WeaponManager.instance;
         myIndex = GameManager.instance.myIndex;
 
-        playerSGInfo = new _PLAYER_SG_INFO[C_Global.MAX_PLAYER];
+        playerSGInfo = new _PLAYER_SG_INFO[GameManager.instance.gameInfo.maxPlayer];
 
 #if !NETWORK
         weaponManager.weaponInfoSG.maxAmmo = 2;
@@ -38,13 +40,15 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
 		weaponManager.weaponInfoSG.reloadTime = 2.0f;
 #endif
 
-		for (int i = 0; i < C_Global.MAX_PLAYER; i++)
+		for (int i = 0; i < GameManager.instance.gameInfo.maxPlayer; i++)
         {
             playerSGInfo[i].obj_bulletClone = new GameObject[5];
             playerSGInfo[i].tf_bulletClone = new Transform[5];
             playerSGInfo[i].vt_bulletPattern = new Vector3[2, 5];
             playerSGInfo[i].bulletPatternIndex = 0;
             playerSGInfo[i].curAmmo = weaponManager.weaponInfoSG.maxAmmo;
+            playerSGInfo[i].reloadTime = weaponManager.weaponInfoSG.reloadTime;
+            playerSGInfo[i].mainWname = "SG";
         }
     }
 
@@ -56,27 +60,90 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
         return instance;
     }
 
-	public IEnumerator ActionFire(int _index)
+    public IEnumerator ActionFire()
+    {
+        if (playerSGInfo[myIndex].curAmmo <= 0)
+        {
+            ReloadAmmo(myIndex);
+            yield break;
+        }
+
+        EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, myIndex);
+
+        for (int i = 0; i < 5; i++)
+        {
+            playerSGInfo[myIndex].obj_bulletClone[i] = PoolManager.instance.GetBulletFromPool(myIndex);
+            playerSGInfo[myIndex].tf_bulletClone[i] = playerSGInfo[myIndex].obj_bulletClone[i].transform;
+        }
+
+        var shellClone = PoolManager.instance.GetShellFromPool(myIndex);
+        PoolManager.instance.StartCoroutine(PoolManager.instance.CheckShellEnd(shellClone, myIndex));
+
+        playerSGInfo[myIndex].vt_bulletPattern[0, 0].x = (playerSGInfo[myIndex].tf_bulletClone[0].forward.x - playerSGInfo[myIndex].tf_bulletClone[0].right.x * 0.05f) - (playerSGInfo[myIndex].tf_bulletClone[0].right.x * 0.2f);
+        playerSGInfo[myIndex].vt_bulletPattern[0, 0].z = (playerSGInfo[myIndex].tf_bulletClone[0].forward.z - playerSGInfo[myIndex].tf_bulletClone[0].right.z * 0.05f) - (playerSGInfo[myIndex].tf_bulletClone[0].right.z * 0.2f);
+        playerSGInfo[myIndex].vt_bulletPattern[0, 1].x = (playerSGInfo[myIndex].tf_bulletClone[1].forward.x - playerSGInfo[myIndex].tf_bulletClone[1].right.x * 0.05f) - (playerSGInfo[myIndex].tf_bulletClone[1].right.x * 0.1f);
+        playerSGInfo[myIndex].vt_bulletPattern[0, 1].z = (playerSGInfo[myIndex].tf_bulletClone[1].forward.z - playerSGInfo[myIndex].tf_bulletClone[1].right.z * 0.05f) - (playerSGInfo[myIndex].tf_bulletClone[1].right.z * 0.1f);
+        playerSGInfo[myIndex].vt_bulletPattern[0, 2].x = (playerSGInfo[myIndex].tf_bulletClone[2].forward.x - playerSGInfo[myIndex].tf_bulletClone[2].right.x * 0.05f);
+        playerSGInfo[myIndex].vt_bulletPattern[0, 2].z = (playerSGInfo[myIndex].tf_bulletClone[2].forward.z - playerSGInfo[myIndex].tf_bulletClone[2].right.z * 0.05f);
+        playerSGInfo[myIndex].vt_bulletPattern[0, 3].x = (playerSGInfo[myIndex].tf_bulletClone[3].forward.x - playerSGInfo[myIndex].tf_bulletClone[3].right.x * 0.05f) + (playerSGInfo[myIndex].tf_bulletClone[3].right.x * 0.1f);
+        playerSGInfo[myIndex].vt_bulletPattern[0, 3].z = (playerSGInfo[myIndex].tf_bulletClone[3].forward.z - playerSGInfo[myIndex].tf_bulletClone[3].right.z * 0.05f) + (playerSGInfo[myIndex].tf_bulletClone[3].right.z * 0.1f);
+        playerSGInfo[myIndex].vt_bulletPattern[0, 4].x = (playerSGInfo[myIndex].tf_bulletClone[4].forward.x - playerSGInfo[myIndex].tf_bulletClone[4].right.x * 0.05f) + (playerSGInfo[myIndex].tf_bulletClone[4].right.x * 0.2f);
+        playerSGInfo[myIndex].vt_bulletPattern[0, 4].z = (playerSGInfo[myIndex].tf_bulletClone[4].forward.z - playerSGInfo[myIndex].tf_bulletClone[4].right.z * 0.05f) + (playerSGInfo[myIndex].tf_bulletClone[4].right.z * 0.2f);
+
+        playerSGInfo[myIndex].vt_bulletPattern[1, 0].x = (playerSGInfo[myIndex].tf_bulletClone[0].forward.x + playerSGInfo[myIndex].tf_bulletClone[0].right.x * 0.05f) - (playerSGInfo[myIndex].tf_bulletClone[0].right.x * 0.2f);
+        playerSGInfo[myIndex].vt_bulletPattern[1, 0].z = (playerSGInfo[myIndex].tf_bulletClone[0].forward.z + playerSGInfo[myIndex].tf_bulletClone[0].right.z * 0.05f) - (playerSGInfo[myIndex].tf_bulletClone[0].right.z * 0.2f);
+        playerSGInfo[myIndex].vt_bulletPattern[1, 1].x = (playerSGInfo[myIndex].tf_bulletClone[1].forward.x + playerSGInfo[myIndex].tf_bulletClone[1].right.x * 0.05f) - (playerSGInfo[myIndex].tf_bulletClone[1].right.x * 0.1f);
+        playerSGInfo[myIndex].vt_bulletPattern[1, 1].z = (playerSGInfo[myIndex].tf_bulletClone[1].forward.z + playerSGInfo[myIndex].tf_bulletClone[1].right.z * 0.05f) - (playerSGInfo[myIndex].tf_bulletClone[1].right.z * 0.1f);
+        playerSGInfo[myIndex].vt_bulletPattern[1, 2].x = (playerSGInfo[myIndex].tf_bulletClone[2].forward.x + playerSGInfo[myIndex].tf_bulletClone[2].right.x * 0.05f);
+        playerSGInfo[myIndex].vt_bulletPattern[1, 2].z = (playerSGInfo[myIndex].tf_bulletClone[2].forward.z + playerSGInfo[myIndex].tf_bulletClone[2].right.z * 0.05f);
+        playerSGInfo[myIndex].vt_bulletPattern[1, 3].x = (playerSGInfo[myIndex].tf_bulletClone[3].forward.x + playerSGInfo[myIndex].tf_bulletClone[3].right.x * 0.05f) + (playerSGInfo[myIndex].tf_bulletClone[3].right.x * 0.1f);
+        playerSGInfo[myIndex].vt_bulletPattern[1, 3].z = (playerSGInfo[myIndex].tf_bulletClone[3].forward.z + playerSGInfo[myIndex].tf_bulletClone[3].right.z * 0.05f) + (playerSGInfo[myIndex].tf_bulletClone[3].right.z * 0.1f);
+        playerSGInfo[myIndex].vt_bulletPattern[1, 4].x = (playerSGInfo[myIndex].tf_bulletClone[4].forward.x + playerSGInfo[myIndex].tf_bulletClone[4].right.x * 0.05f) + (playerSGInfo[myIndex].tf_bulletClone[4].right.x * 0.2f);
+        playerSGInfo[myIndex].vt_bulletPattern[1, 4].z = (playerSGInfo[myIndex].tf_bulletClone[4].forward.z + playerSGInfo[myIndex].tf_bulletClone[4].right.z * 0.05f) + (playerSGInfo[myIndex].tf_bulletClone[4].right.z * 0.2f);
+
+        AudioManager.Instance.Play(1);
+        for (int i = 0; i < playerSGInfo[myIndex].obj_bulletClone.Length; i++)
+        {
+            playerSGInfo[myIndex].tf_bulletClone[i].localRotation = Quaternion.LookRotation(playerSGInfo[myIndex].vt_bulletPattern[playerSGInfo[myIndex].bulletPatternIndex, i]);
+            playerSGInfo[myIndex].obj_bulletClone[i].GetComponent<Rigidbody>().AddForce(playerSGInfo[myIndex].vt_bulletPattern[playerSGInfo[myIndex].bulletPatternIndex, i] * weaponManager.weaponInfoSG.speed, ForceMode.Acceleration);
+        }
+        playerSGInfo[myIndex].curAmmo--;
+        UIManager.instance.SetAmmoStateTxt(playerSGInfo[myIndex].curAmmo);
+
+        switch (playerSGInfo[myIndex].bulletPatternIndex)
+        {
+            case 0:
+                playerSGInfo[myIndex].bulletPatternIndex = 1;
+                break;
+            case 1:
+                playerSGInfo[myIndex].bulletPatternIndex = 0;
+                break;
+        }
+
+        if (playerSGInfo[myIndex].curAmmo <= 0)
+        {
+            ReloadAmmo(myIndex);
+            yield break;
+        }
+        yield break;
+    }
+
+    public IEnumerator ActionFire(int _index)
 	{
-		if (_index == myIndex)
-		{
-			if (playerSGInfo[_index].curAmmo <= 0)
-			{
-				ReloadAmmo(_index);
-				yield break;
-			}
-			EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, myIndex);
-		}
+        if (_index == myIndex)
+            yield break;
+        
+        #if NETWORK
+        if (NetworkManager.instance.GetReloadState(_index) == true)
+        {
+            StartDecreaseReloadGage(_index);
+            yield break;
+        }
+        #endif
 
-#if NETWORK
-		if (NetworkManager.instance.GetReloadState(_index) == true)
-		{
-			EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, _index);
-			yield break;
-		}
-#endif
+        EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, _index);
 
-		for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 5; i++)
 		{
 			playerSGInfo[_index].obj_bulletClone[i] = PoolManager.instance.GetBulletFromPool(_index);
 			playerSGInfo[_index].tf_bulletClone[i] = playerSGInfo[_index].obj_bulletClone[i].transform;
@@ -107,47 +174,23 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
 		playerSGInfo[_index].vt_bulletPattern[1, 4].x = (playerSGInfo[_index].tf_bulletClone[4].forward.x + playerSGInfo[_index].tf_bulletClone[4].right.x * 0.05f) + (playerSGInfo[_index].tf_bulletClone[4].right.x * 0.2f);
 		playerSGInfo[_index].vt_bulletPattern[1, 4].z = (playerSGInfo[_index].tf_bulletClone[4].forward.z + playerSGInfo[_index].tf_bulletClone[4].right.z * 0.05f) + (playerSGInfo[_index].tf_bulletClone[4].right.z * 0.2f);
 
-		AudioManager.Instance.Play(1);
+        AudioManager.Instance.Play(1);
 		for (int i = 0; i < playerSGInfo[_index].obj_bulletClone.Length; i++)
 		{
 			playerSGInfo[_index].tf_bulletClone[i].localRotation = Quaternion.LookRotation(playerSGInfo[_index].vt_bulletPattern[playerSGInfo[_index].bulletPatternIndex, i]);
 			playerSGInfo[_index].obj_bulletClone[i].GetComponent<Rigidbody>().AddForce(playerSGInfo[_index].vt_bulletPattern[playerSGInfo[_index].bulletPatternIndex, i] * weaponManager.weaponInfoSG.speed, ForceMode.Acceleration);
 		}
 
-		if (_index == myIndex)
-		{
-			playerSGInfo[_index].curAmmo--;
-			UIManager.instance.SetAmmoStateTxt(playerSGInfo[_index].curAmmo);
-		}
-
-		switch (playerSGInfo[_index].bulletPatternIndex)
-		{
-			case 0:
-				playerSGInfo[_index].bulletPatternIndex = 1;
-				break;
-			case 1:
-				playerSGInfo[_index].bulletPatternIndex = 0;
-				break;
-		}
-
-		if (_index == myIndex)
-		{
-			if (playerSGInfo[_index].curAmmo <= 0)
-			{
-				ReloadAmmo(_index);
-				yield break;
-			}
-		}
-
-#if NETWORK
-		if (NetworkManager.instance.GetReloadState(_index) == true)
-		{
-			EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, _index);
-			yield break;
-		}
-#endif
-
-		yield break;
+        switch (playerSGInfo[_index].bulletPatternIndex)
+        {
+            case 0:
+                playerSGInfo[_index].bulletPatternIndex = 1;
+                break;
+            case 1:
+                playerSGInfo[_index].bulletPatternIndex = 0;
+                break;
+        }
+        yield break;
 	}
 
 	public void CheckFireRange(GameObject _obj_bullet, BulletCollision._BULLET_CLONE_INFO _info_bullet, int _index)
@@ -156,9 +199,34 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
             PoolManager.instance.ReturnGunToPool(_obj_bullet, _info_bullet, _index);
     }
 
+    private void StartDecreaseReloadGage(int _index)
+    {
+        if (BridgeClientToServer.instance.isStartReloadGageCor[_index] == false)
+        {
+            UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadGageImg(weaponManager.weaponInfoSG.reloadTime, _index));
+            BridgeClientToServer.instance.isStartReloadGageCor[_index] = true;
+        }
+    }
+
+    public float GetReloadTime(int _index)
+    {
+        return playerSGInfo[_index].reloadTime;
+    }
+
+    public string GetWeaponName(int _index)
+    {
+        return playerSGInfo[_index].mainWname;
+    }
+
     public void ReloadAmmo(int _index)
     {
-        EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, myIndex);
+        #if NETWORK
+        NetworkManager.instance.SendIngamePacket();
+        #endif
+
+        if (playerSGInfo[_index].curAmmo >= weaponManager.weaponInfoSG.maxAmmo) //풀탄창이면 재장전안함
+            return;
+
         AudioManager.Instance.Play(8);
         StartCoroutine(Cor_ReloadAmmo(_index));
     }
@@ -167,32 +235,38 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
     {
         playerSGInfo[_index].curAmmo = 0; //어차피 장전중엔 총을못쏘므로 총알을 0으로 만들어줌
 
-        if (weaponManager.isReloading == false)
+        if (weaponManager.isReloading == false) //weaponManager.isReloading[_index] == false
         {
-			weaponManager.isReloading = true;
+            weaponManager.isReloading = true;     
+            #if NETWORK
+            NetworkManager.instance.SendIngamePacket();
+            #endif
 
-			/// 여기에서 패킷 보내면 됨
-			NetworkManager.instance.SendIngamePacket();
-
-			Debug.Log("SG총알없음. 장전중");
-            UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadTimeImg(weaponManager.weaponInfoSG.reloadTime));
+            UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadGageImg(weaponManager.weaponInfoSG.reloadTime, _index));
 
             yield return YieldInstructionCache.WaitForSeconds(weaponManager.weaponInfoSG.reloadTime);
+
             playerSGInfo[_index].curAmmo = weaponManager.weaponInfoSG.maxAmmo;
             UIManager.instance.SetAmmoStateTxt(playerSGInfo[_index].curAmmo);
             AudioManager.Instance.Play(9);
-            Debug.Log("SG장전완료");
-			weaponManager.isReloading = false;
 
-			// 한번 더 보냄
-			NetworkManager.instance.SendIngamePacket();
+            weaponManager.isReloading = false;
+            #if NETWORK
+            NetworkManager.instance.SendIngamePacket();
+            #endif
 
-			//장전 이전상태가 사격중이였을경우 계속 이어서쏨
-			if (PlayersManager.instance.actionState[_index] == _ACTION_STATE.SHOT ||
+            //장전 이전상태가 사격중이였을경우 계속 이어서쏨
+            if (PlayersManager.instance.actionState[_index] == _ACTION_STATE.SHOT ||
                 PlayersManager.instance.actionState[_index] == _ACTION_STATE.CIR_AIM_SHOT)
             {
                 StateManager.instance.Shot(false);
+                #if NETWORK
+                NetworkManager.instance.SendIngamePacket();
+                #endif
                 StateManager.instance.Shot(true);
+                #if NETWORK
+                NetworkManager.instance.SendIngamePacket();
+                #endif
             }
         }
     }

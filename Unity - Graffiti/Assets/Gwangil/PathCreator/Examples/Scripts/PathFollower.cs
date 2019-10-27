@@ -67,9 +67,9 @@ namespace PathCreation.Examples
 						NetworkManager.instance.ImHitByCar(force);   // 차에 치였다고 프로토콜 서버로 보낸다.
 #endif
 						StateManager.instance.Death(true);  // 내가 죽은상태로 전환.
-						int absoluteIdx = UIManager.instance.PlayerIndexToAbsoluteIndex(playerNum - 1);
+                        int absoluteIdx = UIManager.instance.PlayerIndexToAbsoluteIndex(playerNum - 1);
 						UIManager.instance.HealthUIChanger(absoluteIdx, 0.0f);  // 차에 치이면 즉사
-						UIManager.instance.SetDeadUI();     // 죽은 UI로 전환
+                        UIManager.instance.SetDeadUI("당신이(가) 차에 치었습니다!");     // 죽은 UI로 전환
 						bl_MiniMap.Instance.DoHitEffect();
 					}
 				}

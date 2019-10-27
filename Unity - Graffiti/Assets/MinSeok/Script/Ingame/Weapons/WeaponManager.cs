@@ -22,9 +22,12 @@ public enum _WEAPONS : sbyte
 public interface IMainWeaponType
 {
 	IEnumerator ActionFire(int _index);
-	void CheckFireRange(GameObject _obj_bullet, BulletCollision._BULLET_CLONE_INFO _info_bullet, int _index);
+    IEnumerator ActionFire();
+    void CheckFireRange(GameObject _obj_bullet, BulletCollision._BULLET_CLONE_INFO _info_bullet, int _index);
 	void ReloadAmmo(int _index);
 	void ApplyDamage(int _type, int _index);
+    float GetReloadTime(int _index);
+    string GetWeaponName(int _index);
 }
 
 public class WeaponManager : MonoBehaviour, IMainWeaponType
@@ -115,12 +118,12 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
     public WeaponInfo weaponInfoAR;      // AR 정보(공용)
     public WeaponInfo weaponInfoSG;      // SG 정보(공용)
     public WeaponInfo weaponInfoSMG;	// SMG 정보(공용)
-	#endregion
+    //public bool[] isReloading = new bool[C_Global.MAX_PLAYER];
+    public bool isReloading;
+    #endregion
 
-	// 누가, 몇 발의 총알을 맞았는지 담을 구조체. (로컬 플레이어만 쓴다)
-	private NetworkManager.BulletCollisionChecker colChecker = new NetworkManager.BulletCollisionChecker();
-
-	public bool isReloading = false;
+    // 누가, 몇 발의 총알을 맞았는지 담을 구조체. (로컬 플레이어만 쓴다)
+    private NetworkManager.BulletCollisionChecker colChecker = new NetworkManager.BulletCollisionChecker();
 
 	void Awake()
     {
@@ -128,13 +131,17 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
             instance = this;
 
         myIndex = GameManager.instance.myIndex;
-        mainWeaponType = new IMainWeaponType[C_Global.MAX_PLAYER];
+        mainWeaponType = new IMainWeaponType[GameManager.instance.gameInfo.maxPlayer];
 
         weaponsTag[0] = "Ar"; weaponsTag[1] = "Sg"; weaponsTag[2] = "Smg";
         
         cn_mainWeaponList = obj_mainWeaponList.GetComponents<Component>();
-    
-        Initialization(C_Global.MAX_PLAYER);      
+
+#if NETWORK
+        Initialization(GameManager.instance.gameInfo.maxPlayer);      
+#else
+        Initialization(C_Global.MAX_CHARACTER);
+#endif
     }
 
     void Start()
@@ -206,6 +213,11 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
     }
     */
 
+    public IEnumerator ActionFire()
+    {
+        yield return mainWeaponType[myIndex].ActionFire();
+    }
+
     public IEnumerator ActionFire(int _index) //선택된 총의 파이어액션
     {
         yield return mainWeaponType[_index].ActionFire(_index);
@@ -221,7 +233,17 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
 		mainWeaponType[_index].ReloadAmmo(_index);
 	}
 
-	public void ApplyDamage(int _type, int _index) //해당 총별로 총에 맞았을때 데미지를 실질적으로 깎음.
+    public float GetReloadTime(int _index)
+    {
+        return mainWeaponType[_index].GetReloadTime(_index);
+    }
+
+    public string GetWeaponName(int _index)
+    {
+        return mainWeaponType[_index].GetWeaponName(_index);
+    }
+
+    public void ApplyDamage(int _type, int _index) //해당 총별로 총에 맞았을때 데미지를 실질적으로 깎음.
     {
         mainWeaponType[_index].ApplyDamage(_type, _index);
     }
@@ -322,7 +344,7 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
     // player의 HitCountBit(맞은 횟수 비트)를 증가한다.
     public void IncPlayerHitCountBit(int _hitPlayerNum)
     {
-        int Shifter = 8 * (C_Global.MAX_PLAYER - _hitPlayerNum);    // 이동 연산에 필요한 값
+        int Shifter = 8 * (C_Global.MAX_CHARACTER - _hitPlayerNum);    // 이동 연산에 필요한 값
 
         byte bitEraseMask = 0x00;   // 8비트 지우기 마스크(00000000)
 

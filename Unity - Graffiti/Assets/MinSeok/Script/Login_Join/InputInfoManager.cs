@@ -3,25 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-
+using TMPro;
 
 public class InputInfoManager : UnityEngine.MonoBehaviour
 {
 	public GameObject panel_login, panel_join; //로그인창, 회원가입창
 
 	//로그인, 회원가입 입력필드
-	public InputField inputField_login_id, inputField_login_pw,
-		inputField_join_id, inputField_join_nick, inputField_join_pw;
+	public TMP_InputField inputField_login_id, 
+        inputField_login_pw,
+		inputField_join_id, 
+        inputField_join_nick, 
+        inputField_join_pw;
 
-	public Button btn_login_enter, btn_join_enter; //확인버튼들]
-	public Text txt_login_result, txt_join_result; //로그인, 가입 오류시 문자출력
+	public Button btn_login_enter, btn_join_enter, btn_GuestLogin; //확인버튼들]
+	public TMP_Text txt_login_result, txt_join_result; //로그인, 가입 오류시 문자출력
 
 	private NetworkManager networkManager;
 
 	void Start()
 	{
 		networkManager = NetworkManager.instance;
-		inputField_login_id.Select(); //맨처음 로그인아이디 입력창 자동선택
 	}
 
 	void Update()
@@ -42,21 +44,22 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
 			}
 		}
 
+        if (inputField_join_nick.isFocused == true)
+        {
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                inputField_join_id.Select();
+            }
+        }
 
-		if (inputField_join_id.isFocused == true)
-		{
-			if (Input.GetKeyDown(KeyCode.Tab))
-			{
-				inputField_join_nick.Select();
-			}
-		}
-		if (inputField_join_nick.isFocused == true)
+        if (inputField_join_id.isFocused == true)
 		{
 			if (Input.GetKeyDown(KeyCode.Tab))
 			{
 				inputField_join_pw.Select();
 			}
 		}
+
 		if (inputField_join_pw.isFocused == true)
 		{
 			if (Input.GetKeyDown(KeyCode.Tab))
@@ -68,27 +71,66 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
 
 	public void EnablePanel(int _type) //로그인창이냐 회원가입창이냐.
 	{
-		txt_login_result.text = null;
-		txt_join_result.text = null;
 
 		switch (_type)
 		{
-			case 1: //1은 로그인창에서 회원가입누를때 가입창으로.     
-				inputField_login_id.text = null;
-				inputField_login_pw.text = null;
-				panel_login.SetActive(false);
-				panel_join.SetActive(true);
-				inputField_join_id.Select();
+			case 1: //가입창 클릭
+                if(panel_join.gameObject.activeSelf == true) // 가입창이 이미 켜져있다면
+                {
+                    panel_join.SetActive(false);
+
+                    // 게스트 로그인 버튼 켜주기 
+                    btn_GuestLogin.gameObject.SetActive(true);
+
+                }
+                else if(panel_login.gameObject.activeSelf == true) // 로그인 창이 켜져있다면
+                {
+                    panel_login.SetActive(false);
+                    panel_join.SetActive(true);
+                    inputField_join_nick.text = "";
+                    inputField_join_id.text = "";
+                    inputField_join_pw.text = "";
+                    txt_join_result.text = "";
+                    btn_GuestLogin.gameObject.SetActive(false);
+                }
+                else
+                {
+                    inputField_join_nick.text = "";
+                    inputField_join_id.text = "";
+                    inputField_join_pw.text = "";
+                    txt_join_result.text = "";
+                    panel_join.SetActive(true);
+                    btn_GuestLogin.gameObject.SetActive(false);
+                }
 				break;
-			case 2: //2는 회원가입창에서 닫기버튼 누르면 다시 로그인창으로
-				inputField_join_id.text = null;
-				inputField_join_nick.text = null;
-				inputField_join_pw.text = null;
-				panel_join.SetActive(false);
-				panel_login.SetActive(true);
-				inputField_login_id.Select();
-				break;
-		}
+            case 2: //로그인 창 클릭
+                if (panel_login.gameObject.activeSelf == true) // 로그인 창이 이미 켜져있다면
+                {
+                    panel_login.SetActive(false);
+
+                    // 게스트 로그인 버튼 켜주기 
+                    btn_GuestLogin.gameObject.SetActive(true);
+                }
+                else if (panel_join.gameObject.activeSelf == true) // 가입창이 켜져있다면
+                {
+                    panel_join.SetActive(false);
+                    panel_login.SetActive(true);
+                    inputField_login_id.text = "";
+                    inputField_login_pw.text = "";
+                    txt_login_result.text = "";
+                    btn_GuestLogin.gameObject.SetActive(false);
+
+                }
+                else
+                {
+                    inputField_login_id.text = "";
+                    inputField_login_pw.text = "";
+                    txt_login_result.text = "";
+                    panel_login.SetActive(true);
+                    btn_GuestLogin.gameObject.SetActive(false);
+                }
+                break;
+        }
 	}
 
 	public void BtnEnterLogin() //로그인 정보 입력후 확인버튼
@@ -100,8 +142,8 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
 			return;
 		}
 
-		Debug.Log("입력한 로그인 ID: " + inputField_login_id.text);
-		Debug.Log("입력한 로그인 PW: " + inputField_login_pw.text);
+		//Debug.Log("입력한 로그인 ID: " + inputField_login_id.text);
+		//Debug.Log("입력한 로그인 PW: " + inputField_login_pw.text);
 
 		networkManager.SysMsg = string.Empty;
 
@@ -112,8 +154,6 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
 
 		btn_login_enter.interactable = false;	// 버튼 비활성
 		StartCoroutine(LoginCheck());	// 로그인 검사 코루틴 시작
-
-		inputField_login_id.Select();
 	}
 
 	private IEnumerator LoginCheck()
@@ -131,22 +171,22 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
 				//로그인정보가 틀렸다면 아래작성
 				if (networkManager.CheckLogin_IDError() == true)
 				{
-					inputField_login_id.text = null;
-					inputField_login_pw.text = null;
+					inputField_login_id.text = "";
+					inputField_login_pw.text = "";
 					txt_login_result.text = retMsg;
 				}
 
 				else if (networkManager.CheckLogin_PWError() == true)
 				{
-					inputField_login_id.text = null;
-					inputField_login_pw.text = null;
+					inputField_login_id.text = "";
+					inputField_login_pw.text = "";
 					txt_login_result.text = retMsg;
 				}
 
 				else if (networkManager.CheckLogin_IDExist() == true)
 				{
-					inputField_login_id.text = null;
-					inputField_login_pw.text = null;
+					inputField_login_id.text = "";
+					inputField_login_pw.text = "";
 					txt_login_result.text = retMsg;
 				}
 
@@ -169,9 +209,9 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
 			return;
 		}
 
-		Debug.Log("입력한 회원가입 ID: " + inputField_join_id.text);
-		Debug.Log("입력한 회원가입 PW: " + inputField_join_pw.text);
-		Debug.Log("입력한 회원가입 NICKNAME: " + inputField_join_nick.text);
+		//Debug.Log("입력한 회원가입 ID: " + inputField_join_id.text);
+		//Debug.Log("입력한 회원가입 PW: " + inputField_join_pw.text);
+		//Debug.Log("입력한 회원가입 NICKNAME: " + inputField_join_nick.text);
 
 		networkManager.SysMsg = string.Empty;
 
@@ -196,23 +236,26 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
 			else
 			{
 				string retMsg = networkManager.SysMsg;
-				Debug.Log("회원가입 결과 : " + retMsg);
+				//Debug.Log("회원가입 결과 : " + retMsg);
 
 				// 회원가입 정보가 틀렸다면 아래작성
 				if (networkManager.CheckJoin_IDExist() == true)
 				{
-					inputField_join_id.text = null;
-					inputField_join_pw.text = null;
-					txt_join_result.text = retMsg;
+                    inputField_join_nick.text = "";
+                    inputField_join_id.text = "";
+                    inputField_join_pw.text = "";
+                    txt_join_result.text = retMsg;
 					inputField_join_id.Select();
 				}
 
 				//회원가입에 성공하면 아래작성
 				else if (networkManager.CheckJoin_Success() == true)
 				{
-					EnablePanel(2);
-					txt_login_result.text = retMsg;
-					inputField_login_id.Select();
+                    //EnablePanel(1);
+                    inputField_join_nick.text = "";
+                    inputField_join_id.text = "";
+                    inputField_join_pw.text = "";
+                    txt_join_result.text = retMsg;
 				}
 
 				btn_join_enter.interactable = true; // 버튼 원복

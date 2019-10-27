@@ -36,7 +36,7 @@ public partial class PlayersManager : MonoBehaviour
             direction[_index].z = tmpRot.x;
 
             tf_players[_index].localRotation = Quaternion.Lerp(tf_players[_index].localRotation,
-            Quaternion.LookRotation(direction[_index]), Time.smoothDeltaTime * (C_Global.interpolation_Rot * 2));   // 2배로 러프
+            Quaternion.LookRotation(direction[_index]), Time.smoothDeltaTime * (C_Global.interpolation_LeftRot * 2));   // 2배로 러프
         }
 
         else
@@ -72,7 +72,7 @@ public partial class PlayersManager : MonoBehaviour
 
         // lerp보간작업
         tf_players[_index].localRotation = Quaternion.Lerp(tf_players[_index].localRotation,
-        Quaternion.LookRotation(direction[_index]), Time.smoothDeltaTime * C_Global.interpolation_Rot);
+        Quaternion.LookRotation(direction[_index]), Time.smoothDeltaTime * C_Global.interpolation_LeftRot);
     }
 
     public void Action_AimingNormal(int _index, Vector3 _pos, float _roty) //제자리 조준
@@ -94,7 +94,7 @@ public partial class PlayersManager : MonoBehaviour
         // lerp보간작업
 
         tf_players[_index].localRotation = Quaternion.Lerp(tf_players[_index].localRotation,
-        Quaternion.LookRotation(direction2[_index]), Time.smoothDeltaTime * C_Global.interpolation_Rot);
+        Quaternion.LookRotation(direction2[_index]), Time.smoothDeltaTime * C_Global.interpolation_RightRot);
 
         Anime_Aiming_Idle(_index);
     }
@@ -158,7 +158,7 @@ public partial class PlayersManager : MonoBehaviour
 
 
         tf_players[_index].localRotation = Quaternion.Lerp(tf_players[_index].localRotation,
-        Quaternion.LookRotation(direction2[_index]), Time.smoothDeltaTime * C_Global.interpolation_Rot);
+        Quaternion.LookRotation(direction2[_index]), Time.smoothDeltaTime * C_Global.interpolation_RightRot);
 
     }
 }

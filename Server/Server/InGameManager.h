@@ -7,7 +7,7 @@ class C_ClientInfo;
 class InGameManager : public C_SyncCS< InGameManager>
 {
 #ifdef DEBUG
-	static const int WEAPON_SELTIME = 1 + 1;	// 무기 선택 시간(초 단위)
+	static const int WEAPON_SELTIME = 3 + 1;	// 무기 선택 시간(초 단위)
 	int numOfPacketSent             = 0;		// 패킷 보낸 횟수
 #else
 	static const int WEAPON_SELTIME = 30 + 1;	// 무기 선택 시간(초 단위)
@@ -51,6 +51,7 @@ class InGameManager : public C_SyncCS< InGameManager>
 		RESPAWN				    = ((__int64)0x1 << 25),		// 리스폰 요청 수신 및 리스폰 프로토콜 전송
 		CAR_SPAWN			    = ((__int64)0x1 << 24),		// 자동차 스폰 
 		CAR_HIT					= ((__int64)0x1 << 23),		// 자동차에 치임
+		KILL					= ((__int64)0x1 << 22),		// 플레이어한테 죽음
 
 		NODATA = ((__int64)0x1 << 10)
 	};
@@ -69,6 +70,7 @@ public:
 private:
 	void PackPacket(char* _setptr, const int _num, int& _size);
 	void PackPacket(char* _setptr, int _num, TCHAR* _string, int& _size);
+	void PackPacket(char* _setptr, int _num1, int _num2, int& _size);
 	void PackPacket(char* _setptr, int _num, float _posX, float _posZ, int& _size);
 	void PackPacket(char* _setptr, int _num, Weapon* _struct, int& _size);
 	void PackPacket(char* _setptr, IngamePacket& _struct, int& _size);
@@ -104,10 +106,15 @@ private:
 	int GetNumOfBullet(int& _shootCountBit, byte _hitPlayerNum);
 	bool BulletHitProcess(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer, int _numOfBullet);
 	void BulletDecrease(C_ClientInfo* _shotPlayer, int _numOfBullet);
+	bool CheckBulletHitAndGetHitPlayers(C_ClientInfo* _ptr, IngamePacket& _recvPacket, vector<C_ClientInfo*>& _hitPlayers);
+	void BulletHitSend(C_ClientInfo* _shotPlayer, const vector<C_ClientInfo*>& _hitPlayers);
 
 	void RefillBulletAndHealth(C_ClientInfo* _respawnPlayer);
 	void RefillBullet(C_ClientInfo* _player);
 	void RefillHealth(C_ClientInfo* _player);
+
+	void Kill(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer);
+	void Respawn(C_ClientInfo* _player);
 public:
 	bool CanISelectWeapon(C_ClientInfo* _ptr);	// 무기 선택
 	bool LoadingSuccess(C_ClientInfo* _ptr);	// 로딩 성공 처리
@@ -123,4 +130,7 @@ public:
 	static DWORD WINAPI CarSpawnerThread(LPVOID _arg);
 
 	static void RespawnWaitAndRevive(C_ClientInfo* _player);
+
+public:
+	GameInfo* GetGameInfo(int _gameType) { return gameInfo[_gameType]; }
 };

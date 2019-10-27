@@ -61,24 +61,111 @@ public class bl_MiniMapItem : MonoBehaviour {
     }
     void SetPlayerItem()
     {
-        if (GameManager.instance.myIndex == 1 || GameManager.instance.myIndex == 3)
-            team = GameManager.instance.myIndex - 1;
-        else
-            team = GameManager.instance.myIndex + 1;
+		switch(GameManager.instance.gameInfo.gameType)
+		{
+			case (int)C_Global.GameType._2vs2:
+				{
+					switch(GameManager.instance.gameInfo.maxPlayer)
+					{
+						case 2:
+							{
+								switch (GameManager.instance.myIndex)
+								{
+									case 0:
+										team = 1;
+										break;
+									case 1:
+										team = 0;
+										break;
+								}
+								enemy1 = -1;
+								enemy2 = -1;
+							}
+							break;
 
-        switch (GameManager.instance.myIndex)
-        {
-            case 0:
-            case 1:
-                enemy1 = 2;
-                enemy2 = 3;
-                break;
-            case 2:
-            case 3:
-                enemy1 = 0;
-                enemy2 = 1;
-                break;
-        }
+						case 3:
+							{
+								switch (GameManager.instance.myIndex)
+								{
+									case 0:
+										team = 1;
+										enemy1 = 2;
+										enemy2 = -1;
+										break;
+									case 1:
+										team = 0;
+										enemy1 = 2;
+										enemy2 = -1;
+										break;
+
+									case 2:
+										team = 0;	// 이 상황은 어쩔 수가 없음 팀이 없잖아
+										enemy1 = 0;
+										enemy2 = 1;
+										break;
+								}
+							}
+							break;
+
+						case 4:
+							{
+								switch (GameManager.instance.myIndex)
+								{
+									case 0:
+										team = 1;
+										enemy1 = 2;
+										enemy2 = 3;
+										break;
+									case 1:
+										team = 0;
+										enemy1 = 2;
+										enemy2 = 3;
+										break;
+
+									case 2:
+										team = 3;
+										enemy1 = 0;
+										enemy2 = 1;
+										break;
+
+									case 3:
+										team = 2;
+										enemy1 = 0;
+										enemy2 = 1;
+										break;
+								}
+							}
+							break;
+					}
+				}
+				break;
+
+			case (int)C_Global.GameType._1vs1:
+				{
+					switch(GameManager.instance.gameInfo.maxPlayer)
+					{
+						case 2:
+							{
+								switch (GameManager.instance.myIndex)
+								{
+									case 0:
+										enemy1 = 1;
+										enemy2 = -1;
+										break;
+
+									case 1:
+										enemy1 = 0;
+										enemy2 = -1;
+										break;
+								}
+							}
+							break;
+					}
+
+					team = -1;
+				}
+				break;
+		}
     }
     /// <summary>
     /// 
@@ -97,15 +184,18 @@ public class bl_MiniMapItem : MonoBehaviour {
         if (Target == null)
         {
             switch (gameObject.name)
-            {
-                case "TeamItem":
-                    Target = PlayersManager.instance.obj_players[team].transform;
-                    break;
-                case "EnemyItem1":
-                    Target = PlayersManager.instance.obj_players[enemy1].transform;
-                    break;
-                case "EnemyItem2":
-                    Target = PlayersManager.instance.obj_players[enemy2].transform;
+			{
+				case "TeamItem":
+					if (team != -1)
+						Target = PlayersManager.instance.obj_players[team].transform;
+					break;
+				case "EnemyItem1":
+					if (enemy1 != -1)
+						Target = PlayersManager.instance.obj_players[enemy1].transform;
+					break;
+				case "EnemyItem2":
+					if (enemy2 != -1)
+						Target = PlayersManager.instance.obj_players[enemy2].transform;
                     break;
             }
 

@@ -206,6 +206,7 @@ C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\Boo.Lang.Pa
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\Boo.Lang.Parser.dll
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\Boo.Lang.Useful.dll
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\Unity.CecilTools.dll
+C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\PathCreator.pdb
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEngine.xml
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEditor.xml
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEngine.AIModule.xml

@@ -26,6 +26,7 @@ RoomInfo::RoomInfo(int _gameType, const list<C_ClientInfo*>& _playerList, int _n
 			for (auto iter = _playerList.begin(); iter != _playerList.end(); ++iter)
 			{
 				teamInfo[teamIdx].teamMemberList.emplace_back(*iter);
+				((C_ClientInfo*)(*iter))->GetPlayerInfo()->SetTeamNum(teamIdx);
 
 				if ((++i) % 2 == 0)
 					teamIdx++;
@@ -39,9 +40,10 @@ RoomInfo::RoomInfo(int _gameType, const list<C_ClientInfo*>& _playerList, int _n
 
 			// 각 팀에 1명씩 저장
 			int i = 0;
-			for (auto iter = _playerList.begin(); iter != _playerList.end(); ++iter)
+			for (auto iter = _playerList.begin(); iter != _playerList.end(); ++iter, i++)
 			{
-				teamInfo[i++].teamMemberList.emplace_back(*iter);
+				teamInfo[i].teamMemberList.emplace_back(*iter);
+				((C_ClientInfo*)(*iter))->GetPlayerInfo()->SetTeamNum(i);
 			}
 		}
 		break;

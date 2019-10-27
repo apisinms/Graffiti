@@ -76,6 +76,22 @@ void InGameManager::PackPacket(char* _setptr, int _num, TCHAR* _string, int& _si
 	_size = _size + strsize;
 }
 
+void InGameManager::PackPacket(char* _setptr, int _num1, int _num2, int& _size)
+{
+	char* ptr = _setptr;
+	_size = 0;
+
+	// 플레이어 넘버1
+	memcpy(ptr, &_num1, sizeof(_num1));
+	ptr = ptr + sizeof(_num1);
+	_size = _size + sizeof(_num1);
+
+	// 플레이어 넘버2
+	memcpy(ptr, &_num2, sizeof(_num2));
+	ptr = ptr + sizeof(_num2);
+	_size = _size + sizeof(_num2);
+}
+
 void InGameManager::PackPacket(char* _setptr, int _num, float _posX, float _posZ, int& _size)
 {
 	char* ptr = _setptr;
@@ -495,8 +511,9 @@ bool InGameManager::HitAndRunProcess(C_ClientInfo* _ptr, char* _buf)
 	float posX, posZ;
 	UnPackPacket(_buf, posX, posZ);
 
-	//_ptr->GetPlayerInfo()->GetIngamePacket()->health = 0.0f;	// 죽어서 피 0
-
+	// 이 플레이어 죽은 횟수 1증가
+	_ptr->GetPlayerInfo()->GetScore().numOfDeath++;
+	
 	// 섹터에 있는 플레이어들에게 내가 차에 치여 죽었다는 정보(힘과함께)를 보내준다
 	list<C_ClientInfo*> sendList = _ptr->GetRoom()->GetSector()->GetSectorPlayerList(_ptr->GetPlayerInfo()->GetIndex());
 	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::UPDATE_PROTOCOL, RESULT_INGAME::CAR_HIT);
@@ -506,10 +523,7 @@ bool InGameManager::HitAndRunProcess(C_ClientInfo* _ptr, char* _buf)
 	// 차에 치이면 이따가 리스폰 시켜줘야됨
 	if (_ptr->GetPlayerInfo()->IsRespawning() == false)
 	{
-		std::thread respawnThread(RespawnWaitAndRevive, _ptr);		// 1회용 리스폰 쓰레드 생성
-		respawnThread.detach();		// 이 쓰레드에서 손 뗌 넌 자유
-
-		_ptr->GetPlayerInfo()->RespawnOn();	// 리스폰 시작
+		Respawn(_ptr);
 	}
 
 	return true;
@@ -739,104 +753,16 @@ bool InGameManager::CheckBullet(C_ClientInfo* _ptr, IngamePacket& _recvPacket)
 {
 	IC_CS cs;
 
-	PROTOCOL_INGAME protocol;
-	char buf[BUFSIZE] = { 0, };
-	int packetSize = 0;
-
-	bool validHitFlag = false;	// 정상적으로 맞았는지 맞았으면 true임
-
 	vector<C_ClientInfo*> hitPlayers;	// _ptr의 총에 맞은놈들 리스트
 
-	// 누구라도 쐈다면 플레이어 비트가 셋팅되어있으므로
-	if (_recvPacket.collisionCheck.playerBit != 0)
-	{
-		// 1. 우선 최대 발 수 이내로 쐈는지 검사한다.
-		int totalNumOfBullet = GetNumOfBullet(_recvPacket.collisionCheck.playerHitCountBit, 0);
-		if (CheckMaxFire(_ptr, totalNumOfBullet) == false)
-		{
-			return false;
-		}
-		else
-		{
-			BulletDecrease(_ptr, totalNumOfBullet);	// 쏜 만큼 총알 뺌
-		}
-
-		// 2. 맞은 플레이어들이 사정거리에 있는지 검사한다.
-		byte bitMask = (byte)PLAYER_BIT::PLAYER_1;
-		for (int i = 0; i < _ptr->GetRoom()->GetMaxPlayer(); i++, bitMask >>= 1)
-		{
-			// 본인은 검사 안함
-			if (i == (_ptr->GetPlayerInfo()->GetPlayerNum() - 1))
-				continue;
-
-			// 플레이어 비트가 활성화 되어 있으면
-			if ((bitMask & _recvPacket.collisionCheck.playerBit) > 0)
-			{
-				// 총알을 맞은 이 플레이어가 유효한 숫자의 총알을 맞았는지 다시 검사한다.
-				int numOfBullet = GetNumOfBullet(_recvPacket.collisionCheck.playerHitCountBit, (i + 1));
-				if (CheckMaxFire(_ptr, numOfBullet) == false)	// 유효하지 않으면 그냥 건너 뛴다.
-				{
-					continue;
-				}
-
-				// 유효한 발 수라면 사정거리 검사 -> 총알 개수 감소 -> 실제 데미지 적용 순으로 간다.
-				C_ClientInfo* hitPlayer = _ptr->GetRoom()->GetPlayerByIndex(i);
-				
-				// 사정거리 검사해서 거리이내라면 데미지를 입힌다.
-				if (CheckBulletRange(_ptr, hitPlayer) == true)
-				{
-					// 이전 피가 이미 0이라면 검사없이 그냥 넘어간다.
-					if (BulletHitProcess(_ptr, hitPlayer, numOfBullet) == false)
-					{
-						continue;
-					}
-
-					
-					//_tprintf(TEXT("%s피:%f\n"), hitPlayer->GetUserInfo()->nickname, hitPlayer->GetPlayerInfo()->GetIngamePacket()->health);
-
-					hitPlayers.emplace_back(hitPlayer);	// 맞은놈 리스트에 추가
-
-					validHitFlag = true;	// 정상적으로 맞은 플래그 활성화
-				}
-			}
-		}
-	}
-	
-	// 쏜거 아니면 걍 빠져나감
-	else
-	{
-		return false;
-	}
-
+	// 정상적으로 맞았는지 맞았으면 true임
+	 bool validHitFlag = CheckBulletHitAndGetHitPlayers(_ptr, _recvPacket, hitPlayers);
 
 	// 맞은놈들의 상태를 다른 클라들에게 전송함
-	if (hitPlayers.size() != 0)
+	if (validHitFlag == true)
 	{
-		IngamePacket packet;
-		list<C_ClientInfo*>sendList;
-		for (int i = 0; i < hitPlayers.size(); i++)
-		{
-			// 맞은놈의 인접섹터에 있는 플레이어들의 리스트를 얻음
-			sendList = hitPlayers[i]->GetRoom()->GetSector()->GetSectorPlayerList(hitPlayers[i]->GetPlayerInfo()->GetIndex());
-		
-			// 섹터 내 플레이어들에게 패킷 전송
-			protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::UPDATE_PROTOCOL, RESULT_INGAME::BULLET_HIT);
-			memcpy(&packet, hitPlayers[i]->GetPlayerInfo()->GetIngamePacket(), sizeof(IngamePacket));
-			PackPacket(buf, packet, packetSize);
-			ListSendPacket(sendList, nullptr, protocol, buf, packetSize, true);
-			
-			// 피 0이면 시간 지나면 리스폰 시켜줘야됨
-			if (hitPlayers[i]->GetPlayerInfo()->GetIngamePacket()->health <= 0 
-				&& hitPlayers[i]->GetPlayerInfo()->IsRespawning() == false)
-			{
-				std::thread respawnThread(RespawnWaitAndRevive, hitPlayers[i]);		// 1회용 리스폰 쓰레드 생성
-				respawnThread.detach();		// 이 쓰레드에서 손 뗌 넌 자유
-				
-				hitPlayers[i]->GetPlayerInfo()->RespawnOn();	// 리스폰 시작
-			}
-		}
+		BulletHitSend(_ptr, hitPlayers);
 	}
-
 
 	return validHitFlag;
 }
@@ -959,7 +885,110 @@ void InGameManager::BulletDecrease(C_ClientInfo* _shotPlayer, int _numOfBullet)
 		_shotPlayer->GetPlayerInfo()->SetBullet(originalBullet - minusBullet);
 	}
 }
+bool InGameManager::CheckBulletHitAndGetHitPlayers(C_ClientInfo* _ptr, IngamePacket& _recvPacket, vector<C_ClientInfo*>& _hitPlayers)
+{
+	bool validHitFlag = false;	// 누구라도 맞았는지
 
+	// 누구라도 쐈다면 플레이어 비트가 셋팅되어있으므로
+	if (_recvPacket.collisionCheck.playerBit != 0)
+	{
+		// 1. 우선 최대 발 수 이내로 쐈는지 검사한다.
+		int totalNumOfBullet = GetNumOfBullet(_recvPacket.collisionCheck.playerHitCountBit, 0);
+		if (CheckMaxFire(_ptr, totalNumOfBullet) == false)
+		{
+			return false;
+		}
+		else
+		{
+			BulletDecrease(_ptr, totalNumOfBullet);	// 쏜 만큼 총알 뺌
+		}
+
+		// 2. 맞은 플레이어들이 사정거리에 있는지 검사한다.
+		byte bitMask = (byte)PLAYER_BIT::PLAYER_1;
+		for (int i = 0; i < _ptr->GetRoom()->GetMaxPlayer(); i++, bitMask >>= 1)
+		{
+			// 본인은 검사 안함
+			if (i == (_ptr->GetPlayerInfo()->GetPlayerNum() - 1))
+				continue;
+
+			// 플레이어 비트가 활성화 되어 있으면
+			if ((bitMask & _recvPacket.collisionCheck.playerBit) > 0)
+			{
+				// 총알을 맞은 이 플레이어가 유효한 숫자의 총알을 맞았는지 다시 검사한다.
+				int numOfBullet = GetNumOfBullet(_recvPacket.collisionCheck.playerHitCountBit, (i + 1));
+				if (CheckMaxFire(_ptr, numOfBullet) == false)	// 유효하지 않으면 그냥 건너 뛴다.
+				{
+					continue;
+				}
+
+				// 유효한 발 수라면 사정거리 검사 -> 총알 개수 감소 -> 실제 데미지 적용 순으로 간다.
+				C_ClientInfo* hitPlayer = _ptr->GetRoom()->GetPlayerByIndex(i);
+
+				// 사정거리 검사해서 거리이내라면 데미지를 입힌다.
+				if (CheckBulletRange(_ptr, hitPlayer) == true)
+				{
+					// 이전 피가 이미 0이라면 검사없이 그냥 넘어간다.
+					if (BulletHitProcess(_ptr, hitPlayer, numOfBullet) == false)
+					{
+						continue;
+					}
+
+					_hitPlayers.emplace_back(hitPlayer);	// 맞은놈 리스트에 추가
+
+					validHitFlag = true;
+				}
+			}
+		}
+	}
+
+	return validHitFlag;	// 결과 리턴
+}
+void InGameManager::BulletHitSend(C_ClientInfo* _shotPlayer, const vector<C_ClientInfo*>& _hitPlayers)
+{
+	IC_CS cs;
+
+	PROTOCOL_INGAME protocol;
+	char buf[BUFSIZE] = { 0, };
+	int packetSize = 0;
+
+	IngamePacket packet;
+	list<C_ClientInfo*>playersInSector;
+	vector<C_ClientInfo*>allPlayersInRoom;
+	for (int i = 0; i < _hitPlayers.size(); i++)
+	{
+		// 맞은놈의 인접섹터에 있는 플레이어들의 리스트를 얻음
+		playersInSector = _hitPlayers[i]->GetRoom()->GetSector()->GetSectorPlayerList(_hitPlayers[i]->GetPlayerInfo()->GetIndex());
+
+		// 섹터 내 플레이어들에게 패킷 전송
+		protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::UPDATE_PROTOCOL, RESULT_INGAME::BULLET_HIT);
+		memcpy(&packet, _hitPlayers[i]->GetPlayerInfo()->GetIngamePacket(), sizeof(IngamePacket));
+		PackPacket(buf, packet, packetSize);
+		ListSendPacket(playersInSector, nullptr, protocol, buf, packetSize, true);
+
+		// 피 0이면 시간 지나면 리스폰 시켜줘야됨
+		if (_hitPlayers[i]->GetPlayerInfo()->GetIngamePacket()->health <= 0
+			&& _hitPlayers[i]->GetPlayerInfo()->IsRespawning() == false)
+		{
+			Kill(_shotPlayer, _hitPlayers[i]);	// 죽였으니 전적, 스코어 처리하고
+			
+			// 방에 있는 플레이어 다 얻어와서
+			allPlayersInRoom = _shotPlayer->GetRoom()->GetPlayers();
+			
+			// 프로토콜 세팅하고
+			protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::UPDATE_PROTOCOL, RESULT_INGAME::KILL);
+			
+			// 쏜놈 번호, 맞은놈 번호 순으로 조립해서 보냄
+			PackPacket(buf, 
+				_shotPlayer->GetPlayerInfo()->GetPlayerNum(), 
+				_hitPlayers[i]->GetPlayerInfo()->GetPlayerNum(),
+				packetSize);
+			ListSendPacket(allPlayersInRoom, nullptr, protocol, buf, packetSize, true);
+
+			// 그리고 이따가 부활시키게 리스폰
+			Respawn(_hitPlayers[i]);
+		}
+	}
+}
 
 /// about property
 void InGameManager::RefillBulletAndHealth(C_ClientInfo* _respawnPlayer)
@@ -976,6 +1005,25 @@ void InGameManager::RefillHealth(C_ClientInfo* _player)
 {
 	float maxHealth = gameInfo[_player->GetRoom()->GetGameType()]->maxHealth;
 	_player->GetPlayerInfo()->GetIngamePacket()->health = maxHealth;
+}
+
+void InGameManager::Kill(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer)
+{
+	_shotPlayer->GetPlayerInfo()->GetScore().numOfKill++;	// 쏜 놈
+	_hitPlayer->GetPlayerInfo()->GetScore().numOfDeath++;	// 죽은 놈
+
+	/// 팀 처리는 나중에 한꺼번에 teamScore = 1p+2p 이런식으로
+
+	// 점수 더함
+	_shotPlayer->GetPlayerInfo()->GetScore().killScore +=
+		gameInfo[_shotPlayer->GetGameType()]->killPoint;
+}
+void InGameManager::Respawn(C_ClientInfo* _player)
+{
+	std::thread respawnThread(RespawnWaitAndRevive, _player);		// 1회용 리스폰 쓰레드 생성
+	respawnThread.detach();											// 이 쓰레드에서 손 뗌 넌 자유
+
+	_player->GetPlayerInfo()->RespawnOn();	// 리스폰 시작
 }
 
 //////// public

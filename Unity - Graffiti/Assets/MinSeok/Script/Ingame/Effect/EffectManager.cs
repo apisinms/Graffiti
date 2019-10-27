@@ -60,10 +60,10 @@ public class EffectManager : MonoBehaviour
 
         myIndex = GameManager.instance.myIndex;
 
-        ps_tmpMuzzle = new _PS_TmpMuzzle[C_Global.MAX_PLAYER];
+        ps_tmpMuzzle = new _PS_TmpMuzzle[GameManager.instance.gameInfo.maxPlayer];
 
 #if !NETWORK
-        InitializeMuzzle2(C_Global.MAX_PLAYER);
+        InitializeMuzzle2(C_Global.MAX_CHARACTER);
 #endif
     }
 
@@ -121,7 +121,7 @@ public class EffectManager : MonoBehaviour
 
     public void InitializeMuzzle2(float _num)
     {
-        for (int i = 0; i < C_Global.MAX_PLAYER; i++)
+        for (int i = 0; i < C_Global.MAX_CHARACTER; i++)
         {
             if (ps_tmpMuzzle[i].body.body != null)
                 Destroy(ps_tmpMuzzle[i].body.body.gameObject);

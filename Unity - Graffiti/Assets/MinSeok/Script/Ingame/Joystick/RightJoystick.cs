@@ -78,7 +78,7 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
                     isStep0 = true;
 
                     #if NETWORK
-                    NetworkManager.instance.SendIngamePacket();
+                    BridgeClientToServer.instance.SendPacketOnce();
                     #endif
                 }
                 isStep1 = false; isStep2 = false;
@@ -94,10 +94,10 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
                     StateManager.instance.Shot(false);
                     isStep1 = true;
 
-#if NETWORK
-					NetworkManager.instance.SendIngamePacket();
-#endif
-				}
+                    #if NETWORK
+                    BridgeClientToServer.instance.SendPacketOnce();
+                    #endif
+                }
                 isStep0 = false; isStep2 = false;
 
                 img_joystick_stick.rectTransform.position = right_joystick.stickFirstPos + (right_joystick.stickDir * right_joystick.maxMoveArea * 0.5f);
@@ -109,10 +109,10 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
                     StateManager.instance.Shot(true);
                     isStep2 = true;
 
-#if NETWORK
-					NetworkManager.instance.SendIngamePacket();
-#endif
-				}
+                    #if NETWORK
+                    BridgeClientToServer.instance.SendPacketOnce();
+                    #endif
+                }
                 isStep0 = false; isStep1 = false;
 
                 img_joystick_stick.rectTransform.position = right_joystick.stickFirstPos + (right_joystick.stickDir * right_joystick.maxMoveArea);
@@ -148,12 +148,12 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
 #endif
     }
 
-	public void ResetDrag()
-	{
-		StateManager.instance.Aim(false);
-		img_joystick_stick.transform.position = right_joystick.stickFirstPos;
-		right_joystick.stickDir = Vector3.zero; // 방향을 0으로.
-		isStep0 = true; isStep1 = false; isStep2 = false;
-	}
+    public void ResetDrag()
+    {
+        StateManager.instance.Aim(false);
+        img_joystick_stick.transform.position = right_joystick.stickFirstPos;
+        right_joystick.stickDir = Vector3.zero; // 방향을 0으로.
+        isStep0 = true; isStep1 = false; isStep2 = false;
+    }
 
 }

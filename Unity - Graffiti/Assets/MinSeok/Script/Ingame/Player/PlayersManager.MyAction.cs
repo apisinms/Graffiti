@@ -37,7 +37,7 @@ public partial class PlayersManager : MonoBehaviour
 
     public IEnumerator Action_Circuit()
     {
-        while(true)
+        while (true)
         {
             Anime_Circuit(myIndex);
             BlockCollisionEachOther();
@@ -46,9 +46,9 @@ public partial class PlayersManager : MonoBehaviour
             tf_players[myIndex].localRotation = Quaternion.LookRotation(direction[myIndex]);
             tf_players[myIndex].Translate(direction[myIndex] * speed[myIndex] * Time.smoothDeltaTime, Space.World);
             yield return null;
+
         }
     }
-
     public IEnumerator Action_Aim()
     {
         while (true)
@@ -72,70 +72,67 @@ public partial class PlayersManager : MonoBehaviour
             {
                 Anime_AimingWithCircuit(myIndex, 1);
             }
-            //우측일때
-            else if ((new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= 30.0f) &&
-                (new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= 150.0f))
-            {
-                Anime_AimingWithCircuit(myIndex, 2);
-            }
-            //아래일때
-            else if ((new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= 150.0f &&
-                new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= 180.0f) ||
-                (new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= -180.0f &&
-                new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= -150.0f))
-            {
-                Anime_AimingWithCircuit(myIndex, 3);
-            }
-            //좌측일때
-            else if ((new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= -150.0f) &&
-                (new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= -30.0f))
-            {
-                Anime_AimingWithCircuit(myIndex, 4);
-            }
+             //우측일때
+             else if ((new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= 30.0f) &&
+                 (new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= 150.0f))
+             {
+                 Anime_AimingWithCircuit(myIndex, 2);
+             }
+             //아래일때
+             else if ((new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= 150.0f &&
+                 new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= 180.0f) ||
+                 (new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= -180.0f &&
+                 new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= -150.0f))
+             {
+                 Anime_AimingWithCircuit(myIndex, 3);
+             }
+             //좌측일때
+             else if ((new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y >= -150.0f) &&
+                 (new Vector3(0, Mathf.Atan2(direction[myIndex].x, direction[myIndex].z) * Mathf.Rad2Deg, 0).y <= -30.0f))
+             {
+                 Anime_AimingWithCircuit(myIndex, 4);
+             }
 
-            BlockCollisionEachOther();
-            UIManager.instance.UpdateAimDirectionImg(true);
+             BlockCollisionEachOther();
+             UIManager.instance.UpdateAimDirectionImg(true);
 
-            //tf_players[myIndex].localRotation = Quaternion.LookRotation(direction2[myIndex]);
-            tf_players[myIndex].localRotation = Quaternion.Lerp(tf_players[myIndex].localRotation, Quaternion.LookRotation(direction2[myIndex]), Time.smoothDeltaTime * 6.0f);
-            tf_players[myIndex].Translate(direction[myIndex] * (speed[myIndex] * 0.35f) * Time.smoothDeltaTime, Space.World);
-            yield return null;
-        }
-    }
+             //tf_players[myIndex].localRotation = Quaternion.LookRotation(direction2[myIndex]);
+             tf_players[myIndex].localRotation = Quaternion.Lerp(tf_players[myIndex].localRotation, Quaternion.LookRotation(direction2[myIndex]), Time.smoothDeltaTime * 6.0f);
+             tf_players[myIndex].Translate(direction[myIndex] * (speed[myIndex] * 0.35f) * Time.smoothDeltaTime, Space.World);
+             yield return null;
+         }
+     }
 
-
-  
-    public void BlockCollisionEachOther()
-    {
-        for (int i = 0; i < C_Global.MAX_PLAYER; i++)
-        {
-            _ACTION_STATE actionState = _ACTION_STATE.IDLE;
+       public void BlockCollisionEachOther()
+       {
+           for (int i = 0; i < GameManager.instance.gameInfo.maxPlayer; i++)
+           {
+               _ACTION_STATE actionState = _ACTION_STATE.IDLE;
 #if NETWORK
             actionState = (_ACTION_STATE)networkManager.GetActionState(i);
 #endif
-            if (myIndex == i || obj_players[i].activeSelf == false || actionState == _ACTION_STATE.DEATH)
-                continue;
+                if (myIndex == i || obj_players[i].activeSelf == false || actionState == _ACTION_STATE.DEATH)
+                    continue;
 
-            if (Vector3.Distance(tf_players[myIndex].position, tf_players[i].position) <= 1.05f) //나랑 다른플레이어 거리로 충돌을 구함.
-            {
-                tf_players[myIndex].localPosition = new Vector3(lastPosX[i], 0, lastPosZ[i]); //else에서 받은 충돌전 마지막 좌표로 플레이어를 고정시킴.
-                break;
-            }
-            else //충돌아니면 내좌표를 계속받음
-            {
-                lastPosX[i] = tf_players[myIndex].localPosition.x;
-                lastPosZ[i] = tf_players[myIndex].localPosition.z;
-            }
+                if (Vector3.Distance(tf_players[myIndex].position, tf_players[i].position) <= 1.05f) //나랑 다른플레이어 거리로 충돌을 구함.
+                {
+                    tf_players[myIndex].localPosition = new Vector3(lastPosX[i], 0, lastPosZ[i]); //else에서 받은 충돌전 마지막 좌표로 플레이어를 고정시킴.
+                    break;
+                }
+                else //충돌아니면 내좌표를 계속받음
+                {
+                    lastPosX[i] = tf_players[myIndex].localPosition.x;
+                    lastPosZ[i] = tf_players[myIndex].localPosition.z;
+                }
 
-            /*
-            if (tf_players[myIndex].localPosition.x <= (tf_players[i].localPosition.x - 0.18f) ||
-                tf_players[myIndex].localPosition.x >= (tf_players[i].localPosition.x + 0.18f) ||
-                tf_players[myIndex].localPosition.z <= (tf_players[i].localPosition.z - 0.18f) ||
-                tf_players[myIndex].localPosition.z >= (tf_players[i].localPosition.z + 0.18f)) */
+                /*
+                if (tf_players[myIndex].localPosition.x <= (tf_players[i].localPosition.x - 0.18f) ||
+                    tf_players[myIndex].localPosition.x >= (tf_players[i].localPosition.x + 0.18f) ||
+                    tf_players[myIndex].localPosition.z <= (tf_players[i].localPosition.z - 0.18f) ||
+                    tf_players[myIndex].localPosition.z >= (tf_players[i].localPosition.z + 0.18f)) */
+            }
         }
     }
-
-}
 
 
 
