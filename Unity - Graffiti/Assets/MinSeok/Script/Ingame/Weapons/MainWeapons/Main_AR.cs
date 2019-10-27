@@ -16,6 +16,7 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
         public int prevBulletPatternIndex;
         public int curAmmo;
         public float reloadTime;
+        public string mainWname;
     }
     public _PLAYER_AR_INFO[] playerARInfo { get; set; }
     #endregion
@@ -26,7 +27,7 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
         weaponManager = WeaponManager.instance;
         myIndex = GameManager.instance.myIndex;
 
-        playerARInfo = new _PLAYER_AR_INFO[C_Global.MAX_PLAYER];
+        playerARInfo = new _PLAYER_AR_INFO[GameManager.instance.gameInfo.maxPlayer];
 
 #if !NETWORK
 		weaponManager.weaponInfoAR.maxAmmo = 20;
@@ -38,13 +39,14 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
 		weaponManager.weaponInfoAR.reloadTime = 3.0f;
 #endif
 
-		for (int i = 0; i < C_Global.MAX_PLAYER; i++)
+		for (int i = 0; i < GameManager.instance.gameInfo.maxPlayer; i++)
         {
             playerARInfo[i].vt_bulletPattern = new Vector3[3];
             playerARInfo[i].bulletPatternIndex = 1;
             playerARInfo[i].prevBulletPatternIndex = 2;
             playerARInfo[i].curAmmo = weaponManager.weaponInfoAR.maxAmmo;
             playerARInfo[i].reloadTime = weaponManager.weaponInfoAR.reloadTime;
+            playerARInfo[i].mainWname = "AR";
         }
     }
 
@@ -213,6 +215,11 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
     public float GetReloadTime(int _index)
     {
         return playerARInfo[_index].reloadTime;
+    }
+
+    public string GetWeaponName(int _index)
+    {
+        return playerARInfo[_index].mainWname;
     }
 
     public void ReloadAmmo(int _index)

@@ -15,9 +15,6 @@ using namespace std;
 #define MSGSIZE				512
 #define WEAPON_NAME_SIZE	32
 
-#define _1vs1_MODE_PLAYER	2	// 1:1 게임 플레이어 수
-#define _2vs2_MODE_PLAYER	2	// 2:2 게임 플레이어 수
-
 #define THREAD_END		-777
 
 #define PROTOCOL_OFFSET	0xFFFFF
@@ -151,6 +148,7 @@ private:
 	float respawnPosZ;			// 리스폰 z좌표
 	bool isRespawning;			// 리스폰 중인지
 	Score score;				// 내 스코어
+	int teamNum;				// 팀 번호
 
 public:
 	PlayerInfo()
@@ -219,6 +217,11 @@ public:
 	bool IsRespawning() { return isRespawning; }
 	void RespawnOn() { isRespawning = true; }
 	void RespawnOff() { isRespawning = false; }
+
+	Score& GetScore() { return score; }
+
+	int GetTeamNum() {return teamNum;}
+	void SetTeamNum(int _teamNum) {teamNum = _teamNum;}
 };
 
 struct WeaponInfo
@@ -239,6 +242,7 @@ struct WeaponInfo
 struct GameInfo
 {
 	int gameType;		// 게임 타입(나중에 모드가 여러 개 생길 수도 있으니)
+	int maxPlayer;		// 최대 플레이어 수
 	float maxSpeed;		// 최대 이동속도
 	float maxHealth;	// 최대 체력
 	int respawnTime;		// 리스폰 시간

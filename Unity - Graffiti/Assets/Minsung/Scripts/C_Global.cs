@@ -7,10 +7,10 @@ using System.Text;
 public class C_Global
 {
     public const int BUFSIZE = 4096;   // 버퍼 사이즈
-    public const int MAX_PLAYER = 4;    // 플레이어 수
-
-    public const float interpolation_LeftRot = 15.0f;
-    public const float interpolation_RightRot = 17.0f;
+    //public const int MAX_PLAYER = 4;    // 플레이어 수
+    public const int MAX_CHARACTER = 4;            // 최대 캐릭터 수
+    public const float interpolation_LeftRot = 12.5f;
+    public const float interpolation_RightRot = 10.0f;
     public const float interpolation_Pos = 0.175f;
     //public const float interpolation_Rot = 40.0f;
     public const float amingSpeed = 0.35f;

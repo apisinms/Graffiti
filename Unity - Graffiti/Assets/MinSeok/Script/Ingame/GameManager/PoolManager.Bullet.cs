@@ -9,14 +9,14 @@ public partial class PoolManager : MonoBehaviour
     public GameObject[] obj_bulletPool;
     public List<GameObject>[] list_bulletPool { get; set; } //총알을 가져오는 풀
     public Transform[] tf_bulletFirstPos { get; set; }
-    public readonly string[] bulletTag = new string[C_Global.MAX_PLAYER];
+    public string[] bulletTag;
     #endregion
 
     #region SHELL_POOL
     public GameObject[] obj_shellPool;
     public List<ParticleSystem>[] list_shellPool { get; set; } //탄피를 가져오는 풀
     public Transform[] tf_shellFirstPos { get; set; }
-    public readonly string[] shellTag = new string[C_Global.MAX_PLAYER];
+    public string[] shellTag;
     #endregion
 
     private void Initialization_Bullet(int _num)
@@ -27,7 +27,12 @@ public partial class PoolManager : MonoBehaviour
         for (int i = 0; i < _num; i++)
             list_bulletPool[i] = new List<GameObject>();
 
-        bulletTag[0] = "Bullet1"; bulletTag[1] = "Bullet2"; bulletTag[2] = "Bullet3"; bulletTag[3] = "Bullet4";
+        bulletTag = new string[GameManager.instance.gameInfo.maxPlayer];
+
+        for (int i = 0; i < GameManager.instance.gameInfo.maxPlayer; i++)
+        {
+            bulletTag[i] = "Bullet" + (i + 1).ToString();
+        }
     }
 
     private void Initialization_Shell(int _num)
@@ -38,7 +43,13 @@ public partial class PoolManager : MonoBehaviour
         for (int i = 0; i < _num; i++)
             list_shellPool[i] = new List<ParticleSystem>();
 
-        shellTag[0] = "Shell1"; shellTag[1] = "Shell2"; shellTag[2] = "Shell3"; shellTag[3] = "Shell4";
+        shellTag = new string[GameManager.instance.gameInfo.maxPlayer];
+
+        for (int i = 0; i < GameManager.instance.gameInfo.maxPlayer; i++)
+        {
+            shellTag[i] = "Shell" + (i + 1).ToString();
+        }
+
     }
 
     public void CreateBulletPool(int _index, int _num)

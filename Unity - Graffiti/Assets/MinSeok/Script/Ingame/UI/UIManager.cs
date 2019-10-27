@@ -97,6 +97,7 @@ public class UIManager : MonoBehaviour
     {
         public GameObject obj_parent;
         public Image img_respawnGage { get; set; }
+        public Text txt_deathFrom { get; set; }
     }
     #endregion
 
@@ -114,11 +115,11 @@ public class UIManager : MonoBehaviour
 
 		myIndex = GameManager.instance.myIndex;
 
-		playersIndex = new int[C_Global.MAX_PLAYER];
-		for (int i = 0; i < C_Global.MAX_PLAYER; i++)
-			playersIndex[i] = GameManager.instance.playersIndex[i];
+        playersIndex = new int[GameManager.instance.gameInfo.maxPlayer];
+        for (int i = 0; i < GameManager.instance.gameInfo.maxPlayer; i++)
+            playersIndex[i] = GameManager.instance.playersIndex[i];
 
-		Initialization_HP();
+        Initialization_HP();
 		Initialization_Nickname();
 		Initialization_Circle();
 		Initialization_Line();
@@ -144,7 +145,7 @@ public class UIManager : MonoBehaviour
 
 	void Update()
 	{
-		for (int i = 0; i < C_Global.MAX_PLAYER; i++)
+		for (int i = 0; i < GameManager.instance.gameInfo.maxPlayer; i++)
 		{
 			nickname[playersIndex[i]].obj_parent.transform.position = PlayersManager.instance.tf_players[playersIndex[i]].transform.position + hpAddPos;
 			hp[playersIndex[i]].obj_parent.transform.position = PlayersManager.instance.tf_players[playersIndex[i]].transform.position + nickAddPos;//Camera.main.WorldToScreenPoint(PlayersManager.instance.tf_players[enemyIndex[i]].transform.position);
@@ -165,31 +166,92 @@ public class UIManager : MonoBehaviour
         */
 	}
 
-	private void Initialization_HP()
+    private void Initialization_HP()
+    {
+        hp = new _IMG_HP_INFO[GameManager.instance.gameInfo.maxPlayer];
+        hpAddPos = new Vector3(0, 2.1f, 1.3f);
+        curHpCor = null;
+
+        for (int i = 0; i < hp.Length; i++)
+        {
+            if (i == playersIndex[0]) // == myIndex
+            {
+                hp[i].obj_parent = Instantiate(obj_prefebsHP[0], GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
+            }
+
+            switch (GameManager.instance.gameInfo.gameType)
+            {
+                case (int)C_Global.GameType._2vs2:
+                    {
+                        switch (GameManager.instance.gameInfo.maxPlayer)
+                        {
+                            case 2:
+                                {
+                                    if (i == playersIndex[1]) // == teamIndex
+                                    {
+                                        hp[i].obj_parent = Instantiate(obj_prefebsHP[1], GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
+                                    }
+
+                                }
+                                break;
+
+                            case 3:
+                                {
+                                    if (i == playersIndex[1]) // == teamIndex
+                                    {
+                                        hp[i].obj_parent = Instantiate(obj_prefebsHP[1], GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
+                                    }
+
+                                    else if (i == playersIndex[2]) // == enemyIndex[0]
+                                    {
+                                        hp[i].obj_parent = Instantiate(obj_prefebsHP[2], GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
+                                    }
+                                }
+                                break;
+
+                            case 4:
+                                {
+                                    if (i == playersIndex[1]) // == teamIndex
+                                    {
+                                        hp[i].obj_parent = Instantiate(obj_prefebsHP[1], GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
+                                    }
+
+                                    else if (i == playersIndex[2] || i == playersIndex[3]) // == enemyIndex[0]
+                                    {
+                                        hp[i].obj_parent = Instantiate(obj_prefebsHP[2], GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                    break;
+
+                case (int)C_Global.GameType._1vs1:
+                    {
+                        switch (GameManager.instance.gameInfo.maxPlayer)
+                        {
+                            case 2:
+                                {
+                                    if (i == playersIndex[1]) // == enemy
+                                    {
+                                        hp[i].obj_parent = Instantiate(obj_prefebsHP[2], GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                    break;
+            }
+
+            hp[i].img_back = hp[i].obj_parent.transform.GetChild(0).GetComponent<Image>();
+            hp[i].img_middle = hp[i].obj_parent.transform.GetChild(1).GetComponent<Image>();
+            hp[i].img_front = hp[i].obj_parent.transform.GetChild(2).GetComponent<Image>();
+        }
+    }
+
+    private void Initialization_Nickname()
 	{
-		hp = new _IMG_HP_INFO[C_Global.MAX_PLAYER];
-		hpAddPos = new Vector3(0, 2.1f, 1.3f);
-		curHpCor = null;
-
-		for (int i = 0; i < hp.Length; i++)
-		{
-			if (i == playersIndex[0]) // == myIndex
-				hp[i].obj_parent = Instantiate(obj_prefebsHP[0], GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
-
-			else if (i == playersIndex[1]) // == teamIndex
-				hp[i].obj_parent = Instantiate(obj_prefebsHP[1], GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
-
-			else if (i == playersIndex[2] || i == playersIndex[3]) // == enemyIndex[0]
-				hp[i].obj_parent = Instantiate(obj_prefebsHP[2], GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
-
-			hp[i].img_back = hp[i].obj_parent.transform.GetChild(0).GetComponent<Image>();
-			hp[i].img_middle = hp[i].obj_parent.transform.GetChild(1).GetComponent<Image>();
-			hp[i].img_front = hp[i].obj_parent.transform.GetChild(2).GetComponent<Image>();
-		}
-	}
-	private void Initialization_Nickname()
-	{
-		nickname = new _TXT_NICKNAME_INFO[C_Global.MAX_PLAYER];
+		nickname = new _TXT_NICKNAME_INFO[GameManager.instance.gameInfo.maxPlayer];
 		nickAddPos = new Vector3(0, 2.0f, 0.9f);
 
 		for (int i = 0; i < nickname.Length; i++)
@@ -198,29 +260,89 @@ public class UIManager : MonoBehaviour
 			nickname[i].txt_nickname = nickname[i].obj_parent.transform.GetChild(0).GetComponent<Text>();
 		}
 	}
-	private void Initialization_Circle()
-	{
-		circle = new _IMG_CIRCLE_INFO[C_Global.MAX_PLAYER];
-		circleAddPos = new Vector3(0, 0.2f, 0);
 
-		for (int i = 0; i < circle.Length; i++)
-		{
-			if (i == playersIndex[0]) // == myIndex
-				circle[i].obj_parent = Instantiate(obj_prefebsCircle[0], GameObject.FindGameObjectWithTag("Canvas_worldSpace2").transform);
+    private void Initialization_Circle()
+    {
+        circle = new _IMG_CIRCLE_INFO[GameManager.instance.gameInfo.maxPlayer];
+        circleAddPos = new Vector3(0, 0.2f, 0);
 
-			else if (i == playersIndex[1]) // == teamIndex
-				circle[i].obj_parent = Instantiate(obj_prefebsCircle[1], GameObject.FindGameObjectWithTag("Canvas_worldSpace2").transform);
+        for (int i = 0; i < circle.Length; i++)
+        {
+            if (i == playersIndex[0]) // == myIndex
+            {
+                circle[i].obj_parent = Instantiate(obj_prefebsCircle[0], GameObject.FindGameObjectWithTag("Canvas_worldSpace2").transform);
+            }
 
-			else if (i == playersIndex[2] || i == playersIndex[3]) // == enemyIndex[0]
-				circle[i].obj_parent = Instantiate(obj_prefebsCircle[2], GameObject.FindGameObjectWithTag("Canvas_worldSpace2").transform);
+            switch (GameManager.instance.gameInfo.gameType)
+            {
+                case (int)C_Global.GameType._2vs2:
+                    {
+                        switch (GameManager.instance.gameInfo.maxPlayer)
+                        {
+                            case 2:
+                                {
+                                    if (i == playersIndex[1]) // == teamIndex
+                                    {
+                                        circle[i].obj_parent = Instantiate(obj_prefebsCircle[1], GameObject.FindGameObjectWithTag("Canvas_worldSpace2").transform);
+                                    }
+                                }
+                                break;
 
-			circle[i].img_circle = circle[i].obj_parent.transform.GetChild(0).GetComponent<Image>();
-		}
-	}
+                            case 3:
+                                {
+                                    if (i == playersIndex[1]) // == teamIndex
+                                    {
+                                        circle[i].obj_parent = Instantiate(obj_prefebsCircle[1], GameObject.FindGameObjectWithTag("Canvas_worldSpace2").transform);
+                                    }
+
+                                    else if (i == playersIndex[2]) // == enemyIndex[0]
+                                    {
+                                        circle[i].obj_parent = Instantiate(obj_prefebsCircle[2], GameObject.FindGameObjectWithTag("Canvas_worldSpace2").transform);
+                                    }
+                                }
+                                break;
+
+                            case 4:
+                                {
+                                    if (i == playersIndex[1]) // == teamIndex
+                                    {
+                                        circle[i].obj_parent = Instantiate(obj_prefebsCircle[1], GameObject.FindGameObjectWithTag("Canvas_worldSpace2").transform);
+                                    }
+
+                                    else if (i == playersIndex[2] || i == playersIndex[3]) // == enemyIndex[0]
+                                    {
+                                        circle[i].obj_parent = Instantiate(obj_prefebsCircle[2], GameObject.FindGameObjectWithTag("Canvas_worldSpace2").transform);
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                    break;
+
+                case (int)C_Global.GameType._1vs1:
+                    {
+                        switch (GameManager.instance.gameInfo.maxPlayer)
+                        {
+                            case 2:
+                                {
+                                    if (i == playersIndex[1]) // == enemyIndex[0]
+                                    {
+                                        circle[i].obj_parent = Instantiate(obj_prefebsCircle[2], GameObject.FindGameObjectWithTag("Canvas_worldSpace2").transform);
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                    break;
+            }
+
+            circle[i].img_circle = circle[i].obj_parent.transform.GetChild(0).GetComponent<Image>();
+        }
+    }
 
     private void Initialization_ReloadGage()
     {
-        reloadGage = new _IMG_RELOAD_INFO[C_Global.MAX_PLAYER];
+        reloadGage = new _IMG_RELOAD_INFO[GameManager.instance.gameInfo.maxPlayer];
         reloadAddPos = new Vector3(0, 2.5f, 2.2f);
 
         for(int i=0; i<reloadGage.Length; i++)
@@ -246,16 +368,17 @@ public class UIManager : MonoBehaviour
     {
         respawn.obj_parent = GameObject.FindGameObjectWithTag("Canvas_overlay").transform.GetChild(6).gameObject;
         respawn.img_respawnGage = respawn.obj_parent.transform.GetChild(2).GetComponent<Image>();
+        respawn.txt_deathFrom = respawn.obj_parent.transform.GetChild(3).GetComponent<Text>();
         line.obj_parent.SetActive(false);
     }
 
     public void Initialization_WeaponInfo_1()
 	{
-		weaponAddPos = new Vector3(0, 1.8f, -1.8f);
+		weaponAddPos = new Vector3(0.3f, 1.8f, -1.85f);
 
 		weaponInfo.obj_parent = Instantiate(obj_prefebWeaponInfo, GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
-		weaponInfo.img_mainW = weaponInfo.obj_parent.transform.GetChild(0).GetComponent<Image>();
-		weaponInfo.txt_ammoState = weaponInfo.obj_parent.transform.GetChild(1).GetComponent<Text>();
+		weaponInfo.img_mainW = weaponInfo.obj_parent.transform.GetChild(1).GetComponent<Image>();
+		weaponInfo.txt_ammoState = weaponInfo.obj_parent.transform.GetChild(2).GetComponent<Text>();
 	}
 
     public void Initialization_WeaponInfo_2()
@@ -362,7 +485,7 @@ public class UIManager : MonoBehaviour
                 yield break;
             }
 
-            respawn.img_respawnGage.fillAmount -= Time.fixedDeltaTime / _time;
+            respawn.img_respawnGage.fillAmount -= Time.smoothDeltaTime / _time;
             yield return null;
         }
     }
@@ -390,7 +513,7 @@ public class UIManager : MonoBehaviour
 	public int PlayerIndexToAbsoluteIndex(int _playerIndex)
 	{
 		int result = 0;
-		for (int i = 0; i < C_Global.MAX_PLAYER; i++)
+		for (int i = 0; i < GameManager.instance.gameInfo.maxPlayer; i++)
 		{
 			if (_playerIndex == playersIndex[i])
 			{
@@ -418,7 +541,7 @@ public class UIManager : MonoBehaviour
         reloadGage[_index].obj_parent.SetActive(false);
     }
 
-    public void SetDeadUI()
+    public void SetDeadUI(string _value)
     {
         // 조이스틱 위치 제자리로
         leftJoystick.GetComponent<LeftJoystick>().ResetDrag();
@@ -428,6 +551,7 @@ public class UIManager : MonoBehaviour
         rightJoystick.SetActive(false);
         reloadBtn.SetActive(false);
 
+        respawn.txt_deathFrom.text = _value;
         StartCoroutine(DecreaseRespawnGageImg(GameManager.instance.gameInfo.respawnTime)); //리스폰 유아이 활성화
         //deadPanel.SetActive(true);
     }

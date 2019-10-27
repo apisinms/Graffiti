@@ -17,6 +17,7 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
         public int curAmmo;
         public bool isReloading;
         public float reloadTime;
+        public string mainWname;
     }
 
     public _PLAYER_SMG_INFO[] playerSMGInfo { get; set; }
@@ -27,7 +28,7 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
         weaponManager = WeaponManager.instance;
         myIndex = GameManager.instance.myIndex;
 
-        playerSMGInfo = new _PLAYER_SMG_INFO[C_Global.MAX_PLAYER];
+        playerSMGInfo = new _PLAYER_SMG_INFO[GameManager.instance.gameInfo.maxPlayer];
 
 #if !NETWORK
         weaponManager.weaponInfoSMG.maxAmmo = 17;
@@ -39,13 +40,14 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
 		weaponManager.weaponInfoSMG.reloadTime = 2.0f;
 #endif
 
-		for (int i = 0; i < C_Global.MAX_PLAYER; i++)
+		for (int i = 0; i < GameManager.instance.gameInfo.maxPlayer; i++)
         {
             playerSMGInfo[i].vt_bulletPattern = new Vector3[3];
             playerSMGInfo[i].bulletPatternIndex = 2;
             playerSMGInfo[i].prevBulletPatternIndex = 1;
             playerSMGInfo[i].curAmmo = weaponManager.weaponInfoSMG.maxAmmo;
             playerSMGInfo[i].reloadTime = weaponManager.weaponInfoSMG.reloadTime;
+            playerSMGInfo[i].mainWname = "SMG";
         }
     }
 
@@ -217,6 +219,11 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
         return playerSMGInfo[_index].reloadTime;
     }
 
+    public string GetWeaponName(int _index)
+    {
+        return playerSMGInfo[_index].mainWname;
+
+    }
     public void ReloadAmmo(int _index)
     {
         #if NETWORK

@@ -52,7 +52,7 @@ public class BulletCollision : MonoBehaviour
 #if !NETWORK
 		//적에게 내가맞았냐, 팀킬을했냐, 적1이냐 적2냐에따른 총알피해, 체력적용
 		//함수 _type은 피아구분, returnIdx는 총알의 주인인덱스
-        for(int i=0; i<C_Global.MAX_PLAYER; i++)
+        for(int i=0; i<C_Global.MAX_CHARACTER; i++)
         {
             if (other.CompareTag(PlayersManager.instance.obj_players[GameManager.instance.playersIndex[i]].tag))
             {

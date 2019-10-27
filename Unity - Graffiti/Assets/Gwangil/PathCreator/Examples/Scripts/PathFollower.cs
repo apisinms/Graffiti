@@ -69,7 +69,7 @@ namespace PathCreation.Examples
 						StateManager.instance.Death(true);  // 내가 죽은상태로 전환.
                         int absoluteIdx = UIManager.instance.PlayerIndexToAbsoluteIndex(playerNum - 1);
 						UIManager.instance.HealthUIChanger(absoluteIdx, 0.0f);  // 차에 치이면 즉사
-                        UIManager.instance.SetDeadUI();     // 죽은 UI로 전환
+                        UIManager.instance.SetDeadUI("당신이(가) 차에 치었습니다!");     // 죽은 UI로 전환
 						bl_MiniMap.Instance.DoHitEffect();
 					}
 				}

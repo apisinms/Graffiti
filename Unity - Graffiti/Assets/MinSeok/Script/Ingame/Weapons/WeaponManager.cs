@@ -27,6 +27,7 @@ public interface IMainWeaponType
 	void ReloadAmmo(int _index);
 	void ApplyDamage(int _type, int _index);
     float GetReloadTime(int _index);
+    string GetWeaponName(int _index);
 }
 
 public class WeaponManager : MonoBehaviour, IMainWeaponType
@@ -130,13 +131,17 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
             instance = this;
 
         myIndex = GameManager.instance.myIndex;
-        mainWeaponType = new IMainWeaponType[C_Global.MAX_PLAYER];
+        mainWeaponType = new IMainWeaponType[GameManager.instance.gameInfo.maxPlayer];
 
         weaponsTag[0] = "Ar"; weaponsTag[1] = "Sg"; weaponsTag[2] = "Smg";
         
         cn_mainWeaponList = obj_mainWeaponList.GetComponents<Component>();
-    
-        Initialization(C_Global.MAX_PLAYER);      
+
+#if NETWORK
+        Initialization(GameManager.instance.gameInfo.maxPlayer);      
+#else
+        Initialization(C_Global.MAX_CHARACTER);
+#endif
     }
 
     void Start()
@@ -231,6 +236,11 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
     public float GetReloadTime(int _index)
     {
         return mainWeaponType[_index].GetReloadTime(_index);
+    }
+
+    public string GetWeaponName(int _index)
+    {
+        return mainWeaponType[_index].GetWeaponName(_index);
     }
 
     public void ApplyDamage(int _type, int _index) //해당 총별로 총에 맞았을때 데미지를 실질적으로 깎음.
@@ -334,7 +344,7 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
     // player의 HitCountBit(맞은 횟수 비트)를 증가한다.
     public void IncPlayerHitCountBit(int _hitPlayerNum)
     {
-        int Shifter = 8 * (C_Global.MAX_PLAYER - _hitPlayerNum);    // 이동 연산에 필요한 값
+        int Shifter = 8 * (C_Global.MAX_CHARACTER - _hitPlayerNum);    // 이동 연산에 필요한 값
 
         byte bitEraseMask = 0x00;   // 8비트 지우기 마스크(00000000)
 

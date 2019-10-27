@@ -46,18 +46,18 @@ public partial class BridgeClientToServer : MonoBehaviour
         }
 #endif
 
-        curPlayerPos = new Transform[C_Global.MAX_PLAYER];
+        curPlayerPos = new Transform[gameManager.gameInfo.maxPlayer];
 
         for (int i = 0; i < curPlayerPos.Length; i++)
             curPlayerPos[i] = playersManager.obj_players[i].transform;
 
         pos = new Vector3();
-        isStartShotCor = new bool[C_Global.MAX_PLAYER]; //샷 코루틴 중복실행 방지.
-        isStartReloadGageCor = new bool[C_Global.MAX_PLAYER];
+        isStartShotCor = new bool[gameManager.gameInfo.maxPlayer]; //샷 코루틴 중복실행 방지.
+        isStartReloadGageCor = new bool[gameManager.gameInfo.maxPlayer];
 
 #if NETWORK
         // 초기값 설정 
-        for (int i = 0; i < C_Global.MAX_PLAYER; i++)
+        for (int i = 0; i < gameManager.gameInfo.maxPlayer; i++)
       {
          networkManager.SetPosX(i, curPlayerPos[i].localPosition.x);
          networkManager.SetPosZ(i, curPlayerPos[i].localPosition.z);

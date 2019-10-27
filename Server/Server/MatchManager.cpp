@@ -2,6 +2,7 @@
 #include "MatchManager.h"
 #include "RoomManager.h"
 #include "C_ClientInfo.h"
+#include "InGameManager.h"
 
 MatchManager* MatchManager::instance;
 
@@ -37,6 +38,7 @@ void MatchManager::WaitListRemove(C_ClientInfo* _ptr)
 	if (gameType != -1)
 	{
 		waitList[gameType].remove(_ptr);
+		_ptr->SetGameType(-1);	// -1로 설정
 
 		switch ((RoomInfo::GameType)gameType)
 		{
@@ -52,8 +54,6 @@ void MatchManager::WaitListRemove(C_ClientInfo* _ptr)
 			}
 			break;
 		}
-
-		_ptr->SetGameType(-1);	// -1로 설정
 	}
 }
 
@@ -62,22 +62,22 @@ bool MatchManager::MatchProcess(C_ClientInfo* _ptr)
 	IC_CS cs;
 
 	int gameType = _ptr->GetGameType();
-	int MaxPlayerOfThisGameType = 0;
 	waitList[gameType].emplace_back(_ptr);	// 리스트에 뒤로 넣고
+
+	// DB에서 불러온 정보대로 저장
+	int MaxPlayerOfThisGameType = InGameManager::GetInstance()->GetGameInfo(gameType)->maxPlayer;
 
 	switch ((RoomInfo::GameType)gameType)
 	{
 		case RoomInfo::GameType::_2vs2:
 		{
 			printf("2:2 대기 리스트에 삽입 성공 사이즈 : %d\n", (int)waitList[gameType].size());
-			MaxPlayerOfThisGameType = _2vs2_MODE_PLAYER;
 		}
 		break;
 
 		case RoomInfo::GameType::_1vs1:
 		{
 			printf("1:1 대기 리스트에 삽입 성공 사이즈 : %d\n", (int)waitList[gameType].size());
-			MaxPlayerOfThisGameType = _1vs1_MODE_PLAYER;
 		}
 		break;
 	}

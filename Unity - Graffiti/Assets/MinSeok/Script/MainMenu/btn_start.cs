@@ -3,18 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class btn_start : UnityEngine.MonoBehaviour
 {
 	public GameObject obj_loadingBar;
-	Animator am_loadingBar;
-	public Text txt_startBtn;
+	public TMP_Text txt_startBtn;
 	int flag = 1;
-
-	void Start()
-	{
-		am_loadingBar = obj_loadingBar.GetComponent<Animator>();
-	}
 
 	public void BtnStart() //매칭버튼 눌렀을때.
 	{
@@ -24,7 +19,6 @@ public class btn_start : UnityEngine.MonoBehaviour
 		{
 			txt_startBtn.text = "취소";
 			obj_loadingBar.SetActive(true);
-			am_loadingBar.SetBool("isStart", true);
 
             // 매칭이 가능한지 서버로 전송한다.
             NetworkManager.instance.MayIMatch(0);
@@ -75,7 +69,6 @@ public class btn_start : UnityEngine.MonoBehaviour
 			{
 				// UI바꾸고
 				txt_startBtn.text = "매칭";
-				am_loadingBar.SetBool("isStart", false);
 				obj_loadingBar.SetActive(false);
 
 				yield break;    // 코루틴 종료
