@@ -12,7 +12,7 @@ public class C_Global
     public const float interpolation_LeftRot = 15.0f;
     public const float interpolation_RightRot = 17.0f;
     public const float interpolation_Pos = 0.175f;
-    public const float interpolation_Rot = 40.0f;
+    //public const float interpolation_Rot = 40.0f;
     public const float amingSpeed = 0.35f;
 
     public const float camPosY = 7.0f;

@@ -26,6 +26,7 @@ public interface IMainWeaponType
     void CheckFireRange(GameObject _obj_bullet, BulletCollision._BULLET_CLONE_INFO _info_bullet, int _index);
 	void ReloadAmmo(int _index);
 	void ApplyDamage(int _type, int _index);
+    float GetReloadTime(int _index);
 }
 
 public class WeaponManager : MonoBehaviour, IMainWeaponType
@@ -116,12 +117,12 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
     public WeaponInfo weaponInfoAR;      // AR 정보(공용)
     public WeaponInfo weaponInfoSG;      // SG 정보(공용)
     public WeaponInfo weaponInfoSMG;	// SMG 정보(공용)
-	#endregion
+    //public bool[] isReloading = new bool[C_Global.MAX_PLAYER];
+    public bool isReloading;
+    #endregion
 
-	// 누가, 몇 발의 총알을 맞았는지 담을 구조체. (로컬 플레이어만 쓴다)
-	private NetworkManager.BulletCollisionChecker colChecker = new NetworkManager.BulletCollisionChecker();
-
-	public bool isReloading = false;
+    // 누가, 몇 발의 총알을 맞았는지 담을 구조체. (로컬 플레이어만 쓴다)
+    private NetworkManager.BulletCollisionChecker colChecker = new NetworkManager.BulletCollisionChecker();
 
 	void Awake()
     {
@@ -227,7 +228,12 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
 		mainWeaponType[_index].ReloadAmmo(_index);
 	}
 
-	public void ApplyDamage(int _type, int _index) //해당 총별로 총에 맞았을때 데미지를 실질적으로 깎음.
+    public float GetReloadTime(int _index)
+    {
+        return mainWeaponType[_index].GetReloadTime(_index);
+    }
+
+    public void ApplyDamage(int _type, int _index) //해당 총별로 총에 맞았을때 데미지를 실질적으로 깎음.
     {
         mainWeaponType[_index].ApplyDamage(_type, _index);
     }

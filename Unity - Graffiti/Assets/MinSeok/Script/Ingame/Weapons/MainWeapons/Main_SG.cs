@@ -16,6 +16,7 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
         public Vector3[,] vt_bulletPattern;
         public int bulletPatternIndex;
         public int curAmmo;
+        public float reloadTime;
     }
 
     public _PLAYER_SG_INFO[] playerSGInfo { get; set; }
@@ -45,6 +46,7 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
             playerSGInfo[i].vt_bulletPattern = new Vector3[2, 5];
             playerSGInfo[i].bulletPatternIndex = 0;
             playerSGInfo[i].curAmmo = weaponManager.weaponInfoSG.maxAmmo;
+            playerSGInfo[i].reloadTime = weaponManager.weaponInfoSG.reloadTime;
         }
     }
 
@@ -118,9 +120,6 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
 
         if (playerSGInfo[myIndex].curAmmo <= 0)
         {
-#if NETWORK
-			NetworkManager.instance.SendIngamePacket();
-#endif
             ReloadAmmo(myIndex);
             yield break;
         }
@@ -131,15 +130,14 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
 	{
         if (_index == myIndex)
             yield break;
-
-#if NETWORK
+        
+        #if NETWORK
         if (NetworkManager.instance.GetReloadState(_index) == true)
         {
-            //ReloadAmmo(_index);
-            UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadTimeImg(weaponManager.weaponInfoSG.reloadTime, _index));
+            StartDecreaseReloadGage(_index);
             yield break;
         }
-#endif
+        #endif
 
         EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, _index);
 
@@ -199,8 +197,26 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
             PoolManager.instance.ReturnGunToPool(_obj_bullet, _info_bullet, _index);
     }
 
+    private void StartDecreaseReloadGage(int _index)
+    {
+        if (BridgeClientToServer.instance.isStartReloadGageCor[_index] == false)
+        {
+            UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadGageImg(weaponManager.weaponInfoSG.reloadTime, _index));
+            BridgeClientToServer.instance.isStartReloadGageCor[_index] = true;
+        }
+    }
+
+    public float GetReloadTime(int _index)
+    {
+        return playerSGInfo[_index].reloadTime;
+    }
+
     public void ReloadAmmo(int _index)
     {
+        #if NETWORK
+        NetworkManager.instance.SendIngamePacket();
+        #endif
+
         if (playerSGInfo[_index].curAmmo >= weaponManager.weaponInfoSG.maxAmmo) //풀탄창이면 재장전안함
             return;
 
@@ -212,37 +228,38 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
     {
         playerSGInfo[_index].curAmmo = 0; //어차피 장전중엔 총을못쏘므로 총알을 0으로 만들어줌
 
-        if (weaponManager.isReloading == false)
+        if (weaponManager.isReloading == false) //weaponManager.isReloading[_index] == false
         {
-			weaponManager.isReloading = true;
-#if NETWORK
+            weaponManager.isReloading = true;     
+            #if NETWORK
             NetworkManager.instance.SendIngamePacket();
-#endif
-            Debug.Log("SG총알없음. 장전중");
-            UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadTimeImg(weaponManager.weaponInfoSG.reloadTime, _index));
+            #endif
+
+            UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadGageImg(weaponManager.weaponInfoSG.reloadTime, _index));
 
             yield return YieldInstructionCache.WaitForSeconds(weaponManager.weaponInfoSG.reloadTime);
+
             playerSGInfo[_index].curAmmo = weaponManager.weaponInfoSG.maxAmmo;
             UIManager.instance.SetAmmoStateTxt(playerSGInfo[_index].curAmmo);
             AudioManager.Instance.Play(9);
-            Debug.Log("SG장전완료");
-			weaponManager.isReloading = false;
-#if NETWORK
+
+            weaponManager.isReloading = false;
+            #if NETWORK
             NetworkManager.instance.SendIngamePacket();
-#endif
+            #endif
 
             //장전 이전상태가 사격중이였을경우 계속 이어서쏨
             if (PlayersManager.instance.actionState[_index] == _ACTION_STATE.SHOT ||
                 PlayersManager.instance.actionState[_index] == _ACTION_STATE.CIR_AIM_SHOT)
             {
                 StateManager.instance.Shot(false);
-#if NETWORK
-            NetworkManager.instance.SendIngamePacket();
-#endif
+                #if NETWORK
+                NetworkManager.instance.SendIngamePacket();
+                #endif
                 StateManager.instance.Shot(true);
-#if NETWORK
-            NetworkManager.instance.SendIngamePacket();
-#endif
+                #if NETWORK
+                NetworkManager.instance.SendIngamePacket();
+                #endif
             }
         }
     }

@@ -16,6 +16,7 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
         public int prevBulletPatternIndex;
         public int curAmmo;
         public bool isReloading;
+        public float reloadTime;
     }
 
     public _PLAYER_SMG_INFO[] playerSMGInfo { get; set; }
@@ -44,6 +45,7 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
             playerSMGInfo[i].bulletPatternIndex = 2;
             playerSMGInfo[i].prevBulletPatternIndex = 1;
             playerSMGInfo[i].curAmmo = weaponManager.weaponInfoSMG.maxAmmo;
+            playerSMGInfo[i].reloadTime = weaponManager.weaponInfoSMG.reloadTime;
         }
     }
 
@@ -66,9 +68,6 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
         {
             if (playerSMGInfo[myIndex].curAmmo <= 0)
             {
-#if NETWORK
-			NetworkManager.instance.SendIngamePacket();
-#endif
                 ReloadAmmo(myIndex);
                 yield break;
             }
@@ -119,9 +118,6 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
 
             if (playerSMGInfo[myIndex].curAmmo <= 0)
             {
-#if NETWORK
-			NetworkManager.instance.SendIngamePacket();
-#endif
                 ReloadAmmo(myIndex);
                 yield break;
             }
@@ -139,16 +135,13 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
 
         while (true)
 		{
-
-#if NETWORK
+            #if NETWORK
             if (NetworkManager.instance.GetReloadState(_index) == true)
             {
-                EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, _index);
-                //ReloadAmmo(_index);
-                UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadTimeImg(weaponManager.weaponInfoSMG.reloadTime, _index));
+                StartDecreaseReloadGage(_index);
                 yield break;
             }
-#endif
+            #endif
 
             EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, _index);
 
@@ -190,16 +183,14 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
 					playerSMGInfo[_index].bulletPatternIndex = 1;
 					break;
 			}
-
-#if NETWORK
+            
+            #if NETWORK
             if (NetworkManager.instance.GetReloadState(_index) == true)
             {
-                EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, _index);
-                //ReloadAmmo(_index);
-                UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadTimeImg(weaponManager.weaponInfoSMG.reloadTime, _index));
+                StartDecreaseReloadGage(_index);
                 yield break;
             }
-#endif
+            #endif
 
             yield return YieldInstructionCache.WaitForSeconds(weaponManager.weaponInfoSMG.fireRate);
 		}
@@ -211,8 +202,27 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
             PoolManager.instance.ReturnGunToPool(_obj_bullet, _info_bullet, _index);
     }
 
+    private void StartDecreaseReloadGage(int _index)
+    {
+        EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, _index);
+        if (BridgeClientToServer.instance.isStartReloadGageCor[_index] == false)
+        {
+            UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadGageImg(weaponManager.weaponInfoSMG.reloadTime, _index));
+            BridgeClientToServer.instance.isStartReloadGageCor[_index] = true;
+        }
+    }
+
+    public float GetReloadTime(int _index)
+    {
+        return playerSMGInfo[_index].reloadTime;
+    }
+
     public void ReloadAmmo(int _index)
     {
+        #if NETWORK
+        NetworkManager.instance.SendIngamePacket();
+        #endif
+
         if (playerSMGInfo[_index].curAmmo >= weaponManager.weaponInfoSMG.maxAmmo) //풀탄창이면 재장전안함
             return;
 
@@ -230,36 +240,35 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
         if (weaponManager.isReloading == false)
         {
 			weaponManager.isReloading = true;
-#if NETWORK
+            #if NETWORK
 			NetworkManager.instance.SendIngamePacket();
-#endif
+            #endif
 
-            Debug.Log("SMG총알없음. 장전중");
-            UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadTimeImg(weaponManager.weaponInfoSMG.reloadTime, _index));
+            UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadGageImg(weaponManager.weaponInfoSMG.reloadTime, _index));
 
             yield return YieldInstructionCache.WaitForSeconds(weaponManager.weaponInfoSMG.reloadTime);
+
             playerSMGInfo[_index].curAmmo = weaponManager.weaponInfoSMG.maxAmmo;
             UIManager.instance.SetAmmoStateTxt(playerSMGInfo[_index].curAmmo);
             AudioManager.Instance.Play(9);
-            Debug.Log("SMG장전완료");
+
 			weaponManager.isReloading = false;
-#if NETWORK
+            #if NETWORK
 			NetworkManager.instance.SendIngamePacket();
-#endif
+            #endif
 
             //장전 이전상태가 사격중이였을경우 계속 이어서쏨
             if (PlayersManager.instance.actionState[_index] == _ACTION_STATE.SHOT ||
                 PlayersManager.instance.actionState[_index] == _ACTION_STATE.CIR_AIM_SHOT)
             {
                 StateManager.instance.Shot(false);
-#if NETWORK
-			NetworkManager.instance.SendIngamePacket();
-#endif
+                #if NETWORK
+                NetworkManager.instance.SendIngamePacket();
+                #endif
                 StateManager.instance.Shot(true);
-#if NETWORK
-			NetworkManager.instance.SendIngamePacket();
-#endif
-
+                #if NETWORK
+                NetworkManager.instance.SendIngamePacket();
+                #endif
             }
         }
     }

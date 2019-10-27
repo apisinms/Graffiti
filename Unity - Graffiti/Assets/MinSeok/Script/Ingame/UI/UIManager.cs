@@ -86,10 +86,22 @@ public class UIManager : MonoBehaviour
 		public Image img_mainW { get; set; }
 		public Text txt_ammoState { get; set; }
 	}
-	#endregion
+    #endregion
 
-	#region DeadUI
-	GameObject leftJoystick;
+    #region RESPAWN_GAGE
+    public GameObject obj_prefebRespawnGage;
+    public _IMG_RESPAWN_INFO respawn;
+    private bool isStartRespawnGageCor;
+
+    public struct _IMG_RESPAWN_INFO
+    {
+        public GameObject obj_parent;
+        public Image img_respawnGage { get; set; }
+    }
+    #endregion
+
+    #region DeadUI
+    GameObject leftJoystick;
 	GameObject rightJoystick;
 	GameObject deadPanel;
     GameObject reloadBtn;
@@ -111,6 +123,8 @@ public class UIManager : MonoBehaviour
 		Initialization_Circle();
 		Initialization_Line();
 		Initialization_ReloadGage();
+        Initialization_RespawnGage();
+
         Initialization_WeaponInfo_1();
 #if !NETWORK
         Initialization_WeaponInfo_2();
@@ -228,7 +242,14 @@ public class UIManager : MonoBehaviour
 		line.obj_parent.SetActive(false);
 	}
 
-	public void Initialization_WeaponInfo_1()
+    private void Initialization_RespawnGage()
+    {
+        respawn.obj_parent = GameObject.FindGameObjectWithTag("Canvas_overlay").transform.GetChild(6).gameObject;
+        respawn.img_respawnGage = respawn.obj_parent.transform.GetChild(2).GetComponent<Image>();
+        line.obj_parent.SetActive(false);
+    }
+
+    public void Initialization_WeaponInfo_1()
 	{
 		weaponAddPos = new Vector3(0, 1.8f, -1.8f);
 
@@ -289,19 +310,19 @@ public class UIManager : MonoBehaviour
 
     public void ReloadAmmo_Btn() //재장전 이미지 버튼
     {
+        WeaponManager.instance.ReloadAmmo(myIndex); //총알개수 체크후 바로 다이렉트 재장전
+
 #if NETWORK
         NetworkManager.instance.SendIngamePacket();
-#endif
-        
-        WeaponManager.instance.ReloadAmmo(myIndex); //총알개수 체크후 바로 다이렉트 재장전
+#endif   
     }
 
-	public void SetAmmoStateTxt(int _num)
+    public void SetAmmoStateTxt(int _num)
 	{
 		weaponInfo.txt_ammoState.text = _num.ToString();
 	}
 
-	public IEnumerator DecreaseReloadTimeImg(float _time, int _index) //중간 체력 img는 효과를 적용할것이다.
+	public IEnumerator DecreaseReloadGageImg(float _time, int _index)
 	{
 		reloadGage[_index].obj_parent.SetActive(true);
 		reloadGage[_index].txt_reloadTime.text = (_time).ToString();
@@ -312,6 +333,7 @@ public class UIManager : MonoBehaviour
 			{
 				reloadGage[_index].img_reload.fillAmount = 1.0f;
 				reloadGage[_index].obj_parent.SetActive(false);
+                BridgeClientToServer.instance.isStartReloadGageCor[_index] = false; //중복실행방지
 				yield break;
 			}
 
@@ -321,7 +343,31 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
-	public void UpdateAimDirectionImg(bool _value)
+
+    public IEnumerator DecreaseRespawnGageImg(float _time)
+    {
+        if (isStartRespawnGageCor == true)
+            yield break;
+
+        isStartRespawnGageCor = true;
+        respawn.obj_parent.SetActive(true);
+
+        while (true)
+        {
+            if (respawn.img_respawnGage.fillAmount <= 0)
+            {
+                respawn.img_respawnGage.fillAmount = 1.0f;
+                respawn.obj_parent.SetActive(false);
+                isStartRespawnGageCor = false;
+                yield break;
+            }
+
+            respawn.img_respawnGage.fillAmount -= Time.fixedDeltaTime / _time;
+            yield return null;
+        }
+    }
+
+    public void UpdateAimDirectionImg(bool _value)
 	{
 		if (_value == false && line.obj_parent.activeSelf == true)
 		{
@@ -381,6 +427,8 @@ public class UIManager : MonoBehaviour
         leftJoystick.SetActive(false);
         rightJoystick.SetActive(false);
         reloadBtn.SetActive(false);
+
+        StartCoroutine(DecreaseRespawnGageImg(GameManager.instance.gameInfo.respawnTime)); //리스폰 유아이 활성화
         //deadPanel.SetActive(true);
     }
 

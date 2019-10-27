@@ -1,5 +1,4 @@
 ﻿  stdafx.cpp
-  ChatManager.cpp
   C_ClientInfo.cpp
   C_Encrypt.cpp
   C_IOCP.cpp
@@ -7,11 +6,12 @@
   C_Sector.cpp
   C_Select.cpp
   C_Socket.cpp
+  ChatManager.cpp
   DatabaseManager.cpp
   InGameManager.cpp
   LobbyManager.cpp
-  LoginManager.cpp
   LogManager.cpp
+  LoginManager.cpp
   Main.cpp
   MainManager.cpp
   MatchManager.cpp

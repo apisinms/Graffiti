@@ -115,7 +115,7 @@ public partial class NetworkManager : MonoBehaviour
 		ingameSendPacket.speed = playersManager.speed[myPlayerNum - 1];
 		ingameSendPacket.action = (int)playersManager.actionState[myPlayerNum - 1];
 		ingameSendPacket.health = playersManager.hp[myPlayerNum - 1];
-		ingameSendPacket.isReloading = WeaponManager.instance.isReloading;
+        ingameSendPacket.isReloading = WeaponManager.instance.isReloading;//[myPlayerNum - 1];
         ingameSendPacket.collisionChecker = WeaponManager.instance.GetCollisionChecker();
 
         // 패킹 및 전송
