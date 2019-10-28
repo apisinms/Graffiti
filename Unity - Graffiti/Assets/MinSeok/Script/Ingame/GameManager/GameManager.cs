@@ -70,14 +70,17 @@ public class GameManager : MonoBehaviour
     public int CarSeed { get; set; }
 
     public CameraControl mainCamera;    // 메인 카메라
+	Image loadingImage;
 
     private void Start()
     {
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraControl>();
-
 #if NETWORK
-      PlayersManager.instance.Initialization_GameInfo();              // 얻어온 정보대로 초기화
-      BridgeClientToServer.instance.Initialization_PlayerViewer();    // 게임 시작시 플레이어 뷰어 셋팅
+		PlayersManager.instance.Initialization_GameInfo();              // 얻어온 정보대로 초기화
+		BridgeClientToServer.instance.Initialization_PlayerViewer();    // 게임 시작시 플레이어 뷰어 셋팅
+
+		loadingImage = GameObject.Find("loadingImage").GetComponent<Image>();
+
 #else
         gameInfo.gameType = 0;
         gameInfo.gameTime = 180;
@@ -85,9 +88,9 @@ public class GameManager : MonoBehaviour
         CarSeed = 0;
         StartCoroutine(GameObject.Find("Spawner").GetComponent<PathCreation.Examples.PathSpawner>().Cor_SpawnPrefabs());
 #endif
-    }
+	}
 
-    private void OnEnable()
+	private void OnEnable()
     {
         // 이벤트 등록하고, 로딩 완료되면 호출하게 함
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -190,12 +193,24 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public Image loadingImage;
 
     // 로딩 완료
     public void LoadingComplete()
     {
-        loadingImage.enabled = false;
+#if NETWORK
+      if (loadingImage != null)
+      {
+         loadingImage.enabled = false;
+      }
+
+      // 안들어온 놈들 꺼준다.
+      GameObject notConnectedCharacter;
+      for (int i = gameInfo.maxPlayer; i < C_Global.MAX_CHARACTER; i++)
+      {
+         notConnectedCharacter = GameObject.FindGameObjectWithTag("Player" + (i + 1).ToString());
+         notConnectedCharacter.SetActive(false);
+      }
+#endif
     }
 
     public void SetLocalAndNetworkActionState(int _idx, _ACTION_STATE _action)

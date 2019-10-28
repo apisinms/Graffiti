@@ -64,22 +64,7 @@ public partial class PlayersManager : MonoBehaviour
 
     private void Start()
     {
-#if NETWORK
-        /*
-      // 일단 전부 꺼주고 나중에 닉네임 받을 때 다시 켜준다.
-      GameObject robin;
-      for (int i = 0; i < C_Global.MAX_CHARACTER; i++)
-      {
-         robin = GameObject.FindGameObjectWithTag("Player" + (i + 1).ToString());
-
-         if(robin != null)
-         {
-            UIManager.instance.OffPlayerUI(UIManager.instance.PlayerIndexToAbsoluteIndex(i));
-            robin.SetActive(false);
-         }
-      }
-      */
-#else
+#if !NETWORK
         Initialization_GameInfo();
 #endif
     }

@@ -21,13 +21,15 @@ public enum _WEAPONS : sbyte
 */
 public interface IMainWeaponType
 {
-	IEnumerator ActionFire(int _index);
+    IEnumerator ActionFire(int _index);
     IEnumerator ActionFire();
     void CheckFireRange(GameObject _obj_bullet, BulletCollision._BULLET_CLONE_INFO _info_bullet, int _index);
-	void ReloadAmmo(int _index);
-	void ApplyDamage(int _type, int _index);
+    void ReloadAmmoProcess(int _index);
+    void SupplyAmmo(int _index);
+    void ApplyDamage(int _type, int _index);
     float GetReloadTime(int _index);
     string GetWeaponName(int _index);
+    Sprite GetWeaponSprite(int _index);
 }
 
 public class WeaponManager : MonoBehaviour, IMainWeaponType
@@ -228,10 +230,15 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
         mainWeaponType[_index].CheckFireRange(_obj_bullet, _info_bulletint, _index);
     }
 
-	public void ReloadAmmo(int _index)
+	public void ReloadAmmoProcess(int _index)
 	{
-		mainWeaponType[_index].ReloadAmmo(_index);
+		mainWeaponType[_index].ReloadAmmoProcess(_index);
 	}
+
+    public void SupplyAmmo(int _index)
+    {
+        mainWeaponType[_index].SupplyAmmo(_index);
+    }
 
     public float GetReloadTime(int _index)
     {
@@ -241,6 +248,11 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
     public string GetWeaponName(int _index)
     {
         return mainWeaponType[_index].GetWeaponName(_index);
+    }
+
+    public Sprite GetWeaponSprite(int _index)
+    {
+        return mainWeaponType[_index].GetWeaponSprite(_index);
     }
 
     public void ApplyDamage(int _type, int _index) //해당 총별로 총에 맞았을때 데미지를 실질적으로 깎음.
@@ -340,25 +352,25 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
 
 		return hitPlayerNum;
 	}
-    
+
     // player의 HitCountBit(맞은 횟수 비트)를 증가한다.
     public void IncPlayerHitCountBit(int _hitPlayerNum)
     {
-        int Shifter = 8 * (C_Global.MAX_CHARACTER - _hitPlayerNum);    // 이동 연산에 필요한 값
+        int shifter = 8 * (C_Global.MAX_CHARACTER - _hitPlayerNum);    // 이동 연산에 필요한 값
 
-        byte bitEraseMask = 0x00;   // 8비트 지우기 마스크(00000000)
-
+        byte bitMask = 0xFF;   // 8비트 마스크(1111 1111)
 
         // 1. 기존에 해당 플레이어의 hit횟수를 가져온다.
-        int beforeCount = (colChecker.playerHitCountBit >> Shifter);    // 한 대 맞은 누적 카운트를 저장하고
+        int beforeCount = (colChecker.playerHitCountBit & (bitMask << shifter)) >> shifter;
 
         // 2. 기존 플레이어의 hit 횟수를 0으로 만든다(해당 플레이어의 범위만)
-        colChecker.playerHitCountBit &= (bitEraseMask << Shifter);
+        colChecker.playerHitCountBit |= (bitMask << shifter);   // 일단 or로 다 1로만들어줌
+        colChecker.playerHitCountBit ^= (bitMask << shifter);   // 그리고 xor로 다 0으로 만들어줌
 
         beforeCount++;  // 한 대 더 맞았으니 누적한다.
 
         // 32비트를 4명의 플레이어가 8비트 단위로 끊어서 저장한다.
-        colChecker.playerHitCountBit |= (beforeCount << Shifter);
+        colChecker.playerHitCountBit |= (beforeCount << shifter);
     }
 
     // 총알 충돌 체커 구조체 초기화

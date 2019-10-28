@@ -63,10 +63,17 @@ public partial class BridgeClientToServer : MonoBehaviour
     public void SetPlayerNickName(string _nickName, int _idx)
     {
         uiManager.SetNickname(_nickName, _idx);
+        playersManager.nickname[_idx] = _nickName;
+
+        // 닉네임 받을 때 다시 켜줌
+#if NETWORK
+		playersManager.obj_players[_idx].SetActive(true);
+		uiManager.OnPlayerUI(uiManager.PlayerIndexToAbsoluteIndex(_idx));
+#endif
     }
 
-    // 최초에 무기정보, 게임정보, 자동차 씨드를 bridg의 멤버로 설정(GameManager가 인스턴스 생성되고 나서 저장해야되므로;)
-    public void SetGameInfoToBridge(ref GameInfo _gameInfo, ref WeaponInfo[] _weapons)
+	// 최초에 무기정보, 게임정보, 자동차 씨드를 bridg의 멤버로 설정(GameManager가 인스턴스 생성되고 나서 저장해야되므로;)
+	public void SetGameInfoToBridge(ref GameInfo _gameInfo, ref WeaponInfo[] _weapons)
     {
         tmpGameInfo = _gameInfo;
         tmpWeapons = _weapons;
@@ -194,6 +201,7 @@ public partial class BridgeClientToServer : MonoBehaviour
         playersManager.hp[_packet.playerNum - 1] = _packet.health;  // 실제 피 세팅
         networkManager.SetIngamePacket(_packet.playerNum - 1, ref _packet);
 
+        /*
         // 체력 0이하가 되면 죽음 처리
         if (_packet.health <= 0.0f)
         {
@@ -211,41 +219,29 @@ public partial class BridgeClientToServer : MonoBehaviour
                 uiManager.OffPlayerUI(_packet.playerNum - 1);
             }
         }
+        */
     }
 
-    public void KillProcess(int _killer, int _victim)
+    public void KillProcess(int _killer, int _victim) //누군가 죽으면 무조건 호출
     {
         /*
-        // 체력 0이하가 되면 죽음 처리
-        if (_packet.health <= 0.0f)
+        if ((_killer - 1) == myIndex) // 내가(_killer - 1) 상대방(_victim - 1)을 죽였을때.
         {
-            // 내가 죽은 경우
-            if ((_packet.playerNum - 1) == myIndex)
-            {
-                StateManager.instance.Death(true); //내가 죽은상태로 전환.
-            }
-
-            // 다른 플레이어가 죽은 경우
-            else
-            {
-                gameManager.SetLocalAndNetworkActionState(_packet.playerNum - 1, _ACTION_STATE.DEATH);
-                uiManager.OffPlayerUI(_packet.playerNum - 1);
-            }
+            Debug.Log("내가 " + (_victim - 1) + "을 죽였다!");
         }
-        // 내가(_killer - 1) 상대방(_victim - 1)을 죽였을때.
-        if ((_killer - 1) == myIndex)
-        {
-
-        }
-
-        // 내가(_victim - 1) 상대방(_killer - 1)에게 죽었을때.
-        if ((_victim - 1) == myIndex)
-        {
-            uiManager.SetDeadUI(_killer + "이(가) 당신을 처치했습니다!"); // 죽은 UI로 전환
-        }
-
-        //Debug.Log(_killer + "이" + _victim + "을 죽였다!");
         */
+        uiManager.EnqueueKillLog_Player(_killer, _victim); //살인사건시 킬러와 빅팀의 넘버를 킬로그 큐로 보냄
+
+        if ((_victim - 1) == myIndex) // 내가(_victim - 1) 상대방(_killer - 1)에게 죽었을때.
+        {
+            StateManager.instance.Death(true); //내가 죽은상태로 전환.
+            uiManager.SetDeadUI("당신이(가) " + playersManager.nickname[_killer - 1] + "의 " + weaponManager.GetWeaponName(_killer - 1) + "로 인해 사망했습니다!"); // 죽은 UI로 전환
+        }
+        else
+        {
+            gameManager.SetLocalAndNetworkActionState(_victim - 1, _ACTION_STATE.DEATH);
+            uiManager.OffPlayerUI(_victim - 1);
+        }
     }
 
     public void RespawnProcess(ref IngamePacket _packet)
@@ -267,8 +263,10 @@ public partial class BridgeClientToServer : MonoBehaviour
             uiManager.OnPlayerUI(absoluteIdx);
         }
 
-		// 남아있는 Addforce 초기화
-		playersManager.obj_players[_packet.playerNum - 1].GetComponent<Rigidbody>().velocity = Vector3.zero;
+        // 남아있는 Addforce 초기화 및 drag값 복구
+        Rigidbody rigid = playersManager.obj_players[_packet.playerNum - 1].GetComponent<Rigidbody>();
+        rigid.velocity = Vector3.zero;
+        rigid.drag = C_Global.normalDrag;
     }
 
     public void CarSpawn(int _seed)
@@ -280,18 +278,21 @@ public partial class BridgeClientToServer : MonoBehaviour
 
 	public void OtherPlayerHitByCar(int _playerNum, float _posX, float _posZ)
 	{
-		// 맞은 놈 튕기게 하고
-		Rigidbody rigid = playersManager.obj_players[_playerNum - 1].GetComponent<Rigidbody>();
-		Vector3 force = new Vector3(_posX, 0.0f, _posZ);
-		rigid.AddForce(force);
+        // 맞은 놈 튕기게 하고
+        Rigidbody rigid = playersManager.obj_players[_playerNum - 1].GetComponent<Rigidbody>();
+        Vector3 force = new Vector3(_posX, 0.0f, _posZ);
+        rigid.drag = C_Global.carHitDrag;   // 치일땐 실감나게 낮은 drag로
+        rigid.AddForce(force);
 
-		// 상태 변경
-		gameManager.SetLocalAndNetworkActionState(_playerNum - 1, _ACTION_STATE.DEATH);
+        // 상태 변경
+        gameManager.SetLocalAndNetworkActionState(_playerNum - 1, _ACTION_STATE.DEATH);
 
 		// 체력 UI 적용(차는 즉사)
 		int absoluteIdx = uiManager.PlayerIndexToAbsoluteIndex(_playerNum - 1);
 		uiManager.HealthUIChanger(absoluteIdx, 0.0f);
-	}
+
+        UIManager.instance.EnqueueKillLog_CarCrash(_playerNum); //킬로그 큐에 넣음
+    }
 
 	// 정상적인 업데이트 시
 	public void OnUpdate(ref IngamePacket _packet)

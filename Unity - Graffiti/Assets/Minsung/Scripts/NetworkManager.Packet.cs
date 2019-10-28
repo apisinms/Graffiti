@@ -474,6 +474,7 @@ public partial class NetworkManager : MonoBehaviour
 		// 이제 다시 string으로 변환
 		_str1 = ByteToString(arrStrByte);
 	}
+
 	private void UnPackPacket(byte[] _buf, out string _str1)
 	{
 		byte[] arrStrsize1 = new byte[sizeof(int)];
@@ -495,7 +496,41 @@ public partial class NetworkManager : MonoBehaviour
 		_str1 = ByteToString(arrStrByte);
 	}
 
-	private void UnPackPacket(byte[] _buf, ref GameManager.GameInfo _gameInfo, ref WeaponManager.WeaponInfo[] _weapons)
+    private void UnPackPacket(byte[] _buf, out string _str1, out string _str2)
+    {
+        byte[] arrStrsize = new byte[sizeof(int)];
+        int strsize = 0;
+
+        int offset = sizeof(PROTOCOL);
+
+        // 문자열1 길이
+        Buffer.BlockCopy(_buf, offset, arrStrsize, 0, sizeof(int));
+        offset += sizeof(int);
+        strsize = BitConverter.ToInt32(arrStrsize, 0);
+
+        // 문자열1 길이 만큼 생성해서 문자열을 저장함
+        byte[] arrStrByte = new byte[strsize];
+        Buffer.BlockCopy(_buf, offset, arrStrByte, 0, strsize);
+        offset += strsize;
+
+        // 이제 다시 string으로 변환
+        _str1 = ByteToString(arrStrByte);
+
+
+        // 문자열2 길이
+        Buffer.BlockCopy(_buf, offset, arrStrsize, 0, sizeof(int));
+        offset += sizeof(int);
+        strsize = BitConverter.ToInt32(arrStrsize, 0);
+
+        // 문자열2 길이 만큼 생성해서 문자열을 저장함
+        arrStrByte = new byte[strsize];
+        Buffer.BlockCopy(_buf, offset, arrStrByte, 0, strsize);
+        offset += strsize;
+
+        // 이제 다시 string으로 변환
+        _str2 = ByteToString(arrStrByte);
+    }
+    private void UnPackPacket(byte[] _buf, ref GameManager.GameInfo _gameInfo, ref WeaponManager.WeaponInfo[] _weapons)
 	{
 		int offset = sizeof(PROTOCOL);
 

@@ -132,8 +132,11 @@ public partial class NetworkManager : MonoBehaviour
 		public string nickname;
 	};
 
-	// 총알 충돌 검사 구조체
-	[StructLayout(LayoutKind.Sequential)]
+    string nickName;
+    public string NickName { get { return nickName; } set { nickName = value; } }
+
+    // 총알 충돌 검사 구조체
+    [StructLayout(LayoutKind.Sequential)]
 	public struct BulletCollisionChecker
 	{
 		[MarshalAs(UnmanagedType.I1)]

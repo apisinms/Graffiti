@@ -19,6 +19,8 @@ public class C_Global
     public const float camPosZ = -5.3f;
 
     public const float packetInterval = 0.1f;
+    public const float carHitDrag = 1.0f;
+    public const float normalDrag = 20.0f;
 
     // 큐에 들어갈 정보
     public struct QueueInfo

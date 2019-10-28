@@ -7,7 +7,7 @@ class C_ClientInfo;
 class InGameManager : public C_SyncCS< InGameManager>
 {
 #ifdef DEBUG
-	static const int WEAPON_SELTIME = 1 + 1;	// 무기 선택 시간(초 단위)
+	static const int WEAPON_SELTIME = 3 + 1;	// 무기 선택 시간(초 단위)
 	int numOfPacketSent             = 0;		// 패킷 보낸 횟수
 #else
 	static const int WEAPON_SELTIME = 30 + 1;	// 무기 선택 시간(초 단위)
@@ -103,7 +103,7 @@ private:
 	bool CheckBullet(C_ClientInfo* _ptr, IngamePacket& _recvPacket);
 	bool CheckBulletRange(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer);
 	bool CheckMaxFire(C_ClientInfo* _shotPlayer, int _numOfBullet);
-	int GetNumOfBullet(int& _shootCountBit, byte _hitPlayerNum);
+	int GetNumOfBullet(int _shootCountBit, byte _hitPlayerNum);
 	bool BulletHitProcess(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer, int _numOfBullet);
 	void BulletDecrease(C_ClientInfo* _shotPlayer, int _numOfBullet);
 	bool CheckBulletHitAndGetHitPlayers(C_ClientInfo* _ptr, IngamePacket& _recvPacket, vector<C_ClientInfo*>& _hitPlayers);

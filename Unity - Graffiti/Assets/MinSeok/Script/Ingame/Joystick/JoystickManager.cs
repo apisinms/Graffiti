@@ -22,10 +22,9 @@ public class JoystickManager : MonoBehaviour
         //WeaponManager.instance.mainWeapon[myIndex] = _WEAPONS.SMG;
         //WeaponManager.instance.SetMainWeapon(Main_SMG.GetMainWeaponInstance(), myIndex);
 #if !NETWORK
-        ChangeGun(1);
+        //ChangeGun(1);
 #endif
     }
-
     public void ChangeGun(int _index)
 	{
         #if !NETWORK

@@ -54,6 +54,7 @@ private:
 
 
 	void PackPacket(char* _setptr, TCHAR* _str1, int& _size);
+	void PackPacket(char* _setptr, TCHAR* _str1, TCHAR* _str2, int& _size);
 	void UnPackPacket(char* _getBuf, TCHAR* _str1, TCHAR* _str2, TCHAR* _str3);
 	void UnPackPacket(char* _getBuf, TCHAR* _str1, TCHAR* _str2);
 

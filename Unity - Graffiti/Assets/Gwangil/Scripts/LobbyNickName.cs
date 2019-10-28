@@ -13,10 +13,4 @@ public class LobbyNickName : MonoBehaviour
     {
         txt_myNickname.text = "김민석";
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

@@ -64,7 +64,7 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
         {
             if (playerARInfo[myIndex].curAmmo <= 0)
             {
-                ReloadAmmo(myIndex);
+                ReloadAmmoProcess(myIndex);
                 yield break;
             }
 
@@ -117,7 +117,7 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
 
             if (playerARInfo[myIndex].curAmmo <= 0)
             {
-                ReloadAmmo(myIndex);
+                ReloadAmmoProcess(myIndex);
                 yield break;
             }
 
@@ -208,8 +208,7 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
         if (BridgeClientToServer.instance.isStartReloadGageCor[_index] == false)
         {
             UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadGageImg(weaponManager.weaponInfoAR.reloadTime, _index));
-            BridgeClientToServer.instance.isStartReloadGageCor[_index] = true;
-        }
+            BridgeClientToServer.instance.isStartReloadGageCor[_ind
     }
 
     public float GetReloadTime(int _index)
@@ -222,7 +221,18 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
         return playerARInfo[_index].mainWname;
     }
 
-    public void ReloadAmmo(int _index)
+    public Sprite GetWeaponSprite(int _index)
+    {
+        return UIManager.instance.spr_mainW[0];
+    }
+
+    public void SupplyAmmo(int _index)
+    {
+        playerARInfo[_index].curAmmo = weaponManager.weaponInfoAR.maxAmmo;
+        UIManager.instance.SetAmmoStateTxt(playerARInfo[_index].curAmmo);
+    }
+
+    public void ReloadAmmoProcess(int _index)
     {
         #if NETWORK
         NetworkManager.instance.SendIngamePacket();
@@ -253,8 +263,7 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
 
             yield return YieldInstructionCache.WaitForSeconds(weaponManager.weaponInfoAR.reloadTime);
 
-            playerARInfo[_index].curAmmo = weaponManager.weaponInfoAR.maxAmmo;
-            UIManager.instance.SetAmmoStateTxt(playerARInfo[_index].curAmmo);
+            SupplyAmmo(_index);
             AudioManager.Instance.Play(9);
 
             weaponManager.isReloading = false;

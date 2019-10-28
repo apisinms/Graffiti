@@ -20,10 +20,12 @@ public partial class PoolManager : MonoBehaviour
     {
         for (int i = 0; i < GameManager.instance.gameInfo.maxPlayer; i++) //모든플레이어들의 총알풀 생성.
         {
+            //얘네는 개인용으로다 잇음
             CreateBulletPool(i, 30);
             CreateShellPool(i, 30);
         }
 
+        //이건 공용임
         CreateCollisionEffectPool(100);
     }
 }

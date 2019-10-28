@@ -48,6 +48,37 @@ void LoginManager::PackPacket(char* _setptr, TCHAR* _str1, int& _size)
 	ptr = ptr + strsize1;
 	_size = _size + strsize1;
 }
+
+void LoginManager::PackPacket(char* _setptr, TCHAR* _str1, TCHAR* _str2, int& _size)
+{
+	char* ptr = _setptr;
+	int strsize1 = (int)_tcslen(_str1) * sizeof(TCHAR);
+	int strsize2 = (int)_tcslen(_str2) * sizeof(TCHAR);
+	_size = 0;
+
+	// 문자열1 길이
+	memcpy(ptr, &strsize1, sizeof(strsize1));
+	ptr = ptr + sizeof(strsize1);
+	_size = _size + sizeof(strsize1);
+
+	// 문자열1(유니코드)
+	memcpy(ptr, _str1, strsize1);
+	ptr = ptr + strsize1;
+	_size = _size + strsize1;
+
+
+
+	// 문자열2 길이
+	memcpy(ptr, &strsize2, sizeof(strsize2));
+	ptr = ptr + sizeof(strsize2);
+	_size = _size + sizeof(strsize2);
+
+	// 문자열2(유니코드)
+	memcpy(ptr, _str2, strsize2);
+	ptr = ptr + strsize2;
+	_size = _size + strsize2;
+}
+
 void LoginManager::UnPackPacket(char* _getBuf, TCHAR* _str1, TCHAR* _str2, TCHAR* _str3)
 {
 	int str1size, str2size, str3size;
@@ -194,13 +225,14 @@ bool LoginManager::JoinProcess(C_ClientInfo* _ptr, char* _buf)
 
 	return false;
 }
+
 bool LoginManager::LoginProcess(C_ClientInfo* _ptr, char* _buf)
 {
 	RESULT_LOGIN loginResult = RESULT_LOGIN::NODATA;
 
 	TCHAR msg[MSGSIZE] = { 0, };
 	PROTOCOL_LOGIN protocol;
-	char buf[BUFSIZE];
+	char buf[BUFSIZE] = { 0, };
 	int packetSize;
 
 	UserInfo tmpInfo;
@@ -213,26 +245,30 @@ bool LoginManager::LoginProcess(C_ClientInfo* _ptr, char* _buf)
 	_ptr->SetUserInfo(ptr);
 
 	// 로그인 결과를 토대로 메시지를 조립한다.
-	loginResult = CheckLogin(_ptr);	// 내부에서 가입 목록을 훑어 로그인 가능하면 그 로그인 정보를 가져온다.
+	loginResult = CheckLogin(_ptr);   // 내부에서 가입 목록을 훑어 로그인 가능하면 그 로그인 정보를 가져온다.
 
 	switch (loginResult)
 	{
 
 	case RESULT_LOGIN::ID_EXIST:
 		_tcscpy_s(msg, MSGSIZE, ALREADY_LOGIN_MSG);
+		PackPacket(buf, msg, packetSize);
 		break;
 
 	case RESULT_LOGIN::ID_ERROR:
 		_tcscpy_s(msg, MSGSIZE, ID_ERROR_MSG);
+		PackPacket(buf, msg, packetSize);
 		break;
 
 	case RESULT_LOGIN::PW_ERROR:
 		_tcscpy_s(msg, MSGSIZE, PW_ERROR_MSG);
+		PackPacket(buf, msg, packetSize);
 		break;
 
 	case RESULT_LOGIN::LOGIN_SUCCESS:
 	{
 		_tcscpy_s(msg, MSGSIZE, LOGIN_SUCCESS_MSG);
+		PackPacket(buf, msg, _ptr->GetUserInfo()->nickname, packetSize);   // 로그인 성공시에는 닉네임도 함께 보내준다.
 
 		// 유저의 정보를 로그인 리스트에 추가.
 		loginList->Insert(_ptr->GetUserInfo());
@@ -242,19 +278,16 @@ bool LoginManager::LoginProcess(C_ClientInfo* _ptr, char* _buf)
 	}
 
 
-	// 프로토콜 세팅 
+	// 프로토콜 패킹 및 전송
 	protocol = SetProtocol(LOGIN_STATE, PROTOCOL_LOGIN::LOGIN_PROTOCOL, loginResult);
-	ZeroMemory(buf, sizeof(BUFSIZE));
-	// 패킹 및 전송
-	PackPacket(buf, msg, packetSize);
 	_ptr->SendPacket(protocol, buf, packetSize);
-
 
 	if (loginResult == RESULT_LOGIN::LOGIN_SUCCESS)
 		return true;
 
 	return false;
 }
+
 //bool LoginManager::LogoutProcess(C_ClientInfo* _ptr)
 //{
 //	TCHAR msg[MSGSIZE] = { 0, };

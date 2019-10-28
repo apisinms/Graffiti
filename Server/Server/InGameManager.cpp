@@ -385,9 +385,12 @@ bool InGameManager::InitProcess(C_ClientInfo* _ptr, char* _buf)
 	// 전송(본인 포함)
 	ListSendPacket(playerList, nullptr, protocol, buf, packetSize, false);
 
-	// 2. 모든 플레이어에게 자신의 닉네임 정보를 보내준다(본인 포함)
+	// 2. 모든 플레이어에게 자신의 닉네임 정보를 보내준다(본인 제외)
 	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::NICKNAME_PROTOCOL, RESULT_INGAME::NODATA);
 	PackPacket(buf, _ptr->GetPlayerInfo()->GetPlayerNum(), _ptr->GetUserInfo()->nickname, packetSize);
+
+	// 전송(본인 제외)
+	ListSendPacket(playerList, _ptr, protocol, buf, packetSize, false);
 
 	// 전송(본인 포함)
 	ListSendPacket(playerList, nullptr, protocol, buf, packetSize, false);
@@ -800,38 +803,34 @@ bool InGameManager::CheckMaxFire(C_ClientInfo* _shotPlayer, int _numOfBullet)
 
 	return result;
 }
-int InGameManager::GetNumOfBullet(int& _shootCountBit, byte _hitPlayerNum)
+int InGameManager::GetNumOfBullet(int _shootCountBit, byte _hitPlayerNum)
 {
 	int shifter = 0;
 	int bulletCount = 0;
 	int TEMP_MAX_PLAYER = 4;
-	byte bitEraseMask = 0x00;			// 8비트 지우기 마스크(00000000)
+	byte bitMask = 0xFF;         // 8비트 지우기 마스크(1111 1111)
 
 	// 0이 매개변수로 넘어오면 발사된 전체 총알 갯수를 달라는 의미다.
 	if (_hitPlayerNum == 0)
 	{
 		int bulletCountBit = 0;
 
-		bulletCountBit = _shootCountBit;	//처음 카운트 비트 값으로
+		bulletCountBit = _shootCountBit;   //처음 카운트 비트 값으로
 		for (int i = 1; i <= TEMP_MAX_PLAYER; i++)
 		{
-			shifter = 8 * (TEMP_MAX_PLAYER - i);	// 이동 연산에 필요한 값
-			
+			shifter = 8 * (TEMP_MAX_PLAYER - i);   // 이동 연산에 필요한 값
+
 			if ((bulletCountBit >> shifter) > 0)
 			{
-				bulletCount += (bulletCountBit >> shifter);
-				bulletCountBit &= (bitEraseMask << shifter);	// 지금 구한 8비트를 마스크로 지워줌
+				bulletCount += (bulletCountBit & (bitMask << shifter)) >> shifter;
 			}
 		}
 	}
 
 	else
 	{
-		shifter = 8 * (TEMP_MAX_PLAYER - _hitPlayerNum);	// 이동 연산에 필요한 값
-		bulletCount = (_shootCountBit >> shifter);
-		
-		// 이미 맞은 것을 체크한 플레이어의 총알 갯수는 지워서 지장이 없도록 한다.
-		_shootCountBit &= (bitEraseMask << shifter);	// 지금 구한 8비트를 마스크로 지워줌
+		shifter = 8 * (TEMP_MAX_PLAYER - _hitPlayerNum);   // 이동 연산에 필요한 값
+		bulletCount = (_shootCountBit & (bitMask << shifter)) >> shifter;
 	}
 
 	return bulletCount;
@@ -945,6 +944,8 @@ bool InGameManager::CheckBulletHitAndGetHitPlayers(C_ClientInfo* _ptr, IngamePac
 }
 void InGameManager::BulletHitSend(C_ClientInfo* _shotPlayer, const vector<C_ClientInfo*>& _hitPlayers)
 {
+	IC_CS cs;
+
 	PROTOCOL_INGAME protocol;
 	char buf[BUFSIZE] = { 0, };
 	int packetSize = 0;
@@ -1015,7 +1016,13 @@ void InGameManager::Kill(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer)
 	// 점수 더함
 	_shotPlayer->GetPlayerInfo()->GetScore().killScore +=
 		gameInfo[_shotPlayer->GetGameType()]->killPoint;
+
+	// 팀 점수도 더함
+	_shotPlayer->GetRoom()->GetTeamInfo(
+		_shotPlayer->GetPlayerInfo()->GetTeamNum()).teamKillScore +=
+		gameInfo[_shotPlayer->GetGameType()]->killPoint;
 }
+
 void InGameManager::Respawn(C_ClientInfo* _player)
 {
 	std::thread respawnThread(RespawnWaitAndRevive, _player);		// 1회용 리스폰 쓰레드 생성

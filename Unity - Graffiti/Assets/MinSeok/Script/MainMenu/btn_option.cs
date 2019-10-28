@@ -4,13 +4,9 @@ using UnityEngine;
 
 public class btn_option : UnityEngine.MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    void Awake()
+    {
+        GameObject.Find("UserNickName").GetComponent<TMPro.TMP_Text>().text = NetworkManager.instance.NickName;
+    }
+
 }
