@@ -208,7 +208,8 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
         if (BridgeClientToServer.instance.isStartReloadGageCor[_index] == false)
         {
             UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadGageImg(weaponManager.weaponInfoAR.reloadTime, _index));
-            BridgeClientToServer.instance.isStartReloadGageCor[_ind
+            BridgeClientToServer.instance.isStartReloadGageCor[_index] = true;
+        }
     }
 
     public float GetReloadTime(int _index)
