@@ -94,36 +94,46 @@ public partial class NetworkManager : MonoBehaviour
 		// 얻어온 정보를 switch하여 처리한다.
 		switch (state)
 		{
-			// Login 상태일 때
-			case STATE_PROTOCOL.LOGIN_STATE:
-				{
-					// Login 상태에서 프로토콜은 제외했다.(같은 값이 존재해서)
+            // Login 상태일 때
+            case STATE_PROTOCOL.LOGIN_STATE:
+                {
+                    // Login 상태에서 프로토콜은 제외했다.(같은 값이 존재해서)
 
+                    switch (result)
+                    {
+                        // 로그인 성공하면 닉네임을 보내준다.
+                        case RESULT.LOGIN_SUCCESS:
+                            {
+                                lock (key)
+                                {
+                                    sysMsg = string.Empty;
+                                    UnPackPacket(info.packet, out sysMsg, out nickName);
+                                    Debug.Log(sysMsg);
+                                }
+                            }
+                            break;
 
-					switch (result)
-					{
-						case RESULT.LOGIN_SUCCESS:
-						//case RESULT.JOIN_SUCCESS:
-						//case RESULT.LOGOUT_SUCCESS:
-						case RESULT.ID_EXIST:
-						//case RESULT.LOGOUT_FAIL:
-						case RESULT.ID_ERROR:
-						case RESULT.PW_ERROR:
-							{
-								lock (key)
-								{
-									sysMsg = string.Empty;
-									UnPackPacket(info.packet, out sysMsg);
-									Debug.Log(sysMsg);
-								}
-							}
-							break;
-					}
-				}
-				break;
+                        //case RESULT.JOIN_SUCCESS:
+                        //case RESULT.LOGOUT_SUCCESS:
+                        case RESULT.ID_EXIST:
+                        //case RESULT.LOGOUT_FAIL:
+                        case RESULT.ID_ERROR:
+                        case RESULT.PW_ERROR:
+                            {
+                                lock (key)
+                                {
+                                    sysMsg = string.Empty;
+                                    UnPackPacket(info.packet, out sysMsg);
+                                    Debug.Log(sysMsg);
+                                }
+                            }
+                            break;
+                    }
+                }
+                break;
 
-			// Lobby 상태일 때
-			case STATE_PROTOCOL.LOBBY_STATE:
+            // Lobby 상태일 때
+            case STATE_PROTOCOL.LOBBY_STATE:
 				{
 					switch (protocol)
 					{

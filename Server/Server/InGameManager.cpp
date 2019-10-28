@@ -385,12 +385,12 @@ bool InGameManager::InitProcess(C_ClientInfo* _ptr, char* _buf)
 	// 전송(본인 포함)
 	ListSendPacket(playerList, nullptr, protocol, buf, packetSize, false);
 
-	// 2. 모든 플레이어에게 자신의 닉네임 정보를 보내준다(본인 포함)
+	// 2. 모든 플레이어에게 자신의 닉네임 정보를 보내준다(본인 제외)
 	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::NICKNAME_PROTOCOL, RESULT_INGAME::NODATA);
 	PackPacket(buf, _ptr->GetPlayerInfo()->GetPlayerNum(), _ptr->GetUserInfo()->nickname, packetSize);
 
-	// 전송(본인 포함)
-	ListSendPacket(playerList, nullptr, protocol, buf, packetSize, false);
+	// 전송(본인 제외)
+	ListSendPacket(playerList, _ptr, protocol, buf, packetSize, false);
 
 	return true;
 }
@@ -800,12 +800,12 @@ bool InGameManager::CheckMaxFire(C_ClientInfo* _shotPlayer, int _numOfBullet)
 
 	return result;
 }
-int InGameManager::GetNumOfBullet(int& _shootCountBit, byte _hitPlayerNum)
+int InGameManager::GetNumOfBullet(int _shootCountBit, byte _hitPlayerNum)
 {
 	int shifter = 0;
 	int bulletCount = 0;
 	int TEMP_MAX_PLAYER = 4;
-	byte bitEraseMask = 0x00;			// 8비트 지우기 마스크(00000000)
+	byte bitMask = 0xFF;			// 8비트 지우기 마스크(1111 1111)
 
 	// 0이 매개변수로 넘어오면 발사된 전체 총알 갯수를 달라는 의미다.
 	if (_hitPlayerNum == 0)
@@ -819,8 +819,7 @@ int InGameManager::GetNumOfBullet(int& _shootCountBit, byte _hitPlayerNum)
 			
 			if ((bulletCountBit >> shifter) > 0)
 			{
-				bulletCount += (bulletCountBit >> shifter);
-				bulletCountBit &= (bitEraseMask << shifter);	// 지금 구한 8비트를 마스크로 지워줌
+				bulletCount += (bulletCountBit & (bitMask << shifter)) >> shifter;
 			}
 		}
 	}
@@ -828,10 +827,7 @@ int InGameManager::GetNumOfBullet(int& _shootCountBit, byte _hitPlayerNum)
 	else
 	{
 		shifter = 8 * (TEMP_MAX_PLAYER - _hitPlayerNum);	// 이동 연산에 필요한 값
-		bulletCount = (_shootCountBit >> shifter);
-		
-		// 이미 맞은 것을 체크한 플레이어의 총알 갯수는 지워서 지장이 없도록 한다.
-		_shootCountBit &= (bitEraseMask << shifter);	// 지금 구한 8비트를 마스크로 지워줌
+		bulletCount = (_shootCountBit & (bitMask << shifter)) >> shifter;
 	}
 
 	return bulletCount;
@@ -1017,6 +1013,12 @@ void InGameManager::Kill(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer)
 	// 점수 더함
 	_shotPlayer->GetPlayerInfo()->GetScore().killScore +=
 		gameInfo[_shotPlayer->GetGameType()]->killPoint;
+
+	// 팀 점수도 더함
+	_shotPlayer->GetRoom()->GetTeamInfo(
+		_shotPlayer->GetPlayerInfo()->GetTeamNum()).teamKillScore +=
+		gameInfo[_shotPlayer->GetGameType()]->killPoint;
+
 }
 void InGameManager::Respawn(C_ClientInfo* _player)
 {
@@ -1180,7 +1182,9 @@ void InGameManager::ListSendPacket(vector<C_ClientInfo*> _list, C_ClientInfo* _e
 // 무기 선택 타이머 쓰레드
 DWORD WINAPI InGameManager::WeaponSelectTimerThread(void* _arg)
 {
-	C_ClientInfo* ptr = (C_ClientInfo*)_arg;
+	RoomInfo* room = (RoomInfo*)_arg;	// 방 정보를 얻음
+
+	InGameManager* gameManager = InGameManager::GetInstance();
 
 	PROTOCOL_INGAME protocol = (PROTOCOL_INGAME)0;
 	char buf[BUFSIZE] = { 0, };
@@ -1206,16 +1210,23 @@ DWORD WINAPI InGameManager::WeaponSelectTimerThread(void* _arg)
 		// 만약 아이템 선택시간(상수)을 넘었다면 쓰레드 핸들 반납 후, 무한루프를 빠져나간다.
 		if (duringTime >= WEAPON_SELTIME)
 		{
+			// 누구 하나라도 게임 시작전에 나갔으면 이 방은 터진거임
+			if (room->GetMaxPlayer() > room->GetNumOfPlayer())
+			{
+				/// 그리고 여기에서 클라들에게 방 터졌다는 프로토콜을 보냄
+				return -1;
+			}
+
 			// 쓰레드 핸들 반납
-			CloseHandle(ptr->GetRoom()->GetWeaponTimerHandle());
-			ptr->GetRoom()->SetWeaponTimerHandle(nullptr);
+			CloseHandle(room->GetWeaponTimerHandle());
+			room->SetWeaponTimerHandle(nullptr);
 
 			// 무기 정보를 얻어오기위한 프로토콜 조립
 			protocol = InGameManager::GetInstance()->SetProtocol(INGAME_STATE, PROTOCOL_INGAME::WEAPON_PROTOCOL, RESULT_INGAME::NODATA);
 			packetSize = 0;
 
-			// 같은 방에 있는 "모든" 플레이어에게 무기를 보내라고 프로토콜을 전송함.
-			vector<C_ClientInfo*> playerList = ptr->GetRoom()->GetPlayers();	// 리스트 얻어옴
+			// 같은 방에 있는 "모든" 플레 이어에게 무기를 보내라고 프로토콜을 전송함.
+			vector<C_ClientInfo*> playerList = room->GetPlayers();	// 리스트 얻어옴
 			InGameManager::GetInstance()->ListSendPacket(playerList, nullptr, protocol, buf, packetSize, false);
 
 			break;
@@ -1224,6 +1235,13 @@ DWORD WINAPI InGameManager::WeaponSelectTimerThread(void* _arg)
 		// 1초마다 값이 변하면
 		if (sec < (int)duringTime)
 		{
+			// 누구 하나라도 게임 시작전에 나갔으면 이 방은 터진거임
+			if (room->GetMaxPlayer() > room->GetNumOfPlayer())
+			{
+				/// 그리고 여기에서 클라들에게 방 터졌다는 프로토콜을 보냄
+				return -1;
+			}
+
 			sec = (int)duringTime;	// 새롭게 초 단위를 갱신시켜준다.(before sec의 역할)
 
 			// 1초에 한 번씩 시간을 알려주는 프로토콜을 보냄.
@@ -1234,7 +1252,7 @@ DWORD WINAPI InGameManager::WeaponSelectTimerThread(void* _arg)
 			InGameManager::GetInstance()->PackPacket(buf, (WEAPON_SELTIME - sec), packetSize);
 
 			// 같은 방에 있는 "모든" 플레이어에게 현재 무기 선택종료까지 남은 시간을 보내줌
-			vector<C_ClientInfo*> playerList = ptr->GetRoom()->GetPlayers();	// 리스트 얻어옴
+			vector<C_ClientInfo*> playerList = room->GetPlayers();	// 리스트 얻어옴
 			InGameManager::GetInstance()->ListSendPacket(playerList, nullptr, protocol, buf, packetSize, false);
 		}
 

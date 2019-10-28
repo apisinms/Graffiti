@@ -80,6 +80,7 @@ public class GameManager : MonoBehaviour
 		BridgeClientToServer.instance.Initialization_PlayerViewer();    // 게임 시작시 플레이어 뷰어 셋팅
 
 		loadingImage = GameObject.Find("loadingImage").GetComponent<Image>();
+
 #else
         gameInfo.gameType = 0;
         gameInfo.gameTime = 180;
@@ -202,12 +203,21 @@ public class GameManager : MonoBehaviour
 			loadingImage.enabled = false;
 		}
 
-		// 안들어온 놈들 꺼준다.
+		// 1. 안들어온 놈들 꺼준다.
 		GameObject notConnectedCharacter;
 		for (int i = gameInfo.maxPlayer; i < C_Global.MAX_CHARACTER; i++)
 		{
 			notConnectedCharacter = GameObject.FindGameObjectWithTag("Player" + (i + 1).ToString());
 			notConnectedCharacter.SetActive(false);
+		}
+
+		// 2. 아이콘도 꺼준다.
+		GameObject icon = GameObject.Find("Items");
+		var icons = icon.GetComponentsInChildren<bl_MiniMapItem>();
+		for (int j = 0; j < icons.Length; j++)
+		{
+			if (icons[j].Target == null)
+				icons[j].HideItem();
 		}
 #endif
 	}

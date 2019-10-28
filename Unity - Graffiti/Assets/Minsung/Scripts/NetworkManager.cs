@@ -17,6 +17,7 @@ public partial class NetworkManager : MonoBehaviour
     //private static IPAddress serverIP = IPAddress.Parse("127.0.0.1");
     private static IPAddress serverIP = IPAddress.Parse("211.227.82.184");
 
+
     private static int serverPort = 10823;
 
 	readonly static int IDSIZE = 255;
@@ -131,8 +132,11 @@ public partial class NetworkManager : MonoBehaviour
 		public string nickname;
 	};
 
-	// 총알 충돌 검사 구조체
-	[StructLayout(LayoutKind.Sequential)]
+    string nickName;
+    public string NickName { get { return nickName; } set { nickName = value; } }
+
+    // 총알 충돌 검사 구조체
+    [StructLayout(LayoutKind.Sequential)]
 	public struct BulletCollisionChecker
 	{
 		[MarshalAs(UnmanagedType.I1)]

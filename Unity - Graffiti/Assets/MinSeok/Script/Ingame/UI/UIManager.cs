@@ -85,12 +85,11 @@ public class UIManager : MonoBehaviour
 	{
 		public GameObject obj_parent;
 		public Image img_mainW { get; set; }
-		public Text txt_ammoState { get; set; }
+		public TMP_Text txt_ammoState { get; set; }
 	}
     #endregion
 
     #region RESPAWN_GAGE
-    public GameObject obj_prefebRespawnGage;
     public _IMG_RESPAWN_INFO respawn;
     private bool isStartRespawnGageCor;
 
@@ -98,8 +97,32 @@ public class UIManager : MonoBehaviour
     {
         public GameObject obj_parent;
         public Image img_respawnGage { get; set; }
-        public Text txt_deathFrom { get; set; }
+        public TMP_Text txt_deathFrom { get; set; }
     }
+    #endregion
+
+    #region KILL_LOG
+    private GameObject[] obj_killLogs;
+
+    //킬러, 무기, 빅팀을 각각 큐에넣은후에 _IMG_KILL_LOG[] killLog에 적용시킬것임 
+    private Queue<_TMP_ATTRIBUTE> queueKillLog;
+
+    public struct _IMG_KILL_LOG
+    {
+        public GameObject obj_parent;
+        public TMP_Text txt_from;
+        public Image img_weapon;
+        public TMP_Text txt_to;
+    }
+    _IMG_KILL_LOG[] killLog;
+
+    public struct _TMP_ATTRIBUTE //_IMG_KILL_LOG멤버와 대응되는 값들. tmp로써 값을넣는데 쓰임
+    {
+        public string from;
+        public Sprite spr;
+        public string to;
+    }
+    _TMP_ATTRIBUTE tmpAttribute;
     #endregion
 
     #region DeadUI
@@ -125,6 +148,7 @@ public class UIManager : MonoBehaviour
 		Initialization_Circle();
 		Initialization_Line();
 		Initialization_ReloadGage();
+        Initialization_KillLog();
         Initialization_RespawnGage();
 
         Initialization_WeaponInfo_1();
@@ -138,6 +162,8 @@ public class UIManager : MonoBehaviour
 		leftJoystick = GameObject.Find("Left");
 		rightJoystick = GameObject.Find("Right");
         reloadBtn = GameObject.Find("obj_reloadBtn");
+
+        StartCoroutine(CheckKillLogQueue()); //킬로그검사 큐를 계속돌림
 
         //GameObject.Find("Canvas_overlay").transform.Find("Panel_Dead").gameObject.SetActive(true);
         //deadPanel = GameObject.Find("Panel_Dead");
@@ -155,16 +181,6 @@ public class UIManager : MonoBehaviour
         }
 		line.obj_parent.transform.position = PlayersManager.instance.tf_players[myIndex].transform.position + lineAddPos;		
 		weaponInfo.obj_parent.transform.position = PlayersManager.instance.tf_players[myIndex].transform.position + weaponAddPos;
-		/*
-        for(int i=0; i<nickname.Length; i++)
-            nickname[playersIndex[i]].obj_parent.transform.position = PlayersManager.instance.tf_players[playersIndex[i]].transform.position + hpAddPos;
-
-        for (int i = 0; i < hp.Length; i++)
-            hp[playersIndex[i]].obj_parent.transform.position = PlayersManager.instance.tf_players[playersIndex[i]].transform.position + nickAddPos;//Camera.main.WorldToScreenPoint(PlayersManager.instance.tf_players[enemyIndex[i]].transform.position);
-
-        for(int i=0; i<circle.Length; i++)
-            circle[playersIndex[i]].obj_parent.transform.position = PlayersManager.instance.tf_players[playersIndex[i]].transform.position + circleAddPos;
-        */
 	}
 
     private void Initialization_HP()
@@ -251,16 +267,27 @@ public class UIManager : MonoBehaviour
     }
 
     private void Initialization_Nickname()
-	{
-		nickname = new _TXT_NICKNAME_INFO[GameManager.instance.gameInfo.maxPlayer];
-		nickAddPos = new Vector3(0, 2.0f, 0.9f);
+    {
+        nickname = new _TXT_NICKNAME_INFO[GameManager.instance.gameInfo.maxPlayer];
+        nickAddPos = new Vector3(0, 2.0f, 0.9f);
 
-		for (int i = 0; i < nickname.Length; i++)
-		{
-			nickname[i].obj_parent = Instantiate(obj_prefebNickname, GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
-			nickname[i].txt_nickname = nickname[i].obj_parent.transform.GetChild(0).GetComponent<TMP_Text>();
-		}
-	}
+        for (int i = 0; i < nickname.Length; i++)
+        {
+            nickname[i].obj_parent = Instantiate(obj_prefebNickname, GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
+            nickname[i].txt_nickname = nickname[i].obj_parent.transform.GetChild(0).GetComponent<TMP_Text>();
+#if NETWORK
+         if(i == myIndex)
+         {
+            nickname[i].txt_nickname.text = NetworkManager.instance.NickName;
+         }
+#else
+            if (i == myIndex)
+            {
+                nickname[i].txt_nickname.text = "김민석";
+            }
+#endif
+        }
+    }
 
     private void Initialization_Circle()
     {
@@ -365,11 +392,35 @@ public class UIManager : MonoBehaviour
 		line.obj_parent.SetActive(false);
 	}
 
+    private void Initialization_KillLog()
+    {
+        killLog = new _IMG_KILL_LOG[4];
+        queueKillLog = new Queue<_TMP_ATTRIBUTE>();
+
+        for (int i = 0; i < killLog.Length; i++)
+        {
+            killLog[i].obj_parent = GameObject.FindGameObjectWithTag("Canvas_overlay").transform.GetChild(7).GetChild(i).gameObject;
+            killLog[i].txt_from = killLog[i].obj_parent.transform.GetChild(0).GetComponent<TMP_Text>();
+            killLog[i].img_weapon = killLog[i].obj_parent.transform.GetChild(1).GetComponent<Image>();
+            killLog[i].txt_to = killLog[i].obj_parent.transform.GetChild(2).GetComponent<TMP_Text>();
+            killLog[i].obj_parent.SetActive(false);
+        }
+
+        tmpAttribute = new _TMP_ATTRIBUTE();
+        tmpAttribute.from = null;
+        tmpAttribute.spr = null;
+        tmpAttribute.to = null;
+    }
+
+
+
+
+
     private void Initialization_RespawnGage()
     {
         respawn.obj_parent = GameObject.FindGameObjectWithTag("Canvas_overlay").transform.GetChild(6).gameObject;
         respawn.img_respawnGage = respawn.obj_parent.transform.GetChild(2).GetComponent<Image>();
-        respawn.txt_deathFrom = respawn.obj_parent.transform.GetChild(3).GetComponent<Text>();
+        respawn.txt_deathFrom = respawn.obj_parent.transform.GetChild(3).GetComponent<TMP_Text>();
         line.obj_parent.SetActive(false);
     }
 
@@ -379,7 +430,7 @@ public class UIManager : MonoBehaviour
 
 		weaponInfo.obj_parent = Instantiate(obj_prefebWeaponInfo, GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
 		weaponInfo.img_mainW = weaponInfo.obj_parent.transform.GetChild(1).GetComponent<Image>();
-		weaponInfo.txt_ammoState = weaponInfo.obj_parent.transform.GetChild(2).GetComponent<Text>();
+		weaponInfo.txt_ammoState = weaponInfo.obj_parent.transform.GetChild(2).GetComponent<TMP_Text>();
 	}
 
     public void Initialization_WeaponInfo_2()
@@ -434,7 +485,7 @@ public class UIManager : MonoBehaviour
 
     public void ReloadAmmo_Btn() //재장전 이미지 버튼
     {
-        WeaponManager.instance.ReloadAmmo(myIndex); //총알개수 체크후 바로 다이렉트 재장전
+        WeaponManager.instance.ReloadAmmoProcess(myIndex); //총알개수 체크후 바로 다이렉트 재장전
 
 #if NETWORK
         NetworkManager.instance.SendIngamePacket();
@@ -467,7 +518,6 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
-
     public IEnumerator DecreaseRespawnGageImg(float _time)
     {
         if (isStartRespawnGageCor == true)
@@ -481,6 +531,7 @@ public class UIManager : MonoBehaviour
             if (respawn.img_respawnGage.fillAmount <= 0)
             {
                 respawn.img_respawnGage.fillAmount = 1.0f;
+                WeaponManager.instance.SupplyAmmo(myIndex);
                 respawn.obj_parent.SetActive(false);
                 isStartRespawnGageCor = false;
                 yield break;
@@ -570,4 +621,58 @@ public class UIManager : MonoBehaviour
 		hp[_idx].img_front.fillAmount = _health * 0.01f;
 		StartCoroutine(DecreaseMiddleHPImg(_idx, _health * 0.01f));
 	}
+
+    //킬로그 코루틴을 계속돌려서 유저가 죽을떄마다 큐에 킬로그가 들어오는지 계속확인(브릿지 킬프로세스에서 들어옴)
+    //큐가 들어오면 준비된 로그ui슬롯 4개에 순서대로 출력 시간 1초단위
+    public IEnumerator CheckKillLogQueue()
+    {
+        int i = 0;
+
+        while (true)
+        {
+            if (queueKillLog.Count > 0)
+            {
+                _TMP_ATTRIBUTE tmp = queueKillLog.Dequeue(); //큐에서 킬로그를 바로빼와서
+
+                if (killLog[0].obj_parent.activeSelf == false) //맨윗줄이 1초뒤꺼졌으면 맨위로 다시 정렬해줘야됨
+                    i = 0;
+
+                //그후 킬러, 빅팀의 닉네임, 사용된무기 정보를 킬로그에 업데이트함
+                killLog[i].txt_from.text = tmp.from;
+                killLog[i].img_weapon.sprite = tmp.spr;
+                killLog[i].txt_to.text = tmp.to;
+                killLog[i].obj_parent.SetActive(true);
+
+                StartCoroutine(CheckKillLogTime(killLog[i]));
+                i++;
+            }
+            yield return null;
+        }
+    }
+    
+    //유저간의 전투
+    public void EnqueueKillLog_Player(int _killer, int _victim)
+    {
+        tmpAttribute.from = PlayersManager.instance.nickname[_killer - 1];
+        tmpAttribute.spr = WeaponManager.instance.GetWeaponSprite(_killer - 1);
+        tmpAttribute.to = PlayersManager.instance.nickname[_victim - 1];
+
+        queueKillLog.Enqueue(tmpAttribute);
+    }
+
+    //차에 치어 즉사
+    public void EnqueueKillLog_CarCrash(int _victim)
+    {
+        tmpAttribute.from = null;
+        tmpAttribute.spr = spr_mainW[3];
+        tmpAttribute.to = PlayersManager.instance.nickname[_victim - 1];
+
+        queueKillLog.Enqueue(tmpAttribute);
+    }
+
+    public IEnumerator CheckKillLogTime(_IMG_KILL_LOG _tmp)
+    {
+        yield return YieldInstructionCache.WaitForSeconds(3.0f);
+        _tmp.obj_parent.SetActive(false);
+    }
 }

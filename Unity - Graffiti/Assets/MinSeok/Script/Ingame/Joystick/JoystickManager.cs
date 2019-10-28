@@ -25,7 +25,6 @@ public class JoystickManager : MonoBehaviour
         //ChangeGun(1);
 #endif
     }
-
     public void ChangeGun(int _index)
 	{
         #if !NETWORK

@@ -76,7 +76,6 @@ ScriptsOnlyBuild:
     - bl_WorldSpace
     - btn_option
     - btn_start
-    - scrollViewTest
     PathCreator.dll:
     - PathCreation.PathCreator
     Unity.TextMeshPro.dll:
@@ -170,6 +169,8 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9446}
     - Class: 114
+      Script: {instanceID: 9462}
+    - Class: 114
       Script: {instanceID: 9502}
     - Class: 114
       Script: {instanceID: 9510}
@@ -193,8 +194,6 @@ ScriptsOnlyBuild:
       Script: {instanceID: 9660}
     - Class: 114
       Script: {instanceID: 9662}
-    - Class: 114
-      Script: {instanceID: 9672}
     - Class: 114
       Script: {instanceID: 9734}
     - Class: 114
@@ -242,8 +241,6 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 10268}
     - Class: 114
-      Script: {instanceID: 10280}
-    - Class: 114
       Script: {instanceID: 10290}
     - Class: 114
       Script: {instanceID: 10374}
@@ -263,6 +260,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 10558}
     - Class: 114
       Script: {instanceID: 10572}
+    - Class: 114
+      Script: {instanceID: 10576}
     - Class: 114
       Script: {instanceID: 10624}
     - Class: 114
@@ -1475,7 +1474,7 @@ ScriptsOnlyBuild:
     className: CustomInputField
   - hash:
       serializedVersion: 2
-      Hash: 5c1ae6214d4112892af9a21cc35f7cb5
+      Hash: 760d67df20efd46c5c4054c7de983820
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: UIManager

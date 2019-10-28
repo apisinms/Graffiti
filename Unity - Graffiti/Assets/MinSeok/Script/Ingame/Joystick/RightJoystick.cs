@@ -31,7 +31,7 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
             instance = this;
        
         myIndex = GameManager.instance.myIndex;
-        right_joystick.maxMoveArea = img_joystick_back.rectTransform.sizeDelta.y * 0.8f; //스틱이 움직일수있는 수평범위. ( * 0.5f면 정확히 조이스틱배경의 반지름만큼)
+        right_joystick.maxMoveArea = img_joystick_back.rectTransform.sizeDelta.y * 1.0f; //스틱이 움직일수있는 수평범위. ( * 0.5f면 정확히 조이스틱배경의 반지름만큼)
         right_joystick.stickFirstPos = img_joystick_stick.rectTransform.position;
         
         float can = transform.parent.GetComponent<RectTransform>().localScale.x;  // 캔버스 크기에대한 반지름 조절.
@@ -125,9 +125,9 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
     {
         if (_distance >= 0 && _distance <= right_joystick.maxMoveArea * 0.5f) //0단계때
             return 0;
-        else if (_distance >= right_joystick.maxMoveArea * 0.5f && _distance <= right_joystick.maxMoveArea * 1.2f) //1단계 조준단계
+        else if (_distance >= right_joystick.maxMoveArea * 0.5f && _distance <= right_joystick.maxMoveArea * 1.5f) //1단계 조준단계
             return 1;
-        else if (_distance >= right_joystick.maxMoveArea * 1.2f) //2단계 발사단계
+        else if (_distance >= right_joystick.maxMoveArea * 1.5f) //2단계 발사단계
             return 2;
 
         return -1;

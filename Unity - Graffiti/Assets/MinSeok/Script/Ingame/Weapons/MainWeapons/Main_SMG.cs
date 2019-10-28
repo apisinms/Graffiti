@@ -70,7 +70,7 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
         {
             if (playerSMGInfo[myIndex].curAmmo <= 0)
             {
-                ReloadAmmo(myIndex);
+                ReloadAmmoProcess(myIndex);
                 yield break;
             }
 
@@ -120,7 +120,7 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
 
             if (playerSMGInfo[myIndex].curAmmo <= 0)
             {
-                ReloadAmmo(myIndex);
+                ReloadAmmoProcess(myIndex);
                 yield break;
             }
 
@@ -224,7 +224,19 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
         return playerSMGInfo[_index].mainWname;
 
     }
-    public void ReloadAmmo(int _index)
+
+    public Sprite GetWeaponSprite(int _index)
+    {
+        return UIManager.instance.spr_mainW[2];
+    }
+
+    public void SupplyAmmo(int _index)
+    {
+        playerSMGInfo[_index].curAmmo = weaponManager.weaponInfoSMG.maxAmmo;
+        UIManager.instance.SetAmmoStateTxt(playerSMGInfo[_index].curAmmo);
+    }
+
+    public void ReloadAmmoProcess(int _index)
     {
         #if NETWORK
         NetworkManager.instance.SendIngamePacket();
@@ -255,8 +267,7 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
 
             yield return YieldInstructionCache.WaitForSeconds(weaponManager.weaponInfoSMG.reloadTime);
 
-            playerSMGInfo[_index].curAmmo = weaponManager.weaponInfoSMG.maxAmmo;
-            UIManager.instance.SetAmmoStateTxt(playerSMGInfo[_index].curAmmo);
+            SupplyAmmo(_index);
             AudioManager.Instance.Play(9);
 
 			weaponManager.isReloading = false;

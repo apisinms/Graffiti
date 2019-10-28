@@ -68,7 +68,7 @@ public class btn_start : UnityEngine.MonoBehaviour
 			else
 			{
 				// UI바꾸고
-				txt_startBtn.text = "매칭";
+				txt_startBtn.text = "플레이";
 				obj_loadingBar.SetActive(false);
 
 				yield break;    // 코루틴 종료
