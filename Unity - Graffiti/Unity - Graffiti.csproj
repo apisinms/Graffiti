@@ -16,7 +16,7 @@
     <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectGenerator>VSTU</UnityProjectGenerator>
     <UnityProjectType>Game:1</UnityProjectType>
-    <UnityBuildTarget>Android:13</UnityBuildTarget>
+    <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2019.1.12f1</UnityVersion>
     <RootNamespace></RootNamespace>
     <LangVersion>6</LangVersion>
@@ -33,7 +33,7 @@
     <IntermediateOutputPath>Temp\UnityVS_obj\Debug\</IntermediateOutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>DEBUG;TRACE;UNITY_2019_1_12;UNITY_2019_1;UNITY_2019;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_INCLUDE_TESTS;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_SPRITES;ENABLE_GRID;ENABLE_TILEMAP;ENABLE_TERRAIN;ENABLE_TEXTURE_STREAMING;ENABLE_DIRECTOR;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_TIMELINE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;INCLUDE_DYNAMIC_GI;INCLUDE_GI;ENABLE_MONO_BDWGC;PLATFORM_SUPPORTS_MONO;INCLUDE_PUBNUB;ENABLE_VIDEO;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_LOCALIZATION;PLATFORM_ANDROID;UNITY_ANDROID;UNITY_ANDROID_API;ENABLE_SUBSTANCE;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_EVENT_QUEUE;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_NATIVE_CRASH_REPORTING;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_ADS_ID;UNITY_CAN_SHOW_SPLASH_SCREEN;ENABLE_VR;ENABLE_AR;UNITY_HAS_GOOGLEVR;UNITY_HAS_TANGO;ENABLE_SPATIALTRACKING;ENABLE_RUNTIME_PERMISSIONS;ENABLE_ENGINE_CODE_STRIPPING;UNITY_ASTC_ONLY_DECOMPRESS;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;NET_STANDARD_2_0;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_VSTU;NETWORK;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_2019_1_12;UNITY_2019_1;UNITY_2019;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2019_1_OR_NEWER;PLATFORM_ARCH_64;UNITY_64;UNITY_INCLUDE_TESTS;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_SPRITES;ENABLE_GRID;ENABLE_TILEMAP;ENABLE_TERRAIN;ENABLE_TEXTURE_STREAMING;ENABLE_DIRECTOR;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_TIMELINE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;INCLUDE_DYNAMIC_GI;INCLUDE_GI;ENABLE_MONO_BDWGC;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_VIDEO;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_LOCALIZATION;PLATFORM_STANDALONE_WIN;PLATFORM_STANDALONE;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_OUT_OF_PROCESS_CRASH_HANDLER;ENABLE_SCRIPTING_GC_WBARRIERS;ENABLE_EVENT_QUEUE;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;ENABLE_VR;ENABLE_AR;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_STANDARD_2_0;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_VSTU;NETWORK;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -43,7 +43,7 @@
     <IntermediateOutputPath>Temp\UnityVS_obj\Release\</IntermediateOutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>TRACE;UNITY_2019_1_12;UNITY_2019_1;UNITY_2019;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_INCLUDE_TESTS;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_SPRITES;ENABLE_GRID;ENABLE_TILEMAP;ENABLE_TERRAIN;ENABLE_TEXTURE_STREAMING;ENABLE_DIRECTOR;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_TIMELINE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;INCLUDE_DYNAMIC_GI;INCLUDE_GI;ENABLE_MONO_BDWGC;PLATFORM_SUPPORTS_MONO;INCLUDE_PUBNUB;ENABLE_VIDEO;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_LOCALIZATION;PLATFORM_ANDROID;UNITY_ANDROID;UNITY_ANDROID_API;ENABLE_SUBSTANCE;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_EVENT_QUEUE;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_NATIVE_CRASH_REPORTING;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_ADS_ID;UNITY_CAN_SHOW_SPLASH_SCREEN;ENABLE_VR;ENABLE_AR;UNITY_HAS_GOOGLEVR;UNITY_HAS_TANGO;ENABLE_SPATIALTRACKING;ENABLE_RUNTIME_PERMISSIONS;ENABLE_ENGINE_CODE_STRIPPING;UNITY_ASTC_ONLY_DECOMPRESS;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;NET_STANDARD_2_0;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_VSTU;NETWORK;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
+    <DefineConstants>TRACE;UNITY_2019_1_12;UNITY_2019_1;UNITY_2019;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2019_1_OR_NEWER;PLATFORM_ARCH_64;UNITY_64;UNITY_INCLUDE_TESTS;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_SPRITES;ENABLE_GRID;ENABLE_TILEMAP;ENABLE_TERRAIN;ENABLE_TEXTURE_STREAMING;ENABLE_DIRECTOR;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_TIMELINE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;INCLUDE_DYNAMIC_GI;INCLUDE_GI;ENABLE_MONO_BDWGC;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_VIDEO;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_LOCALIZATION;PLATFORM_STANDALONE_WIN;PLATFORM_STANDALONE;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_OUT_OF_PROCESS_CRASH_HANDLER;ENABLE_SCRIPTING_GC_WBARRIERS;ENABLE_EVENT_QUEUE;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;ENABLE_VR;ENABLE_AR;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_STANDARD_2_0;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_VSTU;NETWORK;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
@@ -76,6 +76,12 @@
     </Reference>
     <Reference Include="Managed/UnityEngine/UnityEngine.ClothModule">
       <HintPath>C:\Program Files\Unity\Editor\2019.1.12f1\Editor\Data\Managed/UnityEngine/UnityEngine.ClothModule.dll</HintPath>
+    </Reference>
+    <Reference Include="Managed/UnityEngine/UnityEngine.ClusterInputModule">
+      <HintPath>C:\Program Files\Unity\Editor\2019.1.12f1\Editor\Data\Managed/UnityEngine/UnityEngine.ClusterInputModule.dll</HintPath>
+    </Reference>
+    <Reference Include="Managed/UnityEngine/UnityEngine.ClusterRendererModule">
+      <HintPath>C:\Program Files\Unity\Editor\2019.1.12f1\Editor\Data\Managed/UnityEngine/UnityEngine.ClusterRendererModule.dll</HintPath>
     </Reference>
     <Reference Include="Managed/UnityEngine/UnityEngine.CoreModule">
       <HintPath>C:\Program Files\Unity\Editor\2019.1.12f1\Editor\Data\Managed/UnityEngine/UnityEngine.CoreModule.dll</HintPath>
@@ -633,6 +639,7 @@
     <Compile Include="Assets\Gwangil\Scripts\BoundaryCollision.cs" />
     <Compile Include="Assets\Gwangil\Scripts\BypassAudioManager.cs" />
     <Compile Include="Assets\Gwangil\Scripts\BypassAudioSource.cs" />
+    <Compile Include="Assets\Gwangil\Scripts\LoadingSceneManager.cs" />
     <Compile Include="Assets\Gwangil\Scripts\LobbyNickName.cs" />
     <Compile Include="Assets\Gwangil\Scripts\ObjectPool.cs" />
     <Compile Include="Assets\Gwangil\Scripts\PooledObject.cs" />
@@ -652,18 +659,6 @@
     <Compile Include="Assets\Gwangil\UGUIMiniMap\Content\Scripts\Internal\Struct\bl_MMItemInfo.cs" />
     <Compile Include="Assets\Gwangil\UGUIMiniMap\Content\Scripts\Util\bl_MiniMapUtils.cs" />
     <Compile Include="Assets\Gwangil\UGUIMiniMap\Content\Scripts\Util\bl_SnapShot.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Scripts\TCP2_Demo_Camera.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Scripts\TCP2_Demo_Cat.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Scripts\TCP2_Demo_GammaLinear.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\TCP2 Demo Assets\Misc\TCP2_Demo.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\TCP2 Demo Assets\Misc\TCP2_Demo_PBS.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\TCP2 Demo Assets\Misc\TCP2_Demo_PBS_View.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\TCP2 Demo Assets\Misc\TCP2_Demo_View.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Scripts\TCP2_CameraDepth.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Scripts\TCP2_GetPosOnWater.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Scripts\TCP2_PlanarReflection.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Scripts\TCP2_RuntimeUtils.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Scripts\TCP2_ShaderUpdateUnityTime.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\CameraControl.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\ClientSectorManager.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\Effect\EffectManager.cs" />
@@ -765,92 +760,6 @@
     <None Include="Assets\Assets\LOWPOLY CHARACTERS\Overview\Font\Raleway\OFL.txt" />
     <None Include="Assets\Gwangil\PathCreator\Core\Editor\PathCreatorEditor.asmdef" />
     <None Include="Assets\Gwangil\PathCreator\Core\Runtime\PathCreator.asmdef" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\!ToonyColorsPro Readme.txt" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Shaders\Cat Demo\Cat\Style 1.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Shaders\Cat Demo\Cat\Style 2.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Shaders\Cat Demo\Cat\Style 3.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Shaders\Cat Demo\Cat\Style 4.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Shaders\Cat Demo\Cat\Style 5.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Shaders\Cat Demo\Cat\Style 6.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Shaders\Cat Demo\Decal.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Shaders\Cat Demo\Ground.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Shaders\Cat Demo\UnityChan\Style 1 Skin.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Shaders\Cat Demo\UnityChan\Style 1.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Shaders\Cat Demo\UnityChan\Style 3 Skin.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Shaders\Cat Demo\UnityChan\Style 3.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Shaders\Cat Demo\UnityChan\Style 4 Skin.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Shaders\Cat Demo\UnityChan\Style 4.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Shaders\Cat Demo\UnityChan\Style 5 Skin.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Shaders\Cat Demo\UnityChan\Style 5.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Shaders\Cat Demo\UnityChan\Style 6 Skin.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Shaders\Cat Demo\UnityChan\Style 6.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Shaders\Cat Demo\UnlitVertexColorsTransparent.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Shaders\Cat Demo\Vertex Colors Emissive.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Shaders\Cat Demo\Vertex Colors Specular.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Shaders\Cat Demo\Vertex Colors.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\Shaders\Cat Demo\Water.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\Cat Demo Assets\UnityChan License.txt" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\SG Demo Assets\_Misc Assets\TCP2_Demo_3DText.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Demo TCP2\TCP2 Demo Assets\Cubemaps\Cubemaps License.txt" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Editor\Shader Templates\TCP2_ShaderTemplate_Default.txt" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Editor\Shader Templates\TCP2_ShaderTemplate_Default_CurvedWorld.txt" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Editor\Shader Templates\TCP2_ShaderTemplate_PBS.txt" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Editor\Shader Templates\TCP2_ShaderTemplate_SurfacePBS.txt" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Editor\Shader Templates\TCP2_ShaderTemplate_Terrain.txt" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Editor\Shader Templates\TCP2_ShaderTemplate_Water.txt" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Editor\Shader Templates\TCP2_ShaderTemplate_Water_CurvedWorld.txt" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0 Generated\Examples\Default\Comic Book.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0 Generated\Examples\Default\Dissolve.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0 Generated\Examples\Default\HSV.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0 Generated\Examples\Default\Old School.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0 Generated\Examples\Default\Sketch.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0 Generated\Examples\Default\Snow Accumulation.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0 Generated\Examples\Default\Subsurface Scattering.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0 Generated\Examples\PBS\Blended Outline.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0 Generated\Examples\PBS\Hand Painted.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0 Generated\Examples\PBS\Outline Behind.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0 Generated\Examples\PBS\Sketch.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0 Generated\Examples\Water\Lava Cartoon.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0 Generated\Examples\Water\Lava.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0 Generated\Examples\Water\Poison.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0 Generated\Examples\Water\Realistic.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0 Generated\Examples\Water\Reflection.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0 Generated\Examples\Water\Water WindWaker.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0 Generated\Examples\Water\Water WindWaker2.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0\Include\TCP2_Include.cginc" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0\Include\TCP2_Outline.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0\Include\TCP2_Outline_Behind.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0\Include\TCP2_Outline_Behind_SM2.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0\Include\TCP2_Outline_Include.cginc" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0\Include\TCP2_Outline_SM2.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0\Include\TCP2_Outline_Stencil.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0\TCP2_Desktop.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0\TCP2_Mobile.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0\TCP2_OutlineOnly Blended SM2.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0\TCP2_OutlineOnly Blended.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0\TCP2_OutlineOnly SM2.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0\TCP2_OutlineOnly.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0\Variants Base\TCP2_Desktop_Outline.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0\Variants Base\TCP2_Desktop_OutlineBlending.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0\Variants Base\TCP2_Desktop_Specular.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0\Variants Base\TCP2_Desktop_Specular_Outline.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0\Variants Base\TCP2_Desktop_Specular_OutlineBlending.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0\Variants Base\TCP2_Mobile_Outline.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0\Variants Base\TCP2_Mobile_OutlineBlending.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0\Variants Base\TCP2_Mobile_Specular.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0\Variants Base\TCP2_Mobile_Specular_Outline.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders 2.0\Variants Base\TCP2_Mobile_Specular_OutlineBlending.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders PBS\TCP2_PBS_BRDF.cginc" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders PBS\TCP2_PBS_Core.cginc" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders PBS\TCP2_PBS_Main.cginc" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders PBS\TCP2_PBS_ShadowMeta.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders PBS\TCP2_Standard PBS (Specular).shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders PBS\TCP2_Standard PBS Outline (Specular).shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders PBS\TCP2_Standard PBS Outline Blended (Specular).shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders PBS\TCP2_Standard PBS Outline Blended.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders PBS\TCP2_Standard PBS Outline.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Shaders PBS\TCP2_Standard PBS.shader" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Textures\MatCap\MatCap Textures License.txt" />
     <None Include="Assets\Modern UI Pack\Read Me.txt" />
     <None Include="Assets\ProDrawCallOptimizer\Examples\ExamplesReadme.txt" />
     <None Include="Assets\ProDrawCallOptimizer\README.txt" />

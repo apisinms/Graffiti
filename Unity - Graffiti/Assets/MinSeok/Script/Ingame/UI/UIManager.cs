@@ -278,8 +278,9 @@ public class UIManager : MonoBehaviour
 #if NETWORK
          if(i == myIndex)
          {
-            nickname[i].txt_nickname.text = NetworkManager.instance.NickName;
-         }
+            nickname[i].txt_nickname.text = NetworkManager.instance.NickName;		// UI
+			PlayersManager.instance.nickname[i] = NetworkManager.instance.NickName;	// 플레이어 정보
+		}
 #else
             if (i == myIndex)
             {

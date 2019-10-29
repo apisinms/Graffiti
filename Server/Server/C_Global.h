@@ -23,9 +23,12 @@ using namespace std;
 #define RESULT_OFFSET	0xFFFFFF
 #define RESULT_MASK		54
 
-#define CAR_SPAWN_TIME	4000
+#define CAR_SPAWN_TIME_SEC	4
 
 #define MEMBER_PER_TEAM	2
+
+#define TIMER_INTERVAL	100	// 타이머 간격
+#define TIMER_INTERVAL_TIMES_MILLISEC	(TIMER_INTERVAL * 0.001)	// 타이머 간격 * 밀리초단위
 
 // Keep-alive 설정 관련
 #define KEEPALIVE_TIME 5000								// TIME ms마다 keep-alive 신호를 주고받는다
@@ -38,6 +41,12 @@ enum PLAYER_BIT : byte
 	PLAYER_2 = (1 << 2),
 	PLAYER_3 = (1 << 1),
 	PLAYER_4 = (1 << 0),
+};
+
+enum ExceptionCode
+{
+	ExitBeforeGame = 1, InvalidClientPtr,
+
 };
 
 struct INDEX
@@ -133,6 +142,32 @@ struct Score
 	int numOfDeath;		// 내가 몇 번 죽었는지
 	int killScore;		// 킬 점수
 	int captureScore;	// 점령 점수
+
+	Score()
+	{
+		numOfKill = numOfDeath = killScore = captureScore = 0;
+	}
+};
+
+struct PlayerRespawnInfo
+{
+	float respawnPosX;			// 리스폰 위치 x
+	float respawnPosZ;			// 리스폰 위치 z
+	bool isRespawning;			// 리스폰 중인지
+	double elapsedSec;				// 리스폰 on 일때 경과한 시간(초)
+
+	PlayerRespawnInfo()
+	{
+		respawnPosX = respawnPosZ = 0.0f;
+		isRespawning = false;
+		elapsedSec = 0.0;
+	}
+
+	void RespawnDone()
+	{
+		elapsedSec = 0.0;
+		isRespawning = false;
+	}
 };
 
 struct PlayerInfo
@@ -144,9 +179,10 @@ private:
 	INDEX index;				// 현재 플레이어의 섹터 인덱스
 	Weapon* weapon;				// 무기
 	int bullet;					// 총알
-	float respawnPosX;			// 리스폰 x좌표
-	float respawnPosZ;			// 리스폰 z좌표
-	bool isRespawning;			// 리스폰 중인지
+	//float respawnPosX;			// 리스폰 x좌표
+	//float respawnPosZ;			// 리스폰 z좌표
+	//bool isRespawning;			// 리스폰 중인지
+	PlayerRespawnInfo playerRespawnInfo;	// 리스폰 정보
 	Score score;				// 내 스코어
 	int teamNum;				// 팀 번호
 
@@ -154,19 +190,12 @@ public:
 	PlayerInfo()
 	{
 		loadStatus = false;
-
 		gamePacket = nullptr;
-		memset(&index, 0, sizeof(INDEX));
 		weapon = nullptr;
-
 		bullet = 0;
-
 		isFocus = true;
 
-		respawnPosX = respawnPosZ = 0.0f;
-		isRespawning = false;
-
-		memset(&score, 0, sizeof(Score));
+		// 구조체들은 내부에서 알아서 초기화 함
 	}
 
 	bool GetLoadStatus() { return loadStatus; }
@@ -210,13 +239,8 @@ public:
 	void FocusOff() { isFocus = false; }
 	bool GetFocus() { return isFocus; }
 
-	void SetRespawnPos(float _posX, float _posZ) { respawnPosX = _posX; respawnPosZ = _posZ; }
-	float GetRespawnPosX() { return respawnPosX; }
-	float GetRespawnPosZ() { return respawnPosZ; }
-
-	bool IsRespawning() { return isRespawning; }
-	void RespawnOn() { isRespawning = true; }
-	void RespawnOff() { isRespawning = false; }
+	PlayerRespawnInfo& GetPlayerRespawnInfo() { return playerRespawnInfo; }
+	void SetPlayerRespawnInfo(PlayerRespawnInfo& _info) { playerRespawnInfo = _info; }
 
 	Score& GetScore() { return score; }
 
@@ -266,7 +290,7 @@ enum STATE : int
 
 enum ROOMSTATUS
 {
-	ROOM_NONE = -1, ROOM_ITEMSEL = 1, ROOM_GAME
+	ROOM_NONE = -1, ROOM_WAIT, ROOM_ITEMSEL = 1, ROOM_GAME, ROOM_GAME_END,
 };
 
 // 상위 10비트 스테이트를 표현해주는 프로토콜	63 ~ 54

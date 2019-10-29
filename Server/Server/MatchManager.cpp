@@ -87,11 +87,18 @@ bool MatchManager::MatchProcess(C_ClientInfo* _ptr)
 	if (waitList[gameType].size() >= MaxPlayerOfThisGameType)
 	{
 		// 지금 대기 리스트를 전달해서 방을 생성
-		return RoomManager::GetInstance()->CreateRoom(waitList[gameType], MaxPlayerOfThisGameType);
+		if (RoomManager::GetInstance()->CreateRoom(waitList[gameType], MaxPlayerOfThisGameType) == true)
+		{
+			for (int i = 0; i < InGameManager::GetInstance()->GetGameInfo(gameType)->maxPlayer; i++)
+			{
+				waitList[gameType].pop_front();	// 리스트에서 빼주자
+			}
+
+			return true;
+		}
 	}
 
 	// 아직 매칭이 안잡히는 상황이라면
-	else
-		return false;
+	return false;
 }
 

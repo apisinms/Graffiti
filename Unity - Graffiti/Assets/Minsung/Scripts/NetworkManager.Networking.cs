@@ -97,38 +97,61 @@ public partial class NetworkManager : MonoBehaviour
             // Login 상태일 때
             case STATE_PROTOCOL.LOGIN_STATE:
                 {
-                    // Login 상태에서 프로토콜은 제외했다.(같은 값이 존재해서)
+					switch(protocol)
+					{
+						// 회원가입
+						case PROTOCOL.JOIN_PROTOCOL:
+							{
+								switch(result)
+								{
+									case RESULT.JOIN_SUCCESS:
+									case RESULT.ID_EXIST:
+										{
+											lock (key)
+											{
+												sysMsg = string.Empty;
+												UnPackPacket(info.packet, out sysMsg);
+												Debug.Log(sysMsg);
+											}
+										}
+										break;
+								}
+							}
+							break;
 
-                    switch (result)
-                    {
-                        // 로그인 성공하면 닉네임을 보내준다.
-                        case RESULT.LOGIN_SUCCESS:
-                            {
-                                lock (key)
-                                {
-                                    sysMsg = string.Empty;
-                                    UnPackPacket(info.packet, out sysMsg, out nickName);
-                                    Debug.Log(sysMsg);
-                                }
-                            }
-                            break;
+							// 로그인
+						case PROTOCOL.LOGIN_PROTOCOL:
+							{
+								switch (result)
+								{
+									// 로그인 성공하면 닉네임을 보내준다.
+									case RESULT.LOGIN_SUCCESS:
+										{
+											lock (key)
+											{
+												sysMsg = string.Empty;
+												UnPackPacket(info.packet, out sysMsg, out nickName);
+												Debug.Log(sysMsg);
+											}
+										}
+										break;
 
-                        //case RESULT.JOIN_SUCCESS:
-                        //case RESULT.LOGOUT_SUCCESS:
-                        case RESULT.ID_EXIST:
-                        //case RESULT.LOGOUT_FAIL:
-                        case RESULT.ID_ERROR:
-                        case RESULT.PW_ERROR:
-                            {
-                                lock (key)
-                                {
-                                    sysMsg = string.Empty;
-                                    UnPackPacket(info.packet, out sysMsg);
-                                    Debug.Log(sysMsg);
-                                }
-                            }
-                            break;
-                    }
+									case RESULT.ID_EXIST:
+									case RESULT.ID_ERROR:
+									case RESULT.PW_ERROR:
+										{
+											lock (key)
+											{
+												sysMsg = string.Empty;
+												UnPackPacket(info.packet, out sysMsg);
+												Debug.Log(sysMsg);
+											}
+										}
+										break;
+								}
+							}
+							break;
+					}
                 }
                 break;
 
@@ -362,8 +385,14 @@ public partial class NetworkManager : MonoBehaviour
 										{
 											lock (key)
 											{
-												UnPackPacket(info.packet, ref tmpIngamePacket);            // 패킷을 받고
-												bridge.HealthChanger(ref tmpIngamePacket);
+												UnPackPacket(info.packet, ref tmpIngamePacket);       // 패킷을 받고
+
+												// 지금 받은 체력이 더 낮아야만 체력을 업데이트 해준다. 그리고 죽었으면 업데이트 안한다.
+												if (playersManager.hp[tmpIngamePacket.playerNum - 1] > tmpIngamePacket.health
+													&& playersManager.actionState[tmpIngamePacket.playerNum - 1] != _ACTION_STATE.DEATH)
+												{
+													bridge.HealthChanger(ref tmpIngamePacket);
+												}
 											}
 										}
 										break;

@@ -26,48 +26,48 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
 		networkManager = NetworkManager.instance;
 	}
 
-	void Update()
-	{
-		if (inputField_login_id.isFocused == true) //포커스가 입력창에 맞춰졌을때 탭키눌러서 자동으로 다음껄로 넘어가게
-		{
-			if (Input.GetKeyDown(KeyCode.Tab))
-			{
-				inputField_login_pw.Select();
-			}
-		}
+	//void Update()
+	//{
+	//	if (inputField_login_id.isFocused == true) //포커스가 입력창에 맞춰졌을때 탭키눌러서 자동으로 다음껄로 넘어가게
+	//	{
+	//		if (Input.GetKeyDown(KeyCode.Tab))
+	//		{
+	//			inputField_login_pw.Select();
+	//		}
+	//	}
 
-		else if (inputField_login_pw.isFocused == true) //포커스가 pw입력창이면, 탭키로 확인으로 바꿈
-		{
-			if (Input.GetKeyDown(KeyCode.Tab))
-			{
-				btn_login_enter.Select();
-			}
-		}
+	//	else if (inputField_login_pw.isFocused == true) //포커스가 pw입력창이면, 탭키로 확인으로 바꿈
+	//	{
+	//		if (Input.GetKeyDown(KeyCode.Tab))
+	//		{
+	//			btn_login_enter.Select();
+	//		}
+	//	}
 
-        if (inputField_join_nick.isFocused == true)
-        {
-            if (Input.GetKeyDown(KeyCode.Tab))
-            {
-                inputField_join_id.Select();
-            }
-        }
+ //       if (inputField_join_nick.isFocused == true)
+ //       {
+ //           if (Input.GetKeyDown(KeyCode.Tab))
+ //           {
+ //               inputField_join_id.Select();
+ //           }
+ //       }
 
-        if (inputField_join_id.isFocused == true)
-		{
-			if (Input.GetKeyDown(KeyCode.Tab))
-			{
-				inputField_join_pw.Select();
-			}
-		}
+ //       if (inputField_join_id.isFocused == true)
+	//	{
+	//		if (Input.GetKeyDown(KeyCode.Tab))
+	//		{
+	//			inputField_join_pw.Select();
+	//		}
+	//	}
 
-		if (inputField_join_pw.isFocused == true)
-		{
-			if (Input.GetKeyDown(KeyCode.Tab))
-			{
-				btn_join_enter.Select();
-			}
-		}
-	}
+	//	if (inputField_join_pw.isFocused == true)
+	//	{
+	//		if (Input.GetKeyDown(KeyCode.Tab))
+	//		{
+	//			btn_join_enter.Select();
+	//		}
+	//	}
+	//}
 
 	public void EnablePanel(int _type) //로그인창이냐 회원가입창이냐.
 	{
@@ -138,7 +138,7 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
 		//공백이 없을시에만
 		if (inputField_login_id.text.Length == 0 || inputField_login_pw.text.Length == 0)
 		{
-			txt_login_result.text = "공백입력은 불가."; //예시로 해놓은거임
+			txt_login_result.text = "공백입력은 불가."; 
 			return;
 		}
 
@@ -168,31 +168,32 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
 				string retMsg = networkManager.SysMsg;
 				Debug.Log("로그인 결과 : " + retMsg);
 
-				//로그인정보가 틀렸다면 아래작성
-				if (networkManager.CheckLogin_IDError() == true)
-				{
-					inputField_login_id.text = "";
-					inputField_login_pw.text = "";
-					txt_login_result.text = retMsg;
-				}
+                //로그인정보가 틀렸다면 아래작성
+                if (networkManager.CheckLogin_IDError() == true)
+                {
+                    inputField_login_id.text = "";
+                    inputField_login_pw.text = "";
+                    txt_login_result.text = retMsg;
+                }
 
-				else if (networkManager.CheckLogin_PWError() == true)
-				{
-					inputField_login_id.text = "";
-					inputField_login_pw.text = "";
-					txt_login_result.text = retMsg;
-				}
+                else if (networkManager.CheckLogin_PWError() == true)
+                {
+                    inputField_login_id.text = "";
+                    inputField_login_pw.text = "";
+                    txt_login_result.text = retMsg;
+                }
 
-				else if (networkManager.CheckLogin_IDExist() == true)
-				{
-					inputField_login_id.text = "";
-					inputField_login_pw.text = "";
-					txt_login_result.text = retMsg;
-				}
+                else if (networkManager.CheckLogin_IDExist() == true)
+                {
+                    inputField_login_id.text = "";
+                    inputField_login_pw.text = "";
+                    txt_login_result.text = retMsg;
+                }
 
-				//로그인이 성공하면 아래작성
-				else if (networkManager.CheckLoginSuccess() == true)
-					SceneManager.LoadScene("MainMenu"); //메인타이틀로 입장
+                //로그인이 성공하면 아래작성
+                else if (networkManager.CheckLoginSuccess() == true)
+                    LoadingSceneManager.LoadScene("LobbyMenuScene", false);
+                    //SceneManager.LoadScene("LobbyMenuScene"); //메인타이틀로 입장
 
 				btn_login_enter.interactable = true;	// 버튼 다시 원상 복구
 				yield break;

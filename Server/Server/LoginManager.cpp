@@ -15,17 +15,14 @@ LoginManager* LoginManager::GetInstance()
 
 void LoginManager::Init()
 {
-	loginList = new C_List<UserInfo*>();
-	joinList = new C_List<UserInfo*>();
-
 	UserInfo* ptr;
 	while ((ptr = DatabaseManager::GetInstance()->LoadUserInfo()) != nullptr)
-		joinList->Insert(ptr);
+	{
+		joinList.emplace_back(ptr);
+	}
 }
 void LoginManager::End()
 {
-	delete loginList;
-	delete joinList;
 }
 
 void LoginManager::Destroy()
@@ -64,7 +61,7 @@ void LoginManager::PackPacket(char* _setptr, TCHAR* _str1, TCHAR* _str2, int& _s
 	memcpy(ptr, _str1, strsize1);
 	ptr = ptr + strsize1;
 	_size = _size + strsize1;
-	
+
 
 
 	// 문자열2 길이
@@ -176,20 +173,19 @@ bool LoginManager::JoinProcess(C_ClientInfo* _ptr, char* _buf)
 	TCHAR msg[MSGSIZE] = { 0, };
 	PROTOCOL_LOGIN protocol;
 
-	char buf[BUFSIZE];		// 버퍼
+	char buf[BUFSIZE] = { 0, };		// 버퍼
 	int packetSize = 0;     // 총 사이즈
 
 	// 회원가입이 되는지 확인해본다.
-	UserInfo userInfo;
-	memset(&userInfo, 0, sizeof(userInfo));
-	UnPackPacket(_buf, userInfo.id, userInfo.pw, userInfo.nickname);
+	UserInfo tmpUserInfo;
+	memset(&tmpUserInfo, 0, sizeof(UserInfo));
+	UnPackPacket(_buf, tmpUserInfo.id, tmpUserInfo.pw, tmpUserInfo.nickname);
 
-	// 새롭게 동적할당해서 유저정보에 추가해줌
-	UserInfo* ptr = new UserInfo(userInfo);
+	// 새롭게 동적할당
+	UserInfo* userInfo = new UserInfo(tmpUserInfo);
 
-	_ptr->SetUserInfo(ptr);
-
-	joinResult = CheckJoin(_ptr);
+	// 이 유저 정보에 대한 회원가입 결과를 얻어옴
+	joinResult = CheckJoin(_ptr, userInfo);
 
 	switch (joinResult)
 	{
@@ -204,17 +200,15 @@ bool LoginManager::JoinProcess(C_ClientInfo* _ptr, char* _buf)
 		_tcscpy_s(msg, MSGSIZE, JOIN_SUCCESS_MSG);
 
 		// DB에 추가하고, 회원가입 리스트에 넣는다.
-		DatabaseManager::GetInstance()->InsertUserInfo(ptr);
-		joinList->Insert(_ptr->GetUserInfo());
+		DatabaseManager::GetInstance()->InsertUserInfo(userInfo);	// DB에 추가
+		joinList.emplace_back(userInfo);	// 회원가입 리스트에 추가
+		wprintf(L"회원가입 성공 유저정보 : ID:%s, NICK:%s, PW:%s\n", userInfo->id, userInfo->nickname, userInfo->pw);
 	}
 	break;
 	}
 
-	// 프로토콜 세팅 
+	// 프로토콜, 패킷 Pack 및 전송
 	protocol = SetProtocol(LOGIN_STATE, PROTOCOL_LOGIN::JOIN_PROTOCOL, joinResult);
-	ZeroMemory(buf, sizeof(BUFSIZE));
-	// 패킹 및 전송
-
 	PackPacket(buf, msg, packetSize);
 	_ptr->SendPacket(protocol, buf, packetSize);
 
@@ -232,17 +226,15 @@ bool LoginManager::LoginProcess(C_ClientInfo* _ptr, char* _buf)
 	char buf[BUFSIZE] = { 0, };
 	int packetSize;
 
-	UserInfo tmpInfo;
-	memset(&tmpInfo, 0, sizeof(tmpInfo));
-	UnPackPacket(_buf, tmpInfo.id, tmpInfo.pw);
+	UserInfo tmpUserInfo;
+	memset(&tmpUserInfo, 0, sizeof(UserInfo));
+	UnPackPacket(_buf, tmpUserInfo.id, tmpUserInfo.pw);
 
-	// 새롭게 동적할당해서 유저정보에 추가해줌
-	UserInfo* ptr = new UserInfo(tmpInfo);
-
-	_ptr->SetUserInfo(ptr);
+	// 새롭게 동적할당
+	UserInfo* userInfo = new UserInfo(tmpUserInfo);
 
 	// 로그인 결과를 토대로 메시지를 조립한다.
-	loginResult = CheckLogin(_ptr);	// 내부에서 가입 목록을 훑어 로그인 가능하면 그 로그인 정보를 가져온다.
+	loginResult = CheckLogin(_ptr, userInfo);	// 내부에서 가입 목록을 훑어 로그인 가능하면 그 로그인 정보를 가져온다.
 
 	switch (loginResult)
 	{
@@ -265,15 +257,15 @@ bool LoginManager::LoginProcess(C_ClientInfo* _ptr, char* _buf)
 	case RESULT_LOGIN::LOGIN_SUCCESS:
 	{
 		_tcscpy_s(msg, MSGSIZE, LOGIN_SUCCESS_MSG);
-		PackPacket(buf, msg, _ptr->GetUserInfo()->nickname, packetSize);	// 로그인 성공시에는 닉네임도 함께 보내준다.
+		PackPacket(buf, msg, userInfo->nickname, packetSize);	// 로그인 성공시에는 닉네임도 함께 보내준다.
 
 		// 유저의 정보를 로그인 리스트에 추가.
-		loginList->Insert(_ptr->GetUserInfo());
-		wprintf(L"로그인 성공 유저정보 : %s, %s\n", _ptr->GetUserInfo()->id, _ptr->GetUserInfo()->pw);
+		_ptr->SetUserInfo(userInfo);	// 유저정보 세팅
+		loginList.emplace_back(userInfo);
+		wprintf(L"로그인 성공 유저정보 : ID:%s, NICK:%s, PW:%s\n", userInfo->id, userInfo->nickname, userInfo->pw);
 	}
 	break;
 	}
-
 
 	// 프로토콜 패킹 및 전송
 	protocol = SetProtocol(LOGIN_STATE, PROTOCOL_LOGIN::LOGIN_PROTOCOL, loginResult);
@@ -355,145 +347,92 @@ bool LoginManager::CanILogin(C_ClientInfo* _ptr)
 //	return false;
 //}
 
-LoginManager::RESULT_LOGIN LoginManager::CheckJoin(C_ClientInfo* _ptr)
+LoginManager::RESULT_LOGIN LoginManager::CheckJoin(C_ClientInfo* _ptr, UserInfo* _userInfo)
 {
-	RESULT_LOGIN joinResult = RESULT_LOGIN::NODATA;
+	IC_CS cs;	// 검색중이니까 동기화 시작
 
-	// 만약 회원 리스트가 검색중이 아니라면
-	if (joinList->SearchCheck() == false)
+	RESULT_LOGIN joinResult = RESULT_LOGIN::JOIN_SUCCESS;	// 만약 같은 아이디 있으면 ID_EXIST로 세팅될거임
+
+	UserInfo* userInfo = nullptr;
+	for (auto iter = joinList.begin(); iter != joinList.end(); ++iter)
 	{
-		UserInfo* info = nullptr;	// SearchData로 리턴받아서 리스트를 순회하는 용도의 변수
+		userInfo = *iter;
 
-		joinList->SearchStart();	// 검색 시작
-		while (1)
+		// 만약 일치하는 ID를 찾는다면 회원가입 실패이다.
+		if (_tcscmp(userInfo->id, _userInfo->id) == 0)
 		{
-			info = joinList->SearchData();	// 데이터를 받아서
-			if (info == nullptr)	// 데이터가 nullptr이면 리스트에 내용이 더이상 없다.
-			{
-				// 이전에 발견한게 아무것도 없다면, 회원가입이 가능하다.
-				if (joinResult == RESULT_LOGIN::NODATA)
-					joinResult = RESULT_LOGIN::JOIN_SUCCESS;
-
-				break;
-			}
-
-			// 아이디가 같은 경우면 회원가입 안된다.
-			if (_tcscmp(info->id, _ptr->GetUserInfo()->id) == 0)
-			{
-				joinResult = RESULT_LOGIN::ID_EXIST;
-				break;
-			}
+			joinResult = RESULT_LOGIN::ID_EXIST;
+			break;
 		}
-		joinList->SearchEnd();	// 검색 종료
-	}
-
-	// 만약 회원가입에 실패했다면
-	if (joinResult != RESULT_LOGIN::JOIN_SUCCESS)
-	{
-		// 회원가입 시도할 때 입력한 유저 정보 지워준다.
-		delete _ptr->GetUserInfo();
-		_ptr->SetUserInfo(nullptr);
 	}
 
 	return joinResult;
 }
-LoginManager::RESULT_LOGIN LoginManager::CheckLogin(C_ClientInfo* _ptr)
+LoginManager::RESULT_LOGIN LoginManager::CheckLogin(C_ClientInfo* _ptr, UserInfo* _userInfo)
 {
+	IC_CS cs;	// 검색중이니까 동기화 시작
+
 	RESULT_LOGIN loginResult = RESULT_LOGIN::NODATA;
 
-	////////////////// 우선 로그인 리스트에서 로그인 된 사용자가 있는지 확인한다. ////////////////
-
-	// 만약 로그인 리스트가 검색중이 아니라면
-	if (loginList->SearchCheck() == false)
+	////////////////// 1. 우선 로그인 리스트에서 로그인 된 사용자가 있는지 확인한다. ////////////////
+	UserInfo* userInfo = nullptr;
+	for (auto iter = loginList.begin(); iter != loginList.end(); ++iter)
 	{
-		UserInfo* info = nullptr;	// SearchData로 리턴받아서 리스트를 순회하는 용도의 변수
+		userInfo = *iter;
 
-		loginList->SearchStart();	// 검색 시작
-		while (1)
+		// 아이디가 같은 경우면 이미 접속한 유저가 있는 경우이다.
+		if (_tcscmp(userInfo->id, _userInfo->id) == 0)
 		{
-			info = loginList->SearchData();	// 데이터를 받아서
-
-			// 데이터가 nullptr이면 탈출 조건이다.
-			if (info == nullptr)
-				break;
-
-			// 아이디가 같은 경우면 이미 접속한 유저가 있는 경우이다.
-			if (_tcscmp(info->id, _ptr->GetUserInfo()->id) == 0)
-			{
-				loginResult = RESULT_LOGIN::ID_EXIST;
-				break;
-			}
+			loginResult = RESULT_LOGIN::ID_EXIST;
+			return loginResult;		// 바로 리턴해줌
 		}
-		loginList->SearchEnd();	// 검색 종료
 	}
 
-	// 검색을 끝마치고 나왔을 때, 로그인을 할 수 없는 결과값이라면 그 값을 바로 리턴한다.
-	if (loginResult != RESULT_LOGIN::NODATA)
+	///////////////// 2. 이번엔 가입된 목록에서 조사해야함 //////////////////////////////
+	userInfo = nullptr;
+	for (auto iter = joinList.begin(); iter != joinList.end(); ++iter)
 	{
-		// 로그인 시도할 때 입력한 유저 정보 지워준다.
-		delete _ptr->GetUserInfo();
-		_ptr->SetUserInfo(nullptr);
+		userInfo = *iter;
 
-		return loginResult;
-	}
-
-	/////////////////////////////////////// 이번엔 가입된 목록에서 조사해야함 //////////////////////////////
-
-		// 만약 이 리스트가 검색중이 아니라면
-	if (joinList->SearchCheck() == false)
-	{
-		UserInfo* info = nullptr;	// SearchData로 리턴받아서 리스트를 순회하는 용도의 변수
-
-		joinList->SearchStart();	// 검색 시작
-		while (1)
+		// 비밀번호가 다르면 '비밀번호 틀림'으로 실패다
+		if (_tcscmp(userInfo->id, _userInfo->id) == 0 &&
+			_tcscmp(userInfo->pw, _userInfo->pw) != 0)
 		{
-			info = joinList->SearchData();	// 데이터를 받아서
-
-			// 데이터가 nullptr이면 탈출 조건이다.
-			if (info == nullptr)
-			{
-				// 이전까지 찾은게 아무것도 없다면 ID가 존재하지 않는 것이다.
-				if (loginResult == RESULT_LOGIN::NODATA)
-					loginResult = RESULT_LOGIN::ID_ERROR;
-
-				break;
-			}
-
-			// 비밀번호가 다르면 '비밀번호 틀림'으로 실패다
-			if (_tcscmp(info->id, _ptr->GetUserInfo()->id) == 0 &&
-				_tcscmp(info->pw, _ptr->GetUserInfo()->pw) != 0)
-			{
-				loginResult = RESULT_LOGIN::PW_ERROR;
-				break;
-			}
-
-			// 아이디와 비밀번호가 모두 같다면 로그인 성공이다.
-			if (_tcscmp(info->id, _ptr->GetUserInfo()->id) == 0 &&
-				_tcscmp(info->pw, _ptr->GetUserInfo()->pw) == 0)
-			{
-				//delete _ptr->GetUserInfo();	// 기존에 입력한 로그인 정보는 지워버리고
-				_ptr->SetUserInfo(info);	// nickname 정보까지 포함된 포인터를 새롭게 가리키게한다.
-
-				loginResult = RESULT_LOGIN::LOGIN_SUCCESS;
-				break;
-			}
+			loginResult = RESULT_LOGIN::PW_ERROR;
+			return loginResult;		// 바로 리턴해줌
 		}
-		joinList->SearchEnd();	// 검색 종료
+
+		// 아이디와 비밀번호가 모두 같다면 로그인 성공이다.
+		if (_tcscmp(userInfo->id, _userInfo->id) == 0 &&
+			_tcscmp(userInfo->pw, _userInfo->pw) == 0)
+		{
+			_tcscpy_s(_userInfo->nickname, NICKNAMESIZE, userInfo->nickname);	// 닉네임 정보는 클라가 안줬으니 DB에서 로드한걸로 저장시키고
+
+			loginResult = RESULT_LOGIN::LOGIN_SUCCESS;
+			return loginResult;		// 바로 리턴해줌
+		}
 	}
 
-	// 로그인 성공이 아니라면
-	if (loginResult != RESULT_LOGIN::LOGIN_SUCCESS)
+	// 이전까지 찾은게 아무것도 없다면 ID가 존재하지 않는 것이다.
+	if (loginResult == RESULT_LOGIN::NODATA)
 	{
-		// 로그인 시도할 때 입력한 유저 정보 지워준다.
-		delete _ptr->GetUserInfo();
-		_ptr->SetUserInfo(nullptr);
+		loginResult = RESULT_LOGIN::ID_ERROR;
 	}
 
-	return loginResult;
+	return loginResult;		// ID_ERROR 리턴
 }
 
 
-bool LoginManager::LoginListDelete(C_ClientInfo* _ptr)
+bool LoginManager::LoginListDelete(UserInfo* _userInfo)
 {
-	return loginList->Delete(_ptr->GetUserInfo());
+	// 지우고 난 뒤에 사이즈가 줄었으면 정상 삭제임
+	int beforeSize = (int)loginList.size();
+	loginList.remove(_userInfo);
+
+	if (beforeSize < (int)loginList.size())
+	{
+		return true;
+	}
+
+	return false;
 }

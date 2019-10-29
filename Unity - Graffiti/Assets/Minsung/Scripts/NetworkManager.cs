@@ -14,9 +14,8 @@ using UnityEngine;
 public partial class NetworkManager : MonoBehaviour
 {
     // 서버 IP와 포트
-    //private static IPAddress serverIP = IPAddress.Parse("127.0.0.1");
-    private static IPAddress serverIP = IPAddress.Parse("211.227.82.184");
-
+    private static IPAddress serverIP = IPAddress.Parse("127.0.0.1");
+    //private static IPAddress serverIP = IPAddress.Parse("211.227.82.184");
 
     private static int serverPort = 10823;
 

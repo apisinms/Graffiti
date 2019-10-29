@@ -7,7 +7,7 @@ class C_ClientInfo;
 class InGameManager : public C_SyncCS< InGameManager>
 {
 #ifdef DEBUG
-	static const int WEAPON_SELTIME = 6 + 1;	// 무기 선택 시간(초 단위)
+	static const int WEAPON_SELTIME = 5 + 1;	// 무기 선택 시간(초 단위)
 	int numOfPacketSent             = 0;		// 패킷 보낸 횟수
 #else
 	static const int WEAPON_SELTIME = 30 + 1;	// 무기 선택 시간(초 단위)
@@ -127,10 +127,11 @@ public:
 	void ListSendPacket(list<C_ClientInfo*> _list, C_ClientInfo* _exceptClient, PROTOCOL_INGAME _protocol, char* _buf, int _packetSize, bool _notFocusExcept);
 	void ListSendPacket(vector<C_ClientInfo*> _list, C_ClientInfo* _exceptClient, PROTOCOL_INGAME _protocol, char* _buf, int _packetSize, bool _notFocusExcept);
 
-	static unsigned long __stdcall WeaponSelectTimerThread(void* _arg);	// 아이템 선택 시간을 세는 타이머 쓰레드
-	static DWORD WINAPI CarSpawnerThread(LPVOID _arg);
+	static DWORD WINAPI InGameTimerThread(LPVOID _arg);
 
-	static void RespawnWaitAndRevive(C_ClientInfo* _player);
+	void WeaponTimerChecker(RoomInfo* _room);
+	void RespawnChecker(RoomInfo* _room);
+	void CarSpawnChecker(RoomInfo* _room);
 
 public:
 	GameInfo* GetGameInfo(int _gameType) { return gameInfo[_gameType]; }

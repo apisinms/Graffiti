@@ -193,22 +193,20 @@ bool LobbyManager::CanIGotoInGame(C_ClientInfo* _ptr)
 		// 만약 방이 생성되고 아무런 진행도 하지 않았다면
 		if (_ptr->GetRoom()->GetRoomStatus() == ROOMSTATUS::ROOM_NONE)
 		{
-			// InGameManager에게 무기타이머 쓰레드를 생성해 30초를 세도록 부탁한다.
-			_ptr->GetRoom()->SetWeaponTimerHandle
+			// 1. 방의 상태를 아이템 선택 상태로 넘어가고
+			_ptr->GetRoom()->SetRoomStatus(ROOMSTATUS::ROOM_ITEMSEL);
+
+			// 2. 인게임 타이머 쓰레드를 생성한다.
+			_ptr->GetRoom()->SetInGameTimerHandle
 			(
 				(HANDLE)_beginthreadex(
-					nullptr, 
+					nullptr,
 					0,
-					(_beginthreadex_proc_type)InGameManager::WeaponSelectTimerThread, 
-					(void*)_ptr->GetRoom(),
-					0, 
+					(_beginthreadex_proc_type)InGameManager::InGameTimerThread,
+					(LPVOID)_ptr->GetRoom(),
+					0,
 					NULL)
 			);
-
-			if (_ptr->GetRoom()->GetWeaponTimerHandle() == nullptr)
-				LogManager::GetInstance()->ErrorPrintf("_beginthreadex() in CanIStart()");
-
-			_ptr->GetRoom()->SetRoomStatus(ROOMSTATUS::ROOM_ITEMSEL);	// 이제 아이템 선택 상태로
 		}
 
 		return true;

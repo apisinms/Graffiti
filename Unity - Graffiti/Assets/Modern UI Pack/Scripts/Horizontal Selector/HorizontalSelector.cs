@@ -16,6 +16,7 @@ namespace Michsky.UI.ModernUIPack
         public string selectorTag = "Tag Text";
         public int defaultIndex = 0;
         public bool saveValue;
+        public bool random = false;
         public bool invokeAtStart;
         public bool invertAnimation;
         public bool loopSelection;
@@ -39,6 +40,9 @@ namespace Michsky.UI.ModernUIPack
 
             if (saveValue == true)
                 defaultIndex = PlayerPrefs.GetInt(selectorTag + "HSelectorValue");
+
+            if (random == true)
+                defaultIndex = Random.Range(0, itemList.Count);
 
             if (invokeAtStart == true)
                 itemList[index].onValueChanged.Invoke();

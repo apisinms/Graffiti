@@ -68,10 +68,9 @@ public class GameManager : MonoBehaviour
     public bool myFocus { get; set; }
 
     public int CarSeed { get; set; }
+    public int mathcingMode { get; set; }
 
     public CameraControl mainCamera;    // 메인 카메라
-	Image loadingImage;
-
     private void Start()
     {
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraControl>();
@@ -79,7 +78,6 @@ public class GameManager : MonoBehaviour
 		PlayersManager.instance.Initialization_GameInfo();              // 얻어온 정보대로 초기화
 		BridgeClientToServer.instance.Initialization_PlayerViewer();    // 게임 시작시 플레이어 뷰어 셋팅
 
-		loadingImage = GameObject.Find("loadingImage").GetComponent<Image>();
 
 #else
         gameInfo.gameType = 0;
@@ -194,14 +192,11 @@ public class GameManager : MonoBehaviour
     }
 
 
-    // 로딩 완료
+	// 로딩 완료
+	public GameObject[] maps;
     public void LoadingComplete()
     {
 #if NETWORK
-		if (loadingImage != null)
-		{
-			loadingImage.enabled = false;
-		}
 
 		// 1. 안들어온 놈들 꺼준다.
 		GameObject notConnectedCharacter;
@@ -219,6 +214,9 @@ public class GameManager : MonoBehaviour
 			if (icons[j].Target == null)
 				icons[j].HideItem();
 		}
+
+		// 맵 켜줌
+		maps[gameInfo.gameType].SetActive(true);
 #endif
 	}
 
