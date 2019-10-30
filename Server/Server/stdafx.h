@@ -8,6 +8,7 @@
 #pragma comment(lib, "ws2_32")
 #include <WinSock2.h>
 #include <Windows.h>
+#include<iostream>
 #include <stdio.h>
 #include <time.h>
 #include <tchar.h>

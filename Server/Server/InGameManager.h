@@ -7,7 +7,7 @@ class C_ClientInfo;
 class InGameManager : public C_SyncCS< InGameManager>
 {
 #ifdef DEBUG
-	static const int WEAPON_SELTIME = 3 + 1;	// 무기 선택 시간(초 단위)
+	static const int WEAPON_SELTIME = 6 + 1;	// 무기 선택 시간(초 단위)
 	int numOfPacketSent             = 0;		// 패킷 보낸 횟수
 #else
 	static const int WEAPON_SELTIME = 30 + 1;	// 무기 선택 시간(초 단위)
@@ -115,6 +115,7 @@ private:
 
 	void Kill(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer);
 	void Respawn(C_ClientInfo* _player);
+
 public:
 	bool CanISelectWeapon(C_ClientInfo* _ptr);	// 무기 선택
 	bool LoadingSuccess(C_ClientInfo* _ptr);	// 로딩 성공 처리

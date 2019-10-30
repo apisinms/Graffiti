@@ -40,6 +40,12 @@ enum PLAYER_BIT : byte
 	PLAYER_4 = (1 << 0),
 };
 
+enum ExceptionCode
+{
+	ExitBeforeGame = 1,
+
+};
+
 struct INDEX
 {
 	int i, j;

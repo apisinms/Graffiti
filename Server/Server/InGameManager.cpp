@@ -392,9 +392,6 @@ bool InGameManager::InitProcess(C_ClientInfo* _ptr, char* _buf)
 	// 전송(본인 제외)
 	ListSendPacket(playerList, _ptr, protocol, buf, packetSize, false);
 
-	// 전송(본인 포함)
-	ListSendPacket(playerList, nullptr, protocol, buf, packetSize, false);
-
 	return true;
 }
 
@@ -808,18 +805,18 @@ int InGameManager::GetNumOfBullet(int _shootCountBit, byte _hitPlayerNum)
 	int shifter = 0;
 	int bulletCount = 0;
 	int TEMP_MAX_PLAYER = 4;
-	byte bitMask = 0xFF;         // 8비트 지우기 마스크(1111 1111)
+	byte bitMask = 0xFF;			// 8비트 지우기 마스크(1111 1111)
 
 	// 0이 매개변수로 넘어오면 발사된 전체 총알 갯수를 달라는 의미다.
 	if (_hitPlayerNum == 0)
 	{
 		int bulletCountBit = 0;
 
-		bulletCountBit = _shootCountBit;   //처음 카운트 비트 값으로
+		bulletCountBit = _shootCountBit;	//처음 카운트 비트 값으로
 		for (int i = 1; i <= TEMP_MAX_PLAYER; i++)
 		{
-			shifter = 8 * (TEMP_MAX_PLAYER - i);   // 이동 연산에 필요한 값
-
+			shifter = 8 * (TEMP_MAX_PLAYER - i);	// 이동 연산에 필요한 값
+			
 			if ((bulletCountBit >> shifter) > 0)
 			{
 				bulletCount += (bulletCountBit & (bitMask << shifter)) >> shifter;
@@ -829,7 +826,7 @@ int InGameManager::GetNumOfBullet(int _shootCountBit, byte _hitPlayerNum)
 
 	else
 	{
-		shifter = 8 * (TEMP_MAX_PLAYER - _hitPlayerNum);   // 이동 연산에 필요한 값
+		shifter = 8 * (TEMP_MAX_PLAYER - _hitPlayerNum);	// 이동 연산에 필요한 값
 		bulletCount = (_shootCountBit & (bitMask << shifter)) >> shifter;
 	}
 
@@ -1021,8 +1018,8 @@ void InGameManager::Kill(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer)
 	_shotPlayer->GetRoom()->GetTeamInfo(
 		_shotPlayer->GetPlayerInfo()->GetTeamNum()).teamKillScore +=
 		gameInfo[_shotPlayer->GetGameType()]->killPoint;
-}
 
+}
 void InGameManager::Respawn(C_ClientInfo* _player)
 {
 	std::thread respawnThread(RespawnWaitAndRevive, _player);		// 1회용 리스폰 쓰레드 생성
@@ -1126,29 +1123,37 @@ void InGameManager::ListSendPacket(list<C_ClientInfo*> _list, C_ClientInfo* _exc
 {
 	IC_CS cs;
 
-	// 가져온 List가 비어있지 않은 경우에만
-	if (!_list.empty())
+	try
 	{
-		// 리스트 안에있는 플레이어들에게 패킷을 전송한다.
-		C_ClientInfo* player = nullptr;
-		for (list<C_ClientInfo*>::iterator iter = _list.begin(); iter != _list.end(); ++iter)
+		// 가져온 List가 비어있지 않은 경우에만
+		if (!_list.empty())
 		{
-			player = *iter;
-
-			// 전송 제외할 클라 건너뜀
-			if (player == _exceptClient)
-				continue;
-
-			// 포커스 없을때 보내지 않기가 설정되었다면
-			if (_notFocusExcept)
+			// 리스트 안에있는 플레이어들에게 패킷을 전송한다.
+			C_ClientInfo* player = nullptr;
+			for (list<C_ClientInfo*>::iterator iter = _list.begin(); iter != _list.end(); ++iter)
 			{
-				// 포커스가 없는 대상은 패킷 보내기 건너 뜀
-				if (player->GetPlayerInfo()->GetFocus() == false)
-					continue;
-			}
+				player = *iter;
 
-			player->SendPacket(_protocol, _buf, _packetSize);
+				// 전송 제외할 클라 건너뜀
+				if (player == _exceptClient)
+					continue;
+
+				// 포커스 없을때 보내지 않기가 설정되었다면
+				if (_notFocusExcept)
+				{
+					// 포커스가 없는 대상은 패킷 보내기 건너 뜀
+					if (player->GetPlayerInfo()->GetFocus() == false)
+						continue;
+				}
+
+				player->SendPacket(_protocol, _buf, _packetSize);
+			}
 		}
+	}
+	catch (const std::exception& _exception)
+	{
+		std::cout << "list버전의 ListSendPacket()에서 예외 발생" << endl;
+		std::cout << _exception.what() << endl;
 	}
 }
 
@@ -1156,36 +1161,48 @@ void InGameManager::ListSendPacket(vector<C_ClientInfo*> _list, C_ClientInfo* _e
 {
 	IC_CS cs;
 
-	// 가져온 List가 비어있지 않은 경우에만
-	if (!_list.empty())
+	try
 	{
-		// 리스트 안에있는 플레이어들에게 패킷을 전송한다.
-		C_ClientInfo* player = nullptr;
-		for (vector<C_ClientInfo*>::iterator iter = _list.begin(); iter != _list.end(); ++iter)
+		// 가져온 List가 비어있지 않은 경우에만
+		if (!_list.empty())
 		{
-			player = *iter;
-
-			// 전송 제외할 클라 건너뜀
-			if (player == _exceptClient)
-				continue;
-
-			// 포커스 없을때 보내지 않기가 설정되었다면
-			if (_notFocusExcept)
+			// 리스트 안에있는 플레이어들에게 패킷을 전송한다.
+			C_ClientInfo* player = nullptr;
+			for (vector<C_ClientInfo*>::iterator iter = _list.begin(); iter != _list.end(); ++iter)
 			{
-				// 포커스가 없는 대상은 패킷 보내기 건너 뜀
-				if (player->GetPlayerInfo()->GetFocus() == false)
-					continue;
-			}
+				player = *iter;
 
-			player->SendPacket(_protocol, _buf, _packetSize);
+				/// 여기에 player의 유효성을 검사해야함!
+
+				// 전송 제외할 클라 건너뜀
+				if (player == _exceptClient)
+					continue;
+
+				// 포커스 없을때 보내지 않기가 설정되었다면
+				if (_notFocusExcept)
+				{
+					// 포커스가 없는 대상은 패킷 보내기 건너 뜀
+					if (player->GetPlayerInfo()->GetFocus() == false)
+						continue;
+				}
+
+				player->SendPacket(_protocol, _buf, _packetSize);
+			}
 		}
+	}
+	catch (const std::exception& _exception)
+	{
+		std::cout << "vector버전의 ListSendPacket()에서 예외 발생" << endl;
+		std::cout << _exception.what() << endl;
 	}
 }
 
 // 무기 선택 타이머 쓰레드
 DWORD WINAPI InGameManager::WeaponSelectTimerThread(void* _arg)
 {
-	C_ClientInfo* ptr = (C_ClientInfo*)_arg;
+	RoomInfo* room = (RoomInfo*)_arg;	// 방 정보를 얻음
+
+	InGameManager* gameManager = InGameManager::GetInstance();
 
 	PROTOCOL_INGAME protocol = (PROTOCOL_INGAME)0;
 	char buf[BUFSIZE] = { 0, };
@@ -1200,50 +1217,77 @@ DWORD WINAPI InGameManager::WeaponSelectTimerThread(void* _arg)
 
 	QueryPerformanceFrequency(&frequency);	// 최초 1회 주파수 얻음
 	QueryPerformanceCounter(&beginTime);	// 시작 시간 얻음
-	while (1)
+
+	try
 	{
-		QueryPerformanceCounter(&endTime);					// 종료 시간 얻음
-		elapsed = endTime.QuadPart - beginTime.QuadPart;	// 경과된 시간 계산
-		
-		
-		duringTime = (double)elapsed / (double)frequency.QuadPart;	// 실제로 흐른 시간을 초 단위로 계산
-		
-		// 만약 아이템 선택시간(상수)을 넘었다면 쓰레드 핸들 반납 후, 무한루프를 빠져나간다.
-		if (duringTime >= WEAPON_SELTIME)
+		while (1)
 		{
-			// 쓰레드 핸들 반납
-			CloseHandle(ptr->GetRoom()->GetWeaponTimerHandle());
-			ptr->GetRoom()->SetWeaponTimerHandle(nullptr);
+			QueryPerformanceCounter(&endTime);					// 종료 시간 얻음
+			elapsed = endTime.QuadPart - beginTime.QuadPart;	// 경과된 시간 계산
 
-			// 무기 정보를 얻어오기위한 프로토콜 조립
-			protocol = InGameManager::GetInstance()->SetProtocol(INGAME_STATE, PROTOCOL_INGAME::WEAPON_PROTOCOL, RESULT_INGAME::NODATA);
-			packetSize = 0;
 
-			// 같은 방에 있는 "모든" 플레이어에게 무기를 보내라고 프로토콜을 전송함.
-			vector<C_ClientInfo*> playerList = ptr->GetRoom()->GetPlayers();	// 리스트 얻어옴
-			InGameManager::GetInstance()->ListSendPacket(playerList, nullptr, protocol, buf, packetSize, false);
+			duringTime = (double)elapsed / (double)frequency.QuadPart;	// 실제로 흐른 시간을 초 단위로 계산
 
+			// 만약 아이템 선택시간(상수)을 넘었다면 쓰레드 핸들 반납 후, 무한루프를 빠져나간다.
+			if (duringTime >= WEAPON_SELTIME)
+			{
+				// 누구 하나라도 게임 시작전에 나갔으면 이 방은 터진거임
+				if (room->GetMaxPlayer() > room->GetNumOfPlayer())
+				{
+					throw ExitBeforeGame;
+				}
+
+				// 쓰레드 핸들 반납
+				CloseHandle(room->GetWeaponTimerHandle());
+				room->SetWeaponTimerHandle(nullptr);
+
+				// 무기 정보를 얻어오기위한 프로토콜 조립
+				protocol = InGameManager::GetInstance()->SetProtocol(INGAME_STATE, PROTOCOL_INGAME::WEAPON_PROTOCOL, RESULT_INGAME::NODATA);
+				packetSize = 0;
+
+				// 같은 방에 있는 "모든" 플레 이어에게 무기를 보내라고 프로토콜을 전송함.
+				vector<C_ClientInfo*> playerList = room->GetPlayers();	// 리스트 얻어옴
+				InGameManager::GetInstance()->ListSendPacket(playerList, nullptr, protocol, buf, packetSize, false);
+
+				break;
+			}
+
+			// 1초마다 값이 변하면
+			if (sec < (int)duringTime)
+			{
+				// 누구 하나라도 게임 시작전에 나갔으면 이 방은 터진거임
+				if (room->GetMaxPlayer() > room->GetNumOfPlayer())
+				{
+					throw ExitBeforeGame;
+				}
+
+				sec = (int)duringTime;	// 새롭게 초 단위를 갱신시켜준다.(before sec의 역할)
+
+				// 1초에 한 번씩 시간을 알려주는 프로토콜을 보냄.
+				protocol = InGameManager::GetInstance()->SetProtocol(INGAME_STATE, PROTOCOL_INGAME::TIMER_PROTOCOL, RESULT_INGAME::NODATA);
+				packetSize = 0;
+
+				// 무기 선택종료까지 남은 시간 패킷 세팅
+				InGameManager::GetInstance()->PackPacket(buf, (WEAPON_SELTIME - sec), packetSize);
+
+				// 같은 방에 있는 "모든" 플레이어에게 현재 무기 선택종료까지 남은 시간을 보내줌
+				vector<C_ClientInfo*> playerList = room->GetPlayers();	// 리스트 얻어옴
+				InGameManager::GetInstance()->ListSendPacket(playerList, nullptr, protocol, buf, packetSize, false);
+			}
+
+			Sleep(50);	// 꼭 넣어줘야함 아니면 혼자 CPU 다 잡아먹음
+		}
+	}
+	catch (const ExceptionCode _code)
+	{
+		switch (_code)
+		{
+			case ExitBeforeGame:
+			{
+				cout << "게임 시작 전에 누구 나갔음" << endl;
+			}
 			break;
 		}
-
-		// 1초마다 값이 변하면
-		if (sec < (int)duringTime)
-		{
-			sec = (int)duringTime;	// 새롭게 초 단위를 갱신시켜준다.(before sec의 역할)
-
-			// 1초에 한 번씩 시간을 알려주는 프로토콜을 보냄.
-			protocol = InGameManager::GetInstance()->SetProtocol(INGAME_STATE, PROTOCOL_INGAME::TIMER_PROTOCOL, RESULT_INGAME::NODATA);
-			packetSize = 0;
-
-			// 무기 선택종료까지 남은 시간 패킷 세팅
-			InGameManager::GetInstance()->PackPacket(buf, (WEAPON_SELTIME - sec), packetSize);
-
-			// 같은 방에 있는 "모든" 플레이어에게 현재 무기 선택종료까지 남은 시간을 보내줌
-			vector<C_ClientInfo*> playerList = ptr->GetRoom()->GetPlayers();	// 리스트 얻어옴
-			InGameManager::GetInstance()->ListSendPacket(playerList, nullptr, protocol, buf, packetSize, false);
-		}
-
-		Sleep(50);	// 꼭 넣어줘야함 아니면 혼자 CPU 다 잡아먹음
 	}
 
 	return 0;	// 그리고 쓰레드 종료

@@ -9,7 +9,10 @@ public class btn_start : UnityEngine.MonoBehaviour
 {
 	public GameObject obj_loadingBar;
 	public TMP_Text txt_startBtn;
-	int flag = 1;
+    public Button prevSelectButton;
+    public Button nextSelectButton;
+    int flag = 1;
+    private int selectMatch = 0;
 
 	public void BtnStart() //매칭버튼 눌렀을때.
 	{
@@ -17,11 +20,14 @@ public class btn_start : UnityEngine.MonoBehaviour
 
 		if (flag == 0)
 		{
-			txt_startBtn.text = "취소";
-			obj_loadingBar.SetActive(true);
+			txt_startBtn.text = "CANCLE";
+            prevSelectButton.enabled = false;
+            nextSelectButton.enabled = false;
+
+            obj_loadingBar.SetActive(true);
 
             // 매칭이 가능한지 서버로 전송한다.
-            NetworkManager.instance.MayIMatch(0);
+            NetworkManager.instance.MayIMatch(selectMatch);
 
             // 코루틴을 돌려서 매칭이 잡힐때까지 반복한다.
             StartCoroutine(CheckMatch());
@@ -49,10 +55,10 @@ public class btn_start : UnityEngine.MonoBehaviour
 			// 매칭에 성공했다면 씬을 로드하고
 			else
 			{
+                //LoadingSceneManager.LoadScene("SelectWeapons", true);
 				SceneManager.LoadScene("SelectWeapons");
 				yield break;    // 코루틴 종료
 			}
-
 		}
 	}
 
@@ -68,12 +74,27 @@ public class btn_start : UnityEngine.MonoBehaviour
 			else
 			{
 				// UI바꾸고
-				txt_startBtn.text = "플레이";
-				obj_loadingBar.SetActive(false);
+				txt_startBtn.text = "PLAY";
+                prevSelectButton.enabled = true;
+                nextSelectButton.enabled = true;
+                obj_loadingBar.SetActive(false);
 
 				yield break;    // 코루틴 종료
 			}
 
 		}
 	}
+
+    public void SelectMatch(int _select = 2)
+    {
+        switch(_select)
+        {
+            case 2:
+                selectMatch = (int)C_Global.GameType._2vs2;
+                break;
+            case 1:
+                selectMatch = (int)C_Global.GameType._1vs1;
+                break;
+        }
+    }
 }

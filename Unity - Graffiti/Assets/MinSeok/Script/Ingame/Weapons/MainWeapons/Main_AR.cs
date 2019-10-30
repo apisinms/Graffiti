@@ -205,11 +205,11 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
     private void StartDecreaseReloadGage(int _index)
     {
         EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, _index);
-        if (BridgeClientToServer.instance.isStartReloadGageCor[_index] == false)
-        {
-            UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadGageImg(weaponManager.weaponInfoAR.reloadTime, _index));
-            BridgeClientToServer.instance.isStartReloadGageCor[_index] = true;
-        }
+		if (BridgeClientToServer.instance.isStartReloadGageCor[_index] == false)
+		{
+			UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadGageImg(weaponManager.weaponInfoAR.reloadTime, _index));
+			BridgeClientToServer.instance.isStartReloadGageCor[_index] = true;
+		}
     }
 
     public float GetReloadTime(int _index)
@@ -235,12 +235,17 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
 
     public void ReloadAmmoProcess(int _index)
     {
+        /*
         #if NETWORK
         NetworkManager.instance.SendIngamePacket();
         #endif
+        */
 
-        if (playerARInfo[_index].curAmmo >= weaponManager.weaponInfoAR.maxAmmo) //풀탄창이면 재장전안함
+        if (playerARInfo[_index].curAmmo >= weaponManager.weaponInfoAR.maxAmmo
+           || weaponManager.isReloading == true)
+        {
             return;
+        }
 
         AudioManager.Instance.Play(8);
         StartCoroutine(Cor_ReloadAmmo(_index));

@@ -62,6 +62,21 @@ void SessionManager::Remove(C_ClientInfo* _info)
 	clientList.remove(_info);
 	delete _info;
 	_info = nullptr;
+
+
+
+	/*try
+	{
+		clientList.remove(_info);
+		delete _info;
+		_info = nullptr;
+	}
+	catch (const std::exception& _exception)
+	{
+		std::cout << "SessionManager::Remove()에서 예외 발생" << endl;
+		std::cout << _exception.what() << endl;
+	}*/
+
 }
 
 int SessionManager::GetSize()

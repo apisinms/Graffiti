@@ -59,7 +59,15 @@ C_State* C_ClientInfo::GetLobbyState() { return (C_State*)lobbyState; }
 C_State* C_ClientInfo::GetLoginState() { return (C_State*)loginState; }
 //C_State* C_ClientInfo::GetChatState() { return (C_State*)chatState; }
 C_State* C_ClientInfo::GetInGameState() { return (C_State*)inGameState; }
-void C_ClientInfo::SetUserInfo(UserInfo* _userInfo) { userInfo = _userInfo; }
+void C_ClientInfo::SetUserInfo(UserInfo* _userInfo)
+{ 
+	if (userInfo != nullptr)
+	{
+		delete userInfo;
+	}
+
+	userInfo = _userInfo;
+}
 UserInfo* C_ClientInfo::GetUserInfo() { return userInfo; }
 void C_ClientInfo::PushState(C_State* _state) { stateStack->push(_state); }
 C_State* C_ClientInfo::PopState() 

@@ -89,7 +89,8 @@ public:
 
 class RoomManager
 {
-	C_List<RoomInfo*>* roomList;
+	//C_List<RoomInfo*>* roomList;
+	list<RoomInfo*> roomList;
 
 private:
 	static RoomManager* instance;

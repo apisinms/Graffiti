@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
 	public static UIManager instance;
 	public int myIndex { get; set; }
 	public int[] playersIndex { get; set; }
+   
 
 	#region HP
 	public GameObject[] obj_prefebsHP;   //0나, 1팀, 2적
@@ -73,10 +74,27 @@ public class UIManager : MonoBehaviour
 		public Image img_back { get; set; }
 		public Text txt_reloadTime { get; set; }
 	}
-	#endregion
+    #endregion
 
-	#region WEAPON_INFO
-	public GameObject obj_prefebWeaponInfo;
+
+    #region CAPTURE_GAGE
+    public GameObject obj_prefebCaptureGage;
+    public _IMG_CAPTURE_INFO[] captureGage;
+    public Vector3 captureAddPos { get; set; }
+    public Coroutine[] isStartCaptureCor;
+    public TMP_Text txt_captureNotice { get; set; } //점령지 탈취, 도난시의 알림텍스트
+
+    public struct _IMG_CAPTURE_INFO
+    {
+        public GameObject obj_parent;
+        public Image img_capture { get; set; }
+        public Image img_back { get; set; }
+        public Text txt_captureTime { get; set; }
+    }
+    #endregion
+
+    #region WEAPON_INFO
+    public GameObject obj_prefebWeaponInfo;
 	public Sprite[] spr_mainW;
 	public _IMG_WEAPON_INFO weaponInfo;
 	public Vector3 weaponAddPos { get; set; }
@@ -148,6 +166,7 @@ public class UIManager : MonoBehaviour
 		Initialization_Circle();
 		Initialization_Line();
 		Initialization_ReloadGage();
+        Initialization_CaptureGage();
         Initialization_KillLog();
         Initialization_RespawnGage();
 
@@ -157,7 +176,7 @@ public class UIManager : MonoBehaviour
 #endif
     }
 
-	private void Start()
+    private void Start()
 	{
 		leftJoystick = GameObject.Find("Left");
 		rightJoystick = GameObject.Find("Right");
@@ -179,7 +198,11 @@ public class UIManager : MonoBehaviour
 			circle[playersIndex[i]].obj_parent.transform.position = PlayersManager.instance.tf_players[playersIndex[i]].transform.position + circleAddPos;
             reloadGage[i].obj_parent.transform.position = PlayersManager.instance.tf_players[i].transform.position + reloadAddPos;
         }
-		line.obj_parent.transform.position = PlayersManager.instance.tf_players[myIndex].transform.position + lineAddPos;		
+
+        for (int i = 0; i < CaptureManager.instance.MAX_TERRITORY_NUM; i++)
+            captureGage[i].obj_parent.transform.position = CaptureManager.instance.obj_territory[i].transform.position + captureAddPos;
+
+        line.obj_parent.transform.position = PlayersManager.instance.tf_players[myIndex].transform.position + lineAddPos;		
 		weaponInfo.obj_parent.transform.position = PlayersManager.instance.tf_players[myIndex].transform.position + weaponAddPos;
 	}
 
@@ -279,6 +302,7 @@ public class UIManager : MonoBehaviour
          if(i == myIndex)
          {
             nickname[i].txt_nickname.text = NetworkManager.instance.NickName;
+            PlayersManager.instance.nickname[i] = NetworkManager.instance.NickName;
          }
 #else
             if (i == myIndex)
@@ -383,6 +407,25 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    private void Initialization_CaptureGage()
+    {
+        txt_captureNotice = GameObject.FindGameObjectWithTag("Canvas_overlay").transform.GetChild(8).GetComponent<TMP_Text>();
+        captureGage = new _IMG_CAPTURE_INFO[CaptureManager.instance.MAX_TERRITORY_NUM];
+        captureAddPos = new Vector3(0, 4.5f, 0);
+        isStartCaptureCor = new Coroutine[CaptureManager.instance.MAX_TERRITORY_NUM];
+
+        for (int i = 0; i < captureGage.Length; i++)
+        {
+            isStartCaptureCor[i] = null;
+            captureGage[i].obj_parent = Instantiate(obj_prefebCaptureGage, GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
+            captureGage[i].img_capture = captureGage[i].obj_parent.transform.GetChild(0).GetComponent<Image>();
+            captureGage[i].img_back = captureGage[i].obj_parent.transform.GetChild(1).GetComponent<Image>();
+            captureGage[i].txt_captureTime = captureGage[i].obj_parent.transform.GetChild(2).GetComponent<Text>();
+            captureGage[i].obj_parent.SetActive(false);
+        }
+        txt_captureNotice.gameObject.SetActive(false);
+    }
+
     private void Initialization_Line()
 	{
 		lineAddPos = new Vector3(0, 0.1f, 0);
@@ -411,10 +454,6 @@ public class UIManager : MonoBehaviour
         tmpAttribute.spr = null;
         tmpAttribute.to = null;
     }
-
-
-
-
 
     private void Initialization_RespawnGage()
     {
@@ -486,10 +525,11 @@ public class UIManager : MonoBehaviour
     public void ReloadAmmo_Btn() //재장전 이미지 버튼
     {
         WeaponManager.instance.ReloadAmmoProcess(myIndex); //총알개수 체크후 바로 다이렉트 재장전
-
+/*
 #if NETWORK
         NetworkManager.instance.SendIngamePacket();
-#endif   
+#endif
+*/
     }
 
     public void SetAmmoStateTxt(int _num)
@@ -517,6 +557,74 @@ public class UIManager : MonoBehaviour
 			yield return null;
 		}
 	}
+
+    public IEnumerator DecreaseCaptureGageImg(float _time, int _triggerIdx, string _playerTag)
+    {
+        captureGage[_triggerIdx].obj_parent.SetActive(true);
+        captureGage[_triggerIdx].txt_captureTime.text = (_time).ToString();
+
+        while (true)
+        {
+            if (captureGage[_triggerIdx].img_capture.fillAmount <= 0)
+            {
+                captureGage[_triggerIdx].img_capture.fillAmount = 1.0f;
+                captureGage[_triggerIdx].obj_parent.SetActive(false);
+
+                int idx = 0;
+                switch(_playerTag)
+                {
+                    case "Player1":
+                        idx = 0;
+                        break;
+                    case "Player2":
+                        idx = 1;
+                        break;
+                    case "Player3":
+                        idx = 2;
+                        break;
+                    case "Player4":
+                        idx = 3;
+                        break;
+                }
+
+                UIManager.instance.txt_captureNotice.gameObject.SetActive(true);
+
+                if (idx == GameManager.instance.playersIndex[0] || idx == GameManager.instance.playersIndex[1])
+                {
+                    Debug.Log("점령지를 탈취했습니다!");
+                    UIManager.instance.txt_captureNotice.color = Color.green;
+                    UIManager.instance.txt_captureNotice.text = "점령지를 탈취 했습니다 !";
+                    CaptureManager.instance.captureResult_team[_triggerIdx] = _CAPTURE_RESULT.GET;
+                    CaptureManager.instance.captureResult_enemy[_triggerIdx] = _CAPTURE_RESULT.LOSE;
+                    CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.green;
+                    CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.green;
+                }
+                else
+                {
+                    Debug.Log("점령지를 빼앗겼습니다!");
+                    UIManager.instance.txt_captureNotice.color = Color.red;
+                    UIManager.instance.txt_captureNotice.text = "점령지를 빼앗겼습니다 !";
+                    CaptureManager.instance.captureResult_team[_triggerIdx] = _CAPTURE_RESULT.LOSE;
+                    CaptureManager.instance.captureResult_enemy[_triggerIdx] = _CAPTURE_RESULT.GET;
+                    CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.red;
+                    CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.red;
+                }
+
+                StartCoroutine(CheckCaptureNoticeTime()); // x초뒤에 캡처 알림 텍스트 셋엑티브펄스.
+                yield break;
+            }
+
+            captureGage[_triggerIdx].img_capture.fillAmount -= Time.smoothDeltaTime / _time;
+            captureGage[_triggerIdx].txt_captureTime.text = (captureGage[_triggerIdx].img_capture.fillAmount * _time).ToString();
+            yield return null;
+        }
+    }
+    public IEnumerator CheckCaptureNoticeTime()
+    {
+        yield return YieldInstructionCache.WaitForSeconds(2.0f);
+        UIManager.instance.txt_captureNotice.gameObject.SetActive(false);
+        yield break;
+    }
 
     public IEnumerator DecreaseRespawnGageImg(float _time)
     {

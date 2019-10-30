@@ -231,11 +231,14 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
 
     public void ReloadAmmoProcess(int _index)
     {
+        /*
         #if NETWORK
         NetworkManager.instance.SendIngamePacket();
         #endif
+        */
 
-        if (playerSGInfo[_index].curAmmo >= weaponManager.weaponInfoSG.maxAmmo) //풀탄창이면 재장전안함
+        if (playerSGInfo[_index].curAmmo >= weaponManager.weaponInfoSG.maxAmmo
+            || weaponManager.isReloading == true) //풀탄창이면 재장전안함
             return;
 
         AudioManager.Instance.Play(8);

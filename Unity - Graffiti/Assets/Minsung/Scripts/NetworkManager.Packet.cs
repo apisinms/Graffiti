@@ -530,6 +530,7 @@ public partial class NetworkManager : MonoBehaviour
         // 이제 다시 string으로 변환
         _str2 = ByteToString(arrStrByte);
     }
+
     private void UnPackPacket(byte[] _buf, ref GameManager.GameInfo _gameInfo, ref WeaponManager.WeaponInfo[] _weapons)
 	{
 		int offset = sizeof(PROTOCOL);

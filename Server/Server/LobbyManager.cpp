@@ -200,7 +200,7 @@ bool LobbyManager::CanIGotoInGame(C_ClientInfo* _ptr)
 					nullptr, 
 					0,
 					(_beginthreadex_proc_type)InGameManager::WeaponSelectTimerThread, 
-					(void*)_ptr,
+					(void*)_ptr->GetRoom(),
 					0, 
 					NULL)
 			);

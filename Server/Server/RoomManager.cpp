@@ -93,11 +93,9 @@ RoomManager* RoomManager::GetInstance()
 
 void RoomManager::Init()
 {
-	roomList = new C_List<RoomInfo*>();
 }
 void RoomManager::End()
 {
-	delete roomList;
 }
 
 void RoomManager::Destroy()
@@ -121,18 +119,23 @@ bool RoomManager::CreateRoom(list<C_ClientInfo*>_players, int _numOfPlayer)
 	}
 
 	// 방 리스트에 추가
-	bool ret = roomList->Insert(room);
+	int beforeSize = (int)roomList.size();
+	roomList.emplace_back(room);
+
+	int nowSize = (int)roomList.size();
+	bool ret = (beforeSize < nowSize);
+
 	switch ((RoomInfo::GameType)gameType)
 	{
 		case RoomInfo::GameType::_2vs2:
 		{
-			printf("[2:2][방생성] 총 갯수 : %d\n", roomList->GetCount());
+			printf("[2:2][방생성] 총 갯수 : %d\n", nowSize);
 		}
 		break;
 
 		case RoomInfo::GameType::_1vs1:
 		{
-			printf("[1:1][방생성] 총 갯수 : %d\n", roomList->GetCount());
+			printf("[1:1][방생성] 총 갯수 : %d\n", nowSize);
 		}
 		break;
 	}
@@ -142,9 +145,12 @@ bool RoomManager::CreateRoom(list<C_ClientInfo*>_players, int _numOfPlayer)
 
 bool RoomManager::DeleteRoom(RoomInfo* _room)
 {
-	if (roomList->Delete(_room) == true)
-	{		
-		printf("[방 소멸]사이즈:%d\n", roomList->GetCount());
+	int beforeSize = (int)roomList.size();
+	roomList.remove(_room);
+
+	if (beforeSize > (int)roomList.size())
+	{
+		printf("[방 소멸 성공]사이즈:%d\n", (int)roomList.size());
 		return true;
 	}
 
@@ -166,8 +172,8 @@ bool RoomManager::CheckLeaveRoom(C_ClientInfo* _ptr)
 			// 방금 나간사람이 마지막이었다면 방을 없앰
 			if (room->IsPlayerListEmpty() == true)
 			{
-				roomList->Delete(room);
-				printf("[방 소멸]사이즈:%d\n", roomList->GetCount());
+				roomList.remove(room);
+				printf("[방 소멸]사이즈:%d\n", (int)roomList.size());
 			}
 
 			return true;
