@@ -84,4 +84,6 @@ public class State_AimCircuit : MonoBehaviour, IActionState
             //EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, myIndex);
         }
     }
+
+    public void Spray(bool _value, int _triggerIdx) { }
 }

@@ -196,6 +196,56 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 24299906}
   m_CullTransparentMesh: 0
+--- !u!1 &39258048
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 39258049}
+  - component: {fileID: 39258050}
+  m_Layer: 0
+  m_Name: CrackationSound
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &39258049
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 39258048}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 721979478}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &39258050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 39258048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af2f8d4512b7d4e4498a9833dce0e5ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_bypassAudioManager: {fileID: 721979479}
+  m_audioFile: crackation.wav
+  m_priority: 1
+  m_volume: 0.3
+  m_rate: 1
+  m_playOnAwake: 0
+  m_loop: 0
 --- !u!1 &74717879
 GameObject:
   m_ObjectHideFlags: 0
@@ -2606,6 +2656,7 @@ GameObject:
   - component: {fileID: 718010458}
   - component: {fileID: 718010462}
   - component: {fileID: 718010463}
+  - component: {fileID: 718010465}
   m_Layer: 0
   m_Name: StateList
   m_TagString: Untagged
@@ -2711,6 +2762,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f91beb0970eef34398c1095318196b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &718010465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 718010456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ab9c1ccd3d79c948a7b6b95bcba04b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &721979477
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2786,7 +2849,7 @@ PrefabInstance:
     - target: {fileID: 5283580370990223409, guid: 5cc1abd50e1583d4680e5d7a66b39284,
         type: 3}
       propertyPath: soundPool.Array.size
-      value: 10
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 5283580370990223409, guid: 5cc1abd50e1583d4680e5d7a66b39284,
         type: 3}
@@ -2813,15 +2876,40 @@ PrefabInstance:
       propertyPath: soundPool.Array.data[9]
       value: 
       objectReference: {fileID: 1587760088}
-    - target: {fileID: 999565226429933482, guid: 5cc1abd50e1583d4680e5d7a66b39284,
+    - target: {fileID: 5283580370990223409, guid: 5cc1abd50e1583d4680e5d7a66b39284,
+        type: 3}
+      propertyPath: soundPool.Array.data[10]
+      value: 
+      objectReference: {fileID: 1979300421}
+    - target: {fileID: 5283580370990223409, guid: 5cc1abd50e1583d4680e5d7a66b39284,
+        type: 3}
+      propertyPath: soundPool.Array.data[11]
+      value: 
+      objectReference: {fileID: 39258050}
+    - target: {fileID: 5283580370702024845, guid: 5cc1abd50e1583d4680e5d7a66b39284,
         type: 3}
       propertyPath: m_volume
-      value: 0.5
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 999565227605105633, guid: 5cc1abd50e1583d4680e5d7a66b39284,
         type: 3}
       propertyPath: m_volume
       value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5283580371518454248, guid: 5cc1abd50e1583d4680e5d7a66b39284,
+        type: 3}
+      propertyPath: m_volume
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 999565226429933482, guid: 5cc1abd50e1583d4680e5d7a66b39284,
+        type: 3}
+      propertyPath: m_volume
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4586540225530162359, guid: 5cc1abd50e1583d4680e5d7a66b39284,
+        type: 3}
+      propertyPath: m_volume
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4586540224851053327, guid: 5cc1abd50e1583d4680e5d7a66b39284,
         type: 3}
@@ -2833,25 +2921,10 @@ PrefabInstance:
       propertyPath: m_volume
       value: 0.25
       objectReference: {fileID: 0}
-    - target: {fileID: 4586540225530162359, guid: 5cc1abd50e1583d4680e5d7a66b39284,
-        type: 3}
-      propertyPath: m_volume
-      value: 0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 4586540225911554106, guid: 5cc1abd50e1583d4680e5d7a66b39284,
         type: 3}
       propertyPath: m_volume
       value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 5283580370702024845, guid: 5cc1abd50e1583d4680e5d7a66b39284,
-        type: 3}
-      propertyPath: m_volume
-      value: 0.15
-      objectReference: {fileID: 0}
-    - target: {fileID: 5283580371518454248, guid: 5cc1abd50e1583d4680e5d7a66b39284,
-        type: 3}
-      propertyPath: m_volume
-      value: 0.15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5cc1abd50e1583d4680e5d7a66b39284, type: 3}
@@ -4103,6 +4176,10 @@ MonoBehaviour:
     type: 3}
   obj_prefebCaptureGage: {fileID: 6234289312042932419, guid: 7e73f13724ea8ae439f043b68d6eacf4,
     type: 3}
+  obj_prefebCaptureGageSub: {fileID: 6234289312042932419, guid: a0ffd237101d23342868696e9c3eef22,
+    type: 3}
+  isStartCaptureCor: 
+  isStartCaptureSubCor: 
   obj_prefebWeaponInfo: {fileID: 7250172163139214135, guid: a2d9310bf7555ae4e93b33750357d231,
     type: 3}
   spr_mainW:
@@ -6448,6 +6525,56 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1956673078}
   m_CullTransparentMesh: 0
+--- !u!1 &1979300419
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1979300420}
+  - component: {fileID: 1979300421}
+  m_Layer: 0
+  m_Name: CarCrashSound
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1979300420
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1979300419}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 721979478}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1979300421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1979300419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af2f8d4512b7d4e4498a9833dce0e5ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_bypassAudioManager: {fileID: 721979479}
+  m_audioFile: carCrash.wav
+  m_priority: 1
+  m_volume: 0.3
+  m_rate: 1
+  m_playOnAwake: 0
+  m_loop: 0
 --- !u!1001 &1984484749
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6566,7 +6693,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 429a036b4766ca04492d1c073515df06, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 0
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -7238,12 +7365,12 @@ PrefabInstance:
     - target: {fileID: 7654918418140886902, guid: 2d4014067741e2241bdae3436bf31066,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.08
+      value: 1.96
       objectReference: {fileID: 0}
     - target: {fileID: 7654918418140886902, guid: 2d4014067741e2241bdae3436bf31066,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -16.85
+      value: -6.47
       objectReference: {fileID: 0}
     - target: {fileID: 1274444308766368636, guid: 2d4014067741e2241bdae3436bf31066,
         type: 3}

@@ -79,9 +79,16 @@ public class UIManager : MonoBehaviour
 
     #region CAPTURE_GAGE
     public GameObject obj_prefebCaptureGage;
+    public GameObject obj_prefebCaptureGageSub;
+
     public _IMG_CAPTURE_INFO[] captureGage;
+    public _IMG_CAPTURE_SUB_INFO[] captureGageSub;
     public Vector3 captureAddPos { get; set; }
-    public Coroutine[] isStartCaptureCor;
+    public Coroutine[] curCaptureCor;
+    public Coroutine[] curCaptureSubCor;
+    public bool[] isStartCaptureCor;
+    public bool[] isStartCaptureSubCor;
+
     public TMP_Text txt_captureNotice { get; set; } //점령지 탈취, 도난시의 알림텍스트
 
     public struct _IMG_CAPTURE_INFO
@@ -90,6 +97,13 @@ public class UIManager : MonoBehaviour
         public Image img_capture { get; set; }
         public Image img_back { get; set; }
         public Text txt_captureTime { get; set; }
+    }
+
+    public struct _IMG_CAPTURE_SUB_INFO
+    {
+        public GameObject obj_parent;
+        public Image img_back { get; set; }
+        public Image img_captureSub { get; set; }
     }
     #endregion
 
@@ -182,7 +196,7 @@ public class UIManager : MonoBehaviour
 		rightJoystick = GameObject.Find("Right");
         reloadBtn = GameObject.Find("obj_reloadBtn");
 
-        StartCoroutine(CheckKillLogQueue()); //킬로그검사 큐를 계속돌림
+        StartCoroutine(Cor_CheckKillLogQueue()); //킬로그검사 큐를 계속돌림
 
         //GameObject.Find("Canvas_overlay").transform.Find("Panel_Dead").gameObject.SetActive(true);
         //deadPanel = GameObject.Find("Panel_Dead");
@@ -200,7 +214,10 @@ public class UIManager : MonoBehaviour
         }
 
         for (int i = 0; i < CaptureManager.instance.MAX_TERRITORY_NUM; i++)
+        {
             captureGage[i].obj_parent.transform.position = CaptureManager.instance.obj_territory[i].transform.position + captureAddPos;
+            captureGageSub[i].obj_parent.transform.position = CaptureManager.instance.obj_territory[i].transform.position + captureAddPos;
+        }
 
         line.obj_parent.transform.position = PlayersManager.instance.tf_players[myIndex].transform.position + lineAddPos;		
 		weaponInfo.obj_parent.transform.position = PlayersManager.instance.tf_players[myIndex].transform.position + weaponAddPos;
@@ -411,17 +428,30 @@ public class UIManager : MonoBehaviour
     {
         txt_captureNotice = GameObject.FindGameObjectWithTag("Canvas_overlay").transform.GetChild(8).GetComponent<TMP_Text>();
         captureGage = new _IMG_CAPTURE_INFO[CaptureManager.instance.MAX_TERRITORY_NUM];
+        captureGageSub = new _IMG_CAPTURE_SUB_INFO[CaptureManager.instance.MAX_TERRITORY_NUM];
         captureAddPos = new Vector3(0, 4.5f, 0);
-        isStartCaptureCor = new Coroutine[CaptureManager.instance.MAX_TERRITORY_NUM];
+        curCaptureCor = new Coroutine[CaptureManager.instance.MAX_TERRITORY_NUM];
+        curCaptureSubCor = new Coroutine[CaptureManager.instance.MAX_TERRITORY_NUM];
+        isStartCaptureCor = new bool[CaptureManager.instance.MAX_TERRITORY_NUM];
+        isStartCaptureSubCor = new bool[CaptureManager.instance.MAX_TERRITORY_NUM];
 
         for (int i = 0; i < captureGage.Length; i++)
         {
-            isStartCaptureCor[i] = null;
+            curCaptureCor[i] = null;
             captureGage[i].obj_parent = Instantiate(obj_prefebCaptureGage, GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
             captureGage[i].img_capture = captureGage[i].obj_parent.transform.GetChild(0).GetComponent<Image>();
             captureGage[i].img_back = captureGage[i].obj_parent.transform.GetChild(1).GetComponent<Image>();
             captureGage[i].txt_captureTime = captureGage[i].obj_parent.transform.GetChild(2).GetComponent<Text>();
             captureGage[i].obj_parent.SetActive(false);
+        }
+
+        for (int i = 0; i < captureGageSub.Length; i++)
+        {
+            curCaptureSubCor[i] = null;
+            captureGageSub[i].obj_parent = Instantiate(obj_prefebCaptureGageSub, GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
+            captureGageSub[i].img_back = captureGageSub[i].obj_parent.transform.GetChild(0).GetComponent<Image>();
+            captureGageSub[i].img_captureSub = captureGageSub[i].obj_parent.transform.GetChild(1).GetComponent<Image>();
+            captureGageSub[i].obj_parent.SetActive(false);
         }
         txt_captureNotice.gameObject.SetActive(false);
     }
@@ -509,7 +539,7 @@ public class UIManager : MonoBehaviour
 #endif
     }
 
-    public IEnumerator DecreaseMiddleHPImg(int _index, float _curHP) //중간 체력 img는 효과를 적용할것이다.
+    public IEnumerator Cor_DecreaseMiddleHPImg(int _index, float _curHP) //중간 체력 img는 효과를 적용할것이다.
 	{
 		//Debug.Log("들어옴");
 		yield return YieldInstructionCache.WaitForSeconds(0.6f);
@@ -537,7 +567,7 @@ public class UIManager : MonoBehaviour
 		weaponInfo.txt_ammoState.text = _num.ToString();
 	}
 
-	public IEnumerator DecreaseReloadGageImg(float _time, int _index)
+	public IEnumerator Cor_DecreaseReloadGageImg(float _time, int _index)
 	{
 		reloadGage[_index].obj_parent.SetActive(true);
 		reloadGage[_index].txt_reloadTime.text = (_time).ToString();
@@ -558,8 +588,82 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
-    public IEnumerator DecreaseCaptureGageImg(float _time, int _triggerIdx, string _playerTag)
+    public void DecreaseCaptureGageSubImg(int _triggerIdx, string _tag, bool _value)
     {
+        if (_value == true)
+        {
+            if (isStartCaptureSubCor[_triggerIdx] == false)
+            {
+                curCaptureSubCor[_triggerIdx] = StartCoroutine(Cor_DecreaseCaptureGageSubImg(1.0f, _triggerIdx, _tag)); //내 점령지 인덱스를 넘김
+            }
+        }
+        else
+        {
+            if (isStartCaptureSubCor[_triggerIdx] == true)
+            {
+                isStartCaptureSubCor[_triggerIdx] = false;
+                captureGageSub[_triggerIdx].img_captureSub.fillAmount = 1;
+                captureGageSub[_triggerIdx].obj_parent.SetActive(false);
+                StopCoroutine(curCaptureSubCor[_triggerIdx]);
+            }
+        }
+    }
+    public IEnumerator Cor_DecreaseCaptureGageSubImg(float _time, int _triggerIdx, string _playerTag)
+    {
+        if (isStartCaptureSubCor[_triggerIdx] == true)
+            yield break;
+
+        isStartCaptureSubCor[_triggerIdx] = true;
+
+        captureGageSub[_triggerIdx].obj_parent.SetActive(true);
+
+        while (true)
+        {
+            if (captureGageSub[_triggerIdx].img_captureSub.fillAmount <= 0)
+            {
+                captureGageSub[_triggerIdx].img_captureSub.fillAmount = 1.0f;
+                captureGageSub[_triggerIdx].obj_parent.SetActive(false);
+
+                //점령애가 "나"면 스프레이상태변환. 다른3명은 여기가 아니라 뷰어에서 해줌. 내스테이트를 서버로 보내니까 내꺼만,.
+                if (_playerTag.Equals(GameManager.instance.myTag))
+                {
+                    StateManager.instance.Spray(true, _triggerIdx); //서브게이지가 끝나면 SPRAY상태로 변환. _triggerIdx를넣어 점령지를 바라보게함
+                    NetworkManager.instance.SendIngamePacket();
+                }
+                DecreaseCaptureGageImg(_triggerIdx, _playerTag, true);
+                yield break;
+            }
+
+            captureGageSub[_triggerIdx].img_captureSub.fillAmount -= Time.smoothDeltaTime / _time;
+            yield return null;
+        }
+    }
+
+    public void DecreaseCaptureGageImg(int _triggerIdx, string _tag, bool _value)
+    {
+        if (_value == true)
+        {
+            if (isStartCaptureCor[_triggerIdx] == false)
+                curCaptureCor[_triggerIdx] = StartCoroutine(Cor_DecreaseCaptureGageImg(4.0f, _triggerIdx, _tag)); //내 점령지 인덱스를 넘김
+        }
+        else
+        {
+            if (isStartCaptureCor[_triggerIdx] == true)
+            {
+                isStartCaptureCor[_triggerIdx] = false;
+                captureGage[_triggerIdx].img_capture.fillAmount = 1;
+                captureGage[_triggerIdx].obj_parent.SetActive(false);
+                StopCoroutine(curCaptureCor[_triggerIdx]);
+            }
+        }
+    }
+    public IEnumerator Cor_DecreaseCaptureGageImg(float _time, int _triggerIdx, string _playerTag)
+    {
+        if (isStartCaptureCor[_triggerIdx] == true)
+            yield break;
+
+        isStartCaptureCor[_triggerIdx] = true;
+
         captureGage[_triggerIdx].obj_parent.SetActive(true);
         captureGage[_triggerIdx].txt_captureTime.text = (_time).ToString();
 
@@ -610,7 +714,15 @@ public class UIManager : MonoBehaviour
                     CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.red;
                 }
 
-                StartCoroutine(CheckCaptureNoticeTime()); // x초뒤에 캡처 알림 텍스트 셋엑티브펄스.
+                StartCoroutine(Cor_CheckCaptureNoticeTime()); // x초뒤에 캡처 알림 텍스트 셋엑티브펄스.
+                isStartCaptureSubCor[_triggerIdx] = false; //서브코루틴 종료는 여기서 초기화되어야함. 메인캡처코루틴이 끝난후
+                isStartCaptureCor[_triggerIdx] = false;
+
+                if (_playerTag.Equals(GameManager.instance.myTag))
+                {
+                    StateManager.instance.Idle(true); //완료후 다시 IDLE상태변환
+                    NetworkManager.instance.SendIngamePacket();
+                }
                 yield break;
             }
 
@@ -619,14 +731,14 @@ public class UIManager : MonoBehaviour
             yield return null;
         }
     }
-    public IEnumerator CheckCaptureNoticeTime()
+    public IEnumerator Cor_CheckCaptureNoticeTime()
     {
         yield return YieldInstructionCache.WaitForSeconds(2.0f);
         UIManager.instance.txt_captureNotice.gameObject.SetActive(false);
         yield break;
     }
 
-    public IEnumerator DecreaseRespawnGageImg(float _time)
+    public IEnumerator Cor_DecreaseRespawnGageImg(float _time)
     {
         if (isStartRespawnGageCor == true)
             yield break;
@@ -712,7 +824,7 @@ public class UIManager : MonoBehaviour
         reloadBtn.SetActive(false);
 
         respawn.txt_deathFrom.text = _value;
-        StartCoroutine(DecreaseRespawnGageImg(GameManager.instance.gameInfo.respawnTime)); //리스폰 유아이 활성화
+        StartCoroutine(Cor_DecreaseRespawnGageImg(GameManager.instance.gameInfo.respawnTime)); //리스폰 유아이 활성화
         //deadPanel.SetActive(true);
     }
 
@@ -727,12 +839,12 @@ public class UIManager : MonoBehaviour
     public void HealthUIChanger(int _idx, float _health)
 	{
 		hp[_idx].img_front.fillAmount = _health * 0.01f;
-		StartCoroutine(DecreaseMiddleHPImg(_idx, _health * 0.01f));
+		StartCoroutine(Cor_DecreaseMiddleHPImg(_idx, _health * 0.01f));
 	}
 
     //킬로그 코루틴을 계속돌려서 유저가 죽을떄마다 큐에 킬로그가 들어오는지 계속확인(브릿지 킬프로세스에서 들어옴)
     //큐가 들어오면 준비된 로그ui슬롯 4개에 순서대로 출력 시간 1초단위
-    public IEnumerator CheckKillLogQueue()
+    public IEnumerator Cor_CheckKillLogQueue()
     {
         int i = 0;
 
@@ -751,7 +863,7 @@ public class UIManager : MonoBehaviour
                 killLog[i].txt_to.text = tmp.to;
                 killLog[i].obj_parent.SetActive(true);
 
-                StartCoroutine(CheckKillLogTime(killLog[i]));
+                StartCoroutine(Cor_CheckKillLogTime(killLog[i]));
                 i++;
             }
             yield return null;
@@ -771,6 +883,8 @@ public class UIManager : MonoBehaviour
     //차에 치어 즉사
     public void EnqueueKillLog_CarCrash(int _victim)
     {
+        AudioManager.Instance.Play(10);
+
         tmpAttribute.from = null;
         tmpAttribute.spr = spr_mainW[3];
         tmpAttribute.to = PlayersManager.instance.nickname[_victim - 1];
@@ -778,7 +892,7 @@ public class UIManager : MonoBehaviour
         queueKillLog.Enqueue(tmpAttribute);
     }
 
-    public IEnumerator CheckKillLogTime(_IMG_KILL_LOG _tmp)
+    public IEnumerator Cor_CheckKillLogTime(_IMG_KILL_LOG _tmp)
     {
         yield return YieldInstructionCache.WaitForSeconds(3.0f);
         _tmp.obj_parent.SetActive(false);

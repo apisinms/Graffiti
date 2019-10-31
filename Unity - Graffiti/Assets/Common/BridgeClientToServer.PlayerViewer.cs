@@ -129,6 +129,11 @@ public partial class BridgeClientToServer : MonoBehaviour
                         View_StartFire(i);
                         break;
                     }
+                case _ACTION_STATE.SPRAY:
+                    {
+                        playersManager.Action_Spray(i, networkManager.GetRotY(i));
+                        break;
+                    }
             }
         }
 #endif
@@ -162,7 +167,7 @@ public partial class BridgeClientToServer : MonoBehaviour
     {
         if (isStartReloadGageCor[_idx] == false)
         {
-            uiManager.StartCoroutine(uiManager.DecreaseReloadGageImg(weaponManager.GetReloadTime(_idx), _idx));
+            uiManager.StartCoroutine(uiManager.Cor_DecreaseReloadGageImg(weaponManager.GetReloadTime(_idx), _idx));
             isStartReloadGageCor[_idx] = true;
         }
     }

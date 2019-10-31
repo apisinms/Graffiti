@@ -203,7 +203,7 @@ GameObject:
   - component: {fileID: 6234289312356489993}
   - component: {fileID: 6234289312356489992}
   m_Layer: 5
-  m_Name: Img_reload
+  m_Name: Img_capture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

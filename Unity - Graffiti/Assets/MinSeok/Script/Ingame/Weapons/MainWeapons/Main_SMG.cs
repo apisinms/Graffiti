@@ -209,7 +209,7 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
         EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, _index);
         if (BridgeClientToServer.instance.isStartReloadGageCor[_index] == false)
         {
-            UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadGageImg(weaponManager.weaponInfoSMG.reloadTime, _index));
+            UIManager.instance.StartCoroutine(UIManager.instance.Cor_DecreaseReloadGageImg(weaponManager.weaponInfoSMG.reloadTime, _index));
             BridgeClientToServer.instance.isStartReloadGageCor[_index] = true;
         }
     }
@@ -266,7 +266,7 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
 			NetworkManager.instance.SendIngamePacket();
             #endif
 
-            UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadGageImg(weaponManager.weaponInfoSMG.reloadTime, _index));
+            UIManager.instance.StartCoroutine(UIManager.instance.Cor_DecreaseReloadGageImg(weaponManager.weaponInfoSMG.reloadTime, _index));
 
             yield return YieldInstructionCache.WaitForSeconds(weaponManager.weaponInfoSMG.reloadTime);
 
@@ -305,7 +305,7 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
         }
 
         UIManager.instance.hp[_type].img_front.fillAmount -= 0.03f; //데미지만큼 피를깎음.
-        UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHPImg(_type, 0.03f));
+        UIManager.instance.StartCoroutine(UIManager.instance.Cor_DecreaseMiddleHPImg(_type, 0.03f));
         /*
         switch (_type)
         {          

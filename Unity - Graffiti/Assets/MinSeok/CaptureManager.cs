@@ -19,6 +19,7 @@ public class CaptureManager : MonoBehaviour
     public _CAPTURE_RESULT[] captureResult_team; //우리팀 기준에서의 점령지 결과
     public _CAPTURE_RESULT[] captureResult_enemy; //적팀 기준에서의 점령지 결과
 
+
     #region OUTLINE_AND_HALO
     public Outline[] territoryOutline;
     #endregion

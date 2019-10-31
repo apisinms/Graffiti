@@ -12,6 +12,7 @@ namespace PathCreation.Examples
         public EndOfPathInstruction endOfPathInstruction;
         public float speed = 5;
         float distanceTravelled;
+        private bool flag = true; // 업데이트에서 한번만 실행 시켜주기 위한 플래그
 
         void Start()
         {
@@ -25,9 +26,26 @@ namespace PathCreation.Examples
         {
             if (pathCreator != null)
             {
-                distanceTravelled += speed * Time.deltaTime;
+                distanceTravelled += speed * Time.smoothDeltaTime;
                 transform.position = pathCreator.path.GetPointAtDistance(distanceTravelled, endOfPathInstruction);
                 transform.rotation = pathCreator.path.GetRotationAtDistance(distanceTravelled, endOfPathInstruction);
+            }
+
+            // 플레이어와 자동차가 5 거리 만큼 가까워 진다면
+            if (Vector3.Distance(gameObject.transform.position,
+                PlayersManager.instance.tf_players[GameManager.instance.myIndex].position) <= 5.0f && flag == true) 
+            {
+                // 크락션 사운드 재생 
+                AudioManager.Instance.Play(11);
+                flag = false;
+            }
+
+            // 플레이어와 자동차가 10 거리 만큼 멀어진다면 
+            if (Vector3.Distance(gameObject.transform.position,
+               PlayersManager.instance.tf_players[GameManager.instance.myIndex].position) >= 10.0f && flag == false) 
+            {
+                // 플래그 원상복귀
+                flag = true;
             }
         }
 
@@ -74,7 +92,6 @@ namespace PathCreation.Examples
                         int absoluteIdx = UIManager.instance.PlayerIndexToAbsoluteIndex(playerNum - 1);
 						UIManager.instance.HealthUIChanger(absoluteIdx, 0.0f);  // 차에 치이면 즉사
                         UIManager.instance.SetDeadUI("당신이(가) 차에 치었습니다!");     // 죽은 UI로 전환
-						bl_MiniMap.Instance.DoHitEffect();
 					}
 				}
 			}

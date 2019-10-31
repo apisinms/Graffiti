@@ -22,16 +22,14 @@ public class State_Idle : MonoBehaviour, IActionState
 
     public void Idle(bool _value)
     {
-        /*
-        if (_value == false)
+        if (_value == true)
         {
-            StateManager.instance.SetState(State_Death.GetStateInstance());
+            StateManager.instance.SetState(State_Idle.GetStateInstance());
 
             if (PlayersManager.instance.curCor != null)
                 PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
-            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.Action_Death());
+            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.Action_Idle());
         }
-        */
     }
 
     public void Death(bool _value)
@@ -84,6 +82,18 @@ public class State_Idle : MonoBehaviour, IActionState
                 WeaponManager.instance.StopCoroutine(WeaponManager.instance.curMainActionCor[myIndex]);
             WeaponManager.instance.curMainActionCor[myIndex] = WeaponManager.instance.StartCoroutine(WeaponManager.instance.ActionFire());
             //EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, myIndex);
+        }
+    }
+
+    public void Spray(bool _value, int _triggerIdx)
+    {
+        if (_value == true)
+        {
+            StateManager.instance.SetState(State_Spray.GetStateInstance()); //스테이트객체 갱신. 
+
+            if (PlayersManager.instance.curCor != null)
+                PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
+            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.Action_Spray(_triggerIdx));
         }
     }
 }

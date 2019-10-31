@@ -6,6 +6,19 @@ public partial class PlayersManager : MonoBehaviour
 {
     private Vector3 tmpRot = new Vector3(); // 자꾸 new해서 가비지 생성하는거 방지용
 
+    public void Action_Spray(int _index, float _roty)
+    {
+        if (myIndex == _index)
+            return;
+
+        Anime_Spray(_index);
+
+        tmpRot = Quaternion.AngleAxis(_roty, Vector3.forward) * Vector3.right;
+        direction[_index].x = tmpRot.y;
+        direction[_index].z = tmpRot.x;
+        tf_players[_index].localRotation = Quaternion.LookRotation(direction[_index]);
+    }
+
     public void Action_Death(int _index)
     {
         if (myIndex == _index) 
@@ -155,7 +168,6 @@ public partial class PlayersManager : MonoBehaviour
         tmpRot = Quaternion.AngleAxis(_roty, Vector3.forward) * Vector3.right;
         direction2[_index].x = tmpRot.y;
         direction2[_index].z = tmpRot.x;
-
 
         tf_players[_index].localRotation = Quaternion.Lerp(tf_players[_index].localRotation,
         Quaternion.LookRotation(direction2[_index]), Time.smoothDeltaTime * C_Global.interpolation_RightRot);
