@@ -5,85 +5,96 @@
 #include "C_ClientInfo.h"
 
 ////////////////////////// RoomInfo 구조체 //////////////////////////////
-RoomInfo::RoomInfo(C_ClientInfo** _playerList, int _numOfPlayer)
+RoomInfo::RoomInfo(int _gameType, const list<C_ClientInfo*>& _playerList, int _numOfPlayer)
 {
-	weaponTimerHandle = NULL;
+	weaponTimeElapsedSec = 0;
+	carSpawnTimeElapsed = 0.0;
+	captureBonusTimeElapsed = 0.0;
 
 	roomStatus = ROOMSTATUS::ROOM_NONE;	// 방 생성시 초기 상태는 아무 상태도아님
 
-	numOfPlayer = _numOfPlayer;
+	gameType = _gameType;
+	maxPlayer = numOfPlayer = _numOfPlayer;
+	
+	int MAX_BUILDING_NUM = 0;
+
+	switch (gameType)
+	{
+		case GameType::_2vs2:
+		{
+			teamInfo = new TeamInfo[2];
+
+			// 2명씩 끊어서 저장
+			int teamIdx = 0;
+			int i = 0;
+			for (auto iter = _playerList.begin(); iter != _playerList.end(); ++iter)
+			{
+				teamInfo[teamIdx].teamMemberList.emplace_back(*iter);
+				((C_ClientInfo*)(*iter))->GetPlayerInfo()->SetTeamNum(teamIdx);
+
+				if ((++i) % 2 == 0)
+					teamIdx++;
+			}
+
+			MAX_BUILDING_NUM = MAX_BUILDINGS_2VS2;
+		}
+		break;
+
+		case GameType::_1vs1:
+		{
+			teamInfo = new TeamInfo[2];	// 나중에 3개 이상 팀이 만약 생긴다면..(확장성 고려)
+
+			// 각 팀에 1명씩 저장
+			int i = 0;
+			for (auto iter = _playerList.begin(); iter != _playerList.end(); ++iter, i++)
+			{
+				teamInfo[i].teamMemberList.emplace_back(*iter);
+				((C_ClientInfo*)(*iter))->GetPlayerInfo()->SetTeamNum(i);
+			}
+
+			MAX_BUILDING_NUM = MAX_BUILDINGS_1VS1;
+		}
+		break;
+	}
+
+	// 건물 생성
+	BuildingInfo info;
+	for (int i = 0; i < MAX_BUILDING_NUM; i++)
+	{
+		info.buildingIndex = i;
+		info.owner = nullptr;
+
+		buildings.emplace_back(new BuildingInfo(info));
+	}
 
 	// 방 플레이어 리스트에 추가
-	for (int i = 0; i < numOfPlayer; i++)
-		playerList.emplace_front(_playerList[i]);
-
-	curIter = playerList.begin();	// 현재 반복자 위치를 처음으로 설정
+	for (auto iter = _playerList.begin(); iter != _playerList.end(); ++iter)
+	{
+		players.emplace_back(*iter);
+	}
 
 	sector = new C_Sector();	// 이 방의 섹터관리자 생성
 }
 
 bool RoomInfo::LeaveRoom(C_ClientInfo* _player)
-{
-	// 리스트를 순회하며
-	int i = 0;
-	for (list<C_ClientInfo*>::iterator iter = playerList.begin();
-		iter != playerList.end(); ++iter, i++)
+{	
+	// 내가 나간다는 것을 같은 방에 있는 플레이어들에게 보내줌
+	if (InGameManager::GetInstance()->LeaveProcess(_player) == true)
 	{
-		// 자신을 찾은 경우
-		if (*iter == _player)
-		{
-			// 다른 플레이어들에게 자신이 나간다고 알리고
-			if (InGameManager::GetInstance()->LeaveProcess(_player, (i + 1)) == true)
-			{
-				// 방 인원수를 감소하고, 자신의 흔적을 지운다.
-				numOfPlayer--;				// 방 인원수 감소
-				playerList.erase(iter);		// 방의 플레이어 리스트에서 제거
-				_player->SetRoom(nullptr);	// 플레이어의 방을 null로 설정
-				curIter = playerList.begin();	// 반복자가 꼬이지 않게 다시 처음으로(나갔으니까)
-
-				/// 그리고 같은 팀 2명이 모두 나가면 그냥 게임 끝나야함
-
-				// 방금 나간사람이 마지막이었다면 방을 없앰
-				if (numOfPlayer == 0)
-					RoomManager::GetInstance()->DeleteRoom(this);
-
-				return true;
-			}
-		}
+		// 방 인원수를 감소하고, 자신의 흔적을 지운다.
+		numOfPlayer--;					// 방 인원수 감소
+		sector->Remove(_player, _player->GetPlayerInfo()->GetIndex());
+		players.erase(remove(players.begin(), players.end(), _player), players.end());		// 방의 플레이어 리스트에서 제거
+		
+		return true;
 	}
 
 	return false;	// 못찾은 경우
 }
 
-bool RoomInfo::GetPlayer(C_ClientInfo* &_ptr)
-{
-	/*
-	중간에 누가 나가면 문제가 될 수 있는 코드임...
-	*/
-
-	static bool flag = true;	// 플래그가 켜져 있다면 아직 보낼 플레이어 리스트 정보가 남음
-
-	// 끝에 도달하면 flag 비활성
-	if (curIter == playerList.end())
-	{
-		flag = false;
-		curIter = playerList.begin();	// 다음번에 이 end() 조건문에 들어오면 안되니까
-		return flag;
-	}
-
-	// flag가 false이면 다시 셋팅해줘야한다.
-	if (flag == false)
-	{
-		flag = true;
-		curIter = playerList.begin();
-	}
-
-	_ptr = *curIter;	// 리턴할 플레이어 정보 저장
-	++curIter;			// 다음 위치로
-
-	return flag;	// flag를 리턴하여 false가 아닐때까지 반복호출하면 된다.
-}
-
+//C_ClientInfo* RoomInfo::GetPlayerByNum(int _playerNum)
+//{
+//}
 
 ////////////////////////// RoomManager 클래스 //////////////////////////
 RoomManager* RoomManager::instance;
@@ -99,11 +110,9 @@ RoomManager* RoomManager::GetInstance()
 
 void RoomManager::Init()
 {
-	roomList = new C_List<RoomInfo*>();
 }
 void RoomManager::End()
 {
-	delete roomList;
 }
 
 void RoomManager::Destroy()
@@ -111,31 +120,124 @@ void RoomManager::Destroy()
 	delete instance;
 }
 
-bool RoomManager::CreateRoom(C_ClientInfo* _players[], int _numOfPlayer)
+bool RoomManager::CreateRoom(list<C_ClientInfo*>&_players, int _numOfPlayer)
 {
+	int gameType = (_players.front())->GetGameType();	// 게임 타입!
+	
 	// 플레이어 목록을 토대로 방을 만듦.
-	RoomInfo* room = new RoomInfo(_players, _numOfPlayer);
+	RoomInfo* room = new RoomInfo(
+		gameType,	
+		_players, _numOfPlayer);
 
 	// 각 플레이어들에게 현재 속한 방을 설정.
-	for (int i = 0; i < _numOfPlayer; i++)
-		_players[i]->SetRoom(room);
+	for (auto iter = _players.begin(); iter != _players.end(); ++iter)
+	{
+		((C_ClientInfo*)(*iter))->SetRoom(room);
+	}
 
 	// 방 리스트에 추가
-	bool ret = roomList->Insert(room);
-	printf("[방생성] 갯수 : %d\n", roomList->GetCount());
+	int beforeSize = (int)roomList.size();
+	roomList.emplace_back(room);
+
+	int nowSize = (int)roomList.size();
+	bool ret = (beforeSize < nowSize) && (room != nullptr);	// 방이 정상적으로 만들어지고, 리스트에 추가됐으면 true
+
+	switch ((RoomInfo::GameType)gameType)
+	{
+		case RoomInfo::GameType::_2vs2:
+		{
+			printf("[2:2][방생성] 총 갯수 : %d\n", nowSize);
+		}
+		break;
+
+		case RoomInfo::GameType::_1vs1:
+		{
+			printf("[1:1][방생성] 총 갯수 : %d\n", nowSize);
+		}
+		break;
+	}
 
 	return ret;
 }
 
 bool RoomManager::DeleteRoom(RoomInfo* _room)
 {
-	if (roomList->Delete(_room) == true)
+	if (_room == nullptr)
 	{
-		printf("[방 소멸]사이즈:%d\n", roomList->GetCount());
-		return true;
+		return false;
+	}
+
+	// 타이머 핸들 돌아가는 중이면 끝날 때까지 대기
+	HANDLE IngameTimerHandle = _room->GetInGameTimerHandle();
+	if (IngameTimerHandle != nullptr)
+	{
+		_room->SetRoomStatus(ROOMSTATUS::ROOM_END);	// 방 종료
+
+		return false;	// 방 못지움
+	}
+
+	// 안돌아가는 중이면 그냥 바로 delete
+	else
+	{
+		int beforeSize = (int)roomList.size();
+
+		// 방에 있는 건물들 싹 지움
+		for (auto iter = _room->GetBuildings().begin(); iter != _room->GetBuildings().end(); ++iter)
+		{
+			delete *iter;
+		}
+
+		roomList.remove(_room);
+		delete _room;
+		_room = nullptr;
+
+		if (beforeSize > (int)roomList.size())
+		{
+			printf("[방 소멸 성공]사이즈:%d\n", (int)roomList.size());
+			return true;	// 정상 방 삭제
+		}
 	}
 
 	return false;
+}
+
+bool RoomManager::OnlyDeleteRoom(RoomInfo* _room)
+{
+	int beforeSize = (int)roomList.size();
+
+	// 방에 있는 건물들 싹 지움
+	for (auto iter = _room->GetBuildings().begin(); iter != _room->GetBuildings().end(); ++iter)
+	{
+		delete *iter;
+	}
+
+	roomList.remove(_room);
+	delete _room;
+	_room = nullptr;
+
+	if (beforeSize > (int)roomList.size())
+	{
+		printf("[방 소멸 성공]사이즈:%d\n", (int)roomList.size());
+		return true;	// 정상 방 삭제
+	}
+
+	return false;
+}
+
+bool RoomManager::LeaveAllPlayersInRoom(RoomInfo* _room)
+{
+	if (_room == nullptr)
+	{
+		return false;
+	}
+
+	// 한명씩 나감처리
+	for (int i = 0; i < _room->GetNumOfPlayer(); i++)
+	{
+		CheckLeaveRoom(_room->GetPlayerByIndex(i));
+	}
+
+	return true;
 }
 
 bool RoomManager::CheckLeaveRoom(C_ClientInfo* _ptr)
@@ -153,10 +255,10 @@ bool RoomManager::CheckLeaveRoom(C_ClientInfo* _ptr)
 			// 방금 나간사람이 마지막이었다면 방을 없앰
 			if (room->IsPlayerListEmpty() == true)
 			{
-				roomList->Delete(room);
-				printf("[방 소멸]사이즈:%d\n", roomList->GetCount());
+				DeleteRoom(room);
 			}
 
+			_ptr->SetRoom(nullptr);	// 여기서 지워줘야 DeleteRoom()도 호출가능
 			return true;
 		}
 	}

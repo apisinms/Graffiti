@@ -8,6 +8,7 @@
 #include "RoomManager.h"
 #include "MatchManager.h"
 #include "InGameManager.h"
+#include "RandomManager.h"
 //#include <locale.h>
 
 // 초기화
@@ -46,6 +47,7 @@ void MainManager::Init()
 	listenSock->Listen(SOMAXCONN);
 
 	IOCP_Init();
+	RandomManager::GetInstance()->Init();
 	LogManager::GetInstance()->Init();
 	UtilityManager::GetInstance()->Init();
 	C_Encrypt::GetInstance()->Init();
@@ -74,6 +76,7 @@ void MainManager::End()
 	C_Encrypt::GetInstance()->End();
 	UtilityManager::GetInstance()->End();
 	LogManager::GetInstance()->End();
+	RandomManager::GetInstance()->End();
 	IOCP_End();
 }
 
@@ -112,6 +115,7 @@ void MainManager::Destroy()
 	C_Encrypt::GetInstance()->Destroy();
 	UtilityManager::GetInstance()->Destroy();
 	LogManager::GetInstance()->Destroy();
+	RandomManager::GetInstance()->Destroy();
 
 	MessageBeep(0);	// 잘 종료되나 메시지비프 울림
 	delete instance;
@@ -156,7 +160,7 @@ void MainManager::IOCP_Read(void* _ptr, int _len)
 }
 void MainManager::IOCP_Write(void* _ptr, int _len)
 {
-	IC_CS cs;		// 동기화 필수
+	IC_CS cs;		/// 동기화 필수 (여기에서 부하를 많이 먹는데 일단 테스트로 주석처리해봤다)
 
 	C_ClientInfo* ptr = (C_ClientInfo*)_ptr;
 
@@ -179,6 +183,7 @@ void MainManager::IOCP_Write(void* _ptr, int _len)
 void MainManager::IOCP_Disconnected(void* _ptr)
 {
 	IC_CS cs;	// 동기화
+	InGameManager::IC_CS ingameManagerCS;	// 인게임 매니저도 동기화! 중요!!
 
 	C_ClientInfo* ptr = (C_ClientInfo*)_ptr;
 
@@ -196,10 +201,10 @@ void MainManager::IOCP_Disconnected(void* _ptr)
 	// + 만약 게임중인 상태였다면 해당 게임 방 + 게임 종료?
 
 
-	LoginManager::GetInstance()->LoginListDelete(ptr);	// 로그인 목록에 있다면 지워준다.
+	LoginManager::GetInstance()->LoginListDelete(ptr->GetUserInfo());	// 로그인 목록에 있다면 지워준다.
 	MatchManager::GetInstance()->WaitListRemove(ptr);	// 매칭 대기 목록에 있다면 지워준다.
 	RoomManager::GetInstance()->CheckLeaveRoom(ptr);	// 방에 있다면 방 정보에서 지워줌
-	SessionManager::GetInstance()->Remove(ptr);			// 데이터까지 완전 종료되는 Remove를 호출
+	SessionManager::GetInstance()->Remove(ptr);			// 세션 매니저에서 지움
 }
 
 BOOL WINAPI MainManager::CtrlHandler(DWORD _fdwCtrlType)

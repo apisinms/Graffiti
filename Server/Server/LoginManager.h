@@ -11,7 +11,7 @@ class C_ClientInfo;
 #define LOGOUT_SUCCESS_MSG	TEXT("로그아웃에 성공했습니다.\n")
 #define LOGOUT_FAIL_MSG		TEXT("로그아웃에 실패했습니다.\n")
 
-class LoginManager
+class LoginManager : public C_SyncCS<LoginManager>
 {
 	// state + protocol + result 순서로 프로토콜이 저장된다.
 
@@ -37,23 +37,26 @@ class LoginManager
 		PW_ERROR = ((__int64)0x1 << 30),
 
 
-		NODATA = ((__int64)0x1 << 24)
+		NODATA = ((__int64)0x1 << 10)
 	};
 
 private:
 	LoginManager() {};
 	~LoginManager() {};
 	static LoginManager* instance;
-	C_List<UserInfo*>* joinList;	// 회원가입된 유저의 정보를 나타내는 리스트
-	C_List<UserInfo*>* loginList;	// 회원가입된 유저의 정보를 나타내는 리스트
-
+	//C_List<UserInfo*>* joinList;	// 회원가입된 유저의 정보를 나타내는 리스트
+	//C_List<UserInfo*>* loginList;	// 회원가입된 유저의 정보를 나타내는 리스트
+	
+	list<UserInfo*> joinList;
+	list<UserInfo*> loginList;
 
 private:
-	RESULT_LOGIN CheckJoin(C_ClientInfo* _ptr);
-	RESULT_LOGIN CheckLogin(C_ClientInfo* _ptr);
+	RESULT_LOGIN CheckJoin(C_ClientInfo* _ptr, UserInfo* _userInfo);
+	RESULT_LOGIN CheckLogin(C_ClientInfo* _ptr, UserInfo* _userInfo);
 
 
 	void PackPacket(char* _setptr, TCHAR* _str1, int& _size);
+	void PackPacket(char* _setptr, TCHAR* _str1, TCHAR* _str2, int& _size);
 	void UnPackPacket(char* _getBuf, TCHAR* _str1, TCHAR* _str2, TCHAR* _str3);
 	void UnPackPacket(char* _getBuf, TCHAR* _str1, TCHAR* _str2);
 
@@ -77,5 +80,5 @@ public:
 	bool CanILogin(C_ClientInfo* _ptr);		// 로그인이 되는지
 	//bool CanILogout(C_ClientInfo* _ptr);	// 로그아웃이 되는지
 
-	bool LoginListDelete(C_ClientInfo* _ptr);	// 외부에서 호출하는, 로그인 목록에서 이 클라를 지워달라는 함수
+	bool LoginListDelete(UserInfo* _ptr);	// 외부에서 호출하는, 로그인 목록에서 이 클라를 지워달라는 함수
 };

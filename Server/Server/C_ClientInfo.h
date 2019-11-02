@@ -18,6 +18,7 @@ class C_ClientInfo : public C_Packet
 private:
 	PlayerInfo* playerInfo;	// 인게임에서 사용하는 플레이어 정보
 	RoomInfo* room;			// 소속된 방 정보(매칭 잡혔을 시)
+	int selectGameType;		// 아직 방정보, 플레이어 정보가 없으므로 선택한 게임 타입을 저장할 변수가 필요.
 
 	UserInfo* userInfo;		// 이 클라의 회원정보
 	C_State* state;			// 이 클라의 현재 상태
@@ -47,21 +48,10 @@ public:
 	void SetRoom(RoomInfo* _room);
 	RoomInfo* GetRoom();
 
+	// 모든 정보가 다 포함된 얘를 리턴해주면 됨(어차피 인터페이스 있으니까)
 	void SetPlayerInfo(PlayerInfo* _playerInfo);
 	PlayerInfo* GetPlayerInfo();
 
-	PositionPacket* GetPosition();
-	void SetPosition(PositionPacket* _position);
-
-	Weapon* GetWeapon();
-	void SetWeapon(Weapon* _weapon);
-
-	float GetHealth();
-	void SetHealth(float _health);
-
-	float GetSpeed();
-	void SetSpeed(float _speed);
-
-	int GetBullet();
-	void SetBullet(int _bullet);
+	void SetGameType(int _gameType) { selectGameType = _gameType; }
+	int GetGameType() { return selectGameType; }
 };

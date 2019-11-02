@@ -8,16 +8,20 @@
 #pragma comment(lib, "ws2_32")
 #include <WinSock2.h>
 #include <Windows.h>
+#include<iostream>
 #include <stdio.h>
 #include <time.h>
 #include <tchar.h>
 #include <process.h>
 #include <locale.h>
+#include <mstcpip.h>
+#include <random>
 
 // STL
 #include <list>
 #include <vector>
 #include <queue>
+#include <algorithm>
 
 // custom STL
 #include "C_LinkedList.h"
@@ -42,3 +46,6 @@
 
 // state
 #include "C_State.h"
+
+// Database
+#include "DatabaseManager.h"

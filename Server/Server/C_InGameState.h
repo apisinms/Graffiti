@@ -15,21 +15,35 @@ public:
 		if (InGameManager::GetInstance()->CanISelectWeapon(_ptr) == true)
 			state = STATE_INGAME;
 
-		if (InGameManager::GetInstance()->CanIIMove(_ptr) == true)
+		if (InGameManager::GetInstance()->CanIStart(_ptr) == true)
 			state = STATE_INGAME;
+
+		if (InGameManager::GetInstance()->LoadingSuccess(_ptr) == true)
+			state = STATE_INGAME;
+
+		if (InGameManager::GetInstance()->CanIUpdate(_ptr) == true)
+			state = STATE_INGAME;
+
+		if (InGameManager::GetInstance()->CanIChangeFocus(_ptr) == true)
+			state = STATE_INGAME;
+
+		if (InGameManager::GetInstance()->CaptureSuccess(_ptr) == true)
+			state = STATE_INGAME;
+
+		if (InGameManager::GetInstance()->CanIGotoLobby(_ptr) == true)
+			_ptr->SetState(_ptr->GetLobbyState());		// 로비 상태로 이동한다.
+
+		
 	}
 
 	void Write(C_ClientInfo* _ptr) override
 	{
-		//switch (state)
-		//{
+		/*switch (state)
+		{
 
-		//case STATE_INGAME:
-		//	_ptr->SetState(_ptr->GetInGameState());		// 인게임 상태로 이동한다.
-		//	break;
-
-		//default:
-		//	break;
-		//}
+		case STATE_LOBBY:
+			_ptr->SetState(_ptr->GetLobbyState());		// 로비 상태로 이동한다.
+			break;
+		}*/
 	}
 };

@@ -32,7 +32,7 @@ class LobbyManager
 		LOBBY_SUCCESS = ((__int64)0x1 << 33),		 // 로비에서 성공 처리
 		LOBBY_FAIL    = ((__int64)0x1 << 32),        // 로비에서 실패 처리
 
-		NODATA = ((__int64)0x1 << 24)
+		NODATA = ((__int64)0x1 << 10)
 	};
 
 private:
@@ -50,6 +50,7 @@ private:
 	void PackPacket(char* _setptr, int _num, int& _size);		// 정수 1개를 Pack하는 함수
 	void PackPacket(char* _setptr, TCHAR* _str1, int& _size);	// 문자열 1개를 Pack하는 함수
 	void UnPackPacket(char* _getBuf, TCHAR* _str1);				// 문자열 1개를 UnPack하는 함수
+	void UnPackPacket(char* _getBuf, int& _gameType);
 
 	void GetProtocol(PROTOCOL_LOBBY& _protocol);								// 프로토콜을 얻음
 	PROTOCOL_LOBBY SetProtocol(STATE_PROTOCOL _state, PROTOCOL_LOBBY _protocol, RESULT_LOBBY _result);	// 프로토콜 + result(있다면)을 설정함

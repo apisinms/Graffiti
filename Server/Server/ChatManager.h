@@ -20,7 +20,7 @@ class ChatManager
 		LEAVE_ROOM_SUCCESS = ((__int64)0x1 << 53),
 		LEAVE_ROOM_FAIL    = ((__int64)0x1 << 52),
 
-		NODATA = ((__int64)0x1 << 49)
+		NODATA = ((__int64)0x1 << 10)
 	};
 
 
