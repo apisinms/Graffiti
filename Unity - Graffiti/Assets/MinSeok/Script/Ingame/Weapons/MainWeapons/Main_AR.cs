@@ -207,7 +207,7 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
         EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, _index);
 		if (BridgeClientToServer.instance.isStartReloadGageCor[_index] == false)
 		{
-			UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadGageImg(weaponManager.weaponInfoAR.reloadTime, _index));
+			UIManager.instance.StartCoroutine(UIManager.instance.Cor_DecreaseReloadGageImg(weaponManager.weaponInfoAR.reloadTime, _index));
 			BridgeClientToServer.instance.isStartReloadGageCor[_index] = true;
 		}
     }
@@ -235,12 +235,17 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
 
     public void ReloadAmmoProcess(int _index)
     {
+        /*
         #if NETWORK
         NetworkManager.instance.SendIngamePacket();
         #endif
+        */
 
-        if (playerARInfo[_index].curAmmo >= weaponManager.weaponInfoAR.maxAmmo) //풀탄창이면 재장전안함
+        if (playerARInfo[_index].curAmmo >= weaponManager.weaponInfoAR.maxAmmo
+           || weaponManager.isReloading == true)
+        {
             return;
+        }
 
         AudioManager.Instance.Play(8);
         StartCoroutine(Cor_ReloadAmmo(_index));
@@ -260,7 +265,7 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
 			NetworkManager.instance.SendIngamePacket();
             #endif
 
-            UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadGageImg(weaponManager.weaponInfoAR.reloadTime, _index));
+            UIManager.instance.StartCoroutine(UIManager.instance.Cor_DecreaseReloadGageImg(weaponManager.weaponInfoAR.reloadTime, _index));
 
             yield return YieldInstructionCache.WaitForSeconds(weaponManager.weaponInfoAR.reloadTime);
 
@@ -299,6 +304,6 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
         }
 
         UIManager.instance.hp[_type].img_front.fillAmount -= 0.04f; //데미지만큼 피를깎음.
-        UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHPImg(_type, 0.04f));
+        UIManager.instance.StartCoroutine(UIManager.instance.Cor_DecreaseMiddleHPImg(_type, 0.04f));
     }
 }

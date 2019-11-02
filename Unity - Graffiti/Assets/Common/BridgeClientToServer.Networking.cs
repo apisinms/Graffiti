@@ -303,13 +303,16 @@ public partial class BridgeClientToServer : MonoBehaviour
     // 다른 플레이어의 접속이 끊겼을때, 플레이어 로빈 오브젝트를 비활성화.
     public void OnOtherPlayerDisconnected(int _quitPlayerNum)
     {
-        if (playersManager.obj_players[_quitPlayerNum - 1].activeSelf == true)
-        {
-            playersManager.obj_players[_quitPlayerNum - 1].SetActive(false);
+		if (playersManager != null) // 플레이어 매니저 있는 경우만
+		{
+			if (playersManager.obj_players[_quitPlayerNum - 1].activeSelf == true)
+			{
+				playersManager.obj_players[_quitPlayerNum - 1].SetActive(false);
 
-            int absoluteIdx = uiManager.PlayerIndexToAbsoluteIndex(_quitPlayerNum - 1);
-            uiManager.OffPlayerUI(absoluteIdx);
-        }
+				int absoluteIdx = uiManager.PlayerIndexToAbsoluteIndex(_quitPlayerNum - 1);
+				uiManager.OffPlayerUI(absoluteIdx);
+			}
+		}
     }
 
     //쐇을때 무조건 1번의 패킷을 보내야됨. 보정용

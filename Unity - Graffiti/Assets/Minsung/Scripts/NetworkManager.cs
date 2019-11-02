@@ -15,8 +15,10 @@ public partial class NetworkManager : MonoBehaviour
 {
     // 서버 IP와 포트
     private static IPAddress serverIP = IPAddress.Parse("127.0.0.1");
+    //private static IPAddress serverIP = IPAddress.Parse("192.168.0.6");
     //private static IPAddress serverIP = IPAddress.Parse("211.227.82.184");
-
+    //private static IPAddress serverIP = IPAddress.Parse("14.32.42.101");
+    
     private static int serverPort = 10823;
 
 	readonly static int IDSIZE = 255;
@@ -65,13 +67,15 @@ public partial class NetworkManager : MonoBehaviour
 		CHAT_PROTOCOL = ((Int64)0x1 << 52),
 
 		// InGameState
-		TIMER_PROTOCOL = ((Int64)0x1 << 53),      // 타이머 프로토콜(1초씩 받음)
-		WEAPON_PROTOCOL = ((Int64)0x1 << 52),      // 무기 전송 프로토콜
-		NICKNAME_PROTOCOL = ((Int64)0x1 << 51),   // 본인의 닉네임을 받음
-		START_PROTOCOL = ((Int64)0x1 << 50),      // 게임 시작 프로토콜
-		LOADING_PROTOCOL = ((Int64)0x1 << 49),       // 로딩 여부 프로토콜
-		UPDATE_PROTOCOL = ((Int64)0x1 << 48),      // 패킷 업데이트 프로토콜
-		FOCUS_PROTOCOL = ((Int64)0x1 << 47),      // 포커스 프로토콜
+		TIMER_PROTOCOL      = ((Int64)0x1 << 53),      // 타이머 프로토콜(1초씩 받음)
+		WEAPON_PROTOCOL     = ((Int64)0x1 << 52),      // 무기 전송 프로토콜
+		NICKNAME_PROTOCOL   = ((Int64)0x1 << 51),   // 본인의 닉네임을 받음
+		START_PROTOCOL      = ((Int64)0x1 << 50),      // 게임 시작 프로토콜
+		LOADING_PROTOCOL    = ((Int64)0x1 << 49),       // 로딩 여부 프로토콜
+		UPDATE_PROTOCOL     = ((Int64)0x1 << 48),      // 패킷 업데이트 프로토콜
+		FOCUS_PROTOCOL      = ((Int64)0x1 << 47),      // 포커스 프로토콜
+		GOTO_LOBBY_PROTOCOL = ((Int64)0x1 << 46),      // 로비로 가는 프로토콜
+		CAPTURE_PROTOCOL    = ((Int64)0x1 << 45),		// 점령 프로토콜
 
 		DISCONNECT_PROTOCOL = ((Int64)0x1 << 34), // 접속 끊김 프로토콜
 
@@ -119,9 +123,15 @@ public partial class NetworkManager : MonoBehaviour
         CAR_HIT = ((Int64)0x1 << 23),         // 자동차에 치여 뒤짐
         KILL = ((Int64)0x1 << 22),         // 플레이어한테 뒤짐
 
+		// DISCONNECT_PROTOCOL 개별
+		WEAPON_SEL = ((Int64)0x1 << 31),
+		ABORT = ((Int64)0x1 << 30),
 
-        // ~ 11
-        NODATA = ((Int64)0x1 << 10)
+		// CAPTRUE_PROTOCOL 개별
+		BONUS = ((Int64)0x1 << 31),
+
+		// ~ 11
+		NODATA = ((Int64)0x1 << 10)
     };
 
     struct _User_Info

@@ -8,12 +8,20 @@ ScriptsOnlyBuild:
     - BulletCollision
     - C_Encrypt
     - CameraControl
+    - CaptureManager
+    - CaptureTriggerCollision
+    - Chasing
+    - DuloGames.UI.NicerOutline
+    - DuloGames.UI.UIFlippable
+    - DuloGames.UI.UIRectangularRaycastFilter
     - EffectManager
     - GameManager
     - InputInfoManager
     - JoystickManager
+    - KetosGames.SceneTransition.LoadingSpinner
+    - KetosGames.SceneTransition.LoadingText
+    - KetosGames.SceneTransition.SceneLoader
     - LeftJoystick
-    - LoadingSceneManager
     - Main_AR
     - Main_SG
     - Main_SMG
@@ -52,6 +60,7 @@ ScriptsOnlyBuild:
     - Michsky.UI.ModernUIPack.UIManagerToggle
     - NetworkManager
     - ObjectPool
+    - Outline
     - PathCreation.Examples.PathFollower
     - PathCreation.Examples.PathSpawner
     - PlayersManager
@@ -78,7 +87,6 @@ ScriptsOnlyBuild:
     - btn_option
     - btn_start
     PathCreator.dll:
-    - PathCreation.GlobalDisplaySettings
     - PathCreation.PathCreator
     Unity.TextMeshPro.dll:
     - TMPro.TMP_FontAsset
@@ -119,7 +127,7 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.ToggleGroup
     - UnityEngine.UI.VerticalLayoutGroup
   sceneClasses:
-    Assets/Scenes/LoadingScene.unity:
+    Assets/KetosGames/SceneTransition/Scenes/Loading.unity:
     - Class: 1
       Script: {instanceID: 0}
     - Class: 4
@@ -128,61 +136,45 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 21
       Script: {instanceID: 0}
+    - Class: 23
+      Script: {instanceID: 0}
     - Class: 28
+      Script: {instanceID: 0}
+    - Class: 33
+      Script: {instanceID: 0}
+    - Class: 43
       Script: {instanceID: 0}
     - Class: 48
       Script: {instanceID: 0}
-    - Class: 74
-      Script: {instanceID: 0}
     - Class: 81
       Script: {instanceID: 0}
-    - Class: 91
-      Script: {instanceID: 0}
-    - Class: 95
+    - Class: 92
       Script: {instanceID: 0}
     - Class: 104
       Script: {instanceID: 0}
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 9506}
+      Script: {instanceID: 9788}
     - Class: 114
-      Script: {instanceID: 9588}
+      Script: {instanceID: 9794}
     - Class: 114
-      Script: {instanceID: 9610}
+      Script: {instanceID: 9800}
     - Class: 114
-      Script: {instanceID: 9618}
+      Script: {instanceID: 9844}
     - Class: 114
-      Script: {instanceID: 9718}
+      Script: {instanceID: 9846}
     - Class: 114
-      Script: {instanceID: 9720}
+      Script: {instanceID: 10302}
     - Class: 114
-      Script: {instanceID: 9726}
-    - Class: 114
-      Script: {instanceID: 9732}
-    - Class: 114
-      Script: {instanceID: 9740}
-    - Class: 114
-      Script: {instanceID: 9776}
-    - Class: 114
-      Script: {instanceID: 9834}
-    - Class: 114
-      Script: {instanceID: 9890}
-    - Class: 114
-      Script: {instanceID: 10424}
-    - Class: 114
-      Script: {instanceID: 10534}
-    - Class: 114
-      Script: {instanceID: 10580}
-    - Class: 114
-      Script: {instanceID: 10628}
+      Script: {instanceID: 10308}
     - Class: 115
+      Script: {instanceID: 0}
+    - Class: 124
       Script: {instanceID: 0}
     - Class: 128
       Script: {instanceID: 0}
     - Class: 157
-      Script: {instanceID: 0}
-    - Class: 213
       Script: {instanceID: 0}
     - Class: 222
       Script: {instanceID: 0}
@@ -209,6 +201,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 48
       Script: {instanceID: 0}
+    - Class: 64
+      Script: {instanceID: 0}
     - Class: 65
       Script: {instanceID: 0}
     - Class: 74
@@ -230,41 +224,47 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 9462}
+      Script: {instanceID: 9514}
     - Class: 114
-      Script: {instanceID: 9588}
+      Script: {instanceID: 9648}
     - Class: 114
-      Script: {instanceID: 9590}
+      Script: {instanceID: 9650}
     - Class: 114
-      Script: {instanceID: 9596}
+      Script: {instanceID: 9656}
     - Class: 114
-      Script: {instanceID: 9602}
+      Script: {instanceID: 9662}
     - Class: 114
-      Script: {instanceID: 9610}
+      Script: {instanceID: 9670}
     - Class: 114
-      Script: {instanceID: 9646}
+      Script: {instanceID: 9706}
     - Class: 114
-      Script: {instanceID: 9718}
+      Script: {instanceID: 9730}
     - Class: 114
-      Script: {instanceID: 9740}
+      Script: {instanceID: 9786}
     - Class: 114
-      Script: {instanceID: 9834}
+      Script: {instanceID: 9808}
     - Class: 114
-      Script: {instanceID: 9890}
+      Script: {instanceID: 9846}
     - Class: 114
-      Script: {instanceID: 10020}
+      Script: {instanceID: 9910}
     - Class: 114
-      Script: {instanceID: 10182}
+      Script: {instanceID: 9982}
     - Class: 114
-      Script: {instanceID: 10424}
+      Script: {instanceID: 10078}
     - Class: 114
-      Script: {instanceID: 10534}
+      Script: {instanceID: 10158}
     - Class: 114
-      Script: {instanceID: 10580}
+      Script: {instanceID: 10354}
     - Class: 114
-      Script: {instanceID: 10758}
+      Script: {instanceID: 10626}
     - Class: 114
-      Script: {instanceID: 10944}
+      Script: {instanceID: 10804}
+    - Class: 114
+      Script: {instanceID: 10814}
+    - Class: 114
+      Script: {instanceID: 11014}
+    - Class: 114
+      Script: {instanceID: 11246}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -337,121 +337,127 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 9446}
+      Script: {instanceID: 9460}
     - Class: 114
-      Script: {instanceID: 9462}
+      Script: {instanceID: 9480}
     - Class: 114
-      Script: {instanceID: 9496}
+      Script: {instanceID: 9524}
     - Class: 114
-      Script: {instanceID: 9504}
+      Script: {instanceID: 9538}
     - Class: 114
-      Script: {instanceID: 9526}
+      Script: {instanceID: 9578}
     - Class: 114
-      Script: {instanceID: 9568}
-    - Class: 114
-      Script: {instanceID: 9588}
-    - Class: 114
-      Script: {instanceID: 9590}
-    - Class: 114
-      Script: {instanceID: 9596}
-    - Class: 114
-      Script: {instanceID: 9598}
-    - Class: 114
-      Script: {instanceID: 9602}
-    - Class: 114
-      Script: {instanceID: 9610}
-    - Class: 114
-      Script: {instanceID: 9646}
+      Script: {instanceID: 9624}
     - Class: 114
       Script: {instanceID: 9648}
     - Class: 114
-      Script: {instanceID: 9718}
+      Script: {instanceID: 9650}
     - Class: 114
-      Script: {instanceID: 9720}
+      Script: {instanceID: 9656}
     - Class: 114
-      Script: {instanceID: 9722}
+      Script: {instanceID: 9658}
     - Class: 114
-      Script: {instanceID: 9732}
+      Script: {instanceID: 9662}
     - Class: 114
-      Script: {instanceID: 9740}
+      Script: {instanceID: 9670}
     - Class: 114
-      Script: {instanceID: 9748}
+      Script: {instanceID: 9706}
     - Class: 114
-      Script: {instanceID: 9752}
+      Script: {instanceID: 9708}
     - Class: 114
-      Script: {instanceID: 9762}
+      Script: {instanceID: 9786}
     - Class: 114
-      Script: {instanceID: 9772}
+      Script: {instanceID: 9788}
     - Class: 114
-      Script: {instanceID: 9778}
+      Script: {instanceID: 9790}
     - Class: 114
-      Script: {instanceID: 9814}
+      Script: {instanceID: 9800}
     - Class: 114
-      Script: {instanceID: 9870}
+      Script: {instanceID: 9808}
     - Class: 114
-      Script: {instanceID: 9890}
+      Script: {instanceID: 9816}
     - Class: 114
-      Script: {instanceID: 9892}
+      Script: {instanceID: 9820}
+    - Class: 114
+      Script: {instanceID: 9830}
+    - Class: 114
+      Script: {instanceID: 9840}
+    - Class: 114
+      Script: {instanceID: 9846}
+    - Class: 114
+      Script: {instanceID: 9882}
+    - Class: 114
+      Script: {instanceID: 9944}
     - Class: 114
       Script: {instanceID: 9958}
     - Class: 114
-      Script: {instanceID: 10014}
+      Script: {instanceID: 9982}
     - Class: 114
-      Script: {instanceID: 10020}
+      Script: {instanceID: 9984}
     - Class: 114
-      Script: {instanceID: 10052}
+      Script: {instanceID: 10070}
     - Class: 114
-      Script: {instanceID: 10056}
+      Script: {instanceID: 10152}
     - Class: 114
-      Script: {instanceID: 10112}
+      Script: {instanceID: 10158}
     - Class: 114
-      Script: {instanceID: 10164}
+      Script: {instanceID: 10194}
     - Class: 114
-      Script: {instanceID: 10208}
+      Script: {instanceID: 10202}
     - Class: 114
-      Script: {instanceID: 10232}
+      Script: {instanceID: 10206}
     - Class: 114
-      Script: {instanceID: 10254}
+      Script: {instanceID: 10270}
     - Class: 114
       Script: {instanceID: 10336}
     - Class: 114
-      Script: {instanceID: 10386}
+      Script: {instanceID: 10380}
     - Class: 114
       Script: {instanceID: 10410}
     - Class: 114
-      Script: {instanceID: 10412}
-    - Class: 114
-      Script: {instanceID: 10424}
-    - Class: 114
-      Script: {instanceID: 10438}
-    - Class: 114
-      Script: {instanceID: 10464}
-    - Class: 114
-      Script: {instanceID: 10516}
-    - Class: 114
-      Script: {instanceID: 10530}
+      Script: {instanceID: 10440}
     - Class: 114
       Script: {instanceID: 10534}
     - Class: 114
-      Script: {instanceID: 10580}
+      Script: {instanceID: 10588}
     - Class: 114
-      Script: {instanceID: 10710}
+      Script: {instanceID: 10612}
     - Class: 114
-      Script: {instanceID: 10720}
+      Script: {instanceID: 10614}
     - Class: 114
-      Script: {instanceID: 10748}
+      Script: {instanceID: 10626}
     - Class: 114
-      Script: {instanceID: 10758}
+      Script: {instanceID: 10642}
     - Class: 114
-      Script: {instanceID: 10760}
+      Script: {instanceID: 10672}
     - Class: 114
-      Script: {instanceID: 10808}
+      Script: {instanceID: 10726}
     - Class: 114
-      Script: {instanceID: 10830}
+      Script: {instanceID: 10744}
     - Class: 114
-      Script: {instanceID: 10898}
+      Script: {instanceID: 10752}
     - Class: 114
-      Script: {instanceID: 10984}
+      Script: {instanceID: 10802}
+    - Class: 114
+      Script: {instanceID: 10814}
+    - Class: 114
+      Script: {instanceID: 10964}
+    - Class: 114
+      Script: {instanceID: 10974}
+    - Class: 114
+      Script: {instanceID: 11002}
+    - Class: 114
+      Script: {instanceID: 11014}
+    - Class: 114
+      Script: {instanceID: 11016}
+    - Class: 114
+      Script: {instanceID: 11074}
+    - Class: 114
+      Script: {instanceID: 11106}
+    - Class: 114
+      Script: {instanceID: 11194}
+    - Class: 114
+      Script: {instanceID: 11306}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -467,6 +473,8 @@ ScriptsOnlyBuild:
     - Class: 198
       Script: {instanceID: 0}
     - Class: 199
+      Script: {instanceID: 0}
+    - Class: 212
       Script: {instanceID: 0}
     - Class: 213
       Script: {instanceID: 0}
@@ -514,151 +522,149 @@ ScriptsOnlyBuild:
     - Class: 109
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 9436}
+      Script: {instanceID: 9450}
     - Class: 114
-      Script: {instanceID: 9462}
+      Script: {instanceID: 9480}
     - Class: 114
-      Script: {instanceID: 9502}
+      Script: {instanceID: 9536}
     - Class: 114
-      Script: {instanceID: 9506}
+      Script: {instanceID: 9540}
     - Class: 114
-      Script: {instanceID: 9530}
-    - Class: 114
-      Script: {instanceID: 9550}
-    - Class: 114
-      Script: {instanceID: 9588}
-    - Class: 114
-      Script: {instanceID: 9590}
-    - Class: 114
-      Script: {instanceID: 9592}
-    - Class: 114
-      Script: {instanceID: 9596}
-    - Class: 114
-      Script: {instanceID: 9598}
-    - Class: 114
-      Script: {instanceID: 9602}
+      Script: {instanceID: 9582}
     - Class: 114
       Script: {instanceID: 9606}
     - Class: 114
-      Script: {instanceID: 9610}
-    - Class: 114
-      Script: {instanceID: 9614}
-    - Class: 114
-      Script: {instanceID: 9618}
-    - Class: 114
-      Script: {instanceID: 9636}
-    - Class: 114
-      Script: {instanceID: 9638}
-    - Class: 114
-      Script: {instanceID: 9644}
-    - Class: 114
-      Script: {instanceID: 9646}
+      Script: {instanceID: 9648}
     - Class: 114
       Script: {instanceID: 9650}
     - Class: 114
       Script: {instanceID: 9652}
     - Class: 114
+      Script: {instanceID: 9656}
+    - Class: 114
       Script: {instanceID: 9658}
     - Class: 114
-      Script: {instanceID: 9668}
+      Script: {instanceID: 9662}
+    - Class: 114
+      Script: {instanceID: 9666}
+    - Class: 114
+      Script: {instanceID: 9670}
+    - Class: 114
+      Script: {instanceID: 9674}
+    - Class: 114
+      Script: {instanceID: 9678}
     - Class: 114
       Script: {instanceID: 9696}
     - Class: 114
+      Script: {instanceID: 9698}
+    - Class: 114
+      Script: {instanceID: 9704}
+    - Class: 114
+      Script: {instanceID: 9706}
+    - Class: 114
+      Script: {instanceID: 9710}
+    - Class: 114
+      Script: {instanceID: 9712}
+    - Class: 114
       Script: {instanceID: 9718}
-    - Class: 114
-      Script: {instanceID: 9720}
-    - Class: 114
-      Script: {instanceID: 9726}
     - Class: 114
       Script: {instanceID: 9732}
     - Class: 114
-      Script: {instanceID: 9740}
+      Script: {instanceID: 9762}
     - Class: 114
-      Script: {instanceID: 9776}
+      Script: {instanceID: 9786}
     - Class: 114
-      Script: {instanceID: 9778}
+      Script: {instanceID: 9788}
     - Class: 114
-      Script: {instanceID: 9780}
+      Script: {instanceID: 9794}
+    - Class: 114
+      Script: {instanceID: 9800}
     - Class: 114
       Script: {instanceID: 9808}
     - Class: 114
-      Script: {instanceID: 9818}
+      Script: {instanceID: 9844}
     - Class: 114
-      Script: {instanceID: 9834}
+      Script: {instanceID: 9848}
     - Class: 114
-      Script: {instanceID: 9836}
+      Script: {instanceID: 9876}
     - Class: 114
       Script: {instanceID: 9890}
     - Class: 114
-      Script: {instanceID: 9896}
+      Script: {instanceID: 9894}
     - Class: 114
-      Script: {instanceID: 10002}
+      Script: {instanceID: 9910}
     - Class: 114
-      Script: {instanceID: 10030}
+      Script: {instanceID: 9912}
     - Class: 114
-      Script: {instanceID: 10042}
+      Script: {instanceID: 9982}
     - Class: 114
-      Script: {instanceID: 10046}
+      Script: {instanceID: 9990}
     - Class: 114
-      Script: {instanceID: 10068}
+      Script: {instanceID: 10138}
     - Class: 114
-      Script: {instanceID: 10072}
+      Script: {instanceID: 10168}
     - Class: 114
-      Script: {instanceID: 10120}
+      Script: {instanceID: 10188}
     - Class: 114
-      Script: {instanceID: 10150}
+      Script: {instanceID: 10192}
     - Class: 114
-      Script: {instanceID: 10196}
+      Script: {instanceID: 10220}
     - Class: 114
-      Script: {instanceID: 10198}
+      Script: {instanceID: 10224}
     - Class: 114
-      Script: {instanceID: 10218}
+      Script: {instanceID: 10280}
     - Class: 114
-      Script: {instanceID: 10248}
+      Script: {instanceID: 10302}
     - Class: 114
-      Script: {instanceID: 10300}
+      Script: {instanceID: 10308}
     - Class: 114
-      Script: {instanceID: 10312}
+      Script: {instanceID: 10320}
     - Class: 114
-      Script: {instanceID: 10332}
+      Script: {instanceID: 10368}
     - Class: 114
-      Script: {instanceID: 10382}
+      Script: {instanceID: 10370}
     - Class: 114
-      Script: {instanceID: 10424}
+      Script: {instanceID: 10392}
     - Class: 114
-      Script: {instanceID: 10434}
+      Script: {instanceID: 10430}
     - Class: 114
-      Script: {instanceID: 10462}
+      Script: {instanceID: 10494}
     - Class: 114
-      Script: {instanceID: 10496}
+      Script: {instanceID: 10508}
     - Class: 114
-      Script: {instanceID: 10532}
+      Script: {instanceID: 10530}
     - Class: 114
-      Script: {instanceID: 10534}
+      Script: {instanceID: 10584}
     - Class: 114
-      Script: {instanceID: 10548}
+      Script: {instanceID: 10626}
     - Class: 114
-      Script: {instanceID: 10580}
+      Script: {instanceID: 10638}
     - Class: 114
-      Script: {instanceID: 10734}
+      Script: {instanceID: 10670}
     - Class: 114
-      Script: {instanceID: 10838}
+      Script: {instanceID: 10704}
     - Class: 114
-      Script: {instanceID: 10878}
+      Script: {instanceID: 10746}
     - Class: 114
-      Script: {instanceID: 10932}
+      Script: {instanceID: 10752}
     - Class: 114
-      Script: {instanceID: 10946}
+      Script: {instanceID: 10772}
     - Class: 114
-      Script: {instanceID: 10958}
+      Script: {instanceID: 10814}
     - Class: 114
-      Script: {instanceID: 11012}
+      Script: {instanceID: 10988}
     - Class: 114
-      Script: {instanceID: 32824}
+      Script: {instanceID: 11118}
     - Class: 114
-      Script: {instanceID: 32858}
+      Script: {instanceID: 11166}
     - Class: 114
-      Script: {instanceID: 32866}
+      Script: {instanceID: 11230}
+    - Class: 114
+      Script: {instanceID: 11250}
+    - Class: 114
+      Script: {instanceID: 11264}
+    - Class: 114
+      Script: {instanceID: 11342}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -695,23 +701,23 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 9588}
-    - Class: 114
-      Script: {instanceID: 9590}
-    - Class: 114
-      Script: {instanceID: 9596}
-    - Class: 114
-      Script: {instanceID: 9602}
-    - Class: 114
-      Script: {instanceID: 9606}
-    - Class: 114
-      Script: {instanceID: 9610}
-    - Class: 114
-      Script: {instanceID: 9646}
-    - Class: 114
       Script: {instanceID: 9648}
     - Class: 114
-      Script: {instanceID: 10082}
+      Script: {instanceID: 9650}
+    - Class: 114
+      Script: {instanceID: 9656}
+    - Class: 114
+      Script: {instanceID: 9662}
+    - Class: 114
+      Script: {instanceID: 9666}
+    - Class: 114
+      Script: {instanceID: 9670}
+    - Class: 114
+      Script: {instanceID: 9706}
+    - Class: 114
+      Script: {instanceID: 9708}
+    - Class: 114
+      Script: {instanceID: 10234}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -753,6 +759,18 @@ ScriptsOnlyBuild:
     className: UIManagerProgressBarLoopEditor
   - hash:
       serializedVersion: 2
+      Hash: 17cf23397b5b1c88362c79878d1b498d
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UIToggle_OnOff
+  - hash:
+      serializedVersion: 2
+      Hash: 4cb2728a73341507476aa240d0f93dd0
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UISpellSlot
+  - hash:
+      serializedVersion: 2
       Hash: 20af7e083414a32304174f69af002363
     assemblyName: Assembly-CSharp.dll
     namespaceName: Michsky.UI.ModernUIPack
@@ -777,10 +795,28 @@ ScriptsOnlyBuild:
     className: TMP_Dropdown
   - hash:
       serializedVersion: 2
+      Hash: 12a825b52bd19f9c163c2c4b9548d867
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: TCP2_GetPosOnWater
+  - hash:
+      serializedVersion: 2
       Hash: 0b760eb7c486d4d51766862c26cc01ef
     assemblyName: Assembly-CSharp.dll
     namespaceName: Michsky.UI.ModernUIPack
     className: UIManagerTooltip
+  - hash:
+      serializedVersion: 2
+      Hash: caa533b001ae39b864ba8425019e2268
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: NicerOutline
+  - hash:
+      serializedVersion: 2
+      Hash: cdae397d069a87828216aa38178e92df
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: TCP2_PlanarReflection
   - hash:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
@@ -793,6 +829,24 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: State_Death
+  - hash:
+      serializedVersion: 2
+      Hash: 217d4c2e235116d6890f0968bf463683
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: Gradient
+  - hash:
+      serializedVersion: 2
+      Hash: 3b569517e22dca18999b31afe3e01d7f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: UnityEngine.UI
+    className: LayoutElementExtended
+  - hash:
+      serializedVersion: 2
+      Hash: 4664fa17523f7c53eafb9f318e2f09bf
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: Test_UISlotBase_Assign
   - hash:
       serializedVersion: 2
       Hash: 2d3a6294a05b1f2fa2815f9e7b1e1fd7
@@ -813,16 +867,46 @@ ScriptsOnlyBuild:
     className: UIManagerHSelector
   - hash:
       serializedVersion: 2
+      Hash: 2122c42aac0c44e0cd7ed01910b598fb
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: TCP2_Demo_PBS_View
+  - hash:
+      serializedVersion: 2
       Hash: e7a73f5f78ba6445195ec23b74a1ce2d
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TMP_ScrollbarEventHandler
   - hash:
       serializedVersion: 2
+      Hash: b84662940d984916c176baa340a25691
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UIJoystick
+  - hash:
+      serializedVersion: 2
+      Hash: c814047a66df5d0a341c58b446f93490
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UIProgressBar
+  - hash:
+      serializedVersion: 2
       Hash: c3d3430df9e3ea95e3e3d587961390fb
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: GroupTrack
+  - hash:
+      serializedVersion: 2
+      Hash: 6fac55b4a2f918b67c0c6f0f60a51185
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: Test_FadeInOut
+  - hash:
+      serializedVersion: 2
+      Hash: f8df21c79e31546d6c1fb6794453be5f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UIWindow
   - hash:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
@@ -843,6 +927,12 @@ ScriptsOnlyBuild:
     className: ActivationTrack
   - hash:
       serializedVersion: 2
+      Hash: 4c7c02093fe947471f98dcca8b4947b3
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UISlotCooldown
+  - hash:
+      serializedVersion: 2
       Hash: b9f6fc307bf8c57490d5a924365ea244
     assemblyName: Assembly-CSharp.dll
     namespaceName: Michsky.UI.ModernUIPack
@@ -853,6 +943,12 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: bl_MiniMap
+  - hash:
+      serializedVersion: 2
+      Hash: 2756701aebbe19bc133832fc340aebe1
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: ScreenFadeControl
   - hash:
       serializedVersion: 2
       Hash: 0eaba8fcbfa6859be3e02bfe60166ccf
@@ -1053,6 +1149,12 @@ ScriptsOnlyBuild:
     className: VerticalLayoutGroup
   - hash:
       serializedVersion: 2
+      Hash: 0cc584363e6d02c7b3153ca9365919f7
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UIRectangularRaycastFilter
+  - hash:
+      serializedVersion: 2
       Hash: 9e70ecf91466f07d9bd649be625cae52
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
@@ -1075,6 +1177,12 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: btn_quit
+  - hash:
+      serializedVersion: 2
+      Hash: 09c5e6409c050de4d39d0fbc97a5fce0
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: TCP2_Demo_Camera
   - hash:
       serializedVersion: 2
       Hash: cf9f5cf2c3145a37ac07f00e50e460f9
@@ -1293,6 +1401,12 @@ ScriptsOnlyBuild:
     className: DropdownMultiSelect
   - hash:
       serializedVersion: 2
+      Hash: ae6666ca81e411e53a2b49f2695380be
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: KetosGames.SceneTransition
+    className: SceneLoader
+  - hash:
+      serializedVersion: 2
       Hash: acd59e840d1001bd6f428657661ddddc
     assemblyName: Assembly-CSharp.dll
     namespaceName: Michsky.UI.ModernUIPack
@@ -1317,10 +1431,28 @@ ScriptsOnlyBuild:
     className: AnimationTrack
   - hash:
       serializedVersion: 2
+      Hash: 4acf15436e4609de1258d188deb1cafe
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: CaptureManager
+  - hash:
+      serializedVersion: 2
+      Hash: b6542bdca0edcd169421a6f5be1ebec1
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: TCP2_Demo_PBS
+  - hash:
+      serializedVersion: 2
       Hash: 1df184a1376e23f565b7d7c11bef593b
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: LeftJoystick
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UIWindowManager
   - hash:
       serializedVersion: 2
       Hash: 00274a21279f5cb831ce20f895049e38
@@ -1335,10 +1467,22 @@ ScriptsOnlyBuild:
     className: ObjectPool
   - hash:
       serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: TCP2_ShaderUpdateUnityTime
+  - hash:
+      serializedVersion: 2
       Hash: d81f13f5afcc512bc65c1d39d24c0806
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: BridgeClientToServer
+  - hash:
+      serializedVersion: 2
+      Hash: 7df6d87c83d5b18e521e74931111eacb
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UIStatsAdd
   - hash:
       serializedVersion: 2
       Hash: 780e8f682b3221346c034a6712a0fd25
@@ -1347,16 +1491,58 @@ ScriptsOnlyBuild:
     className: AnimationPlayableAsset
   - hash:
       serializedVersion: 2
+      Hash: 58aac0a0dc5fceb0e527bdb2b2655a98
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UISliderExtended
+  - hash:
+      serializedVersion: 2
       Hash: 36279b88369020b05374b8b5a1d89f47
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Clothes
   - hash:
       serializedVersion: 2
+      Hash: c746d365feaa967edbf05fb6a800fea0
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UILoadingBar
+  - hash:
+      serializedVersion: 2
+      Hash: e1a4cf5cdfec3faa3644c2011b3b80da
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: KetosGames.SceneTransition.Example
+    className: GoScript
+  - hash:
+      serializedVersion: 2
+      Hash: dc9e318326bf89001e1c59c6bb98abc2
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: TCP2_CameraDepth
+  - hash:
+      serializedVersion: 2
       Hash: 5343516e8efd7e9f9f504e0003298827
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: bl_WorldSpace
+  - hash:
+      serializedVersion: 2
+      Hash: fbdcab98600fc256c3a6646203d8d6f1
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Chasing
+  - hash:
+      serializedVersion: 2
+      Hash: ab90193aff166ecb498f764176bd0062
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: Test_Fill
+  - hash:
+      serializedVersion: 2
+      Hash: 19d7c0c6ac61f8eeddb182017f1c3fe3
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UIHighlightTransition
   - hash:
       serializedVersion: 2
       Hash: 303ad70ce203ad874efe2965d0fbcff9
@@ -1371,6 +1557,18 @@ ScriptsOnlyBuild:
     className: AnalyticsTracker
   - hash:
       serializedVersion: 2
+      Hash: 057d1d0ecfabfaf89aacab094a9010cf
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UIItemSlotOverlay
+  - hash:
+      serializedVersion: 2
+      Hash: 5758a126240ecbad8792a581dd6e3a12
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: UnityEngine.UI
+    className: UIUnitFrame_Bar
+  - hash:
+      serializedVersion: 2
       Hash: 0fb27be807aa299702f28ad0bcad1f46
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
@@ -1381,6 +1579,12 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: test
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UIBlackOverlay
   - hash:
       serializedVersion: 2
       Hash: b8a5e8091ab0b8861d2add371082c5e0
@@ -1413,6 +1617,18 @@ ScriptsOnlyBuild:
     className: UIManagerSlider
   - hash:
       serializedVersion: 2
+      Hash: 6a8ff7856b37195cd33a397d2ab0a7a9
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UISelectField_Option
+  - hash:
+      serializedVersion: 2
+      Hash: e60a48886658c0de9b5c01f63be70e20
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UITextSetValue
+  - hash:
+      serializedVersion: 2
       Hash: 48065ce3dbe07a066dbc8f020ccbb6e8
     assemblyName: Assembly-CSharp.dll
     namespaceName: Michsky.UI.ModernUIPack
@@ -1425,10 +1641,22 @@ ScriptsOnlyBuild:
     className: RangeMaxSlider
   - hash:
       serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: CaptureTriggerCollision
+  - hash:
+      serializedVersion: 2
       Hash: 726ab9c948eb63ef4e6ae80cc272ef1d
     assemblyName: Assembly-CSharp.dll
     namespaceName: Michsky.UI.ModernUIPack
     className: DemoTopListShadow
+  - hash:
+      serializedVersion: 2
+      Hash: 9cb036803635e0c694c9b78e12f230dc
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: TCP2_Demo_Cat
   - hash:
       serializedVersion: 2
       Hash: 59199a4b6dc68554343ae288dd9f95cd
@@ -1461,16 +1689,34 @@ ScriptsOnlyBuild:
     className: SelectWeapons
   - hash:
       serializedVersion: 2
+      Hash: bc5688051a69148eba1a4649d8c8ab85
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UIDragObject
+  - hash:
+      serializedVersion: 2
       Hash: b3ab2106268377ffe25dd18ac23dca28
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TMP_Asset
   - hash:
       serializedVersion: 2
+      Hash: 77a1094ae6e493da86cdac179acb4b60
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UISlotBase
+  - hash:
+      serializedVersion: 2
       Hash: 332d638e3f451130b430356ea65aedc9
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: bl_IconItem
+  - hash:
+      serializedVersion: 2
+      Hash: c975fd3b17eff66435d59b8a126cbfda
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UIToggleWindowAndTab
   - hash:
       serializedVersion: 2
       Hash: 692d6bef9ae10d87a1b64c07cbe0dc58
@@ -1485,10 +1731,28 @@ ScriptsOnlyBuild:
     className: UIManagerButtonEditor
   - hash:
       serializedVersion: 2
+      Hash: 6fb805eeb174fc5a6b2e95a96dddbf2c
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: Test_UISpellSlot_Assign
+  - hash:
+      serializedVersion: 2
       Hash: 8860633d29a22ff64e02e18da3716cdf
     assemblyName: Assembly-CSharp.dll
     namespaceName: UnityTemplateProjects
     className: SimpleCameraController
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: KetosGames.SceneTransition
+    className: LoadingText
+  - hash:
+      serializedVersion: 2
+      Hash: afc5b93a7b192de2dcb3832fe35a5c7e
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: KetosGames.SceneTransition
+    className: LoadingSpinner
   - hash:
       serializedVersion: 2
       Hash: c3d3430df9e3ea95e3e3d587961390fb
@@ -1497,13 +1761,25 @@ ScriptsOnlyBuild:
     className: SignalTrack
   - hash:
       serializedVersion: 2
+      Hash: b6b53d57b68a18944d4c4abd70d1433a
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: UnityEngine.UI
+    className: VerticalLayoutGroupExtended
+  - hash:
+      serializedVersion: 2
       Hash: 3b47e85014c5e084d680b285d8779d7d
     assemblyName: Assembly-CSharp.dll
     namespaceName: Michsky.UI.ModernUIPack
     className: CustomInputField
   - hash:
       serializedVersion: 2
-      Hash: 760d67df20efd46c5c4054c7de983820
+      Hash: 227fcfbfe007c6f48db10b66e4bea055
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UIPagination
+  - hash:
+      serializedVersion: 2
+      Hash: f45a7cb5e679ff4b1fa2d8c47647dc80
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: UIManager
@@ -1549,6 +1825,12 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: EffectManager
+  - hash:
+      serializedVersion: 2
+      Hash: 714eb57d5487a7e96542539153e9b879
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UISelectField
   - hash:
       serializedVersion: 2
       Hash: bfd0fa381ea0fbb32773b78e2b1e2c06
@@ -1601,6 +1883,12 @@ ScriptsOnlyBuild:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: NameAppendIndex
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: bl_MiniMapDragArea
   - hash:
@@ -1611,10 +1899,22 @@ ScriptsOnlyBuild:
     className: TextContainer
   - hash:
       serializedVersion: 2
+      Hash: 7f7636788f1256a9f33412749826d451
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UISelectField_List
+  - hash:
+      serializedVersion: 2
       Hash: 1532436743ef194dbf67c97ed7b8e9f1
     assemblyName: PathCreator.dll
     namespaceName: PathCreation
     className: GlobalDisplaySettings
+  - hash:
+      serializedVersion: 2
+      Hash: e9baad98575157a82b32f2001fafcfe7
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UITalentSlot
   - hash:
       serializedVersion: 2
       Hash: e8563ff29fe8c5e0cce07227288893b0
@@ -1629,6 +1929,12 @@ ScriptsOnlyBuild:
     className: PBFilled
   - hash:
       serializedVersion: 2
+      Hash: fa8ec08f5e247f5f602a8655e9dc9bd3
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UIMirrorDimensions
+  - hash:
+      serializedVersion: 2
       Hash: 0c0fc931324e8f4d770c367a3fb22878
     assemblyName: Assembly-CSharp.dll
     namespaceName: Michsky.UI.ModernUIPack
@@ -1639,6 +1945,12 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Main_AR
+  - hash:
+      serializedVersion: 2
+      Hash: 5e2cf7ef6727c687a9113b6f802cb396
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UIButtonExtended
   - hash:
       serializedVersion: 2
       Hash: be0af4b142f25976c86938456009673d
@@ -1713,7 +2025,13 @@ ScriptsOnlyBuild:
     className: LobbyNickName
   - hash:
       serializedVersion: 2
-      Hash: d8b371f5d4c543eedaee49354b882ba9
+      Hash: b5ad3eafc85b336aa910dba2e7687591
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: IconNameing
+  - hash:
+      serializedVersion: 2
+      Hash: e34a2d04cdbff7975d713cc6bc5a3c98
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: InputInfoManager
@@ -1773,10 +2091,28 @@ ScriptsOnlyBuild:
     className: TimelineAsset
   - hash:
       serializedVersion: 2
+      Hash: b6b53d57b68a18944d4c4abd70d1433a
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: UnityEngine.UI
+    className: HorizontalLayoutGroupExtended
+  - hash:
+      serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: JoystickManager
+  - hash:
+      serializedVersion: 2
+      Hash: 20d241ce3e416a6a7988cfe500b4d7cd
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UITab
+  - hash:
+      serializedVersion: 2
+      Hash: 9a0502729f9a3f233510b3ede6ac68c8
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UITalentDatabase
   - hash:
       serializedVersion: 2
       Hash: 5455126194c7fb60e2136719105446c8
@@ -1791,10 +2127,22 @@ ScriptsOnlyBuild:
     className: SliderManager
   - hash:
       serializedVersion: 2
+      Hash: 740983386b3394ddef324fdac0b6b060
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: Test_UITalentSlot_Assign
+  - hash:
+      serializedVersion: 2
       Hash: b0c289424e1aa7e512712a421384e20b
     assemblyName: Assembly-CSharp.dll
     namespaceName: Michsky.UI.ModernUIPack
     className: UIManager
+  - hash:
+      serializedVersion: 2
+      Hash: 4dba252ae000063a286ed04dd3640779
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: Demo_LoadScene
   - hash:
       serializedVersion: 2
       Hash: d35acf88626ca55f005c18eabdcb1418
@@ -1809,10 +2157,40 @@ ScriptsOnlyBuild:
     className: Readme
   - hash:
       serializedVersion: 2
+      Hash: e36410781ff66a84dd83416bb442035f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UIItemSlot
+  - hash:
+      serializedVersion: 2
+      Hash: ff7f58b226cfe4de0dc241bd88d5a904
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Outline
+  - hash:
+      serializedVersion: 2
+      Hash: c913c1a650d9fa5fb48d6e06dcf86e99
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UIFlippable
+  - hash:
+      serializedVersion: 2
       Hash: ee0cef6caaac8ae485bfa82f000f0f7b
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TextMeshProUGUI
+  - hash:
+      serializedVersion: 2
+      Hash: 2fc7506b7112460666a2b59af15c174c
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UICircularRaycastFilter
+  - hash:
+      serializedVersion: 2
+      Hash: 0b43c84fe14b4e0f4407304616dfc00d
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UISpellDatabase
   - hash:
       serializedVersion: 2
       Hash: 516824a435828eadd660ef2f1658a48e
@@ -1833,16 +2211,28 @@ ScriptsOnlyBuild:
     className: AudioTrack
   - hash:
       serializedVersion: 2
+      Hash: ec97806dd9e91a4f770338ad87e07400
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: Test_UIItemSlot_Assign
+  - hash:
+      serializedVersion: 2
       Hash: e78ae6031b3b9d2f02c22f6155c6163f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: CharacterCustomizer
   - hash:
       serializedVersion: 2
-      Hash: 0ac12d1d5eeb9c00b5708efe4ad76e5f
+      Hash: 675e9af72033620f50f6284cd43a0609
     assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: LoadingSceneManager
+    namespaceName: DuloGames.UI
+    className: UIButtonExtended_Target
+  - hash:
+      serializedVersion: 2
+      Hash: e6127fa241197db4bcd786e1dcfa84c3
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UITooltip
   - hash:
       serializedVersion: 2
       Hash: b4283fb47bfb74b0356ceab47567b304
@@ -1881,16 +2271,40 @@ ScriptsOnlyBuild:
     className: State_Aim
   - hash:
       serializedVersion: 2
+      Hash: 3ab7272a8b7d3ea5a142e0c9b6aae63b
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UILevelFrame
+  - hash:
+      serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
     namespaceName: AndroidAudioBypass
     className: BypassAudioManager
   - hash:
       serializedVersion: 2
-      Hash: bf6574a8320129e07b71ea543414a750
+      Hash: 7c9ac4da9c1312cb0cbe8c0486bfaf88
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GameManager
+  - hash:
+      serializedVersion: 2
+      Hash: 4f39aa6f95df7c0855bcb78e0bdb27e8
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: Test_UIProgressBar
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UIIgnoreRaycast
+  - hash:
+      serializedVersion: 2
+      Hash: 2455e54cc66cc678d2a456a5f51a77ba
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: Test_UIEquipSlot_Assign
   - hash:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
@@ -1899,10 +2313,22 @@ ScriptsOnlyBuild:
     className: State_Shot
   - hash:
       serializedVersion: 2
+      Hash: 02147077186441d097511515e118c74e
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: LetterSpacing
+  - hash:
+      serializedVersion: 2
       Hash: c3d3430df9e3ea95e3e3d587961390fb
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: MarkerTrack
+  - hash:
+      serializedVersion: 2
+      Hash: 6c5d9c1fca31241ab0df9a626b4bc3d2
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: Test_UIUnitFrame_Bar
   - hash:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
@@ -1917,16 +2343,40 @@ ScriptsOnlyBuild:
     className: TMP_StyleSheet
   - hash:
       serializedVersion: 2
+      Hash: a8fd7b629a324bed5a8d6a81ad22652e
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UISelectField_Arrow
+  - hash:
+      serializedVersion: 2
+      Hash: ad414eeb94134c1b0331356405c13b1f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: TCP2_Demo_GammaLinear
+  - hash:
+      serializedVersion: 2
       Hash: f310a46eb879fe7d0f3af3eedd11b7a7
     assemblyName: Assembly-CSharp.dll
     namespaceName: Michsky.UI.ModernUIPack
     className: UIManagerModalWindow
   - hash:
       serializedVersion: 2
+      Hash: 3ab7272a8b7d3ea5a142e0c9b6aae63b
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UIStoreFrame
+  - hash:
+      serializedVersion: 2
       Hash: f815ea34e90fb0e69379bbf497aee31f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: PoolManager
+  - hash:
+      serializedVersion: 2
+      Hash: 0f46123eb60a6cce1399824f93fe8219
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: TCP2_Demo_View
   - hash:
       serializedVersion: 2
       Hash: df2005fd299461f07698f64a04aa9edb
@@ -1959,6 +2409,12 @@ ScriptsOnlyBuild:
     className: UIManagerAnimatedIcon
   - hash:
       serializedVersion: 2
+      Hash: f6b4756d4470fa625d367b30639b2c73
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: TCP2_Demo
+  - hash:
+      serializedVersion: 2
       Hash: e5bba379f24f3160d824b67ca7e4f5fc
     assemblyName: Assembly-CSharp.dll
     namespaceName: Michsky.UI.ModernUIPack
@@ -1983,10 +2439,28 @@ ScriptsOnlyBuild:
     className: RadialSlider
   - hash:
       serializedVersion: 2
+      Hash: b474d6331783864a4f4f41cd2727638d
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: UnityEngine.UI.Extensions
+    className: SoftMaskScript
+  - hash:
+      serializedVersion: 2
       Hash: 8649814970b42d345b89944b862453cc
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TMP_SubMesh
+  - hash:
+      serializedVersion: 2
+      Hash: 1431a90e0909c88d28b021d3e17874e0
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UIItemDatabase
+  - hash:
+      serializedVersion: 2
+      Hash: 1886f4255519a60a848d98cf4e44ed5b
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UIEquipSlot
   - hash:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
@@ -1997,8 +2471,20 @@ ScriptsOnlyBuild:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: BreakPrefabConnection
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: CameraControl
+  - hash:
+      serializedVersion: 2
+      Hash: d2fa7d92df442640d4f7b884a3c27c6e
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UISelectField_Label
   - hash:
       serializedVersion: 2
       Hash: 8220b46879dc5e37db1b940c938f5744
@@ -2007,10 +2493,28 @@ ScriptsOnlyBuild:
     className: SignalEmitter
   - hash:
       serializedVersion: 2
+      Hash: c49aa40fbb5ae9f799a6c8df2201a9e9
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: KetosGames.SceneTransition.Example
+    className: SettingsScript
+  - hash:
+      serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
     namespaceName: Michsky.UI.ModernUIPack
     className: NotificationManager
+  - hash:
+      serializedVersion: 2
+      Hash: 6a9ace8f87cf53c943d773d6c5620dfc
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UIEquipReceiver
+  - hash:
+      serializedVersion: 2
+      Hash: 48864a32eb7f432be77cb08c8897dd81
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: DuloGames.UI
+    className: UIMaskRaycastFilter
   - hash:
       serializedVersion: 2
       Hash: c3d3430df9e3ea95e3e3d587961390fb
@@ -2023,5 +2527,5 @@ ScriptsOnlyBuild:
   - Assets/Scenes/MainGame.unity
   - Assets/Scenes/LobbyMenuScene.unity
   - Assets/Scenes/SelectWeapons.unity
-  - Assets/Scenes/LoadingScene.unity
-  playerPath: C:/Users/Kimtler/Desktop/Graffiti.apk
+  - Assets/KetosGames/SceneTransition/Scenes/Loading.unity
+  playerPath: C:/Users/GANPAN/Desktop/dd.apk

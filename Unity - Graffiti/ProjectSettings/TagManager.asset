@@ -42,6 +42,20 @@ TagManager:
   - Shell2
   - Shell3
   - Shell4
+  - Territory3
+  - Territory2
+  - Territory5
+  - Territory1
+  - Territory4
+  - GrenadePool1
+  - GrenadePool2
+  - GrenadePool3
+  - GrenadePool4
+  - Grenade1
+  - Grenade2
+  - Grenade3
+  - Grenade4
+  - Potion
   layers:
   - Default
   - TransparentFX

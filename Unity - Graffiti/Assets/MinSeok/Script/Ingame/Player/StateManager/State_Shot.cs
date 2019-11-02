@@ -109,4 +109,6 @@ public class State_Shot : MonoBehaviour, IActionState
             EffectManager.instance.StopEffect(_EFFECT_TYPE.MUZZLE, myIndex);
         }
     }
+
+    public void Spray(bool _value, int _triggerIdx) { }
 }

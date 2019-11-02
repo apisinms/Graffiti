@@ -84,4 +84,16 @@ public class State_Circuit : MonoBehaviour, IActionState
             //EffectManager.instance.PlayEffect(_EFFECT_TYPE.MUZZLE, myIndex);
         }
     }
+
+    public void Spray(bool _value, int triggerIdx)
+    {
+        if (_value == true)
+        {
+            StateManager.instance.SetState(State_Spray.GetStateInstance()); //스테이트객체 갱신. 
+
+            if (PlayersManager.instance.curCor != null)
+                PlayersManager.instance.StopCoroutine(PlayersManager.instance.curCor);
+            PlayersManager.instance.curCor = PlayersManager.instance.StartCoroutine(PlayersManager.instance.Action_Spray(triggerIdx));
+        }
+    }
 }

@@ -33,10 +33,10 @@ void InGameManager::Init()
 	while ((gamePtr = DatabaseManager::GetInstance()->LoadGameInfo()) != nullptr)
 		gameInfo.emplace_back(gamePtr);
 
-	// 리스폰 정보를 얻어옴
-	RespawnInfo* respawnPtr;
-	while ((respawnPtr = DatabaseManager::GetInstance()->LoadRespawnInfo()) != nullptr)
-		respawnInfo.emplace_back(respawnPtr);
+	// 위치 정보를 얻어옴
+	LocationInfo* locationPtr;
+	while ((locationPtr = DatabaseManager::GetInstance()->LoadLocationInfo()) != nullptr)
+		locationInfo.emplace_back(locationPtr);
 }
 
 void InGameManager::End()
@@ -257,6 +257,13 @@ InGameManager::PROTOCOL_INGAME InGameManager::GetBufferAndProtocol(C_ClientInfo*
 
 bool InGameManager::WeaponSelectProcess(C_ClientInfo* _ptr, char* _buf)
 {
+	// 방이 없는 경우 나가게 예외처리
+	if (_ptr->GetRoom() == nullptr)
+	{
+		printf("무기 선택 중 방이없음\n");
+		return false;
+	}
+
 	PROTOCOL_INGAME protocol;
 	char buf[BUFSIZE] = { 0, };
 	int packetSize = 0;
@@ -288,11 +295,18 @@ bool InGameManager::WeaponSelectProcess(C_ClientInfo* _ptr, char* _buf)
 	// 3. 만든 패킷을 클라에게 전송
 	_ptr->SendPacket(protocol, buf, packetSize);
 
-	return false;
+	return true;
 }
 
 bool InGameManager::LoadingProcess(C_ClientInfo* _ptr)
 {
+	// 방이 없는 경우 나가게 예외처리
+	if (_ptr->GetRoom() == nullptr)
+	{
+		printf("로딩 완료 방이 없음\n");
+		return false;
+	}
+
 	PROTOCOL_INGAME protocol;
 	char buf[BUFSIZE] = { 0, };
 	int packetSize = 0;
@@ -337,6 +351,13 @@ bool InGameManager::LoadingProcess(C_ClientInfo* _ptr)
 
 bool InGameManager::InitProcess(C_ClientInfo* _ptr, char* _buf)
 {
+	// 방이 없는 경우 나가게 예외처리
+	if (_ptr->GetRoom() == nullptr)
+	{
+		printf("초기 위치 받는데 방이 없음\n");
+		return false;
+	}
+
 	PROTOCOL_INGAME protocol;
 	char buf[BUFSIZE] = { 0, };
 	int packetSize = 0;
@@ -346,23 +367,6 @@ bool InGameManager::InitProcess(C_ClientInfo* _ptr, char* _buf)
 	// 플레이어의 패킷을 저장해둔다.
 	IngamePacket* gamePacket = new IngamePacket(tmpPacket);
 	_ptr->GetPlayerInfo()->SetIngamePacket(gamePacket);
-
-	// 디버깅용 출력
-	printf("[초기인덱스]%d ,%f, %f, %f, %d\n", gamePacket->playerNum, gamePacket->posX, gamePacket->posZ, gamePacket->rotY, gamePacket->action);
-
-	C_Sector* sector = _ptr->GetRoom()->GetSector();	// 이 방의 섹터 매니저를 얻는다.
-
-	// 플레이어 위치를 토대로 몇행 몇열인지 인덱스를 구해서 해당 섹터에 추가한다.
-	INDEX getIdx;
-	if (sector->GetIndex(_ptr->GetPlayerInfo()->GetIndex(), getIdx, tmpPacket.posX, tmpPacket.posZ) == true)
-	{
-		_ptr->GetPlayerInfo()->SetIndex(getIdx);
-		sector->Add(_ptr, getIdx);
-	}
-
-	else
-		printf("유효하지 않은 인덱스!! %d, %d\n", getIdx.i, getIdx.j);
-
 
 	// 1. 모든 플레이어에게 자신이 선택한 무기정보를 패킹(본인 포함) 및 전송
 	vector<C_ClientInfo*> playerList = _ptr->GetRoom()->GetPlayers();
@@ -384,51 +388,34 @@ bool InGameManager::InitProcess(C_ClientInfo* _ptr, char* _buf)
 
 bool InGameManager::UpdateProcess(C_ClientInfo* _ptr, char* _buf)
 {
-	PROTOCOL_INGAME protocol;
-	char buf[BUFSIZE] = { 0, };
-	int packetSize = 0;
+	// 혹시 게임 끝났는데 방에 남아있는 경우에 서버 터지면 안되므로 예외처리
+	if (_ptr->GetRoom() == nullptr)
+	{
+		return false;
+	}	// 임시용임. 어차피 나중에 겜 끝나고 로비로 나가면 필요없어짐
 
 	// 전달된 패킷을 얻음
 	IngamePacket recvPacket;
 	UnPackPacket(_buf, recvPacket);
-	//printf("%d ,%f, %f, %f, %d\n", recvPacket.playerNum, recvPacket.posX, recvPacket.posZ, recvPacket.rotY, recvPacket.action);
-	//printf("패킷 %d회 보냄\n", ++numOfPacketSent);
 
-	list<C_ClientInfo*>sendList;	// 현재 섹터 + 인접 섹터에 존재하는 플레이어 리스트
-	C_ClientInfo* exceptClient = nullptr;	// 패킷 안보낼 대상
-
-	// 1. 움직임 검사
-	if (CheckMovement(_ptr, recvPacket) == true)
-	{
-		// 정상 결과 protocol에 패킹
-		protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::UPDATE_PROTOCOL, RESULT_INGAME::INGAME_SUCCESS);
-
-		// 보낼 리스트 구함
-		sendList = _ptr->GetRoom()->GetSector()->GetSectorPlayerList(_ptr->GetPlayerInfo()->GetIndex());
-		exceptClient = _ptr;	// 움직임은 자신한텐 안보낸다.
-
-		// 섹터 내 플레이어들에게 패킷 전송
-		PackPacket(buf, recvPacket, packetSize);
-		ListSendPacket(sendList, exceptClient, protocol, buf, packetSize, true);
-
-		// 마지막으로, 플레이어의 패킷 정보를 저장해둔다.
-		IngamePacket* setPacket = new IngamePacket(recvPacket);
-		_ptr->GetPlayerInfo()->SetIngamePacket(setPacket);
-	}
-
-	// 불법 움직임은 이미 CheckMovement에서 다 처리했으니 빠져나간다.
-	else
-		return false;
+	// 1. 움직임 검사(false이면 불법 움직임은 false리턴)
+	CheckMovement(_ptr, recvPacket);
 
 	// 2. 총알 검사
 	CheckBullet(_ptr, recvPacket);
-
 
 	return true;   // 걍 다 true여
 }
 
 bool InGameManager::GetPosProcess(C_ClientInfo* _ptr, char* _buf)
 {
+	// 방이 없는 경우 나가게 예외처리
+	if (_ptr->GetRoom() == nullptr)
+	{
+		printf("다른애 위치 받는데 방이 없음\n");
+		return false;
+	}
+
 	PROTOCOL_INGAME protocol;
 	char buf[BUFSIZE] = { 0, };
 	int packetSize = 0;
@@ -462,6 +449,13 @@ bool InGameManager::GetPosProcess(C_ClientInfo* _ptr, char* _buf)
 
 bool InGameManager::OnFocusProcess(C_ClientInfo* _ptr)
 {
+	// 방이 없는 경우 나가게 예외처리
+	if (_ptr->GetRoom() == nullptr)
+	{
+		printf("포커스 바꾸는데 방이 없음\n");
+		return false;
+	}
+
 	PROTOCOL_INGAME protocol;
 	char buf[BUFSIZE] = { 0, };
 	int packetSize = 0;
@@ -489,6 +483,13 @@ bool InGameManager::OnFocusProcess(C_ClientInfo* _ptr)
 
 bool InGameManager::HitAndRunProcess(C_ClientInfo* _ptr, char* _buf)
 {
+	// 방이 없는 경우 나가게 예외처리
+	if (_ptr->GetRoom() == nullptr)
+	{
+		printf("차에 치였는데 방이 없음\n");
+		return false;
+	}
+
 	PROTOCOL_INGAME protocol;
 	char buf[BUFSIZE] = { 0, };
 	int packetSize = 0;
@@ -502,10 +503,9 @@ bool InGameManager::HitAndRunProcess(C_ClientInfo* _ptr, char* _buf)
 	_ptr->GetPlayerInfo()->GetScore().numOfDeath++;
 
 	// 섹터에 있는 플레이어들에게 내가 차에 치여 죽었다는 정보(힘과함께)를 보내준다
-	list<C_ClientInfo*> sendList = _ptr->GetRoom()->GetSector()->GetSectorPlayerList(_ptr->GetPlayerInfo()->GetIndex());
 	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::UPDATE_PROTOCOL, RESULT_INGAME::CAR_HIT);
 	PackPacket(buf, _ptr->GetPlayerInfo()->GetPlayerNum(), posX, posZ, packetSize);
-	ListSendPacket(sendList, _ptr, protocol, buf, packetSize, true);	// 나 빼고 전송
+	ListSendPacket(_ptr->GetPlayerInfo()->GetSectorPlayerList(), _ptr, protocol, buf, packetSize, true);	// 나 빼고 전송
 
 	// 차에 치이면 이따가 리스폰 시켜줘야됨
 	if (_ptr->GetPlayerInfo()->GetPlayerRespawnInfo().isRespawning == false)
@@ -516,8 +516,62 @@ bool InGameManager::HitAndRunProcess(C_ClientInfo* _ptr, char* _buf)
 	return true;
 }
 
-bool InGameManager::LeaveProcess(C_ClientInfo* _ptr, int _playerNum)
+bool InGameManager::CaptureProcess(C_ClientInfo* _ptr, char* _buf)
 {
+	// 점령한 건물 인덱스 얻어옴
+	int buildingIdx;
+	UnPackPacket(_buf, buildingIdx);
+
+	if (buildingIdx < 0)
+	{
+		printf("건물 인덱스가 음수다\n");
+		return false;
+	}
+
+	// 방, 팀 정보 얻어옴
+	RoomInfo* room = _ptr->GetRoom();
+	TeamInfo& team = room->GetTeamInfo(_ptr->GetPlayerInfo()->GetTeamNum());
+
+	// 건물 정보를 얻어옴
+	BuildingInfo* building = room->GetBuildings().at(buildingIdx);
+	
+	// 이 건물 소유자가 있다면
+	if (building->owner != nullptr)
+	{
+		// 1. 팀 건물 개수 줄임(팀 개수는 계속 뺏고 뺏김)
+		int teamNum = building->owner->GetPlayerInfo()->GetTeamNum();
+		room->GetTeamInfo(teamNum).teamCaptureNum--;
+
+		// 2. 그리고 소유자를 이 클라로 한다.
+		building->owner = _ptr;
+	}
+
+	// 1. 팀 점령 점수 더함
+	team.teamCaptureScore += gameInfo[_ptr->GetGameType()]->capturePoint;
+
+	// 2. 개인은 점령 횟수 카운트, 팀은 현재 점령중인 건물 개수 증가
+	_ptr->GetPlayerInfo()->GetScore().captureCount++;
+	team.teamCaptureNum++;
+
+	wprintf(L"건물 번호=%d, %s점령, 팀점수=%d, 팀점령 개수=%d, 단독점령횟수:%d\n",
+		buildingIdx,
+		_ptr->GetUserInfo()->nickname,
+		team.teamCaptureScore,
+		team.teamCaptureNum,
+		_ptr->GetPlayerInfo()->GetScore().captureCount);
+
+	return true;
+}
+
+bool InGameManager::LeaveProcess(C_ClientInfo* _ptr)
+{
+	// 방이 없는 경우 나가게 예외처리
+	if (_ptr->GetRoom() == nullptr)
+	{
+		printf("나갔는데 방이 없음\n");
+		return false;
+	}
+
 	PROTOCOL_INGAME protocol;
 	char buf[BUFSIZE] = { 0, };
 	int packetSize = 0;
@@ -526,29 +580,13 @@ bool InGameManager::LeaveProcess(C_ClientInfo* _ptr, int _playerNum)
 	protocol = SetProtocol(
 		STATE_PROTOCOL::INGAME_STATE,
 		PROTOCOL_INGAME::DISCONNECT_PROTOCOL,
-		RESULT_INGAME::INGAME_SUCCESS);
+		RESULT_INGAME::ABORT);
 
 	// 패킹
-	PackPacket(buf, _playerNum, packetSize);
+	PackPacket(buf, _ptr->GetPlayerInfo()->GetPlayerNum(), packetSize);
 
-	// 자신을 제외한 다른 클라들에게 자신이 나갔음을 알린다.
-	vector<C_ClientInfo*> playerList = _ptr->GetRoom()->GetPlayers();	// 리스트 얻어옴
-	C_ClientInfo* player = nullptr;
-	for (auto iter = playerList.begin(); iter != playerList.end(); ++iter)
-	{
-		player = *iter;
-
-		// 본인 제외
-		if (player == _ptr)
-			continue;
-
-		// 다른 플레이어에게 자신이 나갔음을 전송
-		else
-			player->SendPacket(protocol, buf, packetSize);
-	}
-
-	// 나간 플레이어의 섹터, 인접섹터 리스트에서 지워주고
-	_ptr->GetRoom()->GetSector()->LeaveProcess(_ptr, _ptr->GetPlayerInfo()->GetIndex());
+	// 1. 방에있는 자신을 제외한 다른 클라들에게 자신이 나갔음을 알린다.
+	ListSendPacket(_ptr->GetRoom()->GetPlayers(), _ptr, protocol, buf, packetSize, true);
 
 	// 일단 모든 경우 true라고 가정하고 리턴한다.
 	return true;
@@ -561,8 +599,8 @@ void InGameManager::InitalizePlayersInfo(RoomInfo* _room)
 	// 리스폰 좌표 설정용
 	int gameType = 0;
 	int playerNum = 0;
-	float posX = 0.0f;
-	float posZ = 0.0f;
+	float respawnPosX = 0.0f;
+	float respawnPosZ = 0.0f;
 
 	C_ClientInfo* player = nullptr;
 	vector<C_ClientInfo*>players = _room->GetPlayers();
@@ -570,29 +608,50 @@ void InGameManager::InitalizePlayersInfo(RoomInfo* _room)
 	{
 		player = *iter;
 
-		// 초기 체력, 총알 설정(총알은 나중에 IngamePacket으로 편입 시키자)
+		// 초기 체력, 총알 설정
 		player->GetPlayerInfo()->GetIngamePacket()->health = gameInfo[_room->GetGameType()]->maxHealth;
 		player->GetPlayerInfo()->SetBullet(weaponInfo[player->GetPlayerInfo()->GetWeapon()->mainW]->maxAmmo);
 
 		// 리스폰 위치 찾아서
-		for (int i = 0; i < respawnInfo.size(); i++)
+		for (int i = 0; i < locationInfo.size(); i++)
 		{
 			gameType = player->GetRoom()->GetGameType();
 			playerNum = player->GetPlayerInfo()->GetPlayerNum();
 
-			if (gameType == respawnInfo[i]->gameType
-				&& playerNum == respawnInfo[i]->playerNum)
+			// 플레이어 넘버 + 게임타입이 일치하는 row를 찾으면
+			if (gameType == locationInfo[i]->respawnInfo.gameType
+				&& playerNum == locationInfo[i]->respawnInfo.playerNum)
 			{
-				posX = respawnInfo[i]->posX;
-				posZ = respawnInfo[i]->posZ;
+				// 1. 리스폰 위치 저장
+				player->GetPlayerInfo()->GetPlayerRespawnInfo().respawnPosX = locationInfo[i]->respawnInfo.posX;
+				player->GetPlayerInfo()->GetPlayerRespawnInfo().respawnPosZ = locationInfo[i]->respawnInfo.posZ;
+
+				// 2. 초기 위치를 토대로 인덱스 저장 및 섹터의 플레이어 리스트에 추가
+				C_Sector* sector = player->GetRoom()->GetSector();	// 이 방의 섹터 매니저를 얻는다.
+				INDEX getIdx;
+				if (sector->GetIndex(player->GetPlayerInfo()->GetIndex(), getIdx, locationInfo[i]->firstPosInfo.posX, locationInfo[i]->firstPosInfo.posZ) == true)
+				{
+					player->GetPlayerInfo()->SetIndex(getIdx);
+					sector->Add(player, getIdx);
+				}
+
+				else
+				{
+					printf("유효하지 않은 인덱스!! %d, %d\n", getIdx.i, getIdx.j);
+				}
 
 				break;
 			}
 		}
+	}
 
-		// 리스폰 위치 세팅
-		player->GetPlayerInfo()->GetPlayerRespawnInfo().respawnPosX = posX;
-		player->GetPlayerInfo()->GetPlayerRespawnInfo().respawnPosZ = posZ;
+	// 이제 모든 플레이어들의 인접섹터 playerList를 얻어놓는다.
+	for (auto iter = players.begin(); iter != players.end(); ++iter)
+	{
+		player = *iter;
+
+		list<C_ClientInfo*> playerList = player->GetRoom()->GetSector()->GetSectorPlayerList(player->GetPlayerInfo()->GetIndex());
+		player->GetPlayerInfo()->SetSectorPlayerList(playerList);
 	}
 }
 
@@ -600,6 +659,10 @@ void InGameManager::InitalizePlayersInfo(RoomInfo* _room)
 
 bool InGameManager::CheckMovement(C_ClientInfo* _ptr, IngamePacket& _recvPacket)
 {
+	PROTOCOL_INGAME protocol;
+	char buf[BUFSIZE] = { 0, };
+	int packetSize = 0;
+
 #ifndef DEBUG	// 나중에 릴리즈할때 ifdef를 ifndef로 바꾸면 됨
 	CheckIllegalMovement();
 #endif
@@ -617,8 +680,35 @@ bool InGameManager::CheckMovement(C_ClientInfo* _ptr, IngamePacket& _recvPacket)
 		// 1. 원래 갖고 있던 인덱스 정보와 현재 이동한 인덱스 정보가 다르다면 원래 있던 리스트에서 빼고, 지금 들어온 리스트에 추가해준다.
 		if (getIdx != _ptr->GetPlayerInfo()->GetIndex())
 		{
+			// 인접섹터 업데이트
 			UpdateSectorAndSend(_ptr, _recvPacket, getIdx);
+
+			// 1. 본인 플레이어 리스트 셋팅
+			list<C_ClientInfo*> sectorPlayerList = _ptr->GetRoom()->GetSector()->GetSectorPlayerList(getIdx);
+			_ptr->GetPlayerInfo()->SetSectorPlayerList(sectorPlayerList);
+
+			// 2. 방에있는 다른 사람들 플레이어 리스트 셋팅
+			vector<C_ClientInfo*>playerList = _ptr->GetRoom()->GetPlayers();
+			for (auto iter = playerList.begin(); iter != playerList.end(); ++iter)
+			{
+				// 본인 제외
+				if (*iter == _ptr)
+					continue;
+
+				UpdatePlayerList(*iter);
+			}
 		}
+
+		// 정상 결과 protocol에 패킹
+		protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::UPDATE_PROTOCOL, RESULT_INGAME::INGAME_SUCCESS);
+
+		// 섹터 내 플레이어들에게 패킷 전송
+		PackPacket(buf, _recvPacket, packetSize);
+		ListSendPacket(_ptr->GetPlayerInfo()->GetSectorPlayerList(), _ptr, protocol, buf, packetSize, true);
+
+		// 마지막으로, 플레이어의 패킷 정보를 저장해둔다.
+		IngamePacket* setPacket = new IngamePacket(_recvPacket);
+		_ptr->GetPlayerInfo()->SetIngamePacket(setPacket);
 
 		return true;
 	}
@@ -704,7 +794,11 @@ void InGameManager::UpdateSectorAndSend(C_ClientInfo* _ptr, IngamePacket& _recvP
 
 	C_Sector* sector = _ptr->GetRoom()->GetSector();
 
-	sector->Delete(_ptr, _ptr->GetPlayerInfo()->GetIndex());    // 기존에 있던 인덱스에서는 빼고
+	// 1. 먼저 퇴장하는 섹터에 있는 플레이어들의 리스트를 업데이트해주고
+	// 2. 입장하는 섹터에 있는 플레이어들의 리스트를 업데이트 해준다.
+	// 근데 그 와중에 겹치는 플레이어가 있다면
+
+	sector->Remove(_ptr, _ptr->GetPlayerInfo()->GetIndex());    // 기존에 있던 인덱스에서는 빼고
 	sector->Add(_ptr, _newIdx);                  // 새로운 인덱스위치 리스트에 추가한다.
 
 	list<C_ClientInfo*>enterList;
@@ -733,6 +827,16 @@ void InGameManager::UpdateSectorAndSend(C_ClientInfo* _ptr, IngamePacket& _recvP
 	_ptr->SendPacket(protocol, buf, packetSize);   // 전송
 
 	_ptr->GetPlayerInfo()->SetIndex(_newIdx);            // 변경된 새로운 인덱스 설정
+}
+
+// 섹터 업데이트
+void InGameManager::UpdatePlayerList(C_ClientInfo* _player)
+{
+	INDEX curIdx = _player->GetPlayerInfo()->GetIndex();	// 현재 있는 인덱스
+	C_Sector* sector = _player->GetRoom()->GetSector();		// 이 방의 섹터 매니저를 얻는다.
+
+	// 이 플레이어의 섹터 플레이어 리스트를 다시 설정한다.
+	_player->GetPlayerInfo()->SetSectorPlayerList(sector->GetSectorPlayerList(curIdx));
 }
 
 
@@ -940,14 +1044,11 @@ void InGameManager::BulletHitSend(C_ClientInfo* _shotPlayer, const vector<C_Clie
 	vector<C_ClientInfo*>allPlayersInRoom;
 	for (int i = 0; i < _hitPlayers.size(); i++)
 	{
-		// 맞은놈의 인접섹터에 있는 플레이어들의 리스트를 얻음
-		playersInSector = _hitPlayers[i]->GetRoom()->GetSector()->GetSectorPlayerList(_hitPlayers[i]->GetPlayerInfo()->GetIndex());
-
 		// 섹터 내 플레이어들에게 패킷 전송
 		protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::UPDATE_PROTOCOL, RESULT_INGAME::BULLET_HIT);
 		memcpy(&packet, _hitPlayers[i]->GetPlayerInfo()->GetIngamePacket(), sizeof(IngamePacket));
 		PackPacket(buf, packet, packetSize);
-		ListSendPacket(playersInSector, nullptr, protocol, buf, packetSize, true);
+		ListSendPacket(_hitPlayers[i]->GetPlayerInfo()->GetSectorPlayerList(), nullptr, protocol, buf, packetSize, true);
 
 		// 피 0이면 시간 지나면 리스폰 시켜줘야됨
 		if (_hitPlayers[i]->GetPlayerInfo()->GetIngamePacket()->health <= 0
@@ -1014,6 +1115,28 @@ void InGameManager::Respawn(C_ClientInfo* _player)
 	//respawnThread.detach();											// 이 쓰레드에서 손 뗌 넌 자유
 
 	_player->GetPlayerInfo()->GetPlayerRespawnInfo().isRespawning = true;	// 리스폰 시작
+}
+
+void InGameManager::AddCaptureBonus(RoomInfo* _room)
+{
+	TeamInfo& team1 = _room->GetTeamInfo(0);
+	TeamInfo& team2 = _room->GetTeamInfo(1);
+	int capturePoint = gameInfo[_room->GetGameType()]->capturePoint;
+
+	int bonusPoint = 0;
+	if (team1.teamCaptureNum > 0)
+	{
+		// 보너스 점수 구해서 계산해서 추가
+		bonusPoint = team1.teamCaptureNum * (capturePoint - 10);
+		team1.teamCaptureScore += bonusPoint;
+	}
+
+	if (team2.teamCaptureNum > 0)
+	{
+		// 보너스 점수 구해서 계산해서 추가
+		bonusPoint = team2.teamCaptureNum * (capturePoint - 10);
+		team2.teamCaptureScore += bonusPoint;
+	}
 }
 
 //////// public
@@ -1107,7 +1230,38 @@ bool InGameManager::CanIChangeFocus(C_ClientInfo* _ptr)
 	return true;
 }
 
-void InGameManager::ListSendPacket(list<C_ClientInfo*> _list, C_ClientInfo* _exceptClient, PROTOCOL_INGAME _protocol, char* _buf, int _packetSize, bool _notFocusExcept)
+bool InGameManager::CanIGotoLobby(C_ClientInfo* _ptr)
+{
+	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
+	PROTOCOL_INGAME protocol = GetBufferAndProtocol(_ptr, buf);
+
+	// 로비로 가고싶다는 프로토콜이면
+	if (protocol == GOTO_LOBBY_PROTOCOL)
+	{
+		_ptr->SetPlayerInfo(new PlayerInfo());	// 싹 지워주자
+		_ptr->SetRoom(nullptr);					// 방도 없다
+		return true;
+	}
+
+	return false;
+}
+
+bool InGameManager::CaptureSuccess(C_ClientInfo* _ptr)
+{
+	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
+	PROTOCOL_INGAME protocol = GetBufferAndProtocol(_ptr, buf);
+
+	// 점령 성공 프로토콜이면
+	if (protocol == CAPTURE_PROTOCOL)
+	{
+		return CaptureProcess(_ptr, buf);
+	}
+
+	return false;
+}
+
+
+void InGameManager::ListSendPacket(list<C_ClientInfo*>& _list, C_ClientInfo* _exceptClient, PROTOCOL_INGAME _protocol, char* _buf, int _packetSize, bool _notFocusExcept)
 {
 	IC_CS cs;
 
@@ -1137,46 +1291,33 @@ void InGameManager::ListSendPacket(list<C_ClientInfo*> _list, C_ClientInfo* _exc
 	}
 }
 
-void InGameManager::ListSendPacket(vector<C_ClientInfo*> _list, C_ClientInfo* _exceptClient, PROTOCOL_INGAME _protocol, char* _buf, int _packetSize, bool _notFocusExcept)
+void InGameManager::ListSendPacket(vector<C_ClientInfo*>& _list, C_ClientInfo* _exceptClient, PROTOCOL_INGAME _protocol, char* _buf, int _packetSize, bool _notFocusExcept)
 {
 	IC_CS cs;
 
-	try
+	// 가져온 List가 비어있지 않은 경우에만
+	if (!_list.empty())
 	{
-		// 가져온 List가 비어있지 않은 경우에만
-		if (!_list.empty())
+		// 리스트 안에있는 플레이어들에게 패킷을 전송한다.
+		C_ClientInfo* player = nullptr;
+		for (vector<C_ClientInfo*>::iterator iter = _list.begin(); iter != _list.end(); ++iter)
 		{
-			// 리스트 안에있는 플레이어들에게 패킷을 전송한다.
-			C_ClientInfo* player = nullptr;
-			for (vector<C_ClientInfo*>::iterator iter = _list.begin(); iter != _list.end(); ++iter)
+			player = *iter;
+
+			// 전송 제외할 클라 건너뜀
+			if (player == _exceptClient)
+				continue;
+
+			// 포커스 없을때 보내지 않기가 설정되었다면
+			if (_notFocusExcept)
 			{
-				player = *iter;
-
-				/// 여기에 player의 유효성을 검사해야함!
-				if (SessionManager::GetInstance()->IsClientExist(player) == false)
-				{
-					throw InvalidClientPtr;
-				}
-
-				// 전송 제외할 클라 건너뜀
-				if (player == _exceptClient)
+				// 포커스가 없는 대상은 패킷 보내기 건너 뜀
+				if (player->GetPlayerInfo()->GetFocus() == false)
 					continue;
-
-				// 포커스 없을때 보내지 않기가 설정되었다면
-				if (_notFocusExcept)
-				{
-					// 포커스가 없는 대상은 패킷 보내기 건너 뜀
-					if (player->GetPlayerInfo()->GetFocus() == false)
-						continue;
-				}
-
-				player->SendPacket(_protocol, _buf, _packetSize);
 			}
+
+			player->SendPacket(_protocol, _buf, _packetSize);
 		}
-	}
-	catch (const ExceptionCode _exceptionCode)
-	{
-		std::cout << "vector버전의 ListSendPacket()에서 예외 발생, 유효하지 않은 클라이언트 포인터" << endl;
 	}
 }
 
@@ -1195,49 +1336,63 @@ DWORD WINAPI InGameManager::InGameTimerThread(LPVOID _arg)
 
 	bool endFlag = false;
 
-	int weaponSelectTime = 0;	// 무기 선택 시간
-	double IngameTime = 0.0;	// 인게임 타이머
+	double IngameTimeElapsed = 0.0;		// 인게임 타이머
+	double IngameEndTimeElapsed = 0.0;	// 게임 끝나고 잠깐 대기할 타이머
 
 	while (endFlag == false)
 	{
-		// 게임 시간 아직 남았다면
+		// 방 상태를 보고 처리
 		switch (room->GetRoomStatus())
 		{
 			// 무기 선택 
 		case ROOMSTATUS::ROOM_ITEMSEL:
 		{
 			// 시간 다됐으면 true리턴하므로 다시 0으로 셋팅(인게임 타이머 세야되니까)
-			gameManager->WeaponTimerChecker(room);
-
-			std::this_thread::sleep_for(std::chrono::seconds(1));	// 1초에 한번씩 들어오면 됨
-			weaponSelectTime += 1;	// 1초씩 증가
+			if (gameManager->WeaponTimerChecker(room) == true)
+			{
+				std::this_thread::sleep_for(std::chrono::seconds(1));	// 1초에 한번씩 들어오면 됨
+			}
 		}
 		break;
 
 		// 게임 중
 		case ROOMSTATUS::ROOM_GAME:
 		{
-			gameManager->RespawnChecker(room);	// 리스폰 검사
-			gameManager->CarSpawnChecker(room);	// 차 스폰 검사
-
+			// 슬립 후 시간 증가
 			std::this_thread::sleep_for(std::chrono::milliseconds(TIMER_INTERVAL));	// 꼭 넣어줘야함 아니면 혼자 CPU 다 잡아먹음
-			IngameTime += TIMER_INTERVAL_TIMES_MILLISEC;
+			IngameTimeElapsed += TIMER_INTERVAL_TIMES_MILLISEC;
 
-			// 타이머 돌다가 이 방 게임 타입 최대 시간 지나면 게임 끝났다고 보내줘야됨
-			if (IngameTime >= gameManager->gameInfo[room->GetGameType()]->gameTime)
-			{
-				/// 게임 끝났다고 패킷 보내줘야 됨
+			gameManager->RespawnChecker(room);		// 리스폰 검사
+			gameManager->CarSpawnChecker(room);		// 차 스폰 검사
+			gameManager->CaptureBonusTimeChecker(room);	// 점령 보너스 검사
+			gameManager->GameEndTimeChecker(room, IngameTimeElapsed);	// 게임 종료 검사
+		}
+		break;
 
-				//printf("야 게임 끝났다 지금 초 %lf\n", IngameTime);
+		// 게임 끝남(몇 초 후에 게임 나가게 처리)
+		case ROOMSTATUS::ROOM_GAME_END:
+		{
+			// 슬립 후 시간 증가
+			std::this_thread::sleep_for(std::chrono::milliseconds(TIMER_INTERVAL));	// 꼭 넣어줘야함 아니면 혼자 CPU 다 잡아먹음
+			IngameEndTimeElapsed += TIMER_INTERVAL_TIMES_MILLISEC;
 
-				// 게임 끝났으니 인게임 타이머 쓰레드 핸들 반환
-				CloseHandle(room->GetInGameTimerHandle());
-				room->SetInGameTimerHandle(nullptr);
+			gameManager->ScoreTimeChecker(room, IngameEndTimeElapsed);	// 스코어 보여주는 시간 끝났나 검사
+		}
+		break;
 
-				/// 게임 끝났고, 쓰레드 종료해라 이 부분은 나중에 게임 종료 처리하고 호출하면 됨!
-				/*room->SetRoomStatus(ROOMSTATUS::ROOM_GAME_END);
-				endFlag = true;*/
-			}
+		// 진짜 방 종료!(여기에서 뒷정리 해줘야됨!)
+		case ROOMSTATUS::ROOM_END:
+		{
+#ifdef DEBUG
+			// 타이머 쓰레드 핸들 뒷정리
+			CloseHandle(room->GetInGameTimerHandle());
+			room->SetInGameTimerHandle(nullptr);
+
+			RoomManager::GetInstance()->OnlyDeleteRoom(room);	// 진짜 방 지움
+			endFlag = true;
+#else
+			std::this_thread::sleep_for(std::chrono::milliseconds(TIMER_INTERVAL));
+#endif
 		}
 		break;
 
@@ -1251,6 +1406,7 @@ DWORD WINAPI InGameManager::InGameTimerThread(LPVOID _arg)
 		}
 	}
 
+	printf("인게임타이머 쓰레드 종료!\n");
 	return 0;	// 그리고 쓰레드 종료
 }
 
@@ -1258,6 +1414,11 @@ DWORD WINAPI InGameManager::InGameTimerThread(LPVOID _arg)
 void InGameManager::RespawnChecker(RoomInfo* _room)
 {
 	IC_CS cs;
+
+	if (_room->GetNumOfPlayer() <= 0)
+	{
+		return;
+	}
 
 	PROTOCOL_INGAME protocol;
 	char buf[BUFSIZE] = { 0, };
@@ -1346,18 +1507,20 @@ void InGameManager::CarSpawnChecker(RoomInfo* _room)
 {
 	IC_CS cs;
 
+	if (_room->GetNumOfPlayer() <= 0)
+	{
+		return;
+	}
+
 	PROTOCOL_INGAME protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::UPDATE_PROTOCOL, RESULT_INGAME::CAR_SPAWN);
 	char buf[BUFSIZE] = { 0, };
 	int packetSize = 0;
 	int seed = 0;
 
 	double carSpawnTimeElapsed = _room->GetCarSpawnTimeElapsed();
-	if (carSpawnTimeElapsed < CAR_SPAWN_TIME_SEC)
-	{
-		_room->SetCarSpawnTimeElasped(carSpawnTimeElapsed + TIMER_INTERVAL_TIMES_MILLISEC);
-	}
 
-	else
+	// 차량 스폰 시간 되면
+	if (carSpawnTimeElapsed >= CAR_SPAWN_TIME_SEC)
 	{
 		// 방에 있는 '포커스 있는' 플레이어들에게 자동차 스폰하라고 알려줌
 		vector<C_ClientInfo*>playerList = _room->GetPlayers();
@@ -1367,31 +1530,86 @@ void InGameManager::CarSpawnChecker(RoomInfo* _room)
 
 		_room->SetCarSpawnTimeElasped(0.0);	// 시간 다시 초기화
 	}
+
+	else
+	{
+		_room->SetCarSpawnTimeElasped(carSpawnTimeElapsed + TIMER_INTERVAL_TIMES_MILLISEC);
+	}
+}
+
+// 건물 보너스 시간 체커
+void InGameManager::CaptureBonusTimeChecker(RoomInfo* _room)
+{
+	IC_CS cs;
+
+	if (_room->GetNumOfPlayer() <= 0)
+	{
+		return;
+	}
+
+	PROTOCOL_INGAME protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::CAPTURE_PROTOCOL, RESULT_INGAME::BONUS);
+	char buf[BUFSIZE] = { 0, };
+	int packetSize = 0;
+
+	double bonusTimeElapsed = _room->GetCaptureBonusTimeElapsed();
+
+	// 점령 보너스 받을 시간이 되면
+	if (bonusTimeElapsed >= CAPTURE_BONUS_INTERVAL)
+	{
+		AddCaptureBonus(_room);	// 보너스 점수를 적용시키고
+
+		// 방에 있는 모든 플레이어들에게 보너스 점수 업데이트하라고 점수를 보내줌
+		vector<C_ClientInfo*>playerList = _room->GetPlayers();
+		PackPacket(buf, _room->GetTeamInfo(0).teamCaptureScore, _room->GetTeamInfo(1).teamCaptureScore, packetSize);	// 패킹 후
+		ListSendPacket(playerList, nullptr, protocol, buf, packetSize, true);
+
+		_room->SetCaptureBonusTimeElasped(0.0);	// 시간 다시 초기화
+	}
+
+	else
+	{
+		_room->SetCaptureBonusTimeElasped(bonusTimeElapsed + TIMER_INTERVAL_TIMES_MILLISEC);
+	}
 }
 
 // 무기 타이머 체커
-void InGameManager::WeaponTimerChecker(RoomInfo* _room)
+bool InGameManager::WeaponTimerChecker(RoomInfo* _room)
 {
 	IC_CS cs;
+
+	if (_room->GetNumOfPlayer() <= 0)
+	{
+		return false;
+	}
 
 	PROTOCOL_INGAME protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::WEAPON_PROTOCOL, RESULT_INGAME::NODATA);
 	char buf[BUFSIZE] = { 0, };
 	int packetSize = 0;
-	int seed = 0;
-
 	vector<C_ClientInfo*> playerList;
+
+	if (_room->GetNumOfPlayer() < _room->GetMaxPlayer())
+	{
+		printf("어떤놈 무기 초 받다가 도중 나감\n");
+
+		// 끊김 프로토콜 세팅
+		protocol = SetProtocol(
+			STATE_PROTOCOL::INGAME_STATE,
+			PROTOCOL_INGAME::DISCONNECT_PROTOCOL,
+			RESULT_INGAME::WEAPON_SEL);
+
+		// 방에 모든 플레이어들에게 방 터졌다고 알림
+		ListSendPacket(_room->GetPlayers(), nullptr, protocol, buf, packetSize, true);
+
+		_room->SetRoomStatus(ROOMSTATUS::ROOM_END);	// 방 타이머도 삭제
+		return false;
+	}
+
 
 	int weaponTimeElapsedSec = _room->GetWeaponTimeElapsed();
 
 	// 만약 아이템 선택시간(상수)을 넘었다면 무기를 보내라고 프로토콜을 보내준다.
 	if (weaponTimeElapsedSec >= WEAPON_SELTIME)
 	{
-		/*// 누구 하나라도 게임 시작전에 나갔으면 이 방은 터진거임
-		if (room->GetMaxPlayer() > room->GetNumOfPlayer())
-		{
-			throw ExitBeforeGame;
-		}*/
-
 		// 무기 정보를 얻어오기위한 프로토콜 조립
 		protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::WEAPON_PROTOCOL, RESULT_INGAME::NODATA);
 		packetSize = 0;
@@ -1419,4 +1637,30 @@ void InGameManager::WeaponTimerChecker(RoomInfo* _room)
 		// 1초씩 증가
 		_room->SetWeaponTimeElasped(weaponTimeElapsedSec + 1);
 	}
+
+	return true;
 }
+
+// 게임 종료 타이머 체커
+void InGameManager::GameEndTimeChecker(RoomInfo* _room, double _IngameTimeElapsed)
+{
+	// 타이머 돌다가 이 방 게임 타입 최대 시간 지나면 게임 끝났다고 보내줘야됨
+	if (_IngameTimeElapsed >= gameInfo[_room->GetGameType()]->gameTime)
+	{
+		/// 게임끝나고 스코어보드 뜨는 창 잠깐 나오게하라고 프로토콜 보내줌
+		printf("스코어보드!\n");
+		_room->SetRoomStatus(ROOMSTATUS::ROOM_GAME_END);
+	}
+}
+
+// 스코어 종료 타이머 체커
+void InGameManager::ScoreTimeChecker(RoomInfo* _room, double _IngameEndTimeElapsed)
+{
+	// 스코어 보여주는 시간 끝났으면 방 끝내야되는 상태로
+	if (_IngameEndTimeElapsed >= SCORE_SHOW_TIME)
+	{
+		printf("스코어보드 끝!\n");
+		_room->SetRoomStatus(ROOMSTATUS::ROOM_END);
+	}
+}
+

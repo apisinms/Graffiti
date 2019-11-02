@@ -13,6 +13,14 @@ public partial class PlayersManager : MonoBehaviour
     public Animator[] am_animePlayer { get; set; }
     #endregion
 
+    public void Anime_Spray(int _index)
+    {
+        if (am_animePlayer[_index].GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Spray"))
+            return;
+     
+        am_animePlayer[_index].SetTrigger("Spray");
+    }
+
     public void Anime_Death(int _index)
     {
         if (am_animePlayer[_index].GetBool("isAimingAndCurcuit") == true)
@@ -37,6 +45,7 @@ public partial class PlayersManager : MonoBehaviour
         obj_players[_index].GetComponent<CapsuleCollider>().isTrigger = false;
         am_animePlayer[_index].SetTrigger("Idle");
     }
+
     public void Anime_Circuit(int _index)
     {
         if (am_animePlayer[_index].GetBool("isAimingAndCurcuit") == true)

@@ -20,7 +20,7 @@ public class btn_start : UnityEngine.MonoBehaviour
 
 		if (flag == 0)
 		{
-			txt_startBtn.text = "취소";
+			txt_startBtn.text = "CANCLE";
             prevSelectButton.enabled = false;
             nextSelectButton.enabled = false;
 
@@ -74,7 +74,7 @@ public class btn_start : UnityEngine.MonoBehaviour
 			else
 			{
 				// UI바꾸고
-				txt_startBtn.text = "플레이";
+				txt_startBtn.text = "PLAY";
                 prevSelectButton.enabled = true;
                 nextSelectButton.enabled = true;
                 obj_loadingBar.SetActive(false);

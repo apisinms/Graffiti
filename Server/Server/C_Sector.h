@@ -102,11 +102,5 @@ public:
 		list<C_ClientInfo*>& _enterList, list<C_ClientInfo*>& _exitList);
 
 	void Add(C_ClientInfo* _player, INDEX& _index);
-	void Delete(C_ClientInfo* _player, INDEX _index);
-
-	// 자신의 섹터에서 나감 처리
-	inline void LeaveProcess(C_ClientInfo* _player, INDEX _index)
-	{
-		sectors[_index.i][_index.j].playerList.remove(_player);
-	}
+	void Remove(C_ClientInfo* _player, INDEX _index);
 };

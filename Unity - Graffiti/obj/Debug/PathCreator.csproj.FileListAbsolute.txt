@@ -1087,5 +1087,3 @@ C:\Users\kgl87\OneDrive\문서\GitHub\민성\Graffiti\Unity - Graffiti\obj\Debug
 C:\Users\kgl87\OneDrive\문서\GitHub\민성\Graffiti\Unity - Graffiti\obj\Debug\PathCreator.csproj.CopyComplete
 C:\Users\kgl87\OneDrive\문서\GitHub\민성\Graffiti\Unity - Graffiti\obj\Debug\PathCreator.dll
 C:\Users\kgl87\OneDrive\문서\GitHub\민성\Graffiti\Unity - Graffiti\obj\Debug\PathCreator.pdb
-C:\Users\kgl87\OneDrive\문서\GitHub\민성\Graffiti\Unity - Graffiti\Temp\bin\Debug\Boo.Lang.dll
-C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\Boo.Lang.dll

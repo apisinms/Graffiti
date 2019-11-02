@@ -49,4 +49,5 @@ public class State_Death : MonoBehaviour, IActionState
     public void Circuit(bool _value) { }
     public void Aim(bool _value) { }
     public void Shot(bool _value) { }
+    public void Spray(bool _value, int _triggerIdx) { }
 }

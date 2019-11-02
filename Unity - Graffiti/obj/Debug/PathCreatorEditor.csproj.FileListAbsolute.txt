@@ -206,7 +206,6 @@ C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\Boo.Lang.Pa
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\Boo.Lang.Parser.dll
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\Boo.Lang.Useful.dll
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\Unity.CecilTools.dll
-C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\PathCreator.pdb
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEngine.xml
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEditor.xml
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEngine.AIModule.xml
@@ -1118,3 +1117,4 @@ C:\Users\kgl87\OneDrive\문서\GitHub\민성\Graffiti\Unity - Graffiti\obj\Debug
 C:\Users\kgl87\OneDrive\문서\GitHub\민성\Graffiti\Unity - Graffiti\obj\Debug\PathCreatorEditor.csproj.CopyComplete
 C:\Users\kgl87\OneDrive\문서\GitHub\민성\Graffiti\Unity - Graffiti\obj\Debug\PathCreatorEditor.dll
 C:\Users\kgl87\OneDrive\문서\GitHub\민성\Graffiti\Unity - Graffiti\obj\Debug\PathCreatorEditor.pdb
+C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\PathCreator.pdb

@@ -71,11 +71,11 @@ MonoBehaviour:
       - 0
       globalNormalsAngle: 90
       flipNormals: 0
-    vertexPathUpToDate: 1
+    vertexPathUpToDate: 0
     vertexPathMaxAngleError: 0.3
     vertexPathMinVertexSpacing: 0.01
     showTransformTool: 1
-    showPathBounds: 0
+    showPathBounds: 1
     showPerSegmentBounds: 0
     displayAnchorPoints: 1
     displayControlPoints: 1

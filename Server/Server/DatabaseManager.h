@@ -51,5 +51,5 @@ public:
 
 	 WeaponInfo* LoadWeaponInfo();
 	 GameInfo* LoadGameInfo();
-	 RespawnInfo* LoadRespawnInfo();
+	 LocationInfo* LoadLocationInfo();
 };

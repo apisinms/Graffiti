@@ -7,6 +7,7 @@ using System.Text;
 public class C_Global
 {
     public const int BUFSIZE = 4096;   // 버퍼 사이즈
+    public const int MAX_QUEUE_SIZE = 64;
     //public const int MAX_PLAYER = 4;    // 플레이어 수
     public const int MAX_CHARACTER = 4;            // 최대 캐릭터 수
     public const float interpolation_LeftRot = 12.5f;

@@ -203,7 +203,7 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
     {
         if (BridgeClientToServer.instance.isStartReloadGageCor[_index] == false)
         {
-            UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadGageImg(weaponManager.weaponInfoSG.reloadTime, _index));
+            UIManager.instance.StartCoroutine(UIManager.instance.Cor_DecreaseReloadGageImg(weaponManager.weaponInfoSG.reloadTime, _index));
             BridgeClientToServer.instance.isStartReloadGageCor[_index] = true;
         }
     }
@@ -231,11 +231,14 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
 
     public void ReloadAmmoProcess(int _index)
     {
+        /*
         #if NETWORK
         NetworkManager.instance.SendIngamePacket();
         #endif
+        */
 
-        if (playerSGInfo[_index].curAmmo >= weaponManager.weaponInfoSG.maxAmmo) //풀탄창이면 재장전안함
+        if (playerSGInfo[_index].curAmmo >= weaponManager.weaponInfoSG.maxAmmo
+            || weaponManager.isReloading == true) //풀탄창이면 재장전안함
             return;
 
         AudioManager.Instance.Play(8);
@@ -253,7 +256,7 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
             NetworkManager.instance.SendIngamePacket();
             #endif
 
-            UIManager.instance.StartCoroutine(UIManager.instance.DecreaseReloadGageImg(weaponManager.weaponInfoSG.reloadTime, _index));
+            UIManager.instance.StartCoroutine(UIManager.instance.Cor_DecreaseReloadGageImg(weaponManager.weaponInfoSG.reloadTime, _index));
 
             yield return YieldInstructionCache.WaitForSeconds(weaponManager.weaponInfoSG.reloadTime);
 
@@ -291,7 +294,7 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
         }
 
         UIManager.instance.hp[_type].img_front.fillAmount -= 0.06f; //데미지만큼 피를깎음.
-        UIManager.instance.StartCoroutine(UIManager.instance.DecreaseMiddleHPImg(_type, 0.06f));
+        UIManager.instance.StartCoroutine(UIManager.instance.Cor_DecreaseMiddleHPImg(_type, 0.06f));
         /*
         switch (_type)
         {

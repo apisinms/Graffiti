@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-
+using KetosGames.SceneTransition;
 
 public enum _WEAPONS_TYPE
 {
@@ -252,7 +252,8 @@ public class SelectWeapons : UnityEngine.MonoBehaviour
 				Debug.Log(mySubWeapon);
 				Debug.Log("itemselect 성공");
 
-				SceneManager.LoadScene("MainGame"); //메인타이틀로 입장
+                SceneLoader.LoadScene("MainGame",true);
+				//SceneManager.LoadScene("MainGame"); //메인타이틀로 입장
 
 				yield break;
 			}

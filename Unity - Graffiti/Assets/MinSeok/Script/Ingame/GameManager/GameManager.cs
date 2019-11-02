@@ -60,6 +60,7 @@ public class GameManager : MonoBehaviour
 
     public static GameManager instance;
     public string[] playersTag;
+    public GameObject[] mapMode;
     public int myNetworkNum { get; set; }
     public int myIndex { get; set; }
     public int[] playersIndex { get; set; }
@@ -75,8 +76,8 @@ public class GameManager : MonoBehaviour
     {
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraControl>();
 #if NETWORK
-		PlayersManager.instance.Initialization_GameInfo();              // 얻어온 정보대로 초기화
-		BridgeClientToServer.instance.Initialization_PlayerViewer();    // 게임 시작시 플레이어 뷰어 셋팅
+        PlayersManager.instance.Initialization_GameInfo();              // 얻어온 정보대로 초기화
+        BridgeClientToServer.instance.Initialization_PlayerViewer();    // 게임 시작시 플레이어 뷰어 셋팅
 
 
 #else
@@ -86,9 +87,9 @@ public class GameManager : MonoBehaviour
         CarSeed = 0;
         StartCoroutine(GameObject.Find("Spawner").GetComponent<PathCreation.Examples.PathSpawner>().Cor_SpawnPrefabs());
 #endif
-	}
+    }
 
-	private void OnEnable()
+    private void OnEnable()
     {
         // 이벤트 등록하고, 로딩 완료되면 호출하게 함
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -102,7 +103,7 @@ public class GameManager : MonoBehaviour
     {
         //로딩이 완료되었다고 서버로 보내준다.
 #if NETWORK
-      NetworkManager.instance.SendLoadingComplete();
+        NetworkManager.instance.SendLoadingComplete();
 #endif
     }
 
@@ -112,15 +113,15 @@ public class GameManager : MonoBehaviour
             instance = this;
 
 #if NETWORK
-      gameInfo = BridgeClientToServer.instance.GetTempGameInfo;   // 필요한 게임 정보를 브릿지에서 얻어옴
-      
-      playersIndex = new int[gameInfo.maxPlayer];
-      playersTag = new string[gameInfo.maxPlayer];
+        gameInfo = BridgeClientToServer.instance.GetTempGameInfo;   // 필요한 게임 정보를 브릿지에서 얻어옴
 
-      myNetworkNum = NetworkManager.instance.MyPlayerNum;
-      myIndex = myNetworkNum - 1;
+        playersIndex = new int[gameInfo.maxPlayer];
+        playersTag = new string[gameInfo.maxPlayer];
 
-      SetPlayerTagAndIndex(gameInfo.maxPlayer);   // 태그 및 인덱스 설정
+        myNetworkNum = NetworkManager.instance.MyPlayerNum;
+        myIndex = myNetworkNum - 1;
+
+        SetPlayerTagAndIndex(gameInfo.maxPlayer);   // 태그 및 인덱스 설정
 #else
         gameInfo.gameType = 0;
         gameInfo.maxPlayer = 4;
@@ -168,12 +169,12 @@ public class GameManager : MonoBehaviour
         if (pause == true)
         {
 #if NETWORK
-         // 포커스 갖고 있음
-         if (myFocus == true)
-         {
-            NetworkManager.instance.MayIChangeFocus(false); // 포커스 잃음!(정지)
-            myFocus = false;   // 포커스 off
-         }
+            // 포커스 갖고 있음
+            if (myFocus == true)
+            {
+                NetworkManager.instance.MayIChangeFocus(false); // 포커스 잃음!(정지)
+                myFocus = false;   // 포커스 off
+            }
 #endif
         }
 
@@ -181,44 +182,40 @@ public class GameManager : MonoBehaviour
         else
         {
 #if NETWORK
-         // 포커스 잃었던 상태라면
-         if (myFocus == false)
-         {
-            NetworkManager.instance.MayIChangeFocus(true); // 포커스 얻었다!(정지 풀림)
-            myFocus = true;
-         }
+            // 포커스 잃었던 상태라면
+            if (myFocus == false)
+            {
+                NetworkManager.instance.MayIChangeFocus(true); // 포커스 얻었다!(정지 풀림)
+                myFocus = true;
+            }
 #endif
         }
     }
 
 
-	// 로딩 완료
-	public GameObject[] maps;
+    // 로딩 완료
     public void LoadingComplete()
     {
 #if NETWORK
+        mapMode[gameInfo.gameType].SetActive(true);
+        // 1. 안들어온 놈들 꺼준다.
+        GameObject notConnectedCharacter;
+        for (int i = gameInfo.maxPlayer; i < C_Global.MAX_CHARACTER; i++)
+        {
+            notConnectedCharacter = GameObject.FindGameObjectWithTag("Player" + (i + 1).ToString());
+            notConnectedCharacter.SetActive(false);
+        }
 
-		// 1. 안들어온 놈들 꺼준다.
-		GameObject notConnectedCharacter;
-		for (int i = gameInfo.maxPlayer; i < C_Global.MAX_CHARACTER; i++)
-		{
-			notConnectedCharacter = GameObject.FindGameObjectWithTag("Player" + (i + 1).ToString());
-			notConnectedCharacter.SetActive(false);
-		}
-
-		// 2. 아이콘도 꺼준다.
-		GameObject icon = GameObject.Find("Items");
-		var icons = icon.GetComponentsInChildren<bl_MiniMapItem>();
-		for (int j = 0; j < icons.Length; j++)
-		{
-			if (icons[j].Target == null)
-				icons[j].HideItem();
-		}
-
-		// 맵 켜줌
-		maps[gameInfo.gameType].SetActive(true);
+        // 2. 아이콘도 꺼준다.
+        GameObject icon = GameObject.Find("Items");
+        var icons = icon.GetComponentsInChildren<bl_MiniMapItem>();
+        for (int j = 0; j < icons.Length; j++)
+        {
+            if (icons[j].Target == null)
+                icons[j].HideItem();
+        }
 #endif
-	}
+    }
 
     public void SetLocalAndNetworkActionState(int _idx, _ACTION_STATE _action)
     {

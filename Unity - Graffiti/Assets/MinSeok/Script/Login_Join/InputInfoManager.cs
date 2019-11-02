@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using KetosGames.SceneTransition;
 
 public class InputInfoManager : UnityEngine.MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
         inputField_join_nick, 
         inputField_join_pw;
 
-	public Button btn_login_enter, btn_join_enter, btn_GuestLogin; //확인버튼들]
+	public GameObject btn_login_enter, btn_join_enter, btn_GuestLogin; //확인버튼들
 	public TMP_Text txt_login_result, txt_join_result; //로그인, 가입 오류시 문자출력
 
 	private NetworkManager networkManager;
@@ -152,7 +153,7 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
 			inputField_login_id.text, 
 			inputField_login_pw.text);
 
-		btn_login_enter.interactable = false;	// 버튼 비활성
+		btn_login_enter.SetActive(false);	// 버튼 비활성
 		StartCoroutine(LoginCheck());	// 로그인 검사 코루틴 시작
 	}
 
@@ -192,10 +193,11 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
 
                 //로그인이 성공하면 아래작성
                 else if (networkManager.CheckLoginSuccess() == true)
-                    LoadingSceneManager.LoadScene("LobbyMenuScene", false);
+                    SceneLoader.LoadScene("LobbyMenuScene");
+                    //LoadingSceneManager.LoadScene("LobbyMenuScene", false);
                     //SceneManager.LoadScene("LobbyMenuScene"); //메인타이틀로 입장
 
-				btn_login_enter.interactable = true;	// 버튼 다시 원상 복구
+				btn_login_enter.SetActive(true);	// 버튼 다시 원상 복구
 				yield break;
 			}
 		}
@@ -223,7 +225,7 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
 			inputField_join_nick.text);
 
 
-		btn_join_enter.interactable = false;
+		btn_join_enter.SetActive(false);
 		StartCoroutine(JoinCheck());	// 회원가입 확인 코루틴 실행
 	}
 
@@ -259,7 +261,7 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
                     txt_join_result.text = retMsg;
 				}
 
-				btn_join_enter.interactable = true; // 버튼 원복
+				btn_join_enter.SetActive(true); // 버튼 원복
 				yield break;
 			}
 		}

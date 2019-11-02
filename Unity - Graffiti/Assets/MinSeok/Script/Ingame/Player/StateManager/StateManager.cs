@@ -37,6 +37,7 @@ public enum _ACTION_STATE //액션(움직임)의 상태
     CIR,
     AIM,
     SHOT,
+    SPRAY,
 
     // 복합 STATE
     CIR_AIM,
@@ -50,6 +51,7 @@ public interface IActionState
     void Circuit(bool _value);
     void Aim(bool _value);
     void Shot(bool _value);
+    void Spray(bool _value, int triggerIdx);
 }
 
 public class StateManager : MonoBehaviour, IActionState
@@ -98,6 +100,9 @@ public class StateManager : MonoBehaviour, IActionState
             case "StateList (State_AimCircuitShot)":
                 PlayersManager.instance.actionState[PlayersManager.instance.myIndex] = _ACTION_STATE.CIR_AIM_SHOT;
                 break;
+            case "StateList (State_Spray)":
+                PlayersManager.instance.actionState[PlayersManager.instance.myIndex] = _ACTION_STATE.SPRAY;
+                break;
         }
     }
 
@@ -110,4 +115,6 @@ public class StateManager : MonoBehaviour, IActionState
     public void Aim(bool _value) { myActionState.Aim(_value); }
 
     public void Shot(bool _value) { myActionState.Shot(_value); }
+
+    public void Spray(bool _value, int _triggerIdx) { myActionState.Spray(_value, _triggerIdx); }
 }
