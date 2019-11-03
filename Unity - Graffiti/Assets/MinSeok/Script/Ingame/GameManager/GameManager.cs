@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿ 
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
@@ -60,7 +61,7 @@ public class GameManager : MonoBehaviour
 
     public static GameManager instance;
     public string[] playersTag;
-    public GameObject[] mapMode;
+    //public GameObject[] mapMode;
     public int myNetworkNum { get; set; }
     public int myIndex { get; set; }
     public int[] playersIndex { get; set; }
@@ -197,13 +198,18 @@ public class GameManager : MonoBehaviour
     public void LoadingComplete()
     {
 #if NETWORK
-        mapMode[gameInfo.gameType].SetActive(true);
+        //mapMode[gameInfo.gameType].SetActive(true);
+
         // 1. 안들어온 놈들 꺼준다.
         GameObject notConnectedCharacter;
         for (int i = gameInfo.maxPlayer; i < C_Global.MAX_CHARACTER; i++)
         {
             notConnectedCharacter = GameObject.FindGameObjectWithTag("Player" + (i + 1).ToString());
-            notConnectedCharacter.SetActive(false);
+
+			if (notConnectedCharacter != null)
+			{
+				notConnectedCharacter.SetActive(false);
+			}
         }
 
         // 2. 아이콘도 꺼준다.
@@ -322,7 +328,7 @@ public class GameManager : MonoBehaviour
 
                     // 원래 하드코딩하면 안되는데 그냥 일단 임시로
                     playersTag[0] = "Player1";
-                    playersTag[1] = "Player3";
+                    playersTag[1] = "Player2";
                 }
                 break;
         }

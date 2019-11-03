@@ -12,7 +12,8 @@ public enum _CAPTURE_RESULT //중립, 획득, 뺏김
 public class CaptureManager : MonoBehaviour
 {
     public static CaptureManager instance;
-    public int MAX_TERRITORY_NUM = 5;
+	//public int MAX_TERRITORY_NUM = 5;
+	public int MAX_TERRITORY_NUM;
 
     public GameObject[] obj_territory { get; set; }
     public string[] territoryTag { get; set; }
@@ -28,8 +29,23 @@ public class CaptureManager : MonoBehaviour
     {
         if (instance == null)
             instance = this;
-      
-        obj_territory = new GameObject[MAX_TERRITORY_NUM];
+
+		switch((C_Global.GameType)GameManager.instance.gameInfo.gameType)
+		{
+			case C_Global.GameType._2vs2:
+				{
+					MAX_TERRITORY_NUM = 5;
+				}
+				break;
+
+			case C_Global.GameType._1vs1:
+				{
+					MAX_TERRITORY_NUM = 3;
+				}
+				break;
+		}
+
+		obj_territory = new GameObject[MAX_TERRITORY_NUM];
         territoryTag = new string[MAX_TERRITORY_NUM];
         captureResult_team = new _CAPTURE_RESULT[MAX_TERRITORY_NUM];
         captureResult_enemy = new _CAPTURE_RESULT[MAX_TERRITORY_NUM];

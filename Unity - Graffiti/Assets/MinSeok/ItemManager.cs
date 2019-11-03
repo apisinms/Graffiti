@@ -9,6 +9,11 @@ public enum _POTION_MOVE_STATE
     DOWN,
 }
 
+public enum ItemCode : int
+{
+	HP_NORMAL = 1,
+}
+
 public class ItemManager : MonoBehaviour
 {
     public static ItemManager instance;

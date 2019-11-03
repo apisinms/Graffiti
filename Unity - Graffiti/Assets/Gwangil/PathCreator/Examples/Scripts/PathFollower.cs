@@ -33,7 +33,7 @@ namespace PathCreation.Examples
 
             // 플레이어와 자동차가 3 거리 만큼 가까워 진다면
             if (Vector3.Distance(gameObject.transform.position,
-                PlayersManager.instance.tf_players[GameManager.instance.myIndex].position) <= 3.0f && flag == true)
+                PlayersManager.instance.tf_players[GameManager.instance.myIndex].position) <= 3.0f && flag == true) 
             {
                 // 크락션 사운드 재생 
                 AudioManager.Instance.Play(10);
@@ -42,7 +42,7 @@ namespace PathCreation.Examples
 
             // 플레이어와 자동차가 10 거리 만큼 멀어진다면 
             if (Vector3.Distance(gameObject.transform.position,
-               PlayersManager.instance.tf_players[GameManager.instance.myIndex].position) >= 10.0f && flag == false)
+               PlayersManager.instance.tf_players[GameManager.instance.myIndex].position) >= 10.0f && flag == false) 
             {
                 // 플래그 원상복귀
                 flag = true;
@@ -54,28 +54,28 @@ namespace PathCreation.Examples
             distanceTravelled = pathCreator.path.GetClosestDistanceAlongPath(transform.position);
         }
 
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.gameObject.CompareTag("EndPoint"))
-            {
-                // 오브젝트 풀 반환
-                // distanceTravelled 는 꼭 0으로 초기화 해줘야한다.(현재 얼만큼의 거리를 갔는지 저장하는 변수)
-                distanceTravelled = 0;
-                ObjectPool.Instance.PushToPool(index, gameObject);
-            }
+		private void OnTriggerEnter(Collider other)
+		{
+			if (other.gameObject.CompareTag("EndPoint"))
+			{
+				// 오브젝트 풀 반환
+				// distanceTravelled 는 꼭 0으로 초기화 해줘야한다.(현재 얼만큼의 거리를 갔는지 저장하는 변수)
+				distanceTravelled = 0;
+				ObjectPool.Instance.PushToPool(index, gameObject);
+			}
 
-            // 차에 치인게 플레이어라면 
-            if (other.gameObject.tag.Contains("Player"))
-            {
-                // 플레이어 번호를 얻어서
-                int playerNum = int.Parse(other.gameObject.tag[other.gameObject.tag.Length - 1].ToString());    // "Player+@"자리에 @의 숫자를 얻음
+			// 차에 치인게 플레이어라면 
+			if (other.gameObject.tag.Contains("Player"))
+			{
+				// 플레이어 번호를 얻어서
+				int playerNum = int.Parse(other.gameObject.tag[other.gameObject.tag.Length - 1].ToString());    // "Player+@"자리에 @의 숫자를 얻음
 
-                // 죽은 상태가 아닌 플레이어라면
-                if (PlayersManager.instance.actionState[playerNum - 1] != _ACTION_STATE.DEATH)
-                {
+				// 죽은 상태가 아닌 플레이어라면
+				if (PlayersManager.instance.actionState[playerNum - 1] != _ACTION_STATE.DEATH)
+				{
                     // 그게 만약 나라면
                     if ((playerNum - 1) == GameManager.instance.myIndex)
-                    {
+					{
                         // 저 멀리 내팽개쳐주고
                         Rigidbody rg = other.GetComponent<Rigidbody>();
                         Vector3 force = this.transform.localRotation * Vector3.forward * kNockback;
@@ -85,17 +85,17 @@ namespace PathCreation.Examples
                         UIManager.instance.EnqueueKillLog_CarCrash(playerNum); //교통사고 킬로그 큐에 넣음.
                         NetworkManager.instance.ImHitByCar(force);   // 차에 치였다고 프로토콜 서버로 보낸다.
 #endif
-                        StateManager.instance.Death(true);  // 내가 죽은상태로 전환.
+						StateManager.instance.Death(true);  // 내가 죽은상태로 전환.
                         int absoluteIdx = UIManager.instance.PlayerIndexToAbsoluteIndex(playerNum - 1);
-                        UIManager.instance.HealthUIChanger(absoluteIdx, 0.0f);  // 차에 치이면 즉사
+						UIManager.instance.HealthUIChanger(absoluteIdx, 0.0f);  // 차에 치이면 즉사
                         AudioManager.Instance.Play(5);
                         UIManager.instance.SetDeadUI("당신이(가) 차에 치었습니다!");     // 죽은 UI로 전환
-                    }
-                }
-            }
-        }
+					}
+				}
+			}
+		}
 
-        public void ResetDistanceTravelled()
+		public void ResetDistanceTravelled()
         {
             distanceTravelled = 0;
         }

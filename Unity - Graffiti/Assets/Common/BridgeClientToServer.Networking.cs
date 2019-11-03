@@ -56,8 +56,8 @@ public partial class BridgeClientToServer : MonoBehaviour
 
         EffectManager.instance.InitializeMuzzle(index);
 
-		if (index == myIndex)
-			UIManager.instance.Initialization_WeaponInfo_2();
+        if (index == myIndex)
+            UIManager.instance.Initialization_WeaponInfo_2();
     }
 
     public void SetPlayerNickName(string _nickName, int _idx)
@@ -67,13 +67,13 @@ public partial class BridgeClientToServer : MonoBehaviour
 
         // 닉네임 받을 때 다시 켜줌
 #if NETWORK
-		playersManager.obj_players[_idx].SetActive(true);
-		uiManager.OnPlayerUI(uiManager.PlayerIndexToAbsoluteIndex(_idx));
+      playersManager.obj_players[_idx].SetActive(true);
+      uiManager.OnPlayerUI(uiManager.PlayerIndexToAbsoluteIndex(_idx));
 #endif
     }
 
-	// 최초에 무기정보, 게임정보, 자동차 씨드를 bridg의 멤버로 설정(GameManager가 인스턴스 생성되고 나서 저장해야되므로;)
-	public void SetGameInfoToBridge(ref GameInfo _gameInfo, ref WeaponInfo[] _weapons)
+    // 최초에 무기정보, 게임정보, 자동차 씨드를 bridg의 멤버로 설정(GameManager가 인스턴스 생성되고 나서 저장해야되므로;)
+    public void SetGameInfoToBridge(ref GameInfo _gameInfo, ref WeaponInfo[] _weapons)
     {
         tmpGameInfo = _gameInfo;
         tmpWeapons = _weapons;
@@ -276,8 +276,8 @@ public partial class BridgeClientToServer : MonoBehaviour
         pathSpawner.SpawnPrefabs(); // 차 생성
     }
 
-	public void OtherPlayerHitByCar(int _playerNum, float _posX, float _posZ)
-	{
+    public void OtherPlayerHitByCar(int _playerNum, float _posX, float _posZ)
+    {
         // 맞은 놈 튕기게 하고
         Rigidbody rigid = playersManager.obj_players[_playerNum - 1].GetComponent<Rigidbody>();
         Vector3 force = new Vector3(_posX, 0.0f, _posZ);
@@ -287,32 +287,45 @@ public partial class BridgeClientToServer : MonoBehaviour
         // 상태 변경
         gameManager.SetLocalAndNetworkActionState(_playerNum - 1, _ACTION_STATE.DEATH);
 
-		// 체력 UI 적용(차는 즉사)
-		int absoluteIdx = uiManager.PlayerIndexToAbsoluteIndex(_playerNum - 1);
-		uiManager.HealthUIChanger(absoluteIdx, 0.0f);
+        // 체력 UI 적용(차는 즉사)
+        int absoluteIdx = uiManager.PlayerIndexToAbsoluteIndex(_playerNum - 1);
+        uiManager.HealthUIChanger(absoluteIdx, 0.0f);
 
         UIManager.instance.EnqueueKillLog_CarCrash(_playerNum); //킬로그 큐에 넣음
     }
 
-	// 정상적인 업데이트 시
-	public void OnUpdate(ref IngamePacket _packet)
+    // 정상적인 업데이트 시
+    public void OnUpdate(ref IngamePacket _packet)
     {
         networkManager.SetIngamePacket(_packet.playerNum - 1, ref _packet);
     }
 
+	public void ItemEffectProcess(ref IngamePacket _packet, int _itemCode)
+	{
+		switch((ItemCode)_itemCode)
+		{
+			case ItemCode.HP_NORMAL:
+				{
+					HealthChanger(ref _packet); // 피 변경
+					Debug.Log("채운 피:" + _packet.health);
+				}
+				break;
+		}
+	}
+
     // 다른 플레이어의 접속이 끊겼을때, 플레이어 로빈 오브젝트를 비활성화.
     public void OnOtherPlayerDisconnected(int _quitPlayerNum)
     {
-		if (playersManager != null) // 플레이어 매니저 있는 경우만
-		{
-			if (playersManager.obj_players[_quitPlayerNum - 1].activeSelf == true)
-			{
-				playersManager.obj_players[_quitPlayerNum - 1].SetActive(false);
+        if (playersManager != null) // 플레이어 매니저 있는 경우만
+        {
+            if (playersManager.obj_players[_quitPlayerNum - 1].activeSelf == true)
+            {
+                playersManager.obj_players[_quitPlayerNum - 1].SetActive(false);
 
-				int absoluteIdx = uiManager.PlayerIndexToAbsoluteIndex(_quitPlayerNum - 1);
-				uiManager.OffPlayerUI(absoluteIdx);
-			}
-		}
+                int absoluteIdx = uiManager.PlayerIndexToAbsoluteIndex(_quitPlayerNum - 1);
+                uiManager.OffPlayerUI(absoluteIdx);
+            }
+        }
     }
 
     //쐇을때 무조건 1번의 패킷을 보내야됨. 보정용

@@ -140,6 +140,7 @@
     <ClInclude Include="C_Global.h" />
     <ClInclude Include="C_InGameState.h" />
     <ClInclude Include="C_IOCP.h" />
+    <ClInclude Include="Item.h" />
     <ClInclude Include="C_LinkedList.h" />
     <ClInclude Include="C_List.h" />
     <ClInclude Include="C_LobbyState.h" />
@@ -170,6 +171,7 @@
     <ClCompile Include="C_ClientInfo.cpp" />
     <ClCompile Include="C_Encrypt.cpp" />
     <ClCompile Include="C_IOCP.cpp" />
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="C_Packet.cpp" />
     <ClCompile Include="C_Sector.cpp" />
     <ClCompile Include="C_Select.cpp" />

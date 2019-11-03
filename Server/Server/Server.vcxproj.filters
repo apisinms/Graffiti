@@ -67,6 +67,12 @@
     <Filter Include="헤더 파일\Sector">
       <UniqueIdentifier>{fb1fd5d8-0b0f-41f2-af5b-69481107e68a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Item">
+      <UniqueIdentifier>{84e23267-2e54-4146-8f96-7da40a6d9e00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Item">
+      <UniqueIdentifier>{4883a042-3c39-4423-9042-d14034ba6d76}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UtilityManager.h">
@@ -165,6 +171,9 @@
     <ClInclude Include="RandomManager.h">
       <Filter>헤더 파일\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>헤더 파일\Item</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -229,6 +238,9 @@
     </ClCompile>
     <ClCompile Include="RandomManager.cpp">
       <Filter>소스 파일\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>소스 파일\Item</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

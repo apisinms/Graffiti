@@ -84,17 +84,4 @@ public class btn_start : UnityEngine.MonoBehaviour
 
 		}
 	}
-
-    public void SelectMatch(int _select = 2)
-    {
-        switch(_select)
-        {
-            case 2:
-                selectMatch = (int)C_Global.GameType._2vs2;
-                break;
-            case 1:
-                selectMatch = (int)C_Global.GameType._1vs1;
-                break;
-        }
-    }
 }

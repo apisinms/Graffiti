@@ -6,6 +6,7 @@
 #include "C_ClientInfo.h"
 #include <thread>
 #include <chrono>
+#include "Item.h"
 
 InGameManager* InGameManager::instance;
 
@@ -138,6 +139,22 @@ void InGameManager::PackPacket(char* _setptr, IngamePacket& _struct, int& _size)
 	memcpy(ptr, &_struct, sizeof(IngamePacket));
 	ptr = ptr + sizeof(IngamePacket);
 	_size = _size + sizeof(IngamePacket);
+}
+
+void InGameManager::PackPacket(char* _setptr, IngamePacket& _struct, int _code, int& _size)
+{
+	char* ptr = _setptr;
+	_size = 0;
+
+	// 인게임 패킷
+	memcpy(ptr, &_struct, sizeof(IngamePacket));
+	ptr = ptr + sizeof(IngamePacket);
+	_size = _size + sizeof(IngamePacket);
+
+	// (아이템)코드
+	memcpy(ptr, &_code, sizeof(_code));
+	ptr = ptr + sizeof(_code);
+	_size = _size + sizeof(_code);
 }
 
 void InGameManager::PackPacket(char* _setptr, GameInfo* &_gameInfo, vector<WeaponInfo*>& _weaponInfo, int& _size)
@@ -559,6 +576,51 @@ bool InGameManager::CaptureProcess(C_ClientInfo* _ptr, char* _buf)
 		team.teamCaptureScore,
 		team.teamCaptureNum,
 		_ptr->GetPlayerInfo()->GetScore().captureCount);
+
+	/// 3. 추후에 여기에서 점령되고, 이 점수를 보낼지 결정
+
+	return true;
+}
+
+bool InGameManager::ItemGetProcess(C_ClientInfo* _ptr, char* _buf)
+{
+	// 방이 없는 경우 나가게 예외처리
+	if (_ptr->GetRoom() == nullptr)
+	{
+		printf("템 먹었는데 방이 없음\n");
+		return false;
+	}
+
+	PROTOCOL_INGAME protocol;
+	char buf[BUFSIZE] = { 0, };
+	int packetSize = 0;
+
+	// 얻은 아이템 코드를 얻어옴
+	int itemInt;
+	ItemCode code;
+	UnPackPacket(_buf, itemInt);
+
+	code = (ItemCode)itemInt;
+
+	// 아이템 코드를 switch하여 그에 맞는 속성을 얻는다.
+	switch (code)
+	{
+		// HP팩 노멀 먹었을 때
+		case ItemCode::HP_NORMAL:
+		{
+			// HP 노멀만큼 체력 +하고
+			ChangeHealthAmount(_ptr, +ItemAttribute::HP_NORMAL);
+		}
+		break;
+
+		default:
+			return false;
+	}
+
+	// 아이템 코드를 다시 전송해서 다른 플레이어들도 갱신하도록 한다.
+	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::ITEM_PROTOCOL, RESULT_INGAME::INGAME_SUCCESS);
+	PackPacket(buf, *(_ptr->GetPlayerInfo()->GetIngamePacket()), code, packetSize);
+	ListSendPacket(_ptr->GetPlayerInfo()->GetSectorPlayerList(), nullptr, protocol, buf, packetSize, true);	// 모두에게 전송
 
 	return true;
 }
@@ -1091,6 +1153,29 @@ void InGameManager::RefillHealth(C_ClientInfo* _player)
 	float maxHealth = gameInfo[_player->GetRoom()->GetGameType()]->maxHealth;
 	_player->GetPlayerInfo()->GetIngamePacket()->health = maxHealth;
 }
+void InGameManager::ChangeHealthAmount(C_ClientInfo* _player, float _amount)
+{
+	float maxHealth = gameInfo[_player->GetGameType()]->maxHealth;			// 최대 체력
+	float& playerHP = _player->GetPlayerInfo()->GetIngamePacket()->health;	// 플레이어 체력
+
+	// 0미만이면 0으로 강제 고정
+	if (playerHP + _amount < 0)
+	{
+		playerHP = 0.0f;
+	}
+
+	// 최대체력 이상이면 최대체력으로 강제 고정
+	else if (playerHP + _amount > maxHealth)
+	{
+		playerHP = maxHealth;
+	}
+
+	// 그게 아니면 그냥 amount만큼 더함(음수면 -되겠지)
+	else
+	{
+		playerHP += _amount;
+	}
+}
 
 void InGameManager::Kill(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer)
 {
@@ -1140,94 +1225,68 @@ void InGameManager::AddCaptureBonus(RoomInfo* _room)
 }
 
 //////// public
-bool InGameManager::CanISelectWeapon(C_ClientInfo* _ptr)
-{
-	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
-	PROTOCOL_INGAME protocol = GetBufferAndProtocol(_ptr, buf);
 
-	if (protocol == WEAPON_PROTOCOL)
-		return WeaponSelectProcess(_ptr, buf);
-
-	return false;
-}
-
-bool InGameManager::LoadingSuccess(C_ClientInfo* _ptr)
-{
-	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
-	PROTOCOL_INGAME protocol = GetBufferAndProtocol(_ptr, buf);
-
-	// 로딩 검사
-	if (protocol == LOADING_PROTOCOL)
-		return LoadingProcess(_ptr);
-
-	return false;
-}
-
-bool InGameManager::CanIStart(C_ClientInfo* _ptr)
-{
-	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
-	PROTOCOL_INGAME protocol = GetBufferAndProtocol(_ptr, buf);
-
-	if (protocol == START_PROTOCOL)
-		return InitProcess(_ptr, buf);
-
-	return false;
-}
-
-bool InGameManager::CanIUpdate(C_ClientInfo* _ptr)
+bool InGameManager::IngameProtocolChecker(C_ClientInfo* _ptr)
 {
 	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
 	PROTOCOL_INGAME protocol = GetBufferAndProtocol(_ptr, buf);
 	RESULT_INGAME result;
 	GetResult(buf, result);
 
-	// 업데이트 프로토콜 들어왔을 시 업데이트 프로세스 수행
-	if (protocol == UPDATE_PROTOCOL)
+	switch (protocol)
 	{
-		switch (result)
+		case WEAPON_PROTOCOL:
+			return WeaponSelectProcess(_ptr, buf);
+
+		case LOADING_PROTOCOL:
+			return LoadingProcess(_ptr);
+
+		case START_PROTOCOL:
+			return InitProcess(_ptr, buf);
+
+		case UPDATE_PROTOCOL:
 		{
-			// 다른 사람 상태 요청 일시
-		case GET_OTHERPLAYER_STATUS:
-			return GetPosProcess(_ptr, buf);
+			switch (result)
+			{
+				// 다른 사람 상태 요청 일시
+			case GET_OTHERPLAYER_STATUS:
+				return GetPosProcess(_ptr, buf);
 
-			// 차에 치였을 시
-		case CAR_HIT:
-			return HitAndRunProcess(_ptr, buf);
+				// 차에 치였을 시
+			case CAR_HIT:
+				return HitAndRunProcess(_ptr, buf);
 
-			// 그냥 업데이트일 시
-		default:
-			return UpdateProcess(_ptr, buf);
+				// 그냥 업데이트일 시
+			default:
+				return UpdateProcess(_ptr, buf);
+			}
 		}
+
+		case FOCUS_PROTOCOL:
+		{
+			switch (result)
+			{
+				// focus on시 켜고, 수행할 Process실행 후 bool값 리턴!
+			case INGAME_SUCCESS:
+				_ptr->GetPlayerInfo()->FocusOn();
+				return OnFocusProcess(_ptr);
+
+				// focus off시
+			case INGAME_FAIL:
+				_ptr->GetPlayerInfo()->FocusOff();
+				break;
+			}
+		}
+		break;
+
+		case CAPTURE_PROTOCOL:
+			return CaptureProcess(_ptr, buf);
+
+		case ITEM_PROTOCOL:
+			return ItemGetProcess(_ptr, buf);
 	}
 
 	return false;
-}
-
-bool InGameManager::CanIChangeFocus(C_ClientInfo* _ptr)
-{
-	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
-	PROTOCOL_INGAME protocol = GetBufferAndProtocol(_ptr, buf);
-	RESULT_INGAME result;
-	GetResult(buf, result);
-
-	// 포커스 변경 프로토콜 들어왔을 시
-	if (protocol == FOCUS_PROTOCOL)
-	{
-		switch (result)
-		{
-			// focus on시 켜고, 수행할 Process실행 후 bool값 리턴!
-		case INGAME_SUCCESS:
-			_ptr->GetPlayerInfo()->FocusOn();
-			return OnFocusProcess(_ptr);
-
-			// focus off시
-		case INGAME_FAIL:
-			_ptr->GetPlayerInfo()->FocusOff();
-			break;
-		}
-	}
-
-	return true;
 }
 
 bool InGameManager::CanIGotoLobby(C_ClientInfo* _ptr)
@@ -1245,21 +1304,6 @@ bool InGameManager::CanIGotoLobby(C_ClientInfo* _ptr)
 
 	return false;
 }
-
-bool InGameManager::CaptureSuccess(C_ClientInfo* _ptr)
-{
-	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
-	PROTOCOL_INGAME protocol = GetBufferAndProtocol(_ptr, buf);
-
-	// 점령 성공 프로토콜이면
-	if (protocol == CAPTURE_PROTOCOL)
-	{
-		return CaptureProcess(_ptr, buf);
-	}
-
-	return false;
-}
-
 
 void InGameManager::ListSendPacket(list<C_ClientInfo*>& _list, C_ClientInfo* _exceptClient, PROTOCOL_INGAME _protocol, char* _buf, int _packetSize, bool _notFocusExcept)
 {

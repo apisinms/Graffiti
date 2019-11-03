@@ -80,6 +80,8 @@ namespace Michsky.UI.ModernUIPack
                     if (saveValue == true)
                         PlayerPrefs.SetInt(selectorTag + "HSelectorValue", index);
                 }
+
+				NetworkManager.instance.selectMatch = 1;
             }
 
             else
@@ -105,7 +107,10 @@ namespace Michsky.UI.ModernUIPack
 
                 if (saveValue == true)
                     PlayerPrefs.SetInt(selectorTag + "HSelectorValue", index);
-            }
+
+
+				NetworkManager.instance.selectMatch ^= 1;	// 토글
+			}
         }
 
         public void ForwardClick()
@@ -136,7 +141,9 @@ namespace Michsky.UI.ModernUIPack
                     if (saveValue == true)
                         PlayerPrefs.SetInt(selectorTag + "HSelectorValue", index);
                 }
-            }
+
+				NetworkManager.instance.selectMatch = 0;
+			}
 
             else
             {
@@ -161,7 +168,9 @@ namespace Michsky.UI.ModernUIPack
 
                 if (saveValue == true)
                     PlayerPrefs.SetInt(selectorTag + "HSelectorValue", index);
-            }
+
+				NetworkManager.instance.selectMatch ^= 1;   // 토글
+			}
         }
     }
 }

@@ -605,7 +605,7 @@ PlayerSettings:
   webGLWasmStreaming: 0
   scriptingDefineSymbols:
     1: NETWORK
-    7: 
+    7: NETWORK
   platformArchitecture: {}
   scriptingBackend: {}
   il2cppCompilerConfiguration: {}
