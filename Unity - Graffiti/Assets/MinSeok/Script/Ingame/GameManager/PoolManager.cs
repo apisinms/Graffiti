@@ -14,6 +14,7 @@ public partial class PoolManager : MonoBehaviour
         Initialization_Bullet(GameManager.instance.gameInfo.maxPlayer);
         Initialization_Shell(GameManager.instance.gameInfo.maxPlayer);
         Initialization_Effect(GameManager.instance.gameInfo.maxPlayer);
+        //Initialization_Grenade(GameManager.instance.gameInfo.maxPlayer);
     }
 
     private void Start()
@@ -23,6 +24,7 @@ public partial class PoolManager : MonoBehaviour
             //얘네는 개인용으로다 잇음
             CreateBulletPool(i, 30);
             CreateShellPool(i, 30);
+            //CreateGrenadePool(i, 2);
         }
 
         //이건 공용임

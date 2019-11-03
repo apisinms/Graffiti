@@ -8,7 +8,7 @@ namespace KetosGames.SceneTransition
     public class SceneLoader : MonoBehaviour
     {
         private static SceneLoader SceneLoaderInstance;
-        
+
 
         public GameObject LoadingScreen;
         public Image FadeImage;
@@ -203,7 +203,7 @@ namespace KetosGames.SceneTransition
             setFadeColor(FadeColor);
             FadingOut = false;
         }
-        
+
         /// <summary>
         /// Fade in as a scene is starting
         /// </summary>
@@ -211,13 +211,13 @@ namespace KetosGames.SceneTransition
         {
             FadeTime += Time.unscaledDeltaTime / FadeSeconds;
             setFadeColor(Color.Lerp(FadeColor, FadeClearColor, FadeTime));
-            
+
             if (FadeTime > 1)
             {
                 EndFadeIn();
             }
         }
-        
+
         /// <summary>
         /// Fade out as a scene is ending
         /// </summary>
@@ -225,13 +225,13 @@ namespace KetosGames.SceneTransition
         {
             FadeTime += Time.unscaledDeltaTime / FadeSeconds;
             setFadeColor(Color.Lerp(FadeClearColor, FadeColor, FadeTime));
-            
+
             if (FadeTime > 1)
             {
                 EndFadeOut();
             }
         }
-        
+
         /// <summary>
         /// Loads a scene
         /// </summary>
@@ -290,10 +290,10 @@ namespace KetosGames.SceneTransition
             {
                 if (!VRMode && LoadingScreen != null)
                 {
-                    LoadingScreen.SetActive (true);
+                    LoadingScreen.SetActive(true);
                 }
             }
-                
+
             // Fade in
             if (UseSceneForLoadingScreen || !VRMode)
             {
@@ -345,7 +345,7 @@ namespace KetosGames.SceneTransition
                 }
             }
 
-            SetFadersEnabled (true); // Enable Faders in new scene before switching to it
+            SetFadersEnabled(true); // Enable Faders in new scene before switching to it
 
             // Fade out
             if (UseSceneForLoadingScreen || !VRMode)
@@ -364,15 +364,15 @@ namespace KetosGames.SceneTransition
                 }
             }
 
-            if(_waitOther == true)
+            if (_waitOther == true)
             {
                 if (waitOtherPlayer == false)
                 {
-                    yield return 0;
+                    yield return null;
                 }
                 SceneLoadingOperation.allowSceneActivation = true;
             }
-            else if(_waitOther == false)
+            else if (_waitOther == false)
             {
                 SceneLoadingOperation.allowSceneActivation = true;
             }
@@ -422,9 +422,9 @@ namespace KetosGames.SceneTransition
                 // Find all cameras and set enabled
                 foreach (Camera c in Camera.allCameras)
                 {
-                    if (c.gameObject.GetComponent<ScreenFadeControl> () != null)
+                    if (c.gameObject.GetComponent<ScreenFadeControl>() != null)
                     {
-                        c.gameObject.GetComponent<ScreenFadeControl> ().enabled = value;
+                        c.gameObject.GetComponent<ScreenFadeControl>().enabled = value;
                     }
                 }
             }
@@ -450,7 +450,7 @@ namespace KetosGames.SceneTransition
             }
         }
     }
-    
+
     class Scene
     {
         public string SceneName;

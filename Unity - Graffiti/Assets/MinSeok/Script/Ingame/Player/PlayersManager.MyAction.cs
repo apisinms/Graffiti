@@ -22,6 +22,7 @@ public partial class PlayersManager : MonoBehaviour
             Anime_Spray(myIndex);
             tf_players[myIndex].localRotation = Quaternion.LookRotation(CaptureManager.instance.obj_territory[_triggerIdx].transform.forward * -1);
             UIManager.instance.UpdateAimDirectionImg(false);
+            UIManager.instance.UpdateDirectionImg(false);
             yield return null;
         }
     }
@@ -32,6 +33,7 @@ public partial class PlayersManager : MonoBehaviour
         {
             Anime_Death(myIndex);
             UIManager.instance.UpdateAimDirectionImg(false);
+            UIManager.instance.UpdateDirectionImg(false);
             yield return null;
         }
     }
@@ -42,6 +44,7 @@ public partial class PlayersManager : MonoBehaviour
         {
             Anime_Idle(myIndex);
             UIManager.instance.UpdateAimDirectionImg(false);
+            UIManager.instance.UpdateDirectionImg(true);
             yield return null;
         }
     }
@@ -53,11 +56,11 @@ public partial class PlayersManager : MonoBehaviour
             Anime_Circuit(myIndex);
             BlockCollisionEachOther();
             UIManager.instance.UpdateAimDirectionImg(false);
+            UIManager.instance.UpdateDirectionImg(true);
 
             tf_players[myIndex].localRotation = Quaternion.LookRotation(direction[myIndex]);
             tf_players[myIndex].Translate(direction[myIndex] * speed[myIndex] * Time.smoothDeltaTime, Space.World);
             yield return null;
-
         }
     }
     public IEnumerator Action_Aim()
@@ -66,6 +69,7 @@ public partial class PlayersManager : MonoBehaviour
         {
             Anime_Aiming_Idle(myIndex);
             UIManager.instance.UpdateAimDirectionImg(true); //에임 조준선
+            UIManager.instance.UpdateDirectionImg(false);
 
             tf_players[myIndex].localRotation = Quaternion.Lerp(tf_players[myIndex].localRotation, Quaternion.LookRotation(direction2[myIndex]), Time.smoothDeltaTime * 6.0f);
             //tf_players[myIndex].localRotation = Quaternion.LookRotation(direction2[myIndex]);
@@ -106,9 +110,10 @@ public partial class PlayersManager : MonoBehaviour
 
              BlockCollisionEachOther();
              UIManager.instance.UpdateAimDirectionImg(true);
+            UIManager.instance.UpdateDirectionImg(false);
 
-             //tf_players[myIndex].localRotation = Quaternion.LookRotation(direction2[myIndex]);
-             tf_players[myIndex].localRotation = Quaternion.Lerp(tf_players[myIndex].localRotation, Quaternion.LookRotation(direction2[myIndex]), Time.smoothDeltaTime * 6.0f);
+            //tf_players[myIndex].localRotation = Quaternion.LookRotation(direction2[myIndex]);
+            tf_players[myIndex].localRotation = Quaternion.Lerp(tf_players[myIndex].localRotation, Quaternion.LookRotation(direction2[myIndex]), Time.smoothDeltaTime * 6.0f);
              tf_players[myIndex].Translate(direction[myIndex] * (speed[myIndex] * 0.35f) * Time.smoothDeltaTime, Space.World);
              yield return null;
          }

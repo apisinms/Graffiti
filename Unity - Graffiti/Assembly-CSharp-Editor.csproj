@@ -100,25 +100,6 @@
     <Compile Include="Assets\Gwangil\UGUIMiniMap\Content\Scripts\Internal\Editor\CustomToggleDrawer.cs" />
     <Compile Include="Assets\Gwangil\UGUIMiniMap\Content\Scripts\Internal\Editor\LayerMaskDrawer.cs" />
     <Compile Include="Assets\Gwangil\UGUIMiniMap\Content\Scripts\Internal\Editor\SeparatorDrawer.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Editor\Inspectors\TCP2_GetPosOnWater_Editor.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Editor\Inspectors\TCP2_MaterialInspector.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Editor\Inspectors\TCP2_MaterialInspector_PBS.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Editor\Inspectors\TCP2_MaterialInspector_PBS_SG.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Editor\Inspectors\TCP2_MaterialInspector_SG.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Editor\Inspectors\TCP2_MaterialInspector_SurfacePBS_SG.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Editor\Inspectors\TCP2_OutlineInspector.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Editor\Inspectors\TCP2_ShaderUpdateUnityTime_Editor.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Editor\TCP2_Config.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Editor\TCP2_GradientManager.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Editor\TCP2_GUI.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Editor\TCP2_Menu.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Editor\TCP2_RampGenerator.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Editor\TCP2_ShaderGenerator.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Editor\TCP2_ShaderGenerator.UIFeatures.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Editor\TCP2_SmoothedNormalsUtility.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Editor\Utils\TCP2_ExpressionParser.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Editor\Utils\TCP2_ShaderGeneratorUtils.cs" />
-    <Compile Include="Assets\JMO Assets\Toony Colors Pro\Editor\Utils\TCP2_Utils.cs" />
     <Compile Include="Assets\KetosGames\SceneTransition\Scripts\Editor\SceneLoaderEditor.cs" />
     <Compile Include="Assets\Modern UI Pack\Editor\ContextMenu.cs" />
     <Compile Include="Assets\Modern UI Pack\Editor\ExtendedColorPicker.cs" />
@@ -144,13 +125,6 @@
     <Compile Include="Assets\ProDrawCallOptimizer\Scripts\Editor\GUI\ProDrawCallOptimizerMenu.cs" />
     <Compile Include="Assets\ProDrawCallOptimizer\Scripts\Editor\GUI\SettingsMenuGUI.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Editor\Shader Templates\TCP2_ShaderTemplate_Terrain.txt" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Editor\Shader Templates\TCP2_ShaderTemplate_Default_CurvedWorld.txt" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Editor\Shader Templates\TCP2_ShaderTemplate_Default.txt" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Editor\Shader Templates\TCP2_ShaderTemplate_Water.txt" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Editor\Shader Templates\TCP2_ShaderTemplate_PBS.txt" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Editor\Shader Templates\TCP2_ShaderTemplate_Water_CurvedWorld.txt" />
-    <None Include="Assets\JMO Assets\Toony Colors Pro\Editor\Shader Templates\TCP2_ShaderTemplate_SurfacePBS.txt" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>E:/Unity/Projects/forGitHub/Graffiti/Unity - Graffiti/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

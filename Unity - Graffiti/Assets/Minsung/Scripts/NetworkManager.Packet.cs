@@ -339,12 +339,34 @@ public partial class NetworkManager : MonoBehaviour
 	private void UnPackPacket(byte[] _buf, ref IngamePacket _struct)
 	{
 		int offset = sizeof(PROTOCOL);
-		// 문자열 길이 만큼 생성해서 문자열을 저장함
 
+		// 구조체 길이만큼 생성해서 저장
 		byte[] posByte = new byte[Marshal.SizeOf(_struct)];
 		Buffer.BlockCopy(_buf, offset, posByte, 0, Marshal.SizeOf(_struct));
 
 		_struct.Deserialize(ref posByte);
+	}
+
+	private void UnPackPacket(byte[] _buf, ref IngamePacket _struct, out int _code)
+	{
+		int offset = sizeof(PROTOCOL);
+
+		// 1. 구조체 길이만큼 생성해서 저장
+		byte[] posByte = new byte[Marshal.SizeOf(_struct)];
+		Buffer.BlockCopy(_buf, offset, posByte, 0, Marshal.SizeOf(_struct));
+
+		_struct.Deserialize(ref posByte);
+		offset += Marshal.SizeOf(_struct);
+
+		// 2. 코드 저장
+		byte[] arrNum = new byte[sizeof(int)];
+
+		// 일단 byte 배열로 받고
+		Buffer.BlockCopy(_buf, offset, arrNum, 0, sizeof(int));
+		offset += sizeof(int);
+
+		// 이제 다시 int로 변환
+		_code = BitConverter.ToInt32(arrNum, 0);
 	}
 
 	private void UnPackPacket(byte[] _buf, out byte _playerBit)

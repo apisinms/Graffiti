@@ -221,7 +221,7 @@ WeaponInfo* DatabaseManager::LoadWeaponInfo()
 	}
 }
 
-RespawnInfo* DatabaseManager::LoadRespawnInfo()
+LocationInfo* DatabaseManager::LoadLocationInfo()
 {
 	static bool isLoad = false;
 
@@ -230,7 +230,7 @@ RespawnInfo* DatabaseManager::LoadRespawnInfo()
 	if (isLoad == false)
 	{
 		// mysql에 테이블 정보를 모두 가져오라고 요청한다.
-		if (QueryToMySQL("SELECT * FROM tbl_respawnspot") == true)
+		if (QueryToMySQL("SELECT * FROM tbl_locationinfo") == true)
 		{
 			isLoad = true;
 		}
@@ -248,16 +248,23 @@ RespawnInfo* DatabaseManager::LoadRespawnInfo()
 	// 아직 row가 존재하면 리스폰정보 셋팅
 	else
 	{
-		RespawnInfo info;
-		memset(&info, 0, sizeof(RespawnInfo));
+		LocationInfo info;
+		memset(&info, 0, sizeof(LocationInfo));
 
-		info.gameType      = atoi(row[1]);
-		info.playerNum     = atoi(row[2]);
-		info.posX          = (float)atof(row[3]);
-		info.posZ          = (float)atof(row[4]);
+		// 리스폰 정보
+		info.respawnInfo.gameType      = atoi(row[1]);
+		info.respawnInfo.playerNum     = atoi(row[2]);
+		info.respawnInfo.posX          = (float)atof(row[3]);
+		info.respawnInfo.posZ          = (float)atof(row[4]);
+
+		// 초기 위치
+		info.firstPosInfo.gameType      = atoi(row[1]);
+		info.firstPosInfo.playerNum     = atoi(row[2]);
+		info.firstPosInfo.posX          = (float)atof(row[5]);
+		info.firstPosInfo.posZ          = (float)atof(row[6]);
 
 		// 동적 할당 후 리턴
-		RespawnInfo* ptr = new RespawnInfo(info);
+		LocationInfo* ptr = new LocationInfo(info);
 
 		return ptr;
 	}

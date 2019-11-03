@@ -7,13 +7,17 @@
 ////////////////////////// RoomInfo 구조체 //////////////////////////////
 RoomInfo::RoomInfo(int _gameType, const list<C_ClientInfo*>& _playerList, int _numOfPlayer)
 {
-	weaponTimerHandle = NULL;
+	weaponTimeElapsedSec = 0;
+	carSpawnTimeElapsed = 0.0;
+	captureBonusTimeElapsed = 0.0;
 
 	roomStatus = ROOMSTATUS::ROOM_NONE;	// 방 생성시 초기 상태는 아무 상태도아님
 
 	gameType = _gameType;
 	maxPlayer = numOfPlayer = _numOfPlayer;
 	
+	int MAX_BUILDING_NUM = 0;
+
 	switch (gameType)
 	{
 		case GameType::_2vs2:
@@ -31,6 +35,8 @@ RoomInfo::RoomInfo(int _gameType, const list<C_ClientInfo*>& _playerList, int _n
 				if ((++i) % 2 == 0)
 					teamIdx++;
 			}
+
+			MAX_BUILDING_NUM = MAX_BUILDINGS_2VS2;
 		}
 		break;
 
@@ -45,8 +51,20 @@ RoomInfo::RoomInfo(int _gameType, const list<C_ClientInfo*>& _playerList, int _n
 				teamInfo[i].teamMemberList.emplace_back(*iter);
 				((C_ClientInfo*)(*iter))->GetPlayerInfo()->SetTeamNum(i);
 			}
+
+			MAX_BUILDING_NUM = MAX_BUILDINGS_1VS1;
 		}
 		break;
+	}
+
+	// 건물 생성
+	BuildingInfo info;
+	for (int i = 0; i < MAX_BUILDING_NUM; i++)
+	{
+		info.buildingIndex = i;
+		info.owner = nullptr;
+
+		buildings.emplace_back(new BuildingInfo(info));
 	}
 
 	// 방 플레이어 리스트에 추가
@@ -61,14 +79,13 @@ RoomInfo::RoomInfo(int _gameType, const list<C_ClientInfo*>& _playerList, int _n
 bool RoomInfo::LeaveRoom(C_ClientInfo* _player)
 {	
 	// 내가 나간다는 것을 같은 방에 있는 플레이어들에게 보내줌
-	if (InGameManager::GetInstance()->LeaveProcess(_player, _player->GetPlayerInfo()->GetIngamePacket()->playerNum) == true)
+	if (InGameManager::GetInstance()->LeaveProcess(_player) == true)
 	{
 		// 방 인원수를 감소하고, 자신의 흔적을 지운다.
 		numOfPlayer--;					// 방 인원수 감소
+		sector->Remove(_player, _player->GetPlayerInfo()->GetIndex());
 		players.erase(remove(players.begin(), players.end(), _player), players.end());		// 방의 플레이어 리스트에서 제거
 		
-		_player->SetRoom(nullptr);		// 플레이어의 방을 null로 설정
-
 		return true;
 	}
 
@@ -103,7 +120,7 @@ void RoomManager::Destroy()
 	delete instance;
 }
 
-bool RoomManager::CreateRoom(list<C_ClientInfo*>_players, int _numOfPlayer)
+bool RoomManager::CreateRoom(list<C_ClientInfo*>&_players, int _numOfPlayer)
 {
 	int gameType = (_players.front())->GetGameType();	// 게임 타입!
 	
@@ -123,7 +140,7 @@ bool RoomManager::CreateRoom(list<C_ClientInfo*>_players, int _numOfPlayer)
 	roomList.emplace_back(room);
 
 	int nowSize = (int)roomList.size();
-	bool ret = (beforeSize < nowSize);
+	bool ret = (beforeSize < nowSize) && (room != nullptr);	// 방이 정상적으로 만들어지고, 리스트에 추가됐으면 true
 
 	switch ((RoomInfo::GameType)gameType)
 	{
@@ -145,16 +162,82 @@ bool RoomManager::CreateRoom(list<C_ClientInfo*>_players, int _numOfPlayer)
 
 bool RoomManager::DeleteRoom(RoomInfo* _room)
 {
+	if (_room == nullptr)
+	{
+		return false;
+	}
+
+	// 타이머 핸들 돌아가는 중이면 끝날 때까지 대기
+	HANDLE IngameTimerHandle = _room->GetInGameTimerHandle();
+	if (IngameTimerHandle != nullptr)
+	{
+		_room->SetRoomStatus(ROOMSTATUS::ROOM_END);	// 방 종료
+
+		return false;	// 방 못지움
+	}
+
+	// 안돌아가는 중이면 그냥 바로 delete
+	else
+	{
+		int beforeSize = (int)roomList.size();
+
+		// 방에 있는 건물들 싹 지움
+		for (auto iter = _room->GetBuildings().begin(); iter != _room->GetBuildings().end(); ++iter)
+		{
+			delete *iter;
+		}
+
+		roomList.remove(_room);
+		delete _room;
+		_room = nullptr;
+
+		if (beforeSize > (int)roomList.size())
+		{
+			printf("[방 소멸 성공]사이즈:%d\n", (int)roomList.size());
+			return true;	// 정상 방 삭제
+		}
+	}
+
+	return false;
+}
+
+bool RoomManager::OnlyDeleteRoom(RoomInfo* _room)
+{
 	int beforeSize = (int)roomList.size();
+
+	// 방에 있는 건물들 싹 지움
+	for (auto iter = _room->GetBuildings().begin(); iter != _room->GetBuildings().end(); ++iter)
+	{
+		delete *iter;
+	}
+
 	roomList.remove(_room);
+	delete _room;
+	_room = nullptr;
 
 	if (beforeSize > (int)roomList.size())
 	{
 		printf("[방 소멸 성공]사이즈:%d\n", (int)roomList.size());
-		return true;
+		return true;	// 정상 방 삭제
 	}
 
 	return false;
+}
+
+bool RoomManager::LeaveAllPlayersInRoom(RoomInfo* _room)
+{
+	if (_room == nullptr)
+	{
+		return false;
+	}
+
+	// 한명씩 나감처리
+	for (int i = 0; i < _room->GetNumOfPlayer(); i++)
+	{
+		CheckLeaveRoom(_room->GetPlayerByIndex(i));
+	}
+
+	return true;
 }
 
 bool RoomManager::CheckLeaveRoom(C_ClientInfo* _ptr)
@@ -172,10 +255,10 @@ bool RoomManager::CheckLeaveRoom(C_ClientInfo* _ptr)
 			// 방금 나간사람이 마지막이었다면 방을 없앰
 			if (room->IsPlayerListEmpty() == true)
 			{
-				roomList.remove(room);
-				printf("[방 소멸]사이즈:%d\n", (int)roomList.size());
+				DeleteRoom(room);
 			}
 
+			_ptr->SetRoom(nullptr);	// 여기서 지워줘야 DeleteRoom()도 호출가능
 			return true;
 		}
 	}

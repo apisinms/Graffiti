@@ -252,7 +252,22 @@ public class SelectWeapons : UnityEngine.MonoBehaviour
 				Debug.Log(mySubWeapon);
 				Debug.Log("itemselect 성공");
 
-                SceneLoader.LoadScene("MainGame",true);
+
+				switch((C_Global.GameType)networkManager.selectMatch)
+				{
+					case C_Global.GameType._2vs2:
+						{
+							SceneLoader.LoadScene("MainGame_2vs2", true);
+						}
+						break;
+
+					case C_Global.GameType._1vs1:
+						{
+							SceneLoader.LoadScene("MainGame_1vs1", true);
+						}
+						break;
+				}
+                
 				//SceneManager.LoadScene("MainGame"); //메인타이틀로 입장
 
 				yield break;

@@ -83,7 +83,13 @@ void C_ClientInfo::SetRoom(RoomInfo* _room) { room = _room; }
 RoomInfo* C_ClientInfo::GetRoom() { return room; }
 
 // 인게임에서 사용되는 정보인 PlayerInfo를 리턴해줘서, 그 자체의 public method를 이용해 접근하게 하는게 바람직하다. 아니면 C_ClientInfo의 메소드 코드가 너무 길어짐..
-void C_ClientInfo::SetPlayerInfo(PlayerInfo* _playerInfo){ playerInfo = _playerInfo; }
+void C_ClientInfo::SetPlayerInfo(PlayerInfo* _playerInfo)
+{ 
+	if (playerInfo != nullptr)
+		delete playerInfo;
+
+	playerInfo = _playerInfo; 
+}
 PlayerInfo* C_ClientInfo::GetPlayerInfo() {return playerInfo;}
 
 //PositionPacket* C_ClientInfo::GetPosition() { return playerInfo->GetPosition(); }

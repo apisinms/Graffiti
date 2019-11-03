@@ -427,7 +427,10 @@ bool LoginManager::LoginListDelete(UserInfo* _userInfo)
 {
 	// 지우고 난 뒤에 사이즈가 줄었으면 정상 삭제임
 	int beforeSize = (int)loginList.size();
+
 	loginList.remove(_userInfo);
+	delete _userInfo;
+	_userInfo = nullptr;
 
 	if (beforeSize < (int)loginList.size())
 	{

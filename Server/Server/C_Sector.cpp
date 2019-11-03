@@ -94,6 +94,13 @@ C_Sector::~C_Sector()
 list<C_ClientInfo*> C_Sector::GetSectorPlayerList(INDEX _idx)
 {
 	list<C_ClientInfo*> mergedList;     // 통으로 합쳐서 리턴시킬 리스트
+	
+	if ((_idx.i < 0) || (_idx.i >= ROW)
+		|| (_idx.j < 0) || (_idx.j) >= COL)
+	{
+		printf("Delete()에서 옳지 않은 인덱스 발견\t%d,%d\n", _idx.i, _idx.j);
+		return mergedList;
+	}
 
 	// 1. 일단 이 섹터의 플레이어 리스트 먼저 추가
 	if (!sectors[_idx.i][_idx.j].playerList.empty())
@@ -105,7 +112,7 @@ list<C_ClientInfo*> C_Sector::GetSectorPlayerList(INDEX _idx)
 	}
 
 	// 2. 인접 섹터의 플레이어 리스트도 추가
-	SectorInstance* sector;
+	SectorInstance* sector = nullptr;
 	for (int i = 0; i < sectors[_idx.i][_idx.j].adjacencySector.size(); i++)
 	{
 		sector = sectors[_idx.i][_idx.j].adjacencySector.at(i);
@@ -126,10 +133,10 @@ byte C_Sector::GetMovedSectorPlayerList(INDEX _beforeIdx, INDEX _curIdx,
 {
 	// 1. 각각 퇴장할 섹터, 입장한 섹터를 저장(해당섹터+인접섹터)
 	vector<SectorInstance*> exitVector(sectors[_beforeIdx.i][_beforeIdx.j].adjacencySector);
-	exitVector.push_back(&sectors[_beforeIdx.i][_beforeIdx.j]);
+	exitVector.emplace_back(&sectors[_beforeIdx.i][_beforeIdx.j]);
 
 	vector<SectorInstance*> enterVector(sectors[_curIdx.i][_curIdx.j].adjacencySector);
-	enterVector.push_back(&sectors[_curIdx.i][_curIdx.j]);
+	enterVector.emplace_back(&sectors[_curIdx.i][_curIdx.j]);
 
 	// 1-1. 먼저 exitVector를 지워줄것이기 때문에 지워지기 전의 원본을 가지고 있어야 한다. (exitVector원본)
 	vector<SectorInstance*> originalExitVector(exitVector);
@@ -138,11 +145,11 @@ byte C_Sector::GetMovedSectorPlayerList(INDEX _beforeIdx, INDEX _curIdx,
 	vector<SectorInstance*> originalEnterVector(enterVector);
 
 	// 2. 먼저 공통되는 부분을 지워서 퇴장한 벡터먼저 구한다.
-	for (auto i = enterVector.begin(); i < enterVector.end(); ++i)
-		exitVector.erase(remove(exitVector.begin(), exitVector.end(), *i), exitVector.end());
+	for (auto iter = enterVector.begin(); iter != enterVector.end(); ++iter)
+		exitVector.erase(remove(exitVector.begin(), exitVector.end(), *iter), exitVector.end());
 
-	for (auto i = originalExitVector.begin(); i < originalExitVector.end(); ++i)
-		enterVector.erase(remove(enterVector.begin(), enterVector.end(), *i), enterVector.end());
+	for (auto iter = originalExitVector.begin(); iter != originalExitVector.end(); ++iter)
+		enterVector.erase(remove(enterVector.begin(), enterVector.end(), *iter), enterVector.end());
 
 	// 3. 마지막으로 입장 리스트에 추가
 	_enterList.clear();
@@ -168,39 +175,24 @@ byte C_Sector::GetMovedSectorPlayerList(INDEX _beforeIdx, INDEX _curIdx,
 
 void C_Sector::Add(C_ClientInfo* _player, INDEX& _index)
 {
-	INDEX index = _player->GetPlayerInfo()->GetIndex();
-
 	if ((_index.i < 0) || (_index.i >= ROW)
 		|| (_index.j < 0) || (_index.j) >= COL)
 	{
-		printf("Add()에서 옳지 않은 인덱스 발견\t%d,%d", _index.i, _index.j);
+		printf("Add()에서 옳지 않은 인덱스 발견\t%d,%d\n", _index.i, _index.j);
 		return;
 	}
 
-   sectors[_index.i][_index.j].playerList.emplace_front(_player);
+   sectors[_index.i][_index.j].playerList.emplace_back(_player);
 }
 
-void C_Sector::Delete(C_ClientInfo* _player, INDEX _index)
+void C_Sector::Remove(C_ClientInfo* _player, INDEX _index)
 {
 	if ((_index.i < 0) || (_index.i >= ROW)
 		|| (_index.j < 0) || (_index.j) >= COL)
 	{
-		printf("Delete()에서 옳지 않은 인덱스 발견\t%d,%d", _index.i, _index.j);
+		printf("Delete()에서 옳지 않은 인덱스 발견\t%d,%d\n", _index.i, _index.j);
 		return;
 	}
-
-   //// 리스트를 순회하며
-   //for (auto iter = sectors[_index.i][_index.j].playerList.begin(); 
-   //   iter != sectors[_index.i][_index.j].playerList.end(); ++iter)
-   //{
-   //   // 자신을 찾은 경우
-   //   if (*iter == _player)
-   //   {
-   //      sectors[_index.i][_index.j].playerList.erase(iter++);         // 방의 플레이어 리스트에서 제거(iterator때문에 반드시 iter++을 해줘야 함!)
-   //      break;
-   //   }
-   //}
-	//printf("size=%d\n", sectors[_index.i][_index.j].playerList.size());
 
 	sectors[_index.i][_index.j].playerList.remove(_player);
 }

@@ -31,12 +31,12 @@ namespace PathCreation.Examples
                 transform.rotation = pathCreator.path.GetRotationAtDistance(distanceTravelled, endOfPathInstruction);
             }
 
-            // 플레이어와 자동차가 5 거리 만큼 가까워 진다면
+            // 플레이어와 자동차가 3 거리 만큼 가까워 진다면
             if (Vector3.Distance(gameObject.transform.position,
-                PlayersManager.instance.tf_players[GameManager.instance.myIndex].position) <= 5.0f && flag == true) 
+                PlayersManager.instance.tf_players[GameManager.instance.myIndex].position) <= 3.0f && flag == true) 
             {
                 // 크락션 사운드 재생 
-                AudioManager.Instance.Play(11);
+                AudioManager.Instance.Play(10);
                 flag = false;
             }
 
@@ -73,17 +73,14 @@ namespace PathCreation.Examples
 				// 죽은 상태가 아닌 플레이어라면
 				if (PlayersManager.instance.actionState[playerNum - 1] != _ACTION_STATE.DEATH)
 				{
-                    // 저 멀리 내팽개쳐주고
-                    Rigidbody rg = other.GetComponent<Rigidbody>();
-                    Vector3 force = this.transform.localRotation * Vector3.forward * kNockback;
-                    rg.drag = C_Global.carHitDrag;  // 기존에는 로빈이 비비다가 밀리는거 방지하기위해 20으로 놓는데 치일땐 실감나게 1로 민다.
-                    rg.AddForce(force);
-
-                    //UIManager.instance.EnqueueKillLog(1, 1);
-
                     // 그게 만약 나라면
                     if ((playerNum - 1) == GameManager.instance.myIndex)
 					{
+                        // 저 멀리 내팽개쳐주고
+                        Rigidbody rg = other.GetComponent<Rigidbody>();
+                        Vector3 force = this.transform.localRotation * Vector3.forward * kNockback;
+                        rg.drag = C_Global.carHitDrag;  // 기존에는 로빈이 비비다가 밀리는거 방지하기위해 20으로 놓는데 치일땐 실감나게 1로 민다.
+                        rg.AddForce(force);
 #if NETWORK
                         UIManager.instance.EnqueueKillLog_CarCrash(playerNum); //교통사고 킬로그 큐에 넣음.
                         NetworkManager.instance.ImHitByCar(force);   // 차에 치였다고 프로토콜 서버로 보낸다.
@@ -91,6 +88,7 @@ namespace PathCreation.Examples
 						StateManager.instance.Death(true);  // 내가 죽은상태로 전환.
                         int absoluteIdx = UIManager.instance.PlayerIndexToAbsoluteIndex(playerNum - 1);
 						UIManager.instance.HealthUIChanger(absoluteIdx, 0.0f);  // 차에 치이면 즉사
+                        AudioManager.Instance.Play(5);
                         UIManager.instance.SetDeadUI("당신이(가) 차에 치었습니다!");     // 죽은 UI로 전환
 					}
 				}

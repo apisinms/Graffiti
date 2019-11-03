@@ -19,8 +19,10 @@ public partial class BridgeClientToServer : MonoBehaviour
         gameManager = GameManager.instance;
         weaponManager = WeaponManager.instance;
         uiManager = UIManager.instance;
-        pathSpawner = GameObject.Find("Spawner").GetComponent<PathCreation.Examples.PathSpawner>();
-        myIndex = gameManager.myIndex;
+		pathSpawner = GameObject.Find("Spawner").GetComponent<PathCreation.Examples.PathSpawner>();
+		//pathSpawner = gameManager.mapMode[gameManager.gameInfo.gameType].
+			//GetComponentInChildren<PathCreation.Examples.PathSpawner>();
+		myIndex = gameManager.myIndex;
 
 #if NETWORK
       //////////////// 게임 시작 시 최초로 1회 내 위치정보를 서버로 전송해야함 /////////////////

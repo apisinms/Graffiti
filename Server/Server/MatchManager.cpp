@@ -86,12 +86,22 @@ bool MatchManager::MatchProcess(C_ClientInfo* _ptr)
 	// 인원수가 찼다면
 	if (waitList[gameType].size() >= MaxPlayerOfThisGameType)
 	{
+		// 게임 타입에 맞는 인원수로 플레이어를 새롭게 만들고
+		list<C_ClientInfo*> newPlayers;
+		for (int i = 0; i < InGameManager::GetInstance()->GetGameInfo(gameType)->maxPlayer; i++)
+		{
+			newPlayers.emplace_back(waitList[gameType].front());	// 새로운 플레이어 목록의 뒤에 넣고
+			waitList[gameType].pop_front();							// 넣은 애는 대기 리스트에서 빼준다.
+		}
+
 		// 지금 대기 리스트를 전달해서 방을 생성
-		return RoomManager::GetInstance()->CreateRoom(waitList[gameType], MaxPlayerOfThisGameType);
+		if (RoomManager::GetInstance()->CreateRoom(newPlayers, MaxPlayerOfThisGameType) == true)
+		{
+			return true;
+		}
 	}
 
 	// 아직 매칭이 안잡히는 상황이라면
-	else
-		return false;
+	return false;
 }
 

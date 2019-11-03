@@ -534,6 +534,11 @@ PrefabInstance:
       propertyPath: m_sharedMaterial
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 5475110507157901617, guid: 9a7b9df624c0531479eb62dc15878ff4,
+        type: 3}
+      propertyPath: m_padding
+      value: 2.15
+      objectReference: {fileID: 0}
     - target: {fileID: 5475110506408619306, guid: 9a7b9df624c0531479eb62dc15878ff4,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -604,6 +609,11 @@ PrefabInstance:
       propertyPath: m_sharedMaterial
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 5475110505638255950, guid: 9a7b9df624c0531479eb62dc15878ff4,
+        type: 3}
+      propertyPath: m_padding
+      value: 2.15
+      objectReference: {fileID: 0}
     - target: {fileID: 5475110507203480416, guid: 9a7b9df624c0531479eb62dc15878ff4,
         type: 3}
       propertyPath: m_Material
@@ -613,6 +623,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_sharedMaterial
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5475110507203480416, guid: 9a7b9df624c0531479eb62dc15878ff4,
+        type: 3}
+      propertyPath: m_padding
+      value: 2.15
       objectReference: {fileID: 0}
     - target: {fileID: 5475110505919461014, guid: 9a7b9df624c0531479eb62dc15878ff4,
         type: 3}
@@ -108738,6 +108753,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1000131459182066654}
   - component: {fileID: 4788027973870990292}
+  - component: {fileID: 8121982211471310998}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -108745,6 +108761,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8121982211471310998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8121982211471310997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eda9904d8dff68649a46f6cf95b50717, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &8122298630633342652
 Transform:
   m_ObjectHideFlags: 0

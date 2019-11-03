@@ -17,7 +17,7 @@ public partial class PlayersManager : MonoBehaviour
     {
         if (am_animePlayer[_index].GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Spray"))
             return;
-
+     
         am_animePlayer[_index].SetTrigger("Spray");
     }
 

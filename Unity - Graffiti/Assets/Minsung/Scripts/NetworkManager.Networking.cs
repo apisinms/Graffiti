@@ -4,9 +4,12 @@ using System.Net;
 using System.Net.Sockets;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using KetosGames.SceneTransition;
 using static C_Global;
 using static GameManager;
 using static WeaponManager;
+
 
 /// <summary>
 /// NetworkManager_Networking.cs파일
@@ -45,7 +48,16 @@ public partial class NetworkManager : MonoBehaviour
 
             // 처음 서버와 연결하는 부분
             IPEndPoint serverEndPoint = new IPEndPoint(serverIP, serverPort);
-            tcpClient.Connect(serverEndPoint);
+            try
+            {
+                tcpClient.Connect(serverEndPoint);
+            }
+            catch (SocketException)
+            {
+                MessageBox.Show("Connect fail to server", "연결 불가",
+                   (result) => { Application.Quit(); }, MessageBoxButtons.OK);
+
+            }
 
             // 서버와 연결 성공시 이진 쓰기, 이진 읽기용 스트림 생성
             if (tcpClient.Connected)
@@ -318,6 +330,7 @@ public partial class NetworkManager : MonoBehaviour
                                             {
                                                 lock (key)
                                                 {
+                                                    SceneLoader.Instance.waitOtherPlayer = true;
                                                     GameManager.instance.LoadingComplete();
                                                 }
                                             }
@@ -479,14 +492,78 @@ public partial class NetworkManager : MonoBehaviour
                                 }
                                 break;
 
-                            // 다른사람 끊김 프로토콜
-                            case PROTOCOL.DISCONNECT_PROTOCOL:
+                            case PROTOCOL.CAPTURE_PROTOCOL:
+                                {
+                                    switch (result)
+                                    {
+                                        case RESULT.INGAME_SUCCESS:
+                                            {
+                                                lock (key)
+                                                {
+                                                    int playerNum;
+
+                                                    // 플레이어 번호 얻어옴
+                                                    UnPackPacket(info[i].packet, out playerNum);
+                                                    bridge.CaptureResult(playerNum, buildNum);
+                                                }
+                                            }
+                                            break;
+
+                                        case RESULT.BONUS:
+                                            {
+                                                lock (key)
+                                                {
+                                                    int score1, score2;
+
+                                                    UnPackPacket(info[i].packet, out score1, out score2);   // 점령 보너스 받아옴
+                                                    Debug.Log("팀1 점령점수 : " + score1 + ", 팀2 점령점수 : " + score2);
+                                                }
+                                            }
+                                            break;
+                                    }
+                                }
+                                break;
+
+                            case PROTOCOL.ITEM_PROTOCOL:
                                 {
                                     lock (key)
                                     {
-                                        // 끊긴 놈을 꺼준다.
-                                        UnPackPacket(info[i].packet, out quitPlayerNum);
-                                        bridge.OnOtherPlayerDisconnected(quitPlayerNum);
+                                        int itemCode;
+                                        UnPackPacket(info[i].packet, ref tmpIngamePacket, out itemCode);
+                                        bridge.ItemEffectProcess(ref tmpIngamePacket, itemCode);   // 실제 아이템 효과 적용
+                                    }
+                                }
+                                break;
+
+                            // 다른사람 끊김 프로토콜
+                            case PROTOCOL.DISCONNECT_PROTOCOL:
+                                {
+                                    switch (result)
+                                    {
+                                        // 강종
+                                        case RESULT.ABORT:
+                                            {
+                                                lock (key)
+                                                {
+                                                    // 끊긴 놈을 꺼준다.
+                                                    UnPackPacket(info[i].packet, out quitPlayerNum);
+                                                    bridge.OnOtherPlayerDisconnected(quitPlayerNum);
+                                                }
+                                            }
+                                            break;
+
+                                        // 무기 선택 도중 종료
+                                        case RESULT.WEAPON_SEL:
+                                            {
+                                                lock (key)
+                                                {
+                                                    SceneManager.LoadScene("LobbyMenuScene");
+
+                                                    // 다시 서버로 잘 받았다고 보낸다.(서버에서도 이 클라의 상태를 바꿔줘야 함)
+                                                    SendGotoLobby();
+                                                }
+                                            }
+                                            break;
                                     }
                                 }
                                 break;

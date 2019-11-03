@@ -41,7 +41,7 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
 #if NETWORK
 		// 처음 터치할 때만
 		if (LeftJoystick.LeftTouch == false && RightJoystick.RightTouch == false)
-			BridgeClientToServer.instance.StartMoveCoroutine();
+			BridgeClientToServer.instance.StartMoveCor();
 #endif
         isLeftDrag = true;
     }
@@ -96,7 +96,7 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
 #if NETWORK
       // 둘 다 터치 뗐을 때만
       if (LeftJoystick.LeftTouch == false && RightJoystick.RightTouch == false)
-			BridgeClientToServer.instance.StopMoveCoroutine();
+			BridgeClientToServer.instance.StopMoveCor();
 #endif
 	}
 

@@ -2,21 +2,10 @@
 #include "C_Global.h"
 #include "C_Sector.h"
 
-class C_ClientInfo;
+#define MAX_BUILDINGS_2VS2	5
+#define MAX_BUILDINGS_1VS1	3
 
-//// 팀 정보
-//struct Team
-//{
-//	C_ClientInfo* player1;
-//	C_ClientInfo* player2;
-//
-//	Team() {}
-//	Team(C_ClientInfo* _player1, C_ClientInfo* _player2)
-//	{
-//		player1 = _player1;
-//		player2 = _player2;
-//	}
-//};
+class C_ClientInfo;
 
 // 팀 정보
 struct TeamInfo
@@ -25,6 +14,7 @@ struct TeamInfo
 	int teamKillScore;						// 이 팀의 킬 스코어
 	int teamCaptureScore;					// 이 팀의 점령 스코어
 	int teamTotalScore;						// 이 팀의 킬 + 점령 스코어
+	int teamCaptureNum;						// 이 팀의 점령 개수
 
 	TeamInfo() { memset(this, 0, sizeof(TeamInfo)); }
 };
@@ -34,16 +24,19 @@ struct TeamInfo
 struct RoomInfo
 {
 private:
-	HANDLE weaponTimerHandle;		// 무기 선택 타이머 핸들
-	int numOfPlayer;				// 현재 방에 있는 플레이어 수
-	int maxPlayer;					// 이 방 최대 플레이어 수
-	ROOMSTATUS roomStatus;			// 방의 상태
-	vector<C_ClientInfo*>players;	// 유저들을 벡터에 저장
-	C_Sector* sector;				// 이 방의 섹터 매니저
-	HANDLE carSpawnerHandle;		// 자동차 스포너 핸들
-	int gameType;					// 이 방의 게임 타입 정보
-	TeamInfo* teamInfo;				// 팀 정보
-
+	HANDLE InGameTimerHandle;			// 인게임 타이머 핸들
+	int weaponTimeElapsedSec;			// 무기 선택 경과 시간(초)
+	double carSpawnTimeElapsed;			// 자동차 스폰 경과 시간
+	double captureBonusTimeElapsed;		// 점령 보너스 경과 시간
+	int gameType;						// 이 방의 게임 타입 정보
+	int numOfPlayer;					// 현재 방에 있는 플레이어 수
+	int maxPlayer;						// 이 방 최대 플레이어 수
+	ROOMSTATUS roomStatus;				// 방의 상태
+	vector<C_ClientInfo*>players;		// 유저들을 벡터에 저장
+	C_Sector* sector;					// 이 방의 섹터 매니저
+	TeamInfo* teamInfo;					// 팀 정보
+	vector<BuildingInfo*>buildings;		// 건물 정보
+	
 public:
 	enum GameType
 	{
@@ -58,33 +51,41 @@ public:
 	RoomInfo(int _gameType, const list<C_ClientInfo*>& _playerList, int _numOfPlayer);
 	
 	bool LeaveRoom(C_ClientInfo* _player);
-
-	// 플레이어 벡터를 리턴해주되, 어차피 복사본이 전달되므로 원본은 영향이 없다.
-	vector<C_ClientInfo*> GetPlayers() { return players; }
-
-	C_ClientInfo* GetPlayerByIndex(int _idx) {return players[_idx];}
-
 	bool IsPlayerListEmpty() { return players.empty(); }
+
+
+	void SetInGameTimerHandle(HANDLE _handle) { InGameTimerHandle = _handle; }
+	HANDLE GetInGameTimerHandle() { return InGameTimerHandle; }
+
+	int GetWeaponTimeElapsed() { return weaponTimeElapsedSec; }
+	void SetWeaponTimeElasped(int _elaspedTime) { weaponTimeElapsedSec = _elaspedTime; }
+
+	double GetCarSpawnTimeElapsed() { return carSpawnTimeElapsed; }
+	void SetCarSpawnTimeElasped(double _elaspedTime) { carSpawnTimeElapsed = _elaspedTime; }
+
+	double GetCaptureBonusTimeElapsed() { return captureBonusTimeElapsed; }
+	void SetCaptureBonusTimeElasped(double _elaspedTime) { captureBonusTimeElapsed = _elaspedTime; }
 
 	int GetGameType() { return gameType; }
 	void SetGameType(int _gameType) { gameType = _gameType; }
 
-	void SetWeaponTimerHandle(HANDLE _handle) { weaponTimerHandle = _handle; }
-	HANDLE GetWeaponTimerHandle() { return weaponTimerHandle; }
-
 	void SetNumOfPlayer(int _numOfPlayer) { numOfPlayer = _numOfPlayer; }
 	int GetNumOfPlayer() { return numOfPlayer; }
 
-	void SetCarSpawnerHandle(HANDLE _handle) { carSpawnerHandle = _handle; }
-	HANDLE GetCarSpawnerHandle() { return carSpawnerHandle; }
+	int GetMaxPlayer() { return maxPlayer; }
 
 	void SetRoomStatus(ROOMSTATUS _roomStatus) { roomStatus = _roomStatus; }
 	ROOMSTATUS GetRoomStatus() { return roomStatus; }
+	
+	vector<C_ClientInfo*>& GetPlayers() { return players; }	// 플레이어 벡터를 리턴해주되, 어차피 복사본이 전달되므로 원본은 영향이 없다.
 
+	C_ClientInfo* GetPlayerByIndex(int _idx) { return players[_idx]; }
+	
 	C_Sector* GetSector() { return sector; }
-	int GetMaxPlayer() { return maxPlayer; }
-
+	
 	TeamInfo& GetTeamInfo(int _teamNum) { return teamInfo[_teamNum]; }
+
+	vector<BuildingInfo*>& GetBuildings() { return buildings; }
 };
 
 class RoomManager
@@ -104,7 +105,9 @@ public:
 	void End();
 
 public:
-	bool CreateRoom(list<C_ClientInfo*>_players, int _numOfPlayer);
-	bool DeleteRoom(RoomInfo* _room);
+	bool CreateRoom(list<C_ClientInfo*>&_players, int _numOfPlayer);
+	bool DeleteRoom(RoomInfo* _room);		// 타이머 핸들 살았는지 보고 지우기
+	bool OnlyDeleteRoom(RoomInfo* _room);	// 그냥 방만 지우기
+	bool LeaveAllPlayersInRoom(RoomInfo* _room);	// 방에 있는 모든 플레이어들 나가게
 	bool CheckLeaveRoom(C_ClientInfo* _ptr);
 };

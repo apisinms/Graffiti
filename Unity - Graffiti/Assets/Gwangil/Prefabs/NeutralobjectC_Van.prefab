@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5667860125293929004}
   - component: {fileID: 5667860125293929000}
   - component: {fileID: 5667860125293929001}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: NeutralobjectC_Van
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -133,7 +133,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 126
+  m_Constraints: 36
   m_CollisionDetection: 0
 --- !u!1 &5667860125421435836
 GameObject:
@@ -146,7 +146,7 @@ GameObject:
   - component: {fileID: 5667860125421435837}
   - component: {fileID: 5667860125421435835}
   - component: {fileID: 5667860125421435834}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: SM_Veh_Car_Van_Glass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -223,7 +223,7 @@ GameObject:
   - component: {fileID: 5667860125572680595}
   - component: {fileID: 5667860125572680593}
   - component: {fileID: 5667860125572680592}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: SM_Veh_Car_Van_Wheel_fr
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -300,7 +300,7 @@ GameObject:
   - component: {fileID: 5667860126212353509}
   - component: {fileID: 5667860126212353507}
   - component: {fileID: 5667860126212353506}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: SM_Veh_Car_Van_Door_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -377,7 +377,7 @@ GameObject:
   - component: {fileID: 5667860126296500557}
   - component: {fileID: 5667860126296500555}
   - component: {fileID: 5667860126296500554}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: SM_Veh_Car_Van_Door_l
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -454,7 +454,7 @@ GameObject:
   - component: {fileID: 5667860126343725317}
   - component: {fileID: 5667860126343725315}
   - component: {fileID: 5667860126343725314}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: SM_Veh_Car_Van_Wheel_fl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -531,7 +531,7 @@ GameObject:
   - component: {fileID: 5667860126515548069}
   - component: {fileID: 5667860126515548067}
   - component: {fileID: 5667860126515548066}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: SM_Veh_Car_Van_Wheel_rr
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -608,7 +608,7 @@ GameObject:
   - component: {fileID: 5667860126774234567}
   - component: {fileID: 5667860126774234565}
   - component: {fileID: 5667860126774234564}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: SM_Veh_Car_Van_Wheel_rl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -687,7 +687,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 117528, guid: de0fb8fabb4497b4fb140cddb057abbf, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 428568, guid: de0fb8fabb4497b4fb140cddb057abbf, type: 3}
       propertyPath: m_LocalPosition.x
