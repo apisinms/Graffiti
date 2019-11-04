@@ -207,6 +207,7 @@
     <Compile Include="Assets\MinSeok\Script\Ingame\CameraControl.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\ClientSectorManager.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\Effect\EffectManager.cs" />
+    <Compile Include="Assets\MinSeok\Script\Ingame\EndGame\PlayersGameResult.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\GameManager\CaptureManager.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\GameManager\CaptureTriggerCollision.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\GameManager\GameManager.cs" />

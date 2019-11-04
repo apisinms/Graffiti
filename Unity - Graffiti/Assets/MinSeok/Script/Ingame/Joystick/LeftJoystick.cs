@@ -135,7 +135,7 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
 
         if (x == 0 && y == 0)
         {
-            if (isLeftDrag == true)
+            //if (isLeftDrag == true)
             {
                 Debug.Log("엔드");
                 DragEnd();
@@ -145,7 +145,7 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
         {
             if (isLeftDrag == false)
             {
-                Debug.Log("시작");
+                //Debug.Log("시작");
                 DragStart(1);
             }
 
