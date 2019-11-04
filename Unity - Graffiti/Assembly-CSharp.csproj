@@ -174,10 +174,12 @@
     <Compile Include="Assets\Gwangil\Scripts\BypassAudioManager.cs" />
     <Compile Include="Assets\Gwangil\Scripts\BypassAudioSource.cs" />
     <Compile Include="Assets\Gwangil\Scripts\Chasing.cs" />
+    <Compile Include="Assets\Gwangil\Scripts\CountScore.cs" />
     <Compile Include="Assets\Gwangil\Scripts\LobbyNickName.cs" />
     <Compile Include="Assets\Gwangil\Scripts\ObjectPool.cs" />
     <Compile Include="Assets\Gwangil\Scripts\PooledObject.cs" />
     <Compile Include="Assets\Gwangil\Scripts\Sample.cs" />
+    <Compile Include="Assets\Gwangil\Scripts\SetResultEnd.cs" />
     <Compile Include="Assets\Gwangil\Scripts\Singleton.cs" />
     <Compile Include="Assets\Gwangil\UGUIMiniMap\Content\Scripts\Core\bl_IconItem.cs" />
     <Compile Include="Assets\Gwangil\UGUIMiniMap\Content\Scripts\Core\bl_MiniMap.cs" />
@@ -205,6 +207,7 @@
     <Compile Include="Assets\MinSeok\Script\Ingame\CameraControl.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\ClientSectorManager.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\Effect\EffectManager.cs" />
+    <Compile Include="Assets\MinSeok\Script\Ingame\EndGame\PlayersGameResult.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\GameManager\CaptureManager.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\GameManager\CaptureTriggerCollision.cs" />
     <Compile Include="Assets\MinSeok\Script\Ingame\GameManager\GameManager.cs" />
@@ -302,6 +305,7 @@
     <Compile Include="Assets\Modern UI Pack\Scripts\UI Manager\UIManagerToggle.cs" />
     <Compile Include="Assets\Modern UI Pack\Scripts\UI Manager\UIManagerTooltip.cs" />
     <Compile Include="Assets\QuickOutline\Scripts\Outline.cs" />
+    <Compile Include="Assets\QuickOutline\Scripts\Outline_item.cs" />
     <Compile Include="Assets\scrollViewTest.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\uGUI Message Box Modal Dialog\Source\DialogResult.cs" />

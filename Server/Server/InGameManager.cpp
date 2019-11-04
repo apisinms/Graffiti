@@ -182,6 +182,30 @@ void InGameManager::PackPacket(char* _setptr, GameInfo* &_gameInfo, vector<Weapo
 	}
 }
 
+void InGameManager::PackPacket(char* _setptr, RoomInfo* _room, int& _size)
+{
+	char* ptr = _setptr;
+	_size = 0;
+
+	// 1. 플레이어 수 몇 명인지
+	int numOfPlayer = _room->GetNumOfPlayer();
+	memcpy(ptr, &numOfPlayer, sizeof(numOfPlayer));
+	ptr = ptr + sizeof(numOfPlayer);
+	_size = _size + sizeof(numOfPlayer);
+
+	// 2. 플레이어 수 맞게 순서대로 스코어 패킹
+	C_ClientInfo* player = nullptr;
+	for (int i = 0; i < numOfPlayer; i++)
+	{
+		player = _room->GetPlayerByIndex(i);
+		
+		// 스코어 패킹!
+		memcpy(ptr, &player->GetPlayerInfo()->GetScore(), sizeof(Score));
+		ptr = ptr + sizeof(Score);
+		_size = _size + sizeof(Score);
+	}
+}
+
 void InGameManager::UnPackPacket(char* _getBuf, int& _num)
 {
 	char* ptr = _getBuf + sizeof(PROTOCOL_INGAME);
@@ -648,12 +672,9 @@ bool InGameManager::GameEndProcess(RoomInfo* _room)
 	char buf[BUFSIZE] = { 0, };
 	int packetSize = 0;
 
-	int team1_total = _room->GetTeamInfo(0).teamCaptureScore + _room->GetTeamInfo(0).teamKillScore;
-	int team2_total = _room->GetTeamInfo(1).teamCaptureScore + _room->GetTeamInfo(1).teamKillScore;
-
-	// 아이템 코드를 다시 전송해서 다른 플레이어들도 갱신하도록 한다.
+	// 방에 있는 플레이어들의 스코어를 전송한다.
 	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::GAME_END_PROTOCOL, RESULT_INGAME::INGAME_SUCCESS);
-	PackPacket(buf, team1_total, team2_total, packetSize);
+	PackPacket(buf, _room, packetSize);
 	ListSendPacket(_room->GetPlayers(), nullptr, protocol, buf, packetSize, true);	// 모두에게 전송
 
 	return true;

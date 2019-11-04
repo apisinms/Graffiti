@@ -145,8 +145,47 @@ public partial class NetworkManager : MonoBehaviour
     string nickName;
     public string NickName { get { return nickName; } set { nickName = value; } }
 
-    // 총알 충돌 검사 구조체
-    [StructLayout(LayoutKind.Sequential)]
+	// 플레이어 개별 스코어
+	[StructLayout(LayoutKind.Sequential)]
+	public struct Score
+	{
+		[MarshalAs(UnmanagedType.I4)]
+		int numOfKill;      // 내가 몇 명 죽였는지
+
+		[MarshalAs(UnmanagedType.I4)]
+		int numOfDeath;     // 내가 몇 번 죽었는지
+
+		[MarshalAs(UnmanagedType.I4)]
+		int killScore;      // 킬 점수
+
+		[MarshalAs(UnmanagedType.I4)]
+		int captureCount;   // 점령해본 건물 개수 
+
+		public byte[] Serialize()
+		{
+			// allocate a byte array for the struct data
+			var buffer = new byte[Marshal.SizeOf(typeof(BulletCollisionChecker))];
+
+			// Allocate a GCHandle and get the array pointer
+			var gch = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+			var pBuffer = gch.AddrOfPinnedObject();
+
+			// copy data from struct to array and unpin the gc pointer
+			Marshal.StructureToPtr(this, pBuffer, false);
+			gch.Free();
+
+			return buffer;
+		}
+		public void Deserialize(ref byte[] data)
+		{
+			var gch = GCHandle.Alloc(data, GCHandleType.Pinned);
+			this = (Score)Marshal.PtrToStructure(gch.AddrOfPinnedObject(), typeof(Score));
+			gch.Free();
+		}
+	};
+
+	// 총알 충돌 검사 구조체
+	[StructLayout(LayoutKind.Sequential)]
     public struct BulletCollisionChecker
     {
         [MarshalAs(UnmanagedType.I1)]

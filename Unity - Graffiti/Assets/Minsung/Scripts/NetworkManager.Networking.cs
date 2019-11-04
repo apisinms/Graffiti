@@ -548,10 +548,16 @@ public partial class NetworkManager : MonoBehaviour
 
 							case PROTOCOL.GAME_END_PROTOCOL:
 								{
-									int team1Score, team2Score;
-									UnPackPacket(info[i].packet, out team1Score, out team2Score);	// 스코어 얻기
+									lock (key)
+									{
+										// 모든 플레이어의 스코어를 받아옴
+										Score[] scores = null;
 
-									bridge.GameEndProcess(team1Score, team2Score);   // 종료 처리하고 스코어 띄우도록 함
+										UnPackPacket(info[i].packet, ref scores);
+
+										// 받은 스코어 넘기고, 게임 종료 처리
+										bridge.GameEndProcess(ref scores);
+									}
 								}
 								break;
 

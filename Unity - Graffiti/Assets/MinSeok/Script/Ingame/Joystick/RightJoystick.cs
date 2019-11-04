@@ -50,11 +50,6 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
         isRightDrag = true;
     }
 
-    private void Update()
-    {
-        //Debug.Log(PlayersManager.instance.actionState[myIndex]);
-        //Debug.Log(PlayersManager.instance.direction2[myIndex]);
-    }
     public void Drag(BaseEventData _Data)
     {
         if (PlayersManager.instance.actionState[myIndex] == _ACTION_STATE.DEATH)
@@ -156,4 +151,5 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
         isStep0 = true; isStep1 = false; isStep2 = false;
     }
 
+    public void DragStart(int _inputType) { }
 }

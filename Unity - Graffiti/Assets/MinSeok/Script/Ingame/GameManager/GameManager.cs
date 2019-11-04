@@ -82,6 +82,11 @@ public class GameManager : MonoBehaviour
 
 
 #else
+        if (SceneManager.GetActiveScene().name == "MainGame_2vs2")
+            gameInfo.gameType = 0;
+        else if (SceneManager.GetActiveScene().name == "MainGame_1vs1")
+            gameInfo.gameType = 1;
+
         gameInfo.gameType = 0;
         gameInfo.gameTime = 180;
         gameInfo.respawnTime = 5;
@@ -124,8 +129,16 @@ public class GameManager : MonoBehaviour
 
         SetPlayerTagAndIndex(gameInfo.maxPlayer);   // 태그 및 인덱스 설정
 #else
-        gameInfo.gameType = 0;
-        gameInfo.maxPlayer = 4;
+        if (SceneManager.GetActiveScene().name == "MainGame_2vs2")
+        {
+            gameInfo.gameType = 0;
+            gameInfo.maxPlayer = 4;
+        }
+        else if (SceneManager.GetActiveScene().name == "MainGame_1vs1")
+        {
+            gameInfo.gameType = 1;
+            gameInfo.maxPlayer = 2;
+        }
         gameInfo.maxSpeed = 4.0f;
         gameInfo.maxHealth = 100.0f;
         gameInfo.respawnTime = 3;

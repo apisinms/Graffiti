@@ -394,15 +394,12 @@ public partial class BridgeClientToServer : MonoBehaviour
         }
     }
 
-	public void GameEndProcess(int _team1Score, int _team2Score)
+	public void GameEndProcess(ref Score[] _scores)
 	{
-		// 스코어를 DontDestroyOnLoad 된 게임 오브젝트 스크립트에다가 저장하고
-		// EndScene을 호출
+		/// 여기서 _scores 다음 씬까지 저장하고 알아서 EndScene에서 요리해라 광일아
+		SceneManager.LoadScene("EndScene");
 
-		MessageBox.Show("게임 끝~", "게임 끝~",
-		(result) => { SceneManager.LoadScene("Lobby"); });
-		
-		networkManager.SendGotoLobby();	// 나 로비로 갈랭~
+        networkManager.SendGotoLobby();	// 나 로비로 갈랭~(얜 호출해줘야 돼)
 	}
 
     //쐇을때 무조건 1번의 패킷을 보내야됨. 보정용

@@ -95,6 +95,7 @@ private:
 	void PackPacket(char* _setptr, IngamePacket& _struct, int& _size);
 	void PackPacket(char* _setptr, IngamePacket& _struct, int _code, int& _size);
 	void PackPacket(char* _setptr, GameInfo* &_gameInfo, vector<WeaponInfo*>& _weaponInfo, int& _size);
+	void PackPacket(char* _setptr, RoomInfo* _room, int& _size);	// 방에 있는 플레이어들의 스코어를 보내준다.
 	void UnPackPacket(char* _getBuf, int& _num);
 	void UnPackPacket(char* _getBuf, float& _posX, float& _posZ);
 	void UnPackPacket(char* _getBuf, IngamePacket& _struct);
