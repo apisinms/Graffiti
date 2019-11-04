@@ -1360,3 +1360,5 @@ D:\Project\Unity - Graffiti\Unity - Graffiti\obj\Debug\PathCreator.csproj.CopyCo
 D:\Project\Unity - Graffiti\Unity - Graffiti\obj\Debug\PathCreator.dll
 D:\Project\Unity - Graffiti\Unity - Graffiti\obj\Debug\PathCreator.pdb
 D:\Project\Unity - Graffiti\Unity - Graffiti\Temp\bin\Debug\Boo.Lang.dll
+C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEngine.Advertisements.dll
+C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\Boo.Lang.dll

@@ -54,7 +54,6 @@ public class btn_start : UnityEngine.MonoBehaviour
 			// 매칭에 성공했다면 씬을 로드하고
 			else
 			{
-                //LoadingSceneManager.LoadScene("SelectWeapons", true);
 				SceneManager.LoadScene("SelectWeapons");
 				yield break;    // 코루틴 종료
 			}

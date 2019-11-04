@@ -43,7 +43,8 @@ public class CameraControl : UnityEngine.MonoBehaviour
             if (PlayersManager.instance.actionState[myIndex] == _ACTION_STATE.AIM ||
                 PlayersManager.instance.actionState[myIndex] == _ACTION_STATE.CIR_AIM ||
                 PlayersManager.instance.actionState[myIndex] == _ACTION_STATE.SHOT ||
-                PlayersManager.instance.actionState[myIndex] == _ACTION_STATE.CIR_AIM_SHOT)
+                PlayersManager.instance.actionState[myIndex] == _ACTION_STATE.CIR_AIM_SHOT ||
+                PlayersManager.instance.actionState[myIndex] == _ACTION_STATE.SPRAY)
             {
                 isOnLerp = true;
                 transform.position = new Vector3(Mathf.Lerp(transform.position.x, PlayersManager.instance.direction2[myIndex].x + cameraPos.x, Time.smoothDeltaTime * 7.5f),

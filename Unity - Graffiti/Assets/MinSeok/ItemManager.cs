@@ -17,6 +17,7 @@ public enum ItemCode : int
 public class ItemManager : MonoBehaviour
 {
     public static ItemManager instance;
+    public int MAX_POTION_NUM { get; set; }
 
     #region POTION
     public GameObject[] obj_potion { get; set; }
@@ -42,12 +43,27 @@ public class ItemManager : MonoBehaviour
 
     public void Initialization_Potion()
     {
-        obj_potion = new GameObject[5];
-        tf_posion = new Transform[5];
-        tmpRot = new Vector3[5];
-        tmpPos_min = new float[5];
-        tmpPos_max = new float[5];
-        potionMoveState = new _POTION_MOVE_STATE[5];
+        switch ((C_Global.GameType)GameManager.instance.gameInfo.gameType)
+        {
+            case C_Global.GameType._2vs2:
+                {
+                    MAX_POTION_NUM = 4;
+                }
+                break;
+
+            case C_Global.GameType._1vs1:
+                {
+                    MAX_POTION_NUM = 1;
+                }
+                break;
+        }
+
+        obj_potion = new GameObject[MAX_POTION_NUM];
+        tf_posion = new Transform[MAX_POTION_NUM];
+        tmpRot = new Vector3[MAX_POTION_NUM];
+        tmpPos_min = new float[MAX_POTION_NUM];
+        tmpPos_max = new float[MAX_POTION_NUM];
+        potionMoveState = new _POTION_MOVE_STATE[MAX_POTION_NUM];
 
         for (int i = 0; i < obj_potion.Length; i++)
         {

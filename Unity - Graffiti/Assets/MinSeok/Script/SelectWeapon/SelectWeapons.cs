@@ -267,8 +267,7 @@ public class SelectWeapons : UnityEngine.MonoBehaviour
 						}
 						break;
 				}
-                
-				//SceneManager.LoadScene("MainGame"); //메인타이틀로 입장
+             
 
 				yield break;
 			}

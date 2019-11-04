@@ -5,12 +5,19 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 
+public enum _INPUT_TYPE
+{
+    JOYSTICK = 0,
+    KEYBOARD,
+}
+
 public class LeftJoystick : MonoBehaviour, IJoystickControll
 {
     public Image img_joystick_back;
     public Image img_joystick_stick;
-	private static bool isLeftDrag;
+    private static bool isLeftDrag;
     public static bool LeftTouch { get { return isLeftDrag; } }
+    private _INPUT_TYPE inputType;
 
     protected struct _Joystick
     {
@@ -31,11 +38,15 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
         float can = transform.parent.GetComponent<RectTransform>().localScale.x; // 캔버스 크기에대한 반지름 조절.
         left_joystick.maxMoveArea *= can;
 
-		isLeftDrag = false;
-	}
+        isLeftDrag = false;
 
-    public void DragStart()
+        inputType = _INPUT_TYPE.JOYSTICK;
+    }
+
+    public void DragStart(int _inputType)
     {
+        inputType = (_INPUT_TYPE)_inputType;
+
         StateManager.instance.Circuit(true);
 
 #if NETWORK
@@ -70,7 +81,7 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
             img_joystick_stick.rectTransform.position = left_joystick.stickFirstPos + (left_joystick.stickDir * left_joystick.maxMoveArea);
             PlayersManager.instance.speed[myIndex] = PlayersManager.instance.maxSpeed; //조이스틱을 끝까지밀면 맥스스피드.
         }
-        
+
         // PlayerManager.instance.tmp = joystick[0].stickDir;
 
         //tf_player.transform.localRotation = Quaternion.Euler(0, Mathf.Atan2(stickDir.x, stickDir.y) * Mathf.Rad2Deg, 0);
@@ -78,7 +89,7 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
         //tf_player.eulerAngles = new Vector3(0, Mathf.Atan2(playerDir.x, playerDir.y) * Mathf.Rad2Deg, 0); //플레이어의 방향을 바꿔줌.
     }
 
-    public  void DragEnd()
+    public void DragEnd()
     {
         img_joystick_stick.transform.position = left_joystick.stickFirstPos;
         left_joystick.stickDir = Vector3.zero; // 방향을 0으로.
@@ -98,12 +109,49 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
       if (LeftJoystick.LeftTouch == false && RightJoystick.RightTouch == false)
 			BridgeClientToServer.instance.StopMoveCor();
 #endif
-	}
+    }
 
     public void ResetDrag()
     {
         img_joystick_stick.transform.position = left_joystick.stickFirstPos;
         left_joystick.stickDir = Vector3.zero; // 방향을 0으로.
         StateManager.instance.Circuit(false);
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) ||
+            Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D))
+        {
+            inputType = _INPUT_TYPE.KEYBOARD;
+        }
+
+        if (SystemInfo.deviceType != DeviceType.Desktop || inputType == _INPUT_TYPE.JOYSTICK)
+            return;
+
+        float x = Input.GetAxisRaw("Horizontal");
+        float y = Input.GetAxisRaw("Vertical");
+        left_joystick.stickDir = new Vector3(x, y, 0).normalized;
+
+        if (x == 0 && y == 0)
+        {
+            if (isLeftDrag == true)
+            {
+                Debug.Log("엔드");
+                DragEnd();
+            }
+        }
+        else if (x != 0 || y != 0)
+        {
+            if (isLeftDrag == false)
+            {
+                Debug.Log("시작");
+                DragStart(1);
+            }
+
+            PlayersManager.instance.direction[myIndex] = new Vector3(left_joystick.stickDir.x, 0, left_joystick.stickDir.y);
+            img_joystick_stick.rectTransform.position = left_joystick.stickFirstPos + (left_joystick.stickDir * left_joystick.maxMoveArea);
+            PlayersManager.instance.speed[myIndex] = PlayersManager.instance.maxSpeed;
+        }
     }
 }

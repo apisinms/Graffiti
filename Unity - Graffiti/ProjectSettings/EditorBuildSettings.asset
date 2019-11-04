@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/MainMenuScene.unity
+    path: Assets/Scenes/MainMenu.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
     path: Assets/Scenes/MainGame_2vs2.unity
@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: Assets/Scenes/MainGame_1vs1.unity
     guid: ae6e88d72d1907149890fd399d97d570
   - enabled: 1
-    path: Assets/Scenes/LobbyMenuScene.unity
+    path: Assets/Scenes/Lobby.unity
     guid: e9986b71f3fd0ad4da993cf3e86afcde
   - enabled: 1
     path: Assets/Scenes/SelectWeapons.unity
@@ -23,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/KetosGames/SceneTransition/Scenes/Loading.unity
     guid: 87f79aa6ca09f482d99ccc8b5b2aaa43
+  - enabled: 1
+    path: Assets/Scenes/EndScene.unity
+    guid: 14899ccf0bd53e049910cd52a2c00e92
   m_configObjects: {}

@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 public interface IJoystickControll
 {
-	void DragStart();
+	void DragStart(int _inputType);
 	void Drag(BaseEventData _Data);
 	void DragEnd();
 }

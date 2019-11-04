@@ -76,8 +76,9 @@ public partial class NetworkManager : MonoBehaviour
         GOTO_LOBBY_PROTOCOL = ((Int64)0x1 << 46),      // 로비로 가는 프로토콜
         CAPTURE_PROTOCOL = ((Int64)0x1 << 45),      // 점령 프로토콜
         ITEM_PROTOCOL = ((Int64)0x1 << 44),         // 아이템 프로토콜
+		GAME_END_PROTOCOL = ((Int64)0x1 << 43),   // 게임 종료 프로토콜(스코어 보여줘야함)
 
-        DISCONNECT_PROTOCOL = ((Int64)0x1 << 34), // 접속 끊김 프로토콜
+		DISCONNECT_PROTOCOL = ((Int64)0x1 << 34), // 접속 끊김 프로토콜
 
         // 48 ~ 34
     };
