@@ -7,7 +7,6 @@
 #define TIMER_INTERVAL	100	// 타이머 간격
 #define TIMER_INTERVAL_TIMES_MILLISEC	(TIMER_INTERVAL * 0.001)	// 타이머 간격 * 밀리초단위
 
-#define SCORE_SHOW_TIME	60	// 스코어보드 show시간
 #define CAR_SPAWN_TIME_SEC	5		// 차 생성 주기
 #define CAPTURE_BONUS_INTERVAL	10	// 점령 보너스 시간 주기
 
@@ -28,16 +27,17 @@ class InGameManager : public C_SyncCS<InGameManager>
 	// 53~34
 	enum PROTOCOL_INGAME : __int64
 	{
-		TIMER_PROTOCOL        = ((__int64)0x1 << 53),	// 1초마다 보내는 타이머
-		WEAPON_PROTOCOL       = ((__int64)0x1 << 52),	// 서버측:무기선택받아옴, 클라측:무기선택보내옴
-		NICKNAME_PROTOCOL     = ((__int64)0x1 << 51),	// 본인의 닉네임을 보내줌
-		START_PROTOCOL        = ((__int64)0x1 << 50),	// 게임 시작 프로토콜
-		LOADING_PROTOCOL      = ((__int64)0x1 << 49),	// 로딩 여부 프로토콜
-		UPDATE_PROTOCOL		  = ((__int64)0x1 << 48),	// 이동 프로토콜
-		FOCUS_PROTOCOL        = ((__int64)0x1 << 47),	// 포커스 프로토콜
-		GOTO_LOBBY_PROTOCOL   = ((__int64)0x1 << 46),	// 로비로 가는
-		CAPTURE_PROTOCOL      = ((__int64)0x1 << 45),	// 점령
-		ITEM_PROTOCOL         = ((__int64)0x1 << 44),	// 아이템 프로토콜
+		TIMER_PROTOCOL          = ((__int64)0x1 << 53),	// 1초마다 보내는 타이머
+		WEAPON_PROTOCOL         = ((__int64)0x1 << 52),	// 서버측:무기선택받아옴, 클라측:무기선택보내옴
+		NICKNAME_PROTOCOL       = ((__int64)0x1 << 51),	// 본인의 닉네임을 보내줌
+		START_PROTOCOL          = ((__int64)0x1 << 50),	// 게임 시작 프로토콜
+		LOADING_PROTOCOL        = ((__int64)0x1 << 49),	// 로딩 여부 프로토콜
+		UPDATE_PROTOCOL		    = ((__int64)0x1 << 48),	// 이동 프로토콜
+		FOCUS_PROTOCOL          = ((__int64)0x1 << 47),	// 포커스 프로토콜
+		GOTO_LOBBY_PROTOCOL     = ((__int64)0x1 << 46),	// 로비로 가는
+		CAPTURE_PROTOCOL        = ((__int64)0x1 << 45),	// 점령
+		ITEM_PROTOCOL           = ((__int64)0x1 << 44),	// 아이템 프로토콜
+		GAME_END_PROTOCOL		= ((__int64)0x1 << 43),	// 게임 종료 프로토콜(스코어 보여줘야함)
 
 		DISCONNECT_PROTOCOL   = ((__int64)0x1 << 34),	// 접속 끊김 프로토콜
 	};
@@ -114,6 +114,8 @@ private:
 	bool HitAndRunProcess(C_ClientInfo* _ptr, char* _buf);	// 뺑소니 당함
 	bool CaptureProcess(C_ClientInfo* _ptr, char* _buf);
 	bool ItemGetProcess(C_ClientInfo* _ptr, char* _buf);	// 아이템 먹음
+	
+	bool GameEndProcess(RoomInfo* _room);	// 게임 종료 처리
 
 	void InitalizePlayersInfo(RoomInfo* _room);
 
@@ -159,7 +161,6 @@ public:
 	void CarSpawnChecker(RoomInfo* _room);
 	void CaptureBonusTimeChecker(RoomInfo* _room);
 	void GameEndTimeChecker(RoomInfo* _room, double _IngameTimeElapsed);
-	void ScoreTimeChecker(RoomInfo* _room, double _IngameEndTimeElapsed);
 
 public:
 	GameInfo* GetGameInfo(int _gameType) { return gameInfo[_gameType]; }

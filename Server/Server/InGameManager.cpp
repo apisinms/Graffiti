@@ -535,6 +535,17 @@ bool InGameManager::HitAndRunProcess(C_ClientInfo* _ptr, char* _buf)
 
 bool InGameManager::CaptureProcess(C_ClientInfo* _ptr, char* _buf)
 {
+	// 방이 없는 경우 나가게 예외처리
+	if (_ptr->GetRoom() == nullptr)
+	{
+		printf("건물 점령했는데 방이 없음\n");
+		return false;
+	}
+
+	PROTOCOL_INGAME protocol;
+	char buf[BUFSIZE] = { 0, };
+	int packetSize = 0;
+
 	// 점령한 건물 인덱스 얻어옴
 	int buildingIdx;
 	UnPackPacket(_buf, buildingIdx);
@@ -558,10 +569,10 @@ bool InGameManager::CaptureProcess(C_ClientInfo* _ptr, char* _buf)
 		// 1. 팀 건물 개수 줄임(팀 개수는 계속 뺏고 뺏김)
 		int teamNum = building->owner->GetPlayerInfo()->GetTeamNum();
 		room->GetTeamInfo(teamNum).teamCaptureNum--;
-
-		// 2. 그리고 소유자를 이 클라로 한다.
-		building->owner = _ptr;
 	}
+
+	// 2. 그리고 소유자를 이 클라로 한다.
+	building->owner = _ptr;
 
 	// 1. 팀 점령 점수 더함
 	team.teamCaptureScore += gameInfo[_ptr->GetGameType()]->capturePoint;
@@ -577,7 +588,10 @@ bool InGameManager::CaptureProcess(C_ClientInfo* _ptr, char* _buf)
 		team.teamCaptureNum,
 		_ptr->GetPlayerInfo()->GetScore().captureCount);
 
-	/// 3. 추후에 여기에서 점령되고, 이 점수를 보낼지 결정
+	// 3. 건물 점령한놈의 플레이어 넘버 + 건물 번호를 모든 클라들에게 보냄.
+	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::CAPTURE_PROTOCOL, RESULT_INGAME::INGAME_SUCCESS);
+	PackPacket(buf, building->owner->GetPlayerInfo()->GetPlayerNum(), buildingIdx, packetSize);
+	ListSendPacket(room->GetPlayers(), nullptr , protocol, buf, packetSize, true);	// 모두에게 전송!
 
 	return true;
 }
@@ -613,6 +627,7 @@ bool InGameManager::ItemGetProcess(C_ClientInfo* _ptr, char* _buf)
 		}
 		break;
 
+
 		default:
 			return false;
 	}
@@ -621,6 +636,25 @@ bool InGameManager::ItemGetProcess(C_ClientInfo* _ptr, char* _buf)
 	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::ITEM_PROTOCOL, RESULT_INGAME::INGAME_SUCCESS);
 	PackPacket(buf, *(_ptr->GetPlayerInfo()->GetIngamePacket()), code, packetSize);
 	ListSendPacket(_ptr->GetPlayerInfo()->GetSectorPlayerList(), nullptr, protocol, buf, packetSize, true);	// 모두에게 전송
+
+	return true;
+}
+
+
+
+bool InGameManager::GameEndProcess(RoomInfo* _room)
+{
+	PROTOCOL_INGAME protocol;
+	char buf[BUFSIZE] = { 0, };
+	int packetSize = 0;
+
+	int team1_total = _room->GetTeamInfo(0).teamCaptureScore + _room->GetTeamInfo(0).teamKillScore;
+	int team2_total = _room->GetTeamInfo(1).teamCaptureScore + _room->GetTeamInfo(1).teamKillScore;
+
+	// 아이템 코드를 다시 전송해서 다른 플레이어들도 갱신하도록 한다.
+	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::GAME_END_PROTOCOL, RESULT_INGAME::INGAME_SUCCESS);
+	PackPacket(buf, team1_total, team2_total, packetSize);
+	ListSendPacket(_room->GetPlayers(), nullptr, protocol, buf, packetSize, true);	// 모두에게 전송
 
 	return true;
 }
@@ -1381,7 +1415,6 @@ DWORD WINAPI InGameManager::InGameTimerThread(LPVOID _arg)
 	bool endFlag = false;
 
 	double IngameTimeElapsed = 0.0;		// 인게임 타이머
-	double IngameEndTimeElapsed = 0.0;	// 게임 끝나고 잠깐 대기할 타이머
 
 	while (endFlag == false)
 	{
@@ -1413,18 +1446,7 @@ DWORD WINAPI InGameManager::InGameTimerThread(LPVOID _arg)
 		}
 		break;
 
-		// 게임 끝남(몇 초 후에 게임 나가게 처리)
-		case ROOMSTATUS::ROOM_GAME_END:
-		{
-			// 슬립 후 시간 증가
-			std::this_thread::sleep_for(std::chrono::milliseconds(TIMER_INTERVAL));	// 꼭 넣어줘야함 아니면 혼자 CPU 다 잡아먹음
-			IngameEndTimeElapsed += TIMER_INTERVAL_TIMES_MILLISEC;
-
-			gameManager->ScoreTimeChecker(room, IngameEndTimeElapsed);	// 스코어 보여주는 시간 끝났나 검사
-		}
-		break;
-
-		// 진짜 방 종료!(여기에서 뒷정리 해줘야됨!)
+		// 방 종료!(여기에서 뒷정리 해줘야됨!)
 		case ROOMSTATUS::ROOM_END:
 		{
 #ifdef DEBUG
@@ -1691,20 +1713,12 @@ void InGameManager::GameEndTimeChecker(RoomInfo* _room, double _IngameTimeElapse
 	// 타이머 돌다가 이 방 게임 타입 최대 시간 지나면 게임 끝났다고 보내줘야됨
 	if (_IngameTimeElapsed >= gameInfo[_room->GetGameType()]->gameTime)
 	{
-		/// 게임끝나고 스코어보드 뜨는 창 잠깐 나오게하라고 프로토콜 보내줌
-		printf("스코어보드!\n");
-		_room->SetRoomStatus(ROOMSTATUS::ROOM_GAME_END);
-	}
-}
+		// 게임끝 종료하고 스코어 표시하라고 프로토콜 보내줌
+		printf("게임 끝!\n");
 
-// 스코어 종료 타이머 체커
-void InGameManager::ScoreTimeChecker(RoomInfo* _room, double _IngameEndTimeElapsed)
-{
-	// 스코어 보여주는 시간 끝났으면 방 끝내야되는 상태로
-	if (_IngameEndTimeElapsed >= SCORE_SHOW_TIME)
-	{
-		printf("스코어보드 끝!\n");
+		// 게임 종료처리 함수 호출
+		GameEndProcess(_room);
+
 		_room->SetRoomStatus(ROOMSTATUS::ROOM_END);
 	}
 }
-

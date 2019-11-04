@@ -75,7 +75,8 @@ public partial class NetworkManager : MonoBehaviour
         FOCUS_PROTOCOL = ((Int64)0x1 << 47),      // 포커스 프로토콜
         GOTO_LOBBY_PROTOCOL = ((Int64)0x1 << 46),      // 로비로 가는 프로토콜
         CAPTURE_PROTOCOL = ((Int64)0x1 << 45),      // 점령 프로토콜
-		ITEM_PROTOCOL = ((Int64)0x1 << 44),			// 아이템 프로토콜
+        ITEM_PROTOCOL = ((Int64)0x1 << 44),         // 아이템 프로토콜
+		GAME_END_PROTOCOL = ((Int64)0x1 << 43),   // 게임 종료 프로토콜(스코어 보여줘야함)
 
 		DISCONNECT_PROTOCOL = ((Int64)0x1 << 34), // 접속 끊김 프로토콜
 
@@ -288,7 +289,7 @@ public partial class NetworkManager : MonoBehaviour
     private string sysMsg = string.Empty;   // 서버로부터 전달되는 메시지를 저장할 변수
     private int myPlayerNum;
     private int quitPlayerNum;              // 게임에서 나간 플레이어 번호
-	public int selectMatch = 0;				// 선택한 매칭
+    public int selectMatch = 0;            // 선택한 매칭
 
 
     private Queue<C_Global.QueueInfo> queue;    // recv에 관한 패킷이 저장될 큐

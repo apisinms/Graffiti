@@ -12,7 +12,6 @@ public class btn_start : UnityEngine.MonoBehaviour
     public Button prevSelectButton;
     public Button nextSelectButton;
     int flag = 1;
-    private int selectMatch = 0;
 
 	public void BtnStart() //매칭버튼 눌렀을때.
 	{
@@ -27,7 +26,7 @@ public class btn_start : UnityEngine.MonoBehaviour
             obj_loadingBar.SetActive(true);
 
             // 매칭이 가능한지 서버로 전송한다.
-            NetworkManager.instance.MayIMatch(selectMatch);
+            NetworkManager.instance.MayIMatch(NetworkManager.instance.selectMatch);
 
             // 코루틴을 돌려서 매칭이 잡힐때까지 반복한다.
             StartCoroutine(CheckMatch());
@@ -55,7 +54,6 @@ public class btn_start : UnityEngine.MonoBehaviour
 			// 매칭에 성공했다면 씬을 로드하고
 			else
 			{
-                //LoadingSceneManager.LoadScene("SelectWeapons", true);
 				SceneManager.LoadScene("SelectWeapons");
 				yield break;    // 코루틴 종료
 			}

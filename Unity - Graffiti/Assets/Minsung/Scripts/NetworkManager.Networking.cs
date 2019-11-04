@@ -22,6 +22,7 @@ public partial class NetworkManager : MonoBehaviour
     private Vector3 tmpVec = new Vector3();
     private Vector3 tmpAngle = new Vector3();
     private QueueInfo[] info = new QueueInfo[MAX_QUEUE_SIZE];
+	private bool isMboxAppeared = false;
 
     private void Awake()
     {
@@ -48,7 +49,16 @@ public partial class NetworkManager : MonoBehaviour
 
             // 처음 서버와 연결하는 부분
             IPEndPoint serverEndPoint = new IPEndPoint(serverIP, serverPort);
-            tcpClient.Connect(serverEndPoint);
+            try
+            {
+                tcpClient.Connect(serverEndPoint);
+            }
+            catch (SocketException)
+            {
+                MessageBox.Show("서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.", "서버 접속 실패",
+                   (result) => { Application.Quit(); }, MessageBoxButtons.OK);
+
+            }
 
             // 서버와 연결 성공시 이진 쓰기, 이진 읽기용 스트림 생성
             if (tcpClient.Connected)
@@ -81,9 +91,19 @@ public partial class NetworkManager : MonoBehaviour
         if (tcpClient.Connected && queue.Count > 0)
             RecvProcess();
 
-        // 인터넷이 끊기면 어플을 종료함(나중에 메시지박스 같은거 띄우고 확인버튼 누르면 종료시키면 될듯)
-        if (Application.internetReachability == NetworkReachability.NotReachable)
-            Application.Quit();
+		// 인터넷이 끊기면 어플을 종료함
+		if (Application.internetReachability == NetworkReachability.NotReachable)
+		{
+			MessageBox.Show("인터넷 연결 상태를 확인해주세요", "연결 종료",
+				(result) => { Application.Quit(); });
+		}
+
+		if(tcpClient.Connected == false && isMboxAppeared == false)
+		{
+			isMboxAppeared = true;
+			MessageBox.Show("서버와의 연결이 끊어졌습니다.", "연결 종료",
+				(result) => { Application.Quit(); });
+		}
     }
 
 
@@ -235,286 +255,308 @@ public partial class NetworkManager : MonoBehaviour
 
                 case STATE_PROTOCOL.INGAME_STATE:
                     {
-                        switch (protocol)
-                        {
-                            // 타이머 프로토콜이 넘겨져오면
-                            case PROTOCOL.TIMER_PROTOCOL:
-                                {
-                                    // result 생략
-
-                                    // 넘겨온 초를 string으로 변환해서 sysMsg에 저장한다.
-                                    lock (key)
-                                    {
-                                        sysMsg = string.Empty;
-
-                                        int sec = 0;
-                                        UnPackPacket(info[i].packet, out sec);
-                                        sysMsg = sec.ToString() + "초";
-                                    }
-                                }
-                                break;
-
-                            // (자신포함)상대방이 자신의 총 정보를 넘겨주면 그걸로 셋팅함
-                            case PROTOCOL.WEAPON_PROTOCOL:
-                                {
-                                    switch (result)
-                                    {
-                                        case RESULT.NOTIFY_WEAPON:
-                                            {
-                                                lock (key)
-                                                {
-                                                    int playerNum;
-                                                    WeaponPacket weapon = new WeaponPacket();
-
-                                                    UnPackPacket(info[i].packet, out playerNum, ref weapon);
-                                                    bridge.SetWeapon(playerNum, ref weapon);
-                                                }
-                                            }
-                                            break;
-                                    }
-                                }
-                                break;
-
-                            // 모든 플레이어의 닉네임을 설정함(본인 포함)
-                            case PROTOCOL.NICKNAME_PROTOCOL:
-                                {
-                                    lock (key)
-                                    {
-                                        int playerNum;
-                                        string nickName;
-                                        UnPackPacket(info[i].packet, out playerNum, out nickName);
-
-                                        bridge.SetPlayerNickName(nickName, (playerNum - 1));
-                                    }
-                                }
-                                break;
-
-                            // 게임 시작 프로토콜
-                            case PROTOCOL.START_PROTOCOL:
-                                {
-                                    // result 생략
-
-                                    lock (key)
-                                    {
-                                        // 모든 게임 정보를 받아가지고 옴
-                                        GameInfo gameInfo = new GameInfo();
-                                        WeaponInfo[] weapons = null;
-
-                                        UnPackPacket(info[i].packet, ref gameInfo, ref weapons);
-
-                                        // 받은 정보를 브릿지에 세팅함
-                                        bridge.SetGameInfoToBridge(ref gameInfo, ref weapons);
-
-                                        // 패킷 구조체를 플레이어 수만큼 할당
-                                        ingamePackets = new IngamePacket[gameInfo.maxPlayer];
-                                    }
-                                }
-                                break;
-
-                            // 로딩 프로토콜
-                            case PROTOCOL.LOADING_PROTOCOL:
-                                {
-                                    switch (result)
-                                    {
-                                        // 모두가 로딩 되었다면
-                                        case RESULT.INGAME_SUCCESS:
-                                            {
-                                                lock (key)
-                                                {
-                                                    SceneLoader.Instance.waitOtherPlayer = true;
-                                                    GameManager.instance.LoadingComplete();
-                                                }
-                                            }
-                                            break;
-                                    }
-                                }
-                                break;
-
-                            // 움직임 프로토콜
-                            case PROTOCOL.UPDATE_PROTOCOL:
-                                {
-                                    switch (result)
-                                    {
-                                        // 정상적인 업데이트 시
-                                        case RESULT.INGAME_SUCCESS:
-                                            {
-                                                lock (key)
-                                                {
-                                                    UnPackPacket(info[i].packet, ref tmpIngamePacket);
-                                                    bridge.OnUpdate(ref tmpIngamePacket);
-                                                }
-                                            }
-                                            break;
-
-                                        // 다른 플레이어가 섹터 입장 시
-                                        case RESULT.ENTER_SECTOR:
-                                            {
-                                                lock (key)
-                                                {
-                                                    UnPackPacket(info[i].packet, ref tmpIngamePacket);
-                                                    bridge.EnterSectorProcess(ref tmpIngamePacket);
-                                                }
-                                            }
-                                            break;
-
-                                        // 다른 플레이어가 섹터 퇴장 시
-                                        case RESULT.EXIT_SECTOR:
-                                            {
-                                                lock (key)
-                                                {
-                                                    UnPackPacket(info[i].packet, ref tmpIngamePacket);    // 사실 이 부분도 int 하나만 갖고도 될 일
-                                                    bridge.ExitSectorProcess(ref tmpIngamePacket);
-                                                }
-                                            }
-                                            break;
-
-                                        // 섹터 입장 시 새로 입장한 인접섹터에 있는 플레이어 리스트 갱신
-                                        case RESULT.UPDATE_PLAYER:
-                                            {
-                                                lock (key)
-                                                {
-                                                    byte playerBit = 0;
-                                                    UnPackPacket(info[i].packet, out playerBit);
-
-                                                    bridge.UpdatePlayerProcess(playerBit);
-                                                }
-                                            }
-                                            break;
-
-                                        case RESULT.FORCE_MOVE:
-                                            {
-                                                lock (key)
-                                                {
-                                                    UnPackPacket(info[i].packet, ref tmpIngamePacket);    // 포지션 패킷 가져옴
-                                                    bridge.ForceMoveProcess(ref tmpIngamePacket);
-                                                }
-                                            }
-                                            break;
-
-                                        case RESULT.GET_OTHERPLAYER_STATUS:
-                                            {
-                                                lock (key)
-                                                {
-                                                    UnPackPacket(info[i].packet, ref tmpIngamePacket);            // 패킷을 받고
-                                                    bridge.GetOtherPlayerStatus(ref tmpIngamePacket);
-
-                                                }
-                                            }
-                                            break;
-
-                                        case RESULT.BULLET_HIT:
-                                            {
-                                                lock (key)
-                                                {
-                                                    UnPackPacket(info[i].packet, ref tmpIngamePacket);       // 패킷을 받고
-
-                                                    // 지금 받은 체력이 더 낮아야만 체력을 업데이트 해준다. 그리고 죽었으면 업데이트 안한다.
-                                                    if (playersManager.hp[tmpIngamePacket.playerNum - 1] > tmpIngamePacket.health
-                                                       && playersManager.actionState[tmpIngamePacket.playerNum - 1] != _ACTION_STATE.DEATH)
-                                                    {
-                                                        bridge.HealthChanger(ref tmpIngamePacket);
-                                                    }
-                                                }
-                                            }
-                                            break;
-
-                                        case RESULT.RESPAWN:
-                                            {
-                                                lock (key)
-                                                {
-                                                    UnPackPacket(info[i].packet, ref tmpIngamePacket);
-                                                    bridge.RespawnProcess(ref tmpIngamePacket);
-                                                }
-                                            }
-                                            break;
-
-                                        // 차 스폰
-                                        case RESULT.CAR_SPAWN:
-                                            {
-                                                lock (key)
-                                                {
-                                                    int seed = 0;
-
-                                                    UnPackPacket(info[i].packet, out seed);
-                                                    bridge.CarSpawn(seed);
-                                                }
-                                            }
-                                            break;
-
-                                        // 다른 플레이어 뺑소니 당함
-                                        case RESULT.CAR_HIT:
-                                            {
-                                                lock (key)
-                                                {
-                                                    int playerNum;
-                                                    float posX, posZ;
-
-                                                    UnPackPacket(info[i].packet, out playerNum, out posX, out posZ);
-                                                    bridge.OtherPlayerHitByCar(playerNum, posX, posZ);
-                                                }
-                                            }
-                                            break;
-                                        // 누군가가 총에 맞아 숨짐
-                                        case RESULT.KILL:
-                                            {
-                                                lock (key)
-                                                {
-                                                    int killer, victim;
-
-                                                    UnPackPacket(info[i].packet, out killer, out victim);
-                                                    bridge.KillProcess(killer, victim);
-                                                }
-                                            }
-                                            break;
-                                    }
-                                }
-                                break;
-
-                            // 포커스 프로토콜(추후에 게임 정보가 추가된다면, 위치정보 뿐만 아니라 체력이나 기타 정보도 업데이트 해줘야한다!)
-                            case PROTOCOL.FOCUS_PROTOCOL:
-                                {
-                                    // result 생략
-
-                                    lock (key)
-                                    {
-                                        UnPackPacket(info[i].packet, ref tmpIngamePacket);         // 포지션 패킷 가져옴
-                                        bridge.ForceMoveProcess(ref tmpIngamePacket);
-                                    }
-                                }
-                                break;
-
-                            case PROTOCOL.CAPTURE_PROTOCOL:
-                                {
-                                    switch (result)
-                                    {
-                                        case RESULT.BONUS:
-                                            {
-                                                lock (key)
-                                                {
-                                                    int score1, score2;
-
-                                                    UnPackPacket(info[i].packet, out score1, out score2);   // 점령 보너스 받아옴
-                                                    Debug.Log("팀1 점령점수 : " + score1 + ", 팀2 점령점수 : " + score2);
-                                                }
-                                            }
-                                            break;
-                                    }
-                                }
-                                break;
-
-							case PROTOCOL.ITEM_PROTOCOL:
+					switch (protocol)
+					{
+							// 타이머 프로토콜이 넘겨져오면
+							case PROTOCOL.TIMER_PROTOCOL:
 								{
-									lock(key)
+									// result 생략
+
+									// 넘겨온 초를 string으로 변환해서 sysMsg에 저장한다.
+									lock (key)
 									{
-										int itemCode;
-										UnPackPacket(info[i].packet, ref tmpIngamePacket, out itemCode);
-										bridge.ItemEffectProcess(ref tmpIngamePacket, itemCode);	// 실제 아이템 효과 적용
+										sysMsg = string.Empty;
+
+										int sec = 0;
+										UnPackPacket(info[i].packet, out sec);
+										sysMsg = sec.ToString() + "초";
 									}
 								}
 								break;
 
-                            // 다른사람 끊김 프로토콜
-                            case PROTOCOL.DISCONNECT_PROTOCOL:
+							// (자신포함)상대방이 자신의 총 정보를 넘겨주면 그걸로 셋팅함
+							case PROTOCOL.WEAPON_PROTOCOL:
+								{
+									switch (result)
+									{
+										case RESULT.NOTIFY_WEAPON:
+											{
+												lock (key)
+												{
+													int playerNum;
+													WeaponPacket weapon = new WeaponPacket();
+
+													UnPackPacket(info[i].packet, out playerNum, ref weapon);
+													bridge.SetWeapon(playerNum, ref weapon);
+												}
+											}
+											break;
+									}
+								}
+								break;
+
+							// 모든 플레이어의 닉네임을 설정함(본인 포함)
+							case PROTOCOL.NICKNAME_PROTOCOL:
+								{
+									lock (key)
+									{
+										int playerNum;
+										string nickName;
+										UnPackPacket(info[i].packet, out playerNum, out nickName);
+
+										bridge.SetPlayerNickName(nickName, (playerNum - 1));
+									}
+								}
+								break;
+
+							// 게임 시작 프로토콜
+							case PROTOCOL.START_PROTOCOL:
+								{
+									// result 생략
+
+									lock (key)
+									{
+										// 모든 게임 정보를 받아가지고 옴
+										GameInfo gameInfo = new GameInfo();
+										WeaponInfo[] weapons = null;
+
+										UnPackPacket(info[i].packet, ref gameInfo, ref weapons);
+
+										// 받은 정보를 브릿지에 세팅함
+										bridge.SetGameInfoToBridge(ref gameInfo, ref weapons);
+
+										// 패킷 구조체를 플레이어 수만큼 할당
+										ingamePackets = new IngamePacket[gameInfo.maxPlayer];
+									}
+								}
+								break;
+
+							// 로딩 프로토콜
+							case PROTOCOL.LOADING_PROTOCOL:
+								{
+									switch (result)
+									{
+										// 모두가 로딩 되었다면
+										case RESULT.INGAME_SUCCESS:
+											{
+												lock (key)
+												{
+													SceneLoader.Instance.waitOtherPlayer = true;
+													GameManager.instance.LoadingComplete();
+												}
+											}
+											break;
+									}
+								}
+								break;
+
+							// 움직임 프로토콜
+							case PROTOCOL.UPDATE_PROTOCOL:
+								{
+									switch (result)
+									{
+										// 정상적인 업데이트 시
+										case RESULT.INGAME_SUCCESS:
+											{
+												lock (key)
+												{
+													UnPackPacket(info[i].packet, ref tmpIngamePacket);
+													bridge.OnUpdate(ref tmpIngamePacket);
+												}
+											}
+											break;
+
+										// 다른 플레이어가 섹터 입장 시
+										case RESULT.ENTER_SECTOR:
+											{
+												lock (key)
+												{
+													UnPackPacket(info[i].packet, ref tmpIngamePacket);
+													bridge.EnterSectorProcess(ref tmpIngamePacket);
+												}
+											}
+											break;
+
+										// 다른 플레이어가 섹터 퇴장 시
+										case RESULT.EXIT_SECTOR:
+											{
+												lock (key)
+												{
+													UnPackPacket(info[i].packet, ref tmpIngamePacket);    // 사실 이 부분도 int 하나만 갖고도 될 일
+													bridge.ExitSectorProcess(ref tmpIngamePacket);
+												}
+											}
+											break;
+
+										// 섹터 입장 시 새로 입장한 인접섹터에 있는 플레이어 리스트 갱신
+										case RESULT.UPDATE_PLAYER:
+											{
+												lock (key)
+												{
+													byte playerBit = 0;
+													UnPackPacket(info[i].packet, out playerBit);
+
+													bridge.UpdatePlayerProcess(playerBit);
+												}
+											}
+											break;
+
+										case RESULT.FORCE_MOVE:
+											{
+												lock (key)
+												{
+													UnPackPacket(info[i].packet, ref tmpIngamePacket);    // 포지션 패킷 가져옴
+													bridge.ForceMoveProcess(ref tmpIngamePacket);
+												}
+											}
+											break;
+
+										case RESULT.GET_OTHERPLAYER_STATUS:
+											{
+												lock (key)
+												{
+													UnPackPacket(info[i].packet, ref tmpIngamePacket);            // 패킷을 받고
+													bridge.GetOtherPlayerStatus(ref tmpIngamePacket);
+
+												}
+											}
+											break;
+
+										case RESULT.BULLET_HIT:
+											{
+												lock (key)
+												{
+													UnPackPacket(info[i].packet, ref tmpIngamePacket);       // 패킷을 받고
+
+													// 지금 받은 체력이 더 낮아야만 체력을 업데이트 해준다. 그리고 죽었으면 업데이트 안한다.
+													if (playersManager.hp[tmpIngamePacket.playerNum - 1] > tmpIngamePacket.health
+													   && playersManager.actionState[tmpIngamePacket.playerNum - 1] != _ACTION_STATE.DEATH)
+													{
+														bridge.HealthChanger(ref tmpIngamePacket);
+													}
+												}
+											}
+											break;
+
+										case RESULT.RESPAWN:
+											{
+												lock (key)
+												{
+													UnPackPacket(info[i].packet, ref tmpIngamePacket);
+													bridge.RespawnProcess(ref tmpIngamePacket);
+												}
+											}
+											break;
+
+										// 차 스폰
+										case RESULT.CAR_SPAWN:
+											{
+												lock (key)
+												{
+													int seed = 0;
+
+													UnPackPacket(info[i].packet, out seed);
+													bridge.CarSpawn(seed);
+												}
+											}
+											break;
+
+										// 다른 플레이어 뺑소니 당함
+										case RESULT.CAR_HIT:
+											{
+												lock (key)
+												{
+													int playerNum;
+													float posX, posZ;
+
+													UnPackPacket(info[i].packet, out playerNum, out posX, out posZ);
+													bridge.OtherPlayerHitByCar(playerNum, posX, posZ);
+												}
+											}
+											break;
+										// 누군가가 총에 맞아 숨짐
+										case RESULT.KILL:
+											{
+												lock (key)
+												{
+													int killer, victim;
+
+													UnPackPacket(info[i].packet, out killer, out victim);
+													bridge.KillProcess(killer, victim);
+												}
+											}
+											break;
+									}
+								}
+								break;
+
+							// 포커스 프로토콜(추후에 게임 정보가 추가된다면, 위치정보 뿐만 아니라 체력이나 기타 정보도 업데이트 해줘야한다!)
+							case PROTOCOL.FOCUS_PROTOCOL:
+								{
+									// result 생략
+
+									lock (key)
+									{
+										UnPackPacket(info[i].packet, ref tmpIngamePacket);         // 포지션 패킷 가져옴
+										bridge.ForceMoveProcess(ref tmpIngamePacket);
+									}
+								}
+								break;
+
+							case PROTOCOL.CAPTURE_PROTOCOL:
+								{
+									switch (result)
+									{
+										case RESULT.INGAME_SUCCESS:
+											{
+												lock (key)
+												{
+													int playerNum, buildingIdx;
+
+													// 플레이어 번호 + 건물 번호 얻어옴
+													UnPackPacket(info[i].packet, out playerNum, out buildingIdx);
+													bridge.CaptureResult(playerNum, buildingIdx);
+												}
+											}
+											break;
+
+										case RESULT.BONUS:
+											{
+												lock (key)
+												{
+													int score1, score2;
+
+													UnPackPacket(info[i].packet, out score1, out score2);   // 점령 보너스 받아옴
+													Debug.Log("팀1 점령점수 : " + score1 + ", 팀2 점령점수 : " + score2);
+												}
+											}
+											break;
+									}
+								}
+								break;
+
+							case PROTOCOL.ITEM_PROTOCOL:
+								{
+									lock (key)
+									{
+										int itemCode;
+										UnPackPacket(info[i].packet, ref tmpIngamePacket, out itemCode);
+										bridge.ItemEffectProcess(ref tmpIngamePacket, itemCode);   // 실제 아이템 효과 적용
+									}
+								}
+								break;
+
+							case PROTOCOL.GAME_END_PROTOCOL:
+								{
+									int team1Score, team2Score;
+									UnPackPacket(info[i].packet, out team1Score, out team2Score);	// 스코어 얻기
+
+									bridge.GameEndProcess(team1Score, team2Score);   // 종료 처리하고 스코어 띄우도록 함
+								}
+								break;
+
+							// 다른사람 끊김 프로토콜
+							case PROTOCOL.DISCONNECT_PROTOCOL:
                                 {
                                     switch (result)
                                     {
@@ -535,7 +577,8 @@ public partial class NetworkManager : MonoBehaviour
                                             {
                                                 lock (key)
                                                 {
-                                                    SceneManager.LoadScene("LobbyMenuScene");
+													MessageBox.Show("다른 플레이어가 종료했습니다. 상습적인 강제종료는 계정 정지의 원인이 됩니다.", "강제 종료",
+														(result) => { SceneManager.LoadScene("Lobby"); });
 
                                                     // 다시 서버로 잘 받았다고 보낸다.(서버에서도 이 클라의 상태를 바꿔줘야 함)
                                                     SendGotoLobby();

@@ -12,8 +12,7 @@ public enum _CAPTURE_RESULT //중립, 획득, 뺏김
 public class CaptureManager : MonoBehaviour
 {
     public static CaptureManager instance;
-	//public int MAX_TERRITORY_NUM = 5;
-	public int MAX_TERRITORY_NUM;
+	public int MAX_TERRITORY_NUM { get; set; }
 
     public GameObject[] obj_territory { get; set; }
     public string[] territoryTag { get; set; }

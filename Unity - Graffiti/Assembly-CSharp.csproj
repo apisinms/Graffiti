@@ -304,6 +304,12 @@
     <Compile Include="Assets\QuickOutline\Scripts\Outline.cs" />
     <Compile Include="Assets\scrollViewTest.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
+    <Compile Include="Assets\uGUI Message Box Modal Dialog\Source\DialogResult.cs" />
+    <Compile Include="Assets\uGUI Message Box Modal Dialog\Source\MenuBox.cs" />
+    <Compile Include="Assets\uGUI Message Box Modal Dialog\Source\MessageBox.cs" />
+    <Compile Include="Assets\uGUI Message Box Modal Dialog\Source\MessageBoxButtons.cs" />
+    <Compile Include="Assets\uGUI Message Box Modal Dialog\Source\MessageBoxExample.cs" />
+    <Compile Include="Assets\uGUI Message Box Modal Dialog\Source\ModalBox.cs" />
     <None Include="Assets\KetosGames\SceneTransition\README.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
@@ -317,6 +323,7 @@
     <None Include="Assets\Modern UI Pack\Read Me.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
     <None Include="Assets\ProDrawCallOptimizer\Examples\ExamplesReadme.txt" />
+    <None Include="Assets\uGUI Message Box Modal Dialog\readme.txt" />
     <None Include="Assets\Assets\JMO Assets\WarFX\Shaders\WFX_S Particle Add A8.shader" />
     <None Include="Assets\KetosGames\SceneTransition\Shaders\Unlit Transparent HUD.shader" />
     <None Include="Assets\BlueStone UI for UGUI\Changelog.txt" />

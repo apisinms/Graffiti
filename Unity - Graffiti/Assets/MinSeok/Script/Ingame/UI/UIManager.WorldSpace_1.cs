@@ -434,6 +434,7 @@ public partial class UIManager : MonoBehaviour
                 captureGage[_triggerIdx].img_capture.fillAmount = 1.0f;
                 captureGage[_triggerIdx].obj_parent.SetActive(false);
 
+                /*
                 int idx = 0;
                 switch (_playerTag)
                 {
@@ -450,41 +451,77 @@ public partial class UIManager : MonoBehaviour
                         idx = 3;
                         break;
                 }
-
-                UIManager.instance.txt_captureNotice.gameObject.SetActive(true);
-                //진짜 점령및 탈취가 끝난후.
-                if (idx == GameManager.instance.playersIndex[0] || idx == GameManager.instance.playersIndex[1])
+            
+                switch ((C_Global.GameType)GameManager.instance.gameInfo.gameType)
                 {
-                    Debug.Log("점령지를 탈취했습니다!");
-                    UIManager.instance.txt_captureNotice.color = Color.green;
-                    UIManager.instance.txt_captureNotice.text = "점령지를 탈취 했습니다 !";
-                    CaptureManager.instance.captureResult_team[_triggerIdx] = _CAPTURE_RESULT.GET;
-                    CaptureManager.instance.captureResult_enemy[_triggerIdx] = _CAPTURE_RESULT.LOSE;
-                    CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.green;
-                    CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.green;
-                }
-                else
-                {
-                    Debug.Log("점령지를 빼앗겼습니다!");
-                    UIManager.instance.txt_captureNotice.color = Color.red;
-                    UIManager.instance.txt_captureNotice.text = "점령지를 빼앗겼습니다 !";
-                    CaptureManager.instance.captureResult_team[_triggerIdx] = _CAPTURE_RESULT.LOSE;
-                    CaptureManager.instance.captureResult_enemy[_triggerIdx] = _CAPTURE_RESULT.GET;
-                    CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.red;
-                    CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.red;
+                    case C_Global.GameType._2vs2:
+                        {
+                            //진짜 점령및 탈취가 끝난후.
+                            if (idx == GameManager.instance.playersIndex[0] || idx == GameManager.instance.playersIndex[1])
+                            {
+                                //Debug.Log("점령지를 탈취했습니다!");
+                                UIManager.instance.txt_captureNotice.color = Color.green;
+                                UIManager.instance.txt_captureNotice.text = (_triggerIdx + 1).ToString() + "번 점령지를 탈취 했습니다 !";
+                                CaptureManager.instance.captureResult_team[_triggerIdx] = _CAPTURE_RESULT.GET;
+                                CaptureManager.instance.captureResult_enemy[_triggerIdx] = _CAPTURE_RESULT.LOSE;
+                                CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.green;
+                                CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.green;
+                            }
+                            else
+                            {
+                                //Debug.Log("점령지를 빼앗겼습니다!");
+                                UIManager.instance.txt_captureNotice.color = Color.red;
+                                UIManager.instance.txt_captureNotice.text = (_triggerIdx + 1).ToString() + "번 점령지를 빼앗겼습니다 !";
+                                CaptureManager.instance.captureResult_team[_triggerIdx] = _CAPTURE_RESULT.LOSE;
+                                CaptureManager.instance.captureResult_enemy[_triggerIdx] = _CAPTURE_RESULT.GET;
+                                CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.red;
+                                CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.red;
+                            }
+                        }
+                        break;
+
+                    case C_Global.GameType._1vs1:
+                        {
+                            //진짜 점령및 탈취가 끝난후.
+                            if (idx == GameManager.instance.playersIndex[0])
+                            {
+                                //Debug.Log("점령지를 탈취했습니다!");
+                                UIManager.instance.txt_captureNotice.color = Color.green;
+                                UIManager.instance.txt_captureNotice.text = (_triggerIdx + 1).ToString() + "번 점령지를 탈취 했습니다 !";
+                                CaptureManager.instance.captureResult_team[_triggerIdx] = _CAPTURE_RESULT.GET;
+                                CaptureManager.instance.captureResult_enemy[_triggerIdx] = _CAPTURE_RESULT.LOSE;
+                                CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.green;
+                                CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.green;
+                            }
+                            else
+                            {
+                                //Debug.Log("점령지를 빼앗겼습니다!");
+                                UIManager.instance.txt_captureNotice.color = Color.red;
+                                UIManager.instance.txt_captureNotice.text = (_triggerIdx + 1).ToString() + "번 점령지를 빼앗겼습니다 !";
+                                CaptureManager.instance.captureResult_team[_triggerIdx] = _CAPTURE_RESULT.LOSE;
+                                CaptureManager.instance.captureResult_enemy[_triggerIdx] = _CAPTURE_RESULT.GET;
+                                CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.red;
+                                CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.red;
+                            }
+                        }
+                        break;
                 }
 
+                UIManager.instance.txt_captureNotice.gameObject.SetActive(true); //셋팅한거 켜주고
                 StartCoroutine(Cor_CheckCaptureNoticeTime()); // x초뒤에 캡처 알림 텍스트 셋엑티브펄스.
                 isStartCaptureSubCor[_triggerIdx] = false; //서브코루틴 종료는 여기서 초기화되어야함. 메인캡처코루틴이 끝난후
                 isStartCaptureCor[_triggerIdx] = false;
+                */
+
+                //브릿지 네트워크의 CaptureResult(int _capturePlayerNum) 에서 결과작업이 이루어짐 정확한 동기화를 위함.
 
                 if (_playerTag.Equals(GameManager.instance.myTag))
                 {
                     StateManager.instance.Idle(true); //점령완료 후 다시 IDLE상태변환
-#if NETWORK
+                    #if NETWORK
                     NetworkManager.instance.SendIngamePacket();
                     NetworkManager.instance.SendCaptureSuccess(_triggerIdx);
-#endif
+                    #endif
                 }
                 yield break;
             }
@@ -497,6 +534,7 @@ public partial class UIManager : MonoBehaviour
 
     public IEnumerator Cor_CheckCaptureNoticeTime()
     {
+        Debug.Log("실행되었다");
         yield return YieldInstructionCache.WaitForSeconds(2.0f);
         UIManager.instance.txt_captureNotice.gameObject.SetActive(false);
         yield break;

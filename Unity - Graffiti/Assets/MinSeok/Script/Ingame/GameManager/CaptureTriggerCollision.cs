@@ -43,40 +43,87 @@ public class CaptureTriggerCollision : MonoBehaviour
                 break;
         }
 
-        if (idx == GameManager.instance.playersIndex[0] || idx == GameManager.instance.playersIndex[1])
+        switch ((C_Global.GameType)GameManager.instance.gameInfo.gameType)
         {
-            //점령지발판의 중복방지, 이미 우리가 점령한 지역이면 리턴
-            if (isTriggerProcessing == true || CaptureManager.instance.captureResult_team[triggerIndex] == _CAPTURE_RESULT.GET)
-                return;
-        }
-        else
-        {
-            if (isTriggerProcessing == true || CaptureManager.instance.captureResult_enemy[triggerIndex] == _CAPTURE_RESULT.GET)
-                return;
+            case C_Global.GameType._2vs2:
+                {
+                    if (idx == GameManager.instance.playersIndex[0] || idx == GameManager.instance.playersIndex[1])
+                    {
+                        //점령지발판의 중복방지, 이미 우리가 점령한 지역이면 리턴
+                        if (isTriggerProcessing == true || CaptureManager.instance.captureResult_team[triggerIndex] == _CAPTURE_RESULT.GET)
+                            return;
+                    }
+                    else
+                    {
+                        if (isTriggerProcessing == true || CaptureManager.instance.captureResult_enemy[triggerIndex] == _CAPTURE_RESULT.GET)
+                            return;
+                    }
+                }
+                break;
+
+            case C_Global.GameType._1vs1:
+                {
+                    if (idx == GameManager.instance.playersIndex[0])
+                    {
+                        //점령지발판의 중복방지, 이미 우리가 점령한 지역이면 리턴
+                        if (isTriggerProcessing == true || CaptureManager.instance.captureResult_team[triggerIndex] == _CAPTURE_RESULT.GET)
+                            return;
+                    }
+                    else
+                    {
+                        if (isTriggerProcessing == true || CaptureManager.instance.captureResult_enemy[triggerIndex] == _CAPTURE_RESULT.GET)
+                            return;
+                    }
+                }
+                break;
         }
 
         isTriggerProcessing = true;
 
         //들어온놈이 가만히 서있을때(아이들)를 검사할것임. 서있으면 점령시작 아니면 모든 점령 코루틴을 끔.
-        curCheckIdleCor = StartCoroutine(Cor_CheckPlayerOnlyIdle(idx, other.tag)); 
+        curCheckIdleCor = StartCoroutine(Cor_CheckPlayerOnlyIdle(idx, other.tag));
     }
-  
+
 
     IEnumerator Cor_CheckPlayerOnlyIdle(int _playerIdx, string _tag) //점령중인 플레이어 인덱스를 넘김
     {
-        while(true)
+        while (true)
         {
-            //점령하는놈이 내기준 팀이냐 적이냐에따른. 이 체크코루틴은 점령이 끝나도 계속돌기때문에 점령했으면 멈춰야함.
-            if (_playerIdx == GameManager.instance.playersIndex[0] || _playerIdx == GameManager.instance.playersIndex[1])
+            switch ((C_Global.GameType)GameManager.instance.gameInfo.gameType)
             {
-                //점령지발판의 중복방지, 이미 우리가 점령한 지역이면 리턴, 또는 적이 점령을 완료했으나 그 적이 다시 점령하려하면 리턴
-                if (CaptureManager.instance.captureResult_team[triggerIndex] == _CAPTURE_RESULT.GET)
-                    yield break;
-            }
-            else
-            {
-                if (CaptureManager.instance.captureResult_enemy[triggerIndex] == _CAPTURE_RESULT.GET)
-                    yield break;
+                case C_Global.GameType._2vs2:
+                    {
+                        //점령하는놈이 내기준 팀이냐 적이냐에따른. 이 체크코루틴은 점령이 끝나도 계속돌기때문에 점령했으면 멈춰야함.
+                        if (_playerIdx == GameManager.instance.playersIndex[0] || _playerIdx == GameManager.instance.playersIndex[1])
+                        {
+                            //점령지발판의 중복방지, 이미 우리가 점령한 지역이면 리턴, 또는 적이 점령을 완료했으나 그 적이 다시 점령하려하면 리턴
+                            if (CaptureManager.instance.captureResult_team[triggerIndex] == _CAPTURE_RESULT.GET)
+                                yield break;
+                        }
+                        else
+                        {
+                            if (CaptureManager.instance.captureResult_enemy[triggerIndex] == _CAPTURE_RESULT.GET)
+                                yield break;
+                        }
+                    }
+                    break;
+
+                case C_Global.GameType._1vs1:
+                    {
+                        //점령하는놈이 내기준 팀이냐 적이냐에따른. 이 체크코루틴은 점령이 끝나도 계속돌기때문에 점령했으면 멈춰야함.
+                        if (_playerIdx == GameManager.instance.playersIndex[0])
+                        {
+                            //점령지발판의 중복방지, 이미 우리가 점령한 지역이면 리턴, 또는 적이 점령을 완료했으나 그 적이 다시 점령하려하면 리턴
+                            if (CaptureManager.instance.captureResult_team[triggerIndex] == _CAPTURE_RESULT.GET)
+                                yield break;
+                        }
+                        else
+                        {
+                            if (CaptureManager.instance.captureResult_enemy[triggerIndex] == _CAPTURE_RESULT.GET)
+                                yield break;
+                        }
+                    }
+                    break;
             }
 
             if (_playerIdx == myIndex) //점령시도가 "나"면
@@ -91,6 +138,12 @@ public class CaptureTriggerCollision : MonoBehaviour
                     UIManager.instance.DecreaseCaptureGageSubImg(triggerIndex, _tag, false);
                     UIManager.instance.DecreaseCaptureGageImg(triggerIndex, _tag, false);
                     UIManager.instance.StartGraffitySpraying(triggerIndex, _tag, false);
+
+                    if (PlayersManager.instance.actionState[myIndex] == _ACTION_STATE.DEATH)
+                    {
+                        isTriggerProcessing = false;
+                        yield break;
+                    }
                 }
             }
             else //다른애들이면 스테이트를 받아와야함
@@ -106,6 +159,12 @@ public class CaptureTriggerCollision : MonoBehaviour
                     UIManager.instance.DecreaseCaptureGageSubImg(triggerIndex, _tag, false);
                     UIManager.instance.DecreaseCaptureGageImg(triggerIndex, _tag, false);
                     UIManager.instance.StartGraffitySpraying(triggerIndex, _tag, false);
+
+                    if (tmpState == _ACTION_STATE.DEATH)
+                    {
+                        isTriggerProcessing = false;
+                        yield break;
+                    }
                 }
             }
 
@@ -115,8 +174,34 @@ public class CaptureTriggerCollision : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (isTriggerProcessing == false) //점령지발판의 중복방지
-            return;
+        int idx = 0;
+        switch (other.tag)
+        {
+            case "Player1":
+                idx = 0;
+                break;
+            case "Player2":
+                idx = 1;
+                break;
+            case "Player3":
+                idx = 2;
+                break;
+            case "Player4":
+                idx = 3;
+                break;
+        }
+
+        if (idx == myIndex) //아이들일때는 트리거 밖으로 나갈수가 없음
+        {
+            if (isTriggerProcessing == false || PlayersManager.instance.actionState[myIndex] == _ACTION_STATE.IDLE)
+                return;
+        }
+        else
+        {
+            _ACTION_STATE tmpState = (_ACTION_STATE)NetworkManager.instance.GetActionState(idx);
+            if (isTriggerProcessing == false || tmpState == _ACTION_STATE.IDLE)
+                return;
+        }
 
         isTriggerProcessing = false;
 

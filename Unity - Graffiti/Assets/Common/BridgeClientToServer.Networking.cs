@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static GameManager;
 using static NetworkManager;
 using static WeaponManager;
@@ -300,6 +301,71 @@ public partial class BridgeClientToServer : MonoBehaviour
         networkManager.SetIngamePacket(_packet.playerNum - 1, ref _packet);
     }
 
+    public void CaptureResult(int _capturePlayerNum, int _triggerIdx)
+    {
+        int idx = _capturePlayerNum - 1;
+
+        switch ((C_Global.GameType)GameManager.instance.gameInfo.gameType)
+        {
+            case C_Global.GameType._2vs2:
+                {
+                    //진짜 점령및 탈취가 끝난후.
+                    if (idx == GameManager.instance.playersIndex[0] || idx == GameManager.instance.playersIndex[1])
+                    {
+                        //Debug.Log("점령지를 탈취했습니다!");
+                        UIManager.instance.txt_captureNotice.color = Color.green;
+                        UIManager.instance.txt_captureNotice.text = (_triggerIdx + 1).ToString() + "번 점령지를 탈취 했습니다 !";
+                        CaptureManager.instance.captureResult_team[_triggerIdx] = _CAPTURE_RESULT.GET;
+                        CaptureManager.instance.captureResult_enemy[_triggerIdx] = _CAPTURE_RESULT.LOSE;
+                        CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.green;
+                        CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.green;
+                    }
+                    else
+                    {
+                        //Debug.Log("점령지를 빼앗겼습니다!");
+                        UIManager.instance.txt_captureNotice.color = Color.red;
+                        UIManager.instance.txt_captureNotice.text = (_triggerIdx + 1).ToString() + "번 점령지를 빼앗겼습니다 !";
+                        CaptureManager.instance.captureResult_team[_triggerIdx] = _CAPTURE_RESULT.LOSE;
+                        CaptureManager.instance.captureResult_enemy[_triggerIdx] = _CAPTURE_RESULT.GET;
+                        CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.red;
+                        CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.red;
+                    }
+                }
+                break;
+
+            case C_Global.GameType._1vs1:
+                {
+                    //진짜 점령및 탈취가 끝난후.
+                    if (idx == GameManager.instance.playersIndex[0])
+                    {
+                        //Debug.Log("점령지를 탈취했습니다!");
+                        UIManager.instance.txt_captureNotice.color = Color.green;
+                        UIManager.instance.txt_captureNotice.text = (_triggerIdx + 1).ToString() + "번 점령지를 탈취 했습니다 !";
+                        CaptureManager.instance.captureResult_team[_triggerIdx] = _CAPTURE_RESULT.GET;
+                        CaptureManager.instance.captureResult_enemy[_triggerIdx] = _CAPTURE_RESULT.LOSE;
+                        CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.green;
+                        CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.green;
+                    }
+                    else
+                    {
+                        //Debug.Log("점령지를 빼앗겼습니다!");
+                        UIManager.instance.txt_captureNotice.color = Color.red;
+                        UIManager.instance.txt_captureNotice.text = (_triggerIdx + 1).ToString() + "번 점령지를 빼앗겼습니다 !";
+                        CaptureManager.instance.captureResult_team[_triggerIdx] = _CAPTURE_RESULT.LOSE;
+                        CaptureManager.instance.captureResult_enemy[_triggerIdx] = _CAPTURE_RESULT.GET;
+                        CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.red;
+                        CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.red;
+                    }
+                }
+                break;
+        }
+
+        UIManager.instance.txt_captureNotice.gameObject.SetActive(true); //셋팅한거 켜주고
+        UIManager.instance.StartCoroutine(UIManager.instance.Cor_CheckCaptureNoticeTime()); // x초뒤에 캡처 알림 텍스트 셋엑티브펄스.
+        UIManager.instance.isStartCaptureSubCor[_triggerIdx] = false; //서브코루틴 종료는 여기서 초기화되어야함. 메인캡처코루틴이 끝난후
+        UIManager.instance.isStartCaptureCor[_triggerIdx] = false;
+    }
+
 	public void ItemEffectProcess(ref IngamePacket _packet, int _itemCode)
 	{
 		switch((ItemCode)_itemCode)
@@ -327,6 +393,17 @@ public partial class BridgeClientToServer : MonoBehaviour
             }
         }
     }
+
+	public void GameEndProcess(int _team1Score, int _team2Score)
+	{
+		// 스코어를 DontDestroyOnLoad 된 게임 오브젝트 스크립트에다가 저장하고
+		// EndScene을 호출
+
+		MessageBox.Show("게임 끝~", "게임 끝~",
+		(result) => { SceneManager.LoadScene("Lobby"); });
+		
+		networkManager.SendGotoLobby();	// 나 로비로 갈랭~
+	}
 
     //쐇을때 무조건 1번의 패킷을 보내야됨. 보정용
     public void SendPacketOnce()

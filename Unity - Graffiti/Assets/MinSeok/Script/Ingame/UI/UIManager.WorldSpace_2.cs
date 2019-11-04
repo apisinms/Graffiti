@@ -44,7 +44,8 @@ public partial class UIManager : MonoBehaviour
     #endregion
 
     #region GRAFFITY
-    public GameObject[] obj_prefebGraffity;
+    public GameObject[] obj_prefebGraffity_2vs2;
+    public GameObject[] obj_prefebGraffity_1vs1;
     public _TXT_GRAFFITY_INFO[] graffity;
     public Vector3[] graffityAddPos { get; set; }
     public Coroutine[] curSprayingCor { get; set; }
@@ -157,16 +158,41 @@ public partial class UIManager : MonoBehaviour
 
     private void Initialization_Graffity()
     {
-        //obj_prefebGraffity = new GameObject[CaptureManager.instance.MAX_TERRITORY_NUM];
         graffity = new _TXT_GRAFFITY_INFO[CaptureManager.instance.MAX_TERRITORY_NUM];
         curSprayingCor = new Coroutine[CaptureManager.instance.MAX_TERRITORY_NUM];
         isStartSprayingCor = new bool[CaptureManager.instance.MAX_TERRITORY_NUM];
         graffityAddPos = new Vector3[CaptureManager.instance.MAX_TERRITORY_NUM];
 
+		/*// 할당먼저
+		if (CaptureManager.instance.MAX_TERRITORY_NUM == 5)
+			obj_prefebGraffity_2vs2 = new GameObject[CaptureManager.instance.MAX_TERRITORY_NUM];
+		else if (CaptureManager.instance.MAX_TERRITORY_NUM == 3)
+			obj_prefebGraffity_1vs1 = new GameObject[CaptureManager.instance.MAX_TERRITORY_NUM];
+
+		// 오브젝트 셋팅
+		GameObject territory = null;
+		for (int i = 0; i < CaptureManager.instance.MAX_TERRITORY_NUM; i++, territory = null)
+		{
+			territory = GameObject.FindGameObjectWithTag("Territory" + (i + 1).ToString());
+
+			if(territory != null)
+			{
+				if (CaptureManager.instance.MAX_TERRITORY_NUM == 5)
+					obj_prefebGraffity_2vs2[i] = territory;
+				else if (CaptureManager.instance.MAX_TERRITORY_NUM == 3)
+					obj_prefebGraffity_1vs1[i] = territory;
+			}
+		}*/
+
         for (int i = 0; i < graffity.Length; i++)
         {
             curSprayingCor[i] = null;
-            graffity[i].obj_parent = Instantiate(obj_prefebGraffity[i], GameObject.FindGameObjectWithTag("Canvas_worldSpace2").transform);
+
+			if (CaptureManager.instance.MAX_TERRITORY_NUM == 5)
+				graffity[i].obj_parent = Instantiate(obj_prefebGraffity_2vs2[i], GameObject.FindGameObjectWithTag("Canvas_worldSpace2").transform);
+			else if (CaptureManager.instance.MAX_TERRITORY_NUM == 3)
+				graffity[i].obj_parent = Instantiate(obj_prefebGraffity_1vs1[i], GameObject.FindGameObjectWithTag("Canvas_worldSpace2").gameObject.transform);
+
             graffity[i].img_graffity = graffity[i].obj_parent.transform.GetChild(0).GetComponent<Image>();
             graffity[i].obj_parent.SetActive(true);
         }
@@ -248,10 +274,26 @@ public partial class UIManager : MonoBehaviour
                 break;
         }
 
-        if (idx == GameManager.instance.playersIndex[0] || idx == GameManager.instance.playersIndex[1])
-            graffity[_triggerIdx].img_graffity.color = Color.white;
-        else
-            graffity[_triggerIdx].img_graffity.color = Color.red;
+        switch ((C_Global.GameType)GameManager.instance.gameInfo.gameType)
+        {
+            case C_Global.GameType._2vs2:
+                {
+                    if (idx == GameManager.instance.playersIndex[0] || idx == GameManager.instance.playersIndex[1])
+                        graffity[_triggerIdx].img_graffity.color = Color.white;
+                    else
+                        graffity[_triggerIdx].img_graffity.color = Color.red;
+                }
+                break;
+
+            case C_Global.GameType._1vs1:
+                {
+                    if (idx == GameManager.instance.playersIndex[0])
+                        graffity[_triggerIdx].img_graffity.color = Color.white;
+                    else
+                        graffity[_triggerIdx].img_graffity.color = Color.red;
+                }
+                break;
+        }
 
         while (true)
         {

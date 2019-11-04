@@ -296,7 +296,6 @@ enum ROOMSTATUS
 	ROOM_WAIT =1, 
 	ROOM_ITEMSEL, 
 	ROOM_GAME,
-	ROOM_GAME_END,
 	ROOM_END,	// ¹æ Á¾·á
 };
 
