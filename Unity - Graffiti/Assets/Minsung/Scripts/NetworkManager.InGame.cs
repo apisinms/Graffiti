@@ -222,18 +222,31 @@ public partial class NetworkManager : MonoBehaviour
 
     }
 
-	public void SendItemCode(ItemCode _code)
-	{
-		int packetSize = 0;
+    public void SendItemCode(ItemCode _code)
+    {
+        int packetSize = 0;
 
-		// 아이템 프로토콜 전송
-		protocol = SetProtocol(
-		   STATE_PROTOCOL.INGAME_STATE,
-		   PROTOCOL.ITEM_PROTOCOL,
-		   RESULT.INGAME_SUCCESS);
+        // 아이템 프로토콜 전송
+        protocol = SetProtocol(
+           STATE_PROTOCOL.INGAME_STATE,
+           PROTOCOL.ITEM_PROTOCOL,
+           RESULT.INGAME_SUCCESS);
 
-		// 아이템 프로토콜 코드와 함께 전송
-		PackPacket(ref sendBuf, protocol, (int)_code, out packetSize);
-		bw.Write(sendBuf, 0, packetSize);
-	}
+        // 아이템 프로토콜 코드와 함께 전송
+        PackPacket(ref sendBuf, protocol, (int)_code, out packetSize);
+        bw.Write(sendBuf, 0, packetSize);
+    }
+
+    public bool CheckSomeoneQuitBeforeGameLoad()
+    {
+        if (state == STATE_PROTOCOL.INGAME_STATE &&
+           protocol == PROTOCOL.DISCONNECT_PROTOCOL &&
+           result == RESULT.BEFORE_LOAD)
+        {
+            return true;
+        }
+
+        else
+            return false;
+    }
 }

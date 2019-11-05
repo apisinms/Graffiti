@@ -14,9 +14,6 @@ public partial class NetworkManager : MonoBehaviour
 {
     // 서버 IP와 포트
     private static IPAddress serverIP = IPAddress.Parse("127.0.0.1");
-    //private static IPAddress serverIP = IPAddress.Parse("192.168.0.6");
-    //private static IPAddress serverIP = IPAddress.Parse("211.227.82.184");
-    //private static IPAddress serverIP = IPAddress.Parse("14.32.42.101");
 
     private static int serverPort = 10823;
 
@@ -76,9 +73,9 @@ public partial class NetworkManager : MonoBehaviour
         GOTO_LOBBY_PROTOCOL = ((Int64)0x1 << 46),      // 로비로 가는 프로토콜
         CAPTURE_PROTOCOL = ((Int64)0x1 << 45),      // 점령 프로토콜
         ITEM_PROTOCOL = ((Int64)0x1 << 44),         // 아이템 프로토콜
-		GAME_END_PROTOCOL = ((Int64)0x1 << 43),   // 게임 종료 프로토콜(스코어 보여줘야함)
+        GAME_END_PROTOCOL = ((Int64)0x1 << 43),   // 게임 종료 프로토콜(스코어 보여줘야함)
 
-		DISCONNECT_PROTOCOL = ((Int64)0x1 << 34), // 접속 끊김 프로토콜
+        DISCONNECT_PROTOCOL = ((Int64)0x1 << 34), // 접속 끊김 프로토콜
 
         // 48 ~ 34
     };
@@ -126,7 +123,8 @@ public partial class NetworkManager : MonoBehaviour
 
         // DISCONNECT_PROTOCOL 개별
         WEAPON_SEL = ((Int64)0x1 << 31),
-        ABORT = ((Int64)0x1 << 30),
+        BEFORE_LOAD = ((Int64)0x1 << 30),
+        ABORT = ((Int64)0x1 << 29),
 
         // CAPTRUE_PROTOCOL 개별
         BONUS = ((Int64)0x1 << 31),
@@ -144,6 +142,45 @@ public partial class NetworkManager : MonoBehaviour
 
     string nickName;
     public string NickName { get { return nickName; } set { nickName = value; } }
+
+    // 플레이어 개별 스코어
+    [StructLayout(LayoutKind.Sequential)]
+    public struct Score
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int numOfKill;      // 내가 몇 명 죽였는지
+
+        [MarshalAs(UnmanagedType.I4)]
+        public int numOfDeath;     // 내가 몇 번 죽었는지
+
+        [MarshalAs(UnmanagedType.I4)]
+        public int killScore;      // 킬 점수
+
+        [MarshalAs(UnmanagedType.I4)]
+        public int captureCount;   // 점령해본 건물 개수 
+
+        public byte[] Serialize()
+        {
+            // allocate a byte array for the struct data
+            var buffer = new byte[Marshal.SizeOf(typeof(BulletCollisionChecker))];
+
+            // Allocate a GCHandle and get the array pointer
+            var gch = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+            var pBuffer = gch.AddrOfPinnedObject();
+
+            // copy data from struct to array and unpin the gc pointer
+            Marshal.StructureToPtr(this, pBuffer, false);
+            gch.Free();
+
+            return buffer;
+        }
+        public void Deserialize(ref byte[] data)
+        {
+            var gch = GCHandle.Alloc(data, GCHandleType.Pinned);
+            this = (Score)Marshal.PtrToStructure(gch.AddrOfPinnedObject(), typeof(Score));
+            gch.Free();
+        }
+    };
 
     // 총알 충돌 검사 구조체
     [StructLayout(LayoutKind.Sequential)]

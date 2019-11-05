@@ -15,7 +15,7 @@ class C_ClientInfo;
 class InGameManager : public C_SyncCS<InGameManager>
 {
 #ifdef DEBUG
-	static const int WEAPON_SELTIME = 3;	// 무기 선택 시간(초 단위)
+	static const int WEAPON_SELTIME = 6;	// 무기 선택 시간(초 단위)
 #else
 	static const int WEAPON_SELTIME = 30 + 1;	// 무기 선택 시간(초 단위)
 #endif
@@ -65,8 +65,9 @@ class InGameManager : public C_SyncCS<InGameManager>
 		KILL                   = ((__int64)0x1 << 22),		// 플레이어한테 죽음
 
 		// DISCONNECT_PROTOCOL 개별
-		WEAPON_SEL = ((__int64)0x1 << 31),
-		ABORT      = ((__int64)0x1 << 30),
+		WEAPON_SEL         = ((__int64)0x1 << 31),
+		BEFORE_LOAD        = ((__int64)0x1 << 30),
+		ABORT              = ((__int64)0x1 << 29),
 
 		// CAPTRUE_PROTOCOL 개별
 		BONUS = ((__int64)0x1 << 31),
@@ -95,6 +96,7 @@ private:
 	void PackPacket(char* _setptr, IngamePacket& _struct, int& _size);
 	void PackPacket(char* _setptr, IngamePacket& _struct, int _code, int& _size);
 	void PackPacket(char* _setptr, GameInfo* &_gameInfo, vector<WeaponInfo*>& _weaponInfo, int& _size);
+	void PackPacket(char* _setptr, RoomInfo* _room, int& _size);	// 방에 있는 플레이어들의 스코어를 보내준다.
 	void UnPackPacket(char* _getBuf, int& _num);
 	void UnPackPacket(char* _getBuf, float& _posX, float& _posZ);
 	void UnPackPacket(char* _getBuf, IngamePacket& _struct);
@@ -142,7 +144,7 @@ private:
 	void Kill(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer);
 	void Respawn(C_ClientInfo* _player);
 
-	void AddCaptureBonus(RoomInfo* _room);	// 점령 보너스
+	void AddCaptureBonus(RoomInfo* _room, int& _team1CaptureScore, int& _team2CaptureScore);	// 점령 보너스
 
 	void ListSendPacket(list<C_ClientInfo*>& _list, C_ClientInfo* _exceptClient, PROTOCOL_INGAME _protocol, char* _buf, int _packetSize, bool _notFocusExcept);
 	void ListSendPacket(vector<C_ClientInfo*>& _list, C_ClientInfo* _exceptClient, PROTOCOL_INGAME _protocol, char* _buf, int _packetSize, bool _notFocusExcept);

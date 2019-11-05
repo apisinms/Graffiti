@@ -18,6 +18,9 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
     private static bool isLeftDrag;
     public static bool LeftTouch { get { return isLeftDrag; } }
     private _INPUT_TYPE inputType;
+    float timer;
+    bool timerFlag = true;
+    public float waitTime = C_Global.packetInterval * 2;   // 0.2초
 
     protected struct _Joystick
     {
@@ -41,6 +44,7 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
         isLeftDrag = false;
 
         inputType = _INPUT_TYPE.JOYSTICK;
+        timer = 0.0f;
     }
 
     public void DragStart(int _inputType)
@@ -50,9 +54,9 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
         StateManager.instance.Circuit(true);
 
 #if NETWORK
-		// 처음 터치할 때만
-		if (LeftJoystick.LeftTouch == false && RightJoystick.RightTouch == false)
-			BridgeClientToServer.instance.StartMoveCor();
+        // 처음 터치할 때만
+        if (LeftJoystick.LeftTouch == false && RightJoystick.RightTouch == false)
+            BridgeClientToServer.instance.StartMoveCor();
 #endif
         isLeftDrag = true;
     }
@@ -63,7 +67,7 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
         Vector3 pos = data.position; //드래그 한곳의 위치.
 
         left_joystick.stickDir = (pos - left_joystick.stickFirstPos).normalized; // 스틱 이동방향 추출 .(오른쪽,왼쪽,위,아래)
-        //Debug.Log(PlayersManager.instance.obj_players[PlayersManager.instance.myIndex].transform.eulerAngles.y);
+                                                                                 //Debug.Log(PlayersManager.instance.obj_players[PlayersManager.instance.myIndex].transform.eulerAngles.y);
 
         // playerDir = (stickDir.x * Vector3.right) + (stickDir.y * Vector3.forward); //동시에 플레이어의 이동방향결정
         PlayersManager.instance.direction[myIndex] = new Vector3(left_joystick.stickDir.x, 0, left_joystick.stickDir.y);
@@ -95,19 +99,11 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
         left_joystick.stickDir = Vector3.zero; // 방향을 0으로.
         StateManager.instance.Circuit(false);
 
-        /*
-          if (PlayersManager.instance.stateInfo[myIndex].actionState > (int)_ACTION_STATE.IDLE)
-          {
-              PlayersManager.instance.stateInfo[myIndex].actionState -= (int)_ACTION_STATE.CIRCUIT;
-              img_joystick_stick.transform.position = left_joystick.stickFirstPos;
-              left_joystick.stickDir = Vector3.zero; // 방향을 0으로.
-          }
-          */
         isLeftDrag = false;
 #if NETWORK
-      // 둘 다 터치 뗐을 때만
-      if (LeftJoystick.LeftTouch == false && RightJoystick.RightTouch == false)
-			BridgeClientToServer.instance.StopMoveCor();
+        // 둘 다 터치 뗐을 때만
+        if (LeftJoystick.LeftTouch == false && RightJoystick.RightTouch == false)
+            BridgeClientToServer.instance.StopMoveCor();
 #endif
     }
 
@@ -119,13 +115,38 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
     }
 
     private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) ||
-            Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D))
+    {      
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) ||
+           Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D))
         {
             inputType = _INPUT_TYPE.KEYBOARD;
         }
+        
+#if NETWORK
+        // 조작 이 없을시 
+        if (LeftTouch == false && RightJoystick.RightTouch == false && timerFlag == true)
+        {
+            timer += Time.deltaTime;
 
+            if (timer > waitTime)
+            {
+                //Action
+                NetworkManager.instance.SendIngamePacket();
+                Debug.Log("조작이" + waitTime + "초간 없었습니다.");
+                timerFlag = false;
+                timer = 0;
+            }
+        }
+        else if (LeftTouch == true || RightJoystick.RightTouch == true)
+        {   // 조작이 들어온다면 다시 timer초기화 
+            if (timerFlag == false)
+            {
+                timerFlag = true;
+            }
+            timer = 0;
+        }
+#endif
+      
         if (SystemInfo.deviceType != DeviceType.Desktop || inputType == _INPUT_TYPE.JOYSTICK)
             return;
 
@@ -135,23 +156,20 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
 
         if (x == 0 && y == 0)
         {
-            //if (isLeftDrag == true)
-            {
-                Debug.Log("엔드");
+            if (isLeftDrag == true)
                 DragEnd();
-            }
         }
         else if (x != 0 || y != 0)
         {
             if (isLeftDrag == false)
-            {
-                //Debug.Log("시작");
                 DragStart(1);
-            }
 
             PlayersManager.instance.direction[myIndex] = new Vector3(left_joystick.stickDir.x, 0, left_joystick.stickDir.y);
             img_joystick_stick.rectTransform.position = left_joystick.stickFirstPos + (left_joystick.stickDir * left_joystick.maxMoveArea);
             PlayersManager.instance.speed[myIndex] = PlayersManager.instance.maxSpeed;
         }
+
+        if (Input.GetKeyDown(KeyCode.R))
+            UIManager.instance.ReloadAmmo_Btn();           
     }
 }

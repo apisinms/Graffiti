@@ -276,82 +276,43 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
 		}
 	}
 
-	public int SetPlayerBit(string _playerTag)
-	{
-		int hitPlayerNum = -1;
-		switch (_playerTag)
-		{
-			case "Player1":
-				{
-#if DEBUG
-					colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_1;
-					hitPlayerNum = 1;
-#else
-					// 나랑 같은 팀이 아니면 세팅
-					if ((myIndex + 1) != 2)
-					{
-					colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_1;
-					hitPlayerNum = 1;
-					}
-#endif
-
-				}
-				break;
+    public int SetPlayerBit(string _playerTag)
+    {
+        int hitPlayerNum = -1;
+        switch (_playerTag)
+        {
+            case "Player1":
+                {
+                    colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_1;
+                    hitPlayerNum = 1;
+                }
+                break;
 
 
-			case "Player2":
-				{
-#if DEBUG
-					colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_2;
-					hitPlayerNum = 2;
-#else
-					// 나랑 같은 팀이 아니면 세팅
-					if ((myIndex + 1) != 1)
-					{
-						colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_2;
-						hitPlayerNum = 2;
-					}
-#endif
-				}
-				break;
+            case "Player2":
+                {
+                    colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_2;
+                    hitPlayerNum = 2;
+                }
+                break;
 
-			case "Player3":
-				{
-#if DEBUG
-					// 나랑 같은 팀이 아니면 세팅
-					if ((myIndex + 1) != 4)
-					{
-						colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_3;
-						hitPlayerNum = 3;
-					}
-#else
-					colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_3;
-					hitPlayerNum = 3;
-#endif
+            case "Player3":
+                {
+                    colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_3;
+                    hitPlayerNum = 3;
+                }
+                break;
 
-				}
-				break;
+            case "Player4":
+                {
+                    colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_4;
+                    hitPlayerNum = 4;
+                }
+                break;
+        }
 
-			case "Player4":
-				{
-#if DEBUG
-					// 나랑 같은 팀이 아니면 세팅
-					if ((myIndex + 1) != 3)
-					{
-						colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_4;
-						hitPlayerNum = 4;
-					}
-#else
-					colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_4;
-					hitPlayerNum = 4;
-#endif
-
-				}
-				break;
-		}
-
-		return hitPlayerNum;
-	}
+        return hitPlayerNum;
+    }
 
     // player의 HitCountBit(맞은 횟수 비트)를 증가한다.
     public void IncPlayerHitCountBit(int _hitPlayerNum)

@@ -236,7 +236,7 @@ public partial class BridgeClientToServer : MonoBehaviour
         if ((_victim - 1) == myIndex) // 내가(_victim - 1) 상대방(_killer - 1)에게 죽었을때.
         {
             StateManager.instance.Death(true); //내가 죽은상태로 전환.
-            uiManager.SetDeadUI("당신이(가) " + playersManager.nickname[_killer - 1] + "의 " + weaponManager.GetWeaponName(_killer - 1) + "로 인해 사망했습니다!"); // 죽은 UI로 전환
+            uiManager.SetDeadUI("당신이 " + playersManager.nickname[_killer - 1] + "의 " + weaponManager.GetWeaponName(_killer - 1) + "로 인해 사망했습니다!"); // 죽은 UI로 전환
         }
         else
         {
@@ -279,6 +279,7 @@ public partial class BridgeClientToServer : MonoBehaviour
 
     public void OtherPlayerHitByCar(int _playerNum, float _posX, float _posZ)
     {
+        Debug.Log("다른새기");
         // 맞은 놈 튕기게 하고
         Rigidbody rigid = playersManager.obj_players[_playerNum - 1].GetComponent<Rigidbody>();
         Vector3 force = new Vector3(_posX, 0.0f, _posZ);
@@ -394,17 +395,16 @@ public partial class BridgeClientToServer : MonoBehaviour
         }
     }
 
-	public void GameEndProcess(int _team1Score, int _team2Score)
-	{
-        // 스코어를 DontDestroyOnLoad 된 게임 오브젝트 스크립트에다가 저장하고
-        // EndScene을 호출
+    public void GameEndProcess(ref int[] _playersNum, ref Score[] _scores)
+    {
+        /// 여기서 _scores 다음 씬까지 저장하고 알아서 EndScene에서 요리해라 광일아
+        if (moveCor != null)
+            StopCoroutine(moveCor);
 
-        //MessageBox.Show("게임 끝~", "게임 끝~",
-        //(result) => { SceneManager.LoadScene("EndScene"); });
         SceneManager.LoadScene("EndScene");
 
-        //networkManager.SendGotoLobby();	// 나 로비로 갈랭~
-	}
+        networkManager.SendGotoLobby();   // 나 로비로 갈랭~(얜 호출해줘야 돼)
+    }
 
     //쐇을때 무조건 1번의 패킷을 보내야됨. 보정용
     public void SendPacketOnce()

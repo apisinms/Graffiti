@@ -24,7 +24,7 @@ using namespace std;
 #define RESULT_MASK		54
 
 // Keep-alive 설정 관련
-#define KEEPALIVE_TIME 5000								// TIME ms마다 keep-alive 신호를 주고받는다
+#define KEEPALIVE_TIME 3000								// TIME ms마다 keep-alive 신호를 주고받는다
 #define KEEPALIVE_INTERVAL (KEEPALIVE_TIME / 20)		// Heart-beat가 없을시 INTERVAL ms마다 재전송한다(10번)
 
 class C_ClientInfo;
@@ -59,7 +59,7 @@ struct INDEX
 struct COORD_DOUBLE
 {
 	double x, z;
-	COORD_DOUBLE() { x = z = 0; }
+	COORD_DOUBLE() { x = z = 0.0; }
 };
 
 // 총알 충돌 검사 구조체
@@ -89,11 +89,9 @@ struct IngamePacket
 	IngamePacket()
 	{
 		playerNum = 0;
-		posX = posZ = rotY = speed = 0.0f;
+		posX = posZ = rotY = speed = health = 0.0f;
 		action = 0;
-		health = 0.0;
 		isReloading = false;
-		memset(&collisionCheck, 0, sizeof(BulletCollisionChecker));
 	}
 
 	IngamePacket(IngamePacket& _pos)
@@ -116,7 +114,10 @@ struct Weapon
 	char subW;
 
 public:
-	Weapon() {}
+	Weapon() 
+	{
+		mainW = subW = 0;
+	}
 
 	Weapon(char _mainW, char _subW)
 	{
@@ -131,10 +132,17 @@ struct Score
 	int numOfDeath;		// 내가 몇 번 죽었는지
 	int killScore;		// 킬 점수
 	int captureCount;	// 점령해본 건물 개수 
+	int captureNum;		// 점령중인 건물 개수
+	int captureScore;	// 점령한 건물 토대로 얻은 점수
 
 	Score()
 	{
-		numOfKill = numOfDeath = killScore = captureCount = 0;
+		numOfKill = 0;
+		numOfDeath = 0;
+		killScore = 0;
+		captureCount = 0;
+		captureNum = 0;
+		captureScore = 0;
 	}
 };
 
@@ -174,15 +182,15 @@ private:
 	list<C_ClientInfo*> sectorPlayerList;	// 인접 섹터에 있는 플레이어 리스트
 
 public:
-	PlayerInfo()
-	{
+	PlayerInfo() 
+	{ 
 		loadStatus = false;
-		isFocus = true;
-		gamePacket = nullptr;
-		weapon = nullptr;
+		isFocus = true;	// 포커스는 반드시 true여야함!!
 		bullet = 0;
+		teamNum = 0;
 
-		// 구조체들은 내부에서 알아서 초기화 함
+		weapon = nullptr;
+		gamePacket = nullptr;
 	}
 
 	bool GetLoadStatus() { return loadStatus; }
@@ -251,6 +259,13 @@ struct WeaponInfo
 	float speed;		// 탄속
 	float reloadTime;	// 재장전 시간
 	TCHAR weaponName[WEAPON_NAME_SIZE];	// 무기 이름
+
+	WeaponInfo() 
+	{ 
+		num = numOfPattern = bulletPerShot = maxAmmo = 0;
+		fireRate = damage = accuracy = range = speed = reloadTime = 0.0f;
+		memset(weaponName, 0, WEAPON_NAME_SIZE);
+	}
 };
 
 struct GameInfo
@@ -259,10 +274,17 @@ struct GameInfo
 	int maxPlayer;		// 최대 플레이어 수
 	float maxSpeed;		// 최대 이동속도
 	float maxHealth;	// 최대 체력
-	int respawnTime;		// 리스폰 시간
+	int respawnTime;	// 리스폰 시간
 	int gameTime;		// 게임 시간(ex 180초)
 	int killPoint;		// 킬 점수
 	int capturePoint;	// 점령 점수
+
+	GameInfo() 
+	{ 
+		gameType = maxPlayer = 0;
+		maxSpeed = maxHealth = 0.0f;
+		respawnTime = gameTime = killPoint = capturePoint = 0;
+	}
 };
 
 struct PositionInfo
@@ -271,18 +293,32 @@ struct PositionInfo
 	int playerNum;
 	float posX;
 	float posZ;
+
+	PositionInfo() 
+	{ 
+		gameType = playerNum = 0;
+		posX = posZ = 0.0f;
+	}
 };
 
 struct LocationInfo
 {
 	PositionInfo respawnInfo;
 	PositionInfo firstPosInfo;
+
+	LocationInfo() {}
 };
 
 struct BuildingInfo
 {
 	int buildingIndex;
 	C_ClientInfo* owner;
+
+	BuildingInfo() 
+	{ 
+		buildingIndex = 0;
+		owner = nullptr;
+	}
 };
 
 enum STATE : int
@@ -293,8 +329,8 @@ enum STATE : int
 enum ROOMSTATUS
 {
 	ROOM_NONE = -1, 
-	ROOM_WAIT =1, 
-	ROOM_ITEMSEL, 
+	ROOM_ITEMSEL = 1,
+	ROOM_LOAD,
 	ROOM_GAME,
 	ROOM_END,	// 방 종료
 };
@@ -332,6 +368,12 @@ struct S_SendBuf
 	char sendBuf[BUFSIZE];
 	int sendBytes;
 	int compSendBytes;
+
+	S_SendBuf()
+	{
+		memset(sendBuf, 0, BUFSIZE);
+		sendBytes = compSendBytes = 0;
+	}
 };
 
 struct S_RecvBuf
@@ -342,6 +384,15 @@ struct S_RecvBuf
 	
 	bool rSizeFlag;
 	int sizeBytes;
+
+	S_RecvBuf()
+	{
+		memset(recvBuf, 0, BUFSIZE);
+
+		recvBytes = compRecvBytes = 0;
+		rSizeFlag = false;
+		sizeBytes = 0;
+	}
 };
 
 struct UserInfo
@@ -350,7 +401,13 @@ struct UserInfo
 	TCHAR pw[PWSIZE];
 	TCHAR nickname[NICKNAMESIZE];
 
-	UserInfo() {}
+	UserInfo()
+	{ 
+		memset(id, 0, IDSIZE);
+		memset(pw, 0, PWSIZE);
+		memset(nickname, 0, NICKNAMESIZE);
+	}
+
 	UserInfo(UserInfo &_info)
 	{
 		_tcscpy_s(id, IDSIZE, _info.id);

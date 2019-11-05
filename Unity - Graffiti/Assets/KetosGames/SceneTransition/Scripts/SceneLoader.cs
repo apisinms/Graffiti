@@ -131,6 +131,18 @@ namespace KetosGames.SceneTransition
         /// </summary>
         void Update()
         {
+            if (NetworkManager.instance.CheckSomeoneQuitBeforeGameLoad() == true)
+            {
+                Destroy(gameObject);
+
+                MessageBox.Show("다른 플레이어가 종료했습니다. 상습적인 강제종료는 계정 정지의 원인이 됩니다.", "강제 종료",
+                   (result) =>
+                   {
+                       SceneManager.LoadScene("Lobby");
+                       NetworkManager.instance.SendGotoLobby();
+                   });
+            }
+
             if (FadingIn)
             {
                 UpdateFadeIn();
@@ -278,7 +290,7 @@ namespace KetosGames.SceneTransition
             BeginFadeOut();
             while (FadingOut)
             {
-                yield return 0;
+                yield return null;
             }
 
             if (UseSceneForLoadingScreen)
@@ -306,7 +318,7 @@ namespace KetosGames.SceneTransition
                         {
                             break; // the scene is finished loading, lets get out of here
                         }
-                        yield return 0;
+                        yield return null;
                     }
                 }
                 else
@@ -332,7 +344,7 @@ namespace KetosGames.SceneTransition
             while (SceneLoadingOperation.progress < 0.9f)
             {
                 Progress = SceneLoadingOperation.progress;
-                yield return 0;
+                yield return null;
             }
             Progress = 1f;
 
@@ -341,8 +353,13 @@ namespace KetosGames.SceneTransition
             {
                 while (Time.unscaledTime - startTime < MinimumLoadingScreenSeconds)
                 {
-                    yield return 0;
+                    yield return null;
                 }
+            }
+
+            if (_waitOther == true)
+            {
+                NetworkManager.instance.SendLoadingComplete();
             }
 
             SetFadersEnabled(true); // Enable Faders in new scene before switching to it
@@ -355,7 +372,7 @@ namespace KetosGames.SceneTransition
                     BeginFadeOut();
                     while (FadingOut)
                     {
-                        yield return 0;
+                        yield return null;
                     }
                 }
                 else
@@ -366,7 +383,7 @@ namespace KetosGames.SceneTransition
 
             if (_waitOther == true)
             {
-                if (waitOtherPlayer == false)
+                while (waitOtherPlayer == false)
                 {
                     yield return null;
                 }
@@ -379,7 +396,7 @@ namespace KetosGames.SceneTransition
 
             while (!SceneLoadingOperation.isDone)
             {
-                yield return 0;
+                yield return null;
             }
             if (LoadingScreen != null)
             {

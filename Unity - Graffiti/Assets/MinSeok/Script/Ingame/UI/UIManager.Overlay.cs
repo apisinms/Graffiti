@@ -189,7 +189,10 @@ public partial class UIManager : MonoBehaviour
 
         while (true)
         {
-            if (queueKillLog.Count > 0)
+            if (queueKillLog.Count > 4)
+                Debug.Log("큐가터졌다. 4개 이상이다.");
+
+            if (queueKillLog.Count > 0 && queueKillLog.Count <= 4)
             {
                 _TMP_ATTRIBUTE tmp = queueKillLog.Dequeue(); //큐에서 킬로그를 바로빼와서
 

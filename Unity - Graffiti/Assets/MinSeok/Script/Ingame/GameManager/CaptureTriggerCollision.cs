@@ -98,12 +98,18 @@ public class CaptureTriggerCollision : MonoBehaviour
                         {
                             //점령지발판의 중복방지, 이미 우리가 점령한 지역이면 리턴, 또는 적이 점령을 완료했으나 그 적이 다시 점령하려하면 리턴
                             if (CaptureManager.instance.captureResult_team[triggerIndex] == _CAPTURE_RESULT.GET)
+                            {
+                                isTriggerProcessing = false;
                                 yield break;
+                            }
                         }
                         else
                         {
                             if (CaptureManager.instance.captureResult_enemy[triggerIndex] == _CAPTURE_RESULT.GET)
+                            {
+                                isTriggerProcessing = false;
                                 yield break;
+                            }
                         }
                     }
                     break;
@@ -115,12 +121,18 @@ public class CaptureTriggerCollision : MonoBehaviour
                         {
                             //점령지발판의 중복방지, 이미 우리가 점령한 지역이면 리턴, 또는 적이 점령을 완료했으나 그 적이 다시 점령하려하면 리턴
                             if (CaptureManager.instance.captureResult_team[triggerIndex] == _CAPTURE_RESULT.GET)
+                            {
+                                isTriggerProcessing = false;
                                 yield break;
+                            }
                         }
                         else
                         {
                             if (CaptureManager.instance.captureResult_enemy[triggerIndex] == _CAPTURE_RESULT.GET)
+                            {
+                                isTriggerProcessing = false;
                                 yield break;
+                            }
                         }
                     }
                     break;

@@ -89,8 +89,9 @@ namespace PathCreation.Examples
                         int absoluteIdx = UIManager.instance.PlayerIndexToAbsoluteIndex(playerNum - 1);
 						UIManager.instance.HealthUIChanger(absoluteIdx, 0.0f);  // 차에 치이면 즉사
                         AudioManager.Instance.Play(5);
-                        UIManager.instance.SetDeadUI("당신이(가) 차에 치었습니다!");     // 죽은 UI로 전환
-					}
+                        UIManager.instance.SetDeadUI("당신이 차에 치었습니다!");     // 죽은 UI로 전환
+                        Debug.Log("나!!!!");
+                    }
 				}
 			}
 		}

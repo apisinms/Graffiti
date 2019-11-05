@@ -11,12 +11,12 @@ class C_ClientInfo;
 struct TeamInfo
 {
 	vector<C_ClientInfo*> teamMemberList;	// 이 팀에 속한 플레이어들
-	int teamKillScore;						// 이 팀의 킬 스코어
-	int teamCaptureScore;					// 이 팀의 점령 스코어
-	int teamTotalScore;						// 이 팀의 킬 + 점령 스코어
-	int teamCaptureNum;						// 이 팀의 점령 개수
+	//int teamKillScore;						// 이 팀의 킬 스코어
+	//int teamCaptureScore;					// 이 팀의 점령 스코어
+	//int teamTotalScore;						// 이 팀의 킬 + 점령 스코어
+	//int teamCaptureNum;						// 이 팀의 점령 개수
 
-	TeamInfo() { memset(this, 0, sizeof(TeamInfo)); }
+	TeamInfo() {}
 };
 
 

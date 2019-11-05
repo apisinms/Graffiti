@@ -182,6 +182,37 @@ void InGameManager::PackPacket(char* _setptr, GameInfo* &_gameInfo, vector<Weapo
 	}
 }
 
+void InGameManager::PackPacket(char* _setptr, RoomInfo* _room, int& _size)
+{
+	char* ptr = _setptr;
+	_size = 0;
+
+	// 1. 플레이어 수 몇 명인지
+	int numOfPlayer = _room->GetNumOfPlayer();
+	memcpy(ptr, &numOfPlayer, sizeof(numOfPlayer));
+	ptr = ptr + sizeof(numOfPlayer);
+	_size = _size + sizeof(numOfPlayer);
+
+	// 2. 플레이어 수 맞게 순서대로 스코어 패킹
+	C_ClientInfo* player = nullptr;
+	int playerNum = 0;
+	for (int i = 0; i < numOfPlayer; i++)
+	{
+		player = _room->GetPlayerByIndex(i);
+		
+		// 2-1. 플레이어 번호 패킹
+		playerNum = player->GetPlayerInfo()->GetPlayerNum();
+		memcpy(ptr, &playerNum, sizeof(playerNum));
+		ptr = ptr + sizeof(playerNum);
+		_size = _size + sizeof(playerNum);
+
+		// 2-2. 스코어 패킹!
+		memcpy(ptr, &player->GetPlayerInfo()->GetScore(), sizeof(Score));
+		ptr = ptr + sizeof(Score);
+		_size = _size + sizeof(Score);
+	}
+}
+
 void InGameManager::UnPackPacket(char* _getBuf, int& _num)
 {
 	char* ptr = _getBuf + sizeof(PROTOCOL_INGAME);
@@ -563,32 +594,30 @@ bool InGameManager::CaptureProcess(C_ClientInfo* _ptr, char* _buf)
 	// 건물 정보를 얻어옴
 	BuildingInfo* building = room->GetBuildings().at(buildingIdx);
 	
-	// 이 건물 소유자가 있다면
+	// 이 건물 소유자가 있다면 뺏긴 놈 건물 개수 줄임(개수는 계속 뺏고 뺏김)
 	if (building->owner != nullptr)
 	{
-		// 1. 팀 건물 개수 줄임(팀 개수는 계속 뺏고 뺏김)
 		int teamNum = building->owner->GetPlayerInfo()->GetTeamNum();
-		room->GetTeamInfo(teamNum).teamCaptureNum--;
+		building->owner->GetPlayerInfo()->GetScore().captureNum--;	// 개인
 	}
 
-	// 2. 그리고 소유자를 이 클라로 한다.
+	// 2. 그리고 소유자를 이 클라로하고 점령중인 건물 개수 증가
 	building->owner = _ptr;
+	building->owner->GetPlayerInfo()->GetScore().captureNum++;
 
-	// 1. 팀 점령 점수 더함
-	team.teamCaptureScore += gameInfo[_ptr->GetGameType()]->capturePoint;
+	// 3. 점령 점수 더함
+	int capturePoint = gameInfo[_ptr->GetGameType()]->capturePoint;
+	_ptr->GetPlayerInfo()->GetScore().captureScore += capturePoint;
 
-	// 2. 개인은 점령 횟수 카운트, 팀은 현재 점령중인 건물 개수 증가
+	// 4. 점령 카운트증가
 	_ptr->GetPlayerInfo()->GetScore().captureCount++;
-	team.teamCaptureNum++;
 
-	wprintf(L"건물 번호=%d, %s점령, 팀점수=%d, 팀점령 개수=%d, 단독점령횟수:%d\n",
+	wprintf(L"건물 번호=%d, %s점령, 단독점령횟수:%d\n",
 		buildingIdx,
 		_ptr->GetUserInfo()->nickname,
-		team.teamCaptureScore,
-		team.teamCaptureNum,
 		_ptr->GetPlayerInfo()->GetScore().captureCount);
 
-	// 3. 건물 점령한놈의 플레이어 넘버 + 건물 번호를 모든 클라들에게 보냄.
+	// 5. 건물 점령한놈의 플레이어 넘버 + 건물 번호를 모든 클라들에게 보냄.
 	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::CAPTURE_PROTOCOL, RESULT_INGAME::INGAME_SUCCESS);
 	PackPacket(buf, building->owner->GetPlayerInfo()->GetPlayerNum(), buildingIdx, packetSize);
 	ListSendPacket(room->GetPlayers(), nullptr , protocol, buf, packetSize, true);	// 모두에게 전송!
@@ -648,12 +677,9 @@ bool InGameManager::GameEndProcess(RoomInfo* _room)
 	char buf[BUFSIZE] = { 0, };
 	int packetSize = 0;
 
-	int team1_total = _room->GetTeamInfo(0).teamCaptureScore + _room->GetTeamInfo(0).teamKillScore;
-	int team2_total = _room->GetTeamInfo(1).teamCaptureScore + _room->GetTeamInfo(1).teamKillScore;
-
-	// 아이템 코드를 다시 전송해서 다른 플레이어들도 갱신하도록 한다.
+	// 방에 있는 플레이어들의 스코어를 전송한다.
 	protocol = SetProtocol(INGAME_STATE, PROTOCOL_INGAME::GAME_END_PROTOCOL, RESULT_INGAME::INGAME_SUCCESS);
-	PackPacket(buf, team1_total, team2_total, packetSize);
+	PackPacket(buf, _room, packetSize);
 	ListSendPacket(_room->GetPlayers(), nullptr, protocol, buf, packetSize, true);	// 모두에게 전송
 
 	return true;
@@ -672,17 +698,53 @@ bool InGameManager::LeaveProcess(C_ClientInfo* _ptr)
 	char buf[BUFSIZE] = { 0, };
 	int packetSize = 0;
 
-	// 끊김 프로토콜 세팅
-	protocol = SetProtocol(
-		STATE_PROTOCOL::INGAME_STATE,
-		PROTOCOL_INGAME::DISCONNECT_PROTOCOL,
-		RESULT_INGAME::ABORT);
+	switch (_ptr->GetRoom()->GetRoomStatus())
+	{
+		// 끊김 프로토콜 세팅(게임 전)
+		case ROOMSTATUS::ROOM_ITEMSEL:
+		{
+			protocol = SetProtocol(
+				STATE_PROTOCOL::INGAME_STATE,
+				PROTOCOL_INGAME::DISCONNECT_PROTOCOL,
+				RESULT_INGAME::WEAPON_SEL);
 
-	// 패킹
-	PackPacket(buf, _ptr->GetPlayerInfo()->GetPlayerNum(), packetSize);
+			// 1. 방에있는 자신을 제외한 다른 클라들에게 자신이 나갔음을 알린다.
+			PackPacket(buf, _ptr->GetPlayerInfo()->GetPlayerNum(), packetSize);
+			ListSendPacket(_ptr->GetRoom()->GetPlayers(), _ptr, protocol, buf, packetSize, true);
 
-	// 1. 방에있는 자신을 제외한 다른 클라들에게 자신이 나갔음을 알린다.
-	ListSendPacket(_ptr->GetRoom()->GetPlayers(), _ptr, protocol, buf, packetSize, true);
+			_ptr->GetRoom()->SetRoomStatus(ROOMSTATUS::ROOM_END);	// 방 종료
+		}
+		break;
+
+		case ROOMSTATUS::ROOM_LOAD:
+		{
+			protocol = SetProtocol(
+				STATE_PROTOCOL::INGAME_STATE,
+				PROTOCOL_INGAME::DISCONNECT_PROTOCOL,
+				RESULT_INGAME::BEFORE_LOAD);
+
+			// 1. 방에있는 자신을 제외한 다른 클라들에게 자신이 나갔음을 알린다.
+			PackPacket(buf, _ptr->GetPlayerInfo()->GetPlayerNum(), packetSize);
+			ListSendPacket(_ptr->GetRoom()->GetPlayers(), _ptr, protocol, buf, packetSize, true);
+
+			_ptr->GetRoom()->SetRoomStatus(ROOMSTATUS::ROOM_END);	// 방 종료
+		}
+		break;
+
+		// 끊김 프로토콜 세팅(게임 중)
+		case ROOMSTATUS::ROOM_GAME:
+		{
+			protocol = SetProtocol(
+				STATE_PROTOCOL::INGAME_STATE,
+				PROTOCOL_INGAME::DISCONNECT_PROTOCOL,
+				RESULT_INGAME::ABORT);
+
+			// 1. 방에있는 자신을 제외한 다른 클라들에게 자신이 나갔음을 알린다.
+			PackPacket(buf, _ptr->GetPlayerInfo()->GetPlayerNum(), packetSize);
+			ListSendPacket(_ptr->GetRoom()->GetPlayers(), _ptr, protocol, buf, packetSize, true);
+		}
+		break;
+	}
 
 	// 일단 모든 경우 true라고 가정하고 리턴한다.
 	return true;
@@ -742,12 +804,11 @@ void InGameManager::InitalizePlayersInfo(RoomInfo* _room)
 	}
 
 	// 이제 모든 플레이어들의 인접섹터 playerList를 얻어놓는다.
-	for (auto iter = players.begin(); iter != players.end(); ++iter)
+	//for (auto iter = players.begin(); iter != players.end(); ++iter)
+	for (size_t i = 0; i < players.size(); i++)
 	{
-		player = *iter;
-
-		list<C_ClientInfo*> playerList = player->GetRoom()->GetSector()->GetSectorPlayerList(player->GetPlayerInfo()->GetIndex());
-		player->GetPlayerInfo()->SetSectorPlayerList(playerList);
+		list<C_ClientInfo*> playerList = players[i]->GetRoom()->GetSector()->GetSectorPlayerList(players[i]->GetPlayerInfo()->GetIndex());
+		players[i]->GetPlayerInfo()->SetSectorPlayerList(playerList);
 	}
 }
 
@@ -1098,6 +1159,16 @@ bool InGameManager::CheckBulletHitAndGetHitPlayers(C_ClientInfo* _ptr, IngamePac
 			// 플레이어 비트가 활성화 되어 있으면
 			if ((bitMask & _recvPacket.collisionCheck.playerBit) > 0)
 			{
+#ifdef DEBUG
+				// 같은 팀이면 그냥 검사 안함
+				if (_ptr->GetPlayerInfo()->GetTeamNum() ==
+					_ptr->GetRoom()->GetPlayerByIndex(i)->GetPlayerInfo()->GetTeamNum())
+				{
+					continue;
+				}
+#endif
+
+
 				// 총알을 맞은 이 플레이어가 유효한 숫자의 총알을 맞았는지 다시 검사한다.
 				int numOfBullet = GetNumOfBullet(_recvPacket.collisionCheck.playerHitCountBit, (i + 1));
 				if (CheckMaxFire(_ptr, numOfBullet) == false)	// 유효하지 않으면 그냥 건너 뛴다.
@@ -1216,15 +1287,8 @@ void InGameManager::Kill(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer)
 	_shotPlayer->GetPlayerInfo()->GetScore().numOfKill++;	// 쏜 놈
 	_hitPlayer->GetPlayerInfo()->GetScore().numOfDeath++;	// 죽은 놈
 
-	/// 팀 처리는 나중에 한꺼번에 teamScore = 1p+2p 이런식으로
-
-	// 점수 더함
+	// 개인 킬 점수 더함
 	_shotPlayer->GetPlayerInfo()->GetScore().killScore +=
-		gameInfo[_shotPlayer->GetGameType()]->killPoint;
-
-	// 팀 점수도 더함
-	_shotPlayer->GetRoom()->GetTeamInfo(
-		_shotPlayer->GetPlayerInfo()->GetTeamNum()).teamKillScore +=
 		gameInfo[_shotPlayer->GetGameType()]->killPoint;
 
 }
@@ -1236,26 +1300,38 @@ void InGameManager::Respawn(C_ClientInfo* _player)
 	_player->GetPlayerInfo()->GetPlayerRespawnInfo().isRespawning = true;	// 리스폰 시작
 }
 
-void InGameManager::AddCaptureBonus(RoomInfo* _room)
+void InGameManager::AddCaptureBonus(RoomInfo* _room, int& _team1CaptureScore, int& _team2CaptureScore)
 {
-	TeamInfo& team1 = _room->GetTeamInfo(0);
-	TeamInfo& team2 = _room->GetTeamInfo(1);
-	int capturePoint = gameInfo[_room->GetGameType()]->capturePoint;
+	int capturePoint = gameInfo[_room->GetGameType()]->capturePoint;	// 기본 점령 점수
+	int bonusPoint = 0;			// 보너스 점수 저장용
+	_team1CaptureScore = _team2CaptureScore = 0;
 
-	int bonusPoint = 0;
-	if (team1.teamCaptureNum > 0)
+	
+	// 일단 1:1이든 2:2든 팀은 2팀이다.
+	int teamScore[2] = { 0, };			// 각 팀의 스코어
+	vector<C_ClientInfo*> memberList;
+	for (int i = 0; i < 2; i++)
 	{
-		// 보너스 점수 구해서 계산해서 추가
-		bonusPoint = team1.teamCaptureNum * (capturePoint - 10);
-		team1.teamCaptureScore += bonusPoint;
+		TeamInfo& team = _room->GetTeamInfo(i);	// 현재 팀 정보 얻음
+		memberList = team.teamMemberList;		// 이 팀에 소속된 플레이어 리스트 얻음
+
+		for (size_t j = 0; j < team.teamMemberList.size(); j++)
+		{
+			// 팀1의 팀원이 건물 하나라도 점령하고 있다면
+			Score& memberScore = memberList[j]->GetPlayerInfo()->GetScore();
+			{
+				// 건물 개수 * (점령점수 / 2)로 보너스 포인트를 준다.
+				bonusPoint = (int)(memberScore.captureNum * (capturePoint * 0.5));
+				memberScore.captureScore += bonusPoint;	// 보너스!
+
+				teamScore[i] += memberScore.captureScore;	// 점령 총점 합산
+			}
+		}
 	}
 
-	if (team2.teamCaptureNum > 0)
-	{
-		// 보너스 점수 구해서 계산해서 추가
-		bonusPoint = team2.teamCaptureNum * (capturePoint - 10);
-		team2.teamCaptureScore += bonusPoint;
-	}
+	// 각 팀의 총 점령 스코어 저장
+	_team1CaptureScore = teamScore[0];
+	_team2CaptureScore = teamScore[1];
 }
 
 //////// public
@@ -1622,11 +1698,12 @@ void InGameManager::CaptureBonusTimeChecker(RoomInfo* _room)
 	// 점령 보너스 받을 시간이 되면
 	if (bonusTimeElapsed >= CAPTURE_BONUS_INTERVAL)
 	{
-		AddCaptureBonus(_room);	// 보너스 점수를 적용시키고
+		int team1CaptureScore, team2CaptureScore;
+		AddCaptureBonus(_room, team1CaptureScore, team2CaptureScore);	// 보너스 점수를 적용시키고
 
 		// 방에 있는 모든 플레이어들에게 보너스 점수 업데이트하라고 점수를 보내줌
 		vector<C_ClientInfo*>playerList = _room->GetPlayers();
-		PackPacket(buf, _room->GetTeamInfo(0).teamCaptureScore, _room->GetTeamInfo(1).teamCaptureScore, packetSize);	// 패킹 후
+		PackPacket(buf, team1CaptureScore, team2CaptureScore, packetSize);	// 패킹 후
 		ListSendPacket(playerList, nullptr, protocol, buf, packetSize, true);
 
 		_room->SetCaptureBonusTimeElasped(0.0);	// 시간 다시 초기화
@@ -1684,7 +1761,7 @@ bool InGameManager::WeaponTimerChecker(RoomInfo* _room)
 		playerList = _room->GetPlayers();	// 리스트 얻어옴
 		ListSendPacket(playerList, nullptr, protocol, buf, packetSize, false);
 
-		_room->SetRoomStatus(ROOMSTATUS::ROOM_WAIT);	// 방 잠깐 대기 상태로
+		_room->SetRoomStatus(ROOMSTATUS::ROOM_LOAD);	// 방 잠깐 로딩 상태로
 	}
 
 	// 아직 무기 선택 시간이 남았다면 남은 시간을 보내준다.

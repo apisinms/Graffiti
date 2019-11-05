@@ -205,7 +205,7 @@ bool LobbyManager::CanIGotoInGame(C_ClientInfo* _ptr)
 					(_beginthreadex_proc_type)InGameManager::InGameTimerThread,
 					(LPVOID)_ptr->GetRoom(),
 					0,
-					NULL)
+					nullptr)
 			);
 		}
 

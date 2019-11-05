@@ -593,4 +593,46 @@ public partial class NetworkManager : MonoBehaviour
 			offset += Marshal.SizeOf(weapon);
 		}
 	}
+
+    private void UnPackPacket(byte[] _buf, ref int[] _playersNum, ref Score[] _scores)
+    {
+        int offset = sizeof(PROTOCOL);
+
+        // 1. 플레이어 수 받음
+        byte[] arrNum = new byte[sizeof(int)];
+
+        // 일단 byte 배열로 받고
+        Buffer.BlockCopy(_buf, offset, arrNum, 0, sizeof(int));
+
+        // 이제 다시 int로 변환
+        int numOfPlayer = BitConverter.ToInt32(arrNum, 0);
+        offset += sizeof(int);
+
+        // 받은 만큼 배열 할당
+        _scores = new Score[numOfPlayer];
+        _playersNum = new int[numOfPlayer];
+
+
+        // 2. Score를 받은 갯수만큼 받아서 _scores 배열에 저장함
+        Score score = new Score();
+        byte[] posByte;
+        for (int i = 0; i < numOfPlayer; i++)
+        {
+            // 2-1. 플레이어 번호 저장
+            Buffer.BlockCopy(_buf, offset, arrNum, 0, sizeof(int));
+
+            _playersNum[i] = BitConverter.ToInt32(arrNum, 0);
+            offset += sizeof(int);
+
+
+            // 2-2. 스코어 받아서 저장
+            posByte = new byte[Marshal.SizeOf(score)];
+            Buffer.BlockCopy(_buf, offset, posByte, 0, Marshal.SizeOf(score));
+
+            score.Deserialize(ref posByte);
+
+            _scores[i] = score;
+            offset += Marshal.SizeOf(score);
+        }
+    }
 }

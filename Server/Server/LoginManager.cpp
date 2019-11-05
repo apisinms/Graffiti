@@ -429,8 +429,12 @@ bool LoginManager::LoginListDelete(UserInfo* _userInfo)
 	int beforeSize = (int)loginList.size();
 
 	loginList.remove(_userInfo);
-	delete _userInfo;
-	_userInfo = nullptr;
+
+	if (_userInfo != nullptr)
+	{
+		delete _userInfo;
+		_userInfo = nullptr;
+	}
 
 	if (beforeSize < (int)loginList.size())
 	{

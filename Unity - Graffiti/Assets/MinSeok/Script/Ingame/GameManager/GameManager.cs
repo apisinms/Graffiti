@@ -1,4 +1,4 @@
-﻿ 
+﻿
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -92,24 +92,6 @@ public class GameManager : MonoBehaviour
         gameInfo.respawnTime = 5;
         CarSeed = 0;
         StartCoroutine(GameObject.Find("Spawner").GetComponent<PathCreation.Examples.PathSpawner>().Cor_SpawnPrefabs());
-#endif
-    }
-
-    private void OnEnable()
-    {
-        // 이벤트 등록하고, 로딩 완료되면 호출하게 함
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-    void OnSceneLoaded(Scene _scene, LoadSceneMode _mode)
-    {
-        //로딩이 완료되었다고 서버로 보내준다.
-#if NETWORK
-        NetworkManager.instance.SendLoadingComplete();
 #endif
     }
 
@@ -219,10 +201,10 @@ public class GameManager : MonoBehaviour
         {
             notConnectedCharacter = GameObject.FindGameObjectWithTag("Player" + (i + 1).ToString());
 
-			if (notConnectedCharacter != null)
-			{
-				notConnectedCharacter.SetActive(false);
-			}
+            if (notConnectedCharacter != null)
+            {
+                notConnectedCharacter.SetActive(false);
+            }
         }
 
         // 2. 아이콘도 꺼준다.
