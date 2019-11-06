@@ -44,7 +44,7 @@ struct INDEX
 
 	INDEX()
 	{
-		i = j = -1;
+		i = j = 0;
 	}
 
 	inline bool operator!= (INDEX _param)
@@ -54,6 +54,8 @@ struct INDEX
 
 		return false;
 	}
+
+	void ResetIndex() { i = j = 0; }
 };
 
 struct COORD_DOUBLE
@@ -68,6 +70,12 @@ struct BulletCollisionChecker
 	byte playerBit;
 	int playerHitCountBit;
 	BulletCollisionChecker()
+	{
+		playerBit = 0;
+		playerHitCountBit = 0;
+	}
+
+	void ResetBulletCollisionChecker()
 	{
 		playerBit = 0;
 		playerHitCountBit = 0;
@@ -106,6 +114,31 @@ struct IngamePacket
 		this->collisionCheck = _pos.collisionCheck;
 		this->isReloading    = false;
 	}
+
+	void ResetIngamePacket()
+	{
+		playerNum = 0;
+		posX = posZ = rotY = speed = health = 0.0f;
+		action = 0;
+		isReloading = false;
+		collisionCheck.ResetBulletCollisionChecker();
+	}
+};
+
+enum WEAPONS : char
+{
+	NODATA = -1,
+
+	// main weapons
+	AR,
+	SG,
+	SMG,
+	MAIN_MAX_LENGTH,
+
+	// sub weapons
+	TRAP,
+	GRENADE,
+	SUB_MAX_LENGTH,
 };
 
 struct Weapon
@@ -144,6 +177,16 @@ struct Score
 		captureNum = 0;
 		captureScore = 0;
 	}
+
+	void ResetScore()
+	{
+		numOfKill = 0;
+		numOfDeath = 0;
+		killScore = 0;
+		captureCount = 0;
+		captureNum = 0;
+		captureScore = 0;
+	}
 };
 
 struct PlayerRespawnInfo
@@ -164,6 +207,13 @@ struct PlayerRespawnInfo
 	{
 		elapsedSec = 0.0;
 		isRespawning = false;
+	}
+
+	void ResetPlayerRespawnInfo()
+	{
+		respawnPosX = respawnPosZ = 0.0f;
+		isRespawning = false;
+		elapsedSec = 0.0;
 	}
 };
 
@@ -191,6 +241,27 @@ public:
 
 		weapon = nullptr;
 		gamePacket = nullptr;
+	}
+
+	void ResetPlayerInfo()
+	{
+		loadStatus = false;
+		isFocus = true;
+		if (gamePacket != nullptr)
+		{
+			delete gamePacket;
+			gamePacket = nullptr;
+		}
+		index.ResetIndex();
+		if (weapon != nullptr)
+		{
+			delete weapon;
+			weapon = nullptr;
+		}
+		playerRespawnInfo.ResetPlayerRespawnInfo();
+		score.ResetScore();
+		teamNum = 0;
+		sectorPlayerList.clear();
 	}
 
 	bool GetLoadStatus() { return loadStatus; }

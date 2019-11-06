@@ -80,10 +80,29 @@ public:
 	vector<C_ClientInfo*>& GetPlayers() { return players; }	// 플레이어 벡터를 리턴해주되, 어차피 복사본이 전달되므로 원본은 영향이 없다.
 
 	C_ClientInfo* GetPlayerByIndex(int _idx) { return players[_idx]; }
+	C_ClientInfo* GetPlayerByPlayerNum(int _playerNum)
+	{ 
+		for (size_t i = 0; i < players.size(); i++)
+		{
+			if (players[i]->GetPlayerInfo()->GetPlayerNum() == _playerNum)
+			{
+				return players[i];
+			}
+		}
+		return nullptr;
+	}
 	
 	C_Sector* GetSector() { return sector; }
 	
 	TeamInfo& GetTeamInfo(int _teamNum) { return teamInfo[_teamNum]; }
+	void DeleteTeam()
+	{
+		if (teamInfo != nullptr)
+		{
+			delete[] teamInfo;
+			teamInfo = nullptr;
+		}
+	}
 
 	vector<BuildingInfo*>& GetBuildings() { return buildings; }
 };

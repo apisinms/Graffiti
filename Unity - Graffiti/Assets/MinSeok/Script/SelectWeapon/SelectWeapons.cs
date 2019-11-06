@@ -219,12 +219,6 @@ public class SelectWeapons : UnityEngine.MonoBehaviour
             // 타이머가 끝났다면
             if (networkManager.CheckTimerEnd() == true)
             {
-                if (myMainWeapon == _WEAPONS.NODATA) //주무기 미선택시 주무기 랜덤선택
-                    myMainWeapon = (_WEAPONS)Random.Range(0, (int)_WEAPONS.MAIN_MAX_LENGTH);
-
-                if (mySubWeapon == _WEAPONS.NODATA) //부무기 미선택시 부무기 랜덤선택
-                    mySubWeapon = (_WEAPONS)Random.Range((int)_WEAPONS.MAIN_MAX_LENGTH + 1, (int)_WEAPONS.SUB_MAX_LENGTH);
-
                 // 선택한 무기를 서버로 보내고
                 networkManager.MayISelectWeapon((sbyte)myMainWeapon, (sbyte)mySubWeapon);
 

@@ -452,9 +452,11 @@ public partial class NetworkManager : MonoBehaviour
                                                 lock (key)
                                                 {
                                                     int seed = 0;
+                                                    double time = 0.0;
 
-                                                    UnPackPacket(info[i].packet, out seed);
+                                                    UnPackPacket(info[i].packet, out seed, out time);
                                                     bridge.CarSpawn(seed);
+                                                    bridge.TimeSync(time);
                                                 }
                                             }
                                             break;
@@ -525,6 +527,22 @@ public partial class NetworkManager : MonoBehaviour
                                                     int score1, score2;
 
                                                     UnPackPacket(info[i].packet, out score1, out score2);   // 점령 보너스 받아옴
+                                                    switch ((C_Global.GameType)GameManager.instance.gameInfo.gameType)
+                                                    {
+                                                        case C_Global.GameType._2vs2:
+                                                            {
+                                                                UIManager.instance.SetScore(0 + 1, score1);
+                                                                UIManager.instance.SetScore(2 + 1, score2);
+                                                            }
+                                                            break;
+
+                                                        case C_Global.GameType._1vs1:
+                                                            {
+                                                                UIManager.instance.SetScore(0 + 1, score1);
+                                                                UIManager.instance.SetScore(1 + 1, score2);
+                                                            }
+                                                            break;
+                                                    }
                                                     Debug.Log("팀1 점령점수 : " + score1 + ", 팀2 점령점수 : " + score2);
                                                 }
                                             }
@@ -581,6 +599,10 @@ public partial class NetworkManager : MonoBehaviour
 
                                         // 로딩 전에 종료
                                         case RESULT.BEFORE_LOAD:
+                                            break;
+
+                                        // 최대 로딩 대기시간 지남
+                                        case RESULT.MAX_LOADING_TIMEWAIT:
                                             break;
 
                                         // 게임 도중 강종

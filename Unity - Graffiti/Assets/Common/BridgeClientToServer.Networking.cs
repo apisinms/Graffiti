@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KetosGames.SceneTransition;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -225,17 +226,16 @@ public partial class BridgeClientToServer : MonoBehaviour
 
     public void KillProcess(int _killer, int _victim) //누군가 죽으면 무조건 호출
     {
-        /*
-        if ((_killer - 1) == myIndex) // 내가(_killer - 1) 상대방(_victim - 1)을 죽였을때.
-        {
-            Debug.Log("내가 " + (_victim - 1) + "을 죽였다!");
-        }
-        */
         uiManager.EnqueueKillLog_Player(_killer, _victim); //살인사건시 킬러와 빅팀의 넘버를 킬로그 큐로 보냄
+        uiManager.SetScore(_killer, gameManager.gameInfo.killPoint); //인덱스로 팀판별후 킬점수 누적
+
+        if ((_killer - 1) == myIndex) // 내가(_killer - 1) 상대방(_victim - 1)을 죽였을때.
+            uiManager.SetMyKillDeath("kill");
 
         if ((_victim - 1) == myIndex) // 내가(_victim - 1) 상대방(_killer - 1)에게 죽었을때.
         {
             StateManager.instance.Death(true); //내가 죽은상태로 전환.
+            uiManager.SetMyKillDeath("death");
             uiManager.SetDeadUI("당신이 " + playersManager.nickname[_killer - 1] + "의 " + weaponManager.GetWeaponName(_killer - 1) + "로 인해 사망했습니다!"); // 죽은 UI로 전환
         }
         else
@@ -277,9 +277,13 @@ public partial class BridgeClientToServer : MonoBehaviour
         pathSpawner.SpawnPrefabs(); // 차 생성
     }
 
+    public void TimeSync(double _time)
+    {
+
+    }
+
     public void OtherPlayerHitByCar(int _playerNum, float _posX, float _posZ)
     {
-        Debug.Log("다른새기");
         // 맞은 놈 튕기게 하고
         Rigidbody rigid = playersManager.obj_players[_playerNum - 1].GetComponent<Rigidbody>();
         Vector3 force = new Vector3(_posX, 0.0f, _posZ);
@@ -305,6 +309,8 @@ public partial class BridgeClientToServer : MonoBehaviour
     public void CaptureResult(int _capturePlayerNum, int _triggerIdx)
     {
         int idx = _capturePlayerNum - 1;
+
+        uiManager.SetScore(_capturePlayerNum, gameManager.gameInfo.capturePoint); //인덱스로 팀판별하여 점령점수 누적
 
         switch ((C_Global.GameType)GameManager.instance.gameInfo.gameType)
         {
@@ -401,7 +407,18 @@ public partial class BridgeClientToServer : MonoBehaviour
         if (moveCor != null)
             StopCoroutine(moveCor);
 
+        // 지워지지 않는 오브젝트로 정보 이동
+        EndSceneManager.Instance.nickName = PlayersManager.instance.nickname;
+        EndSceneManager.Instance.playerNum = _playersNum;
+        EndSceneManager.Instance.scores = new Score[4];
+        for (int i = 0; i < _scores.Length; i++)
+        {
+            EndSceneManager.Instance.scores[_playersNum[i] - 1] = _scores[i];
+        }
+        EndSceneManager.Instance.gameType = GameManager.instance.gameInfo.gameType;
+
         SceneManager.LoadScene("EndScene");
+        SceneLoader.Instance.waitOtherPlayer = false;
 
         networkManager.SendGotoLobby();   // 나 로비로 갈랭~(얜 호출해줘야 돼)
     }

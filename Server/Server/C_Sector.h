@@ -16,7 +16,7 @@ private:
 	//list<C_Bullet*>bulletList;				// 섹터에 존재하는 총알 리스트(추가할지 애매함)
 
 public:
-	SectorInstance() 
+	SectorInstance()
 	{ 
 		int num = 0;
 	}

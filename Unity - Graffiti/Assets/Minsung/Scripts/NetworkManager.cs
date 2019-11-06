@@ -13,8 +13,10 @@ using UnityEngine;
 public partial class NetworkManager : MonoBehaviour
 {
     // 서버 IP와 포트
-    private static IPAddress serverIP = IPAddress.Parse("127.0.0.1");
-
+    //private static IPAddress serverIP = IPAddress.Parse("127.0.0.1");
+    //private static IPAddress serverIP = IPAddress.Parse("121.164.149.148");
+    private static IPAddress serverIP = IPAddress.Parse("121.164.149.148");
+  
     private static int serverPort = 10823;
 
     readonly static int IDSIZE = 255;
@@ -124,7 +126,8 @@ public partial class NetworkManager : MonoBehaviour
         // DISCONNECT_PROTOCOL 개별
         WEAPON_SEL = ((Int64)0x1 << 31),
         BEFORE_LOAD = ((Int64)0x1 << 30),
-        ABORT = ((Int64)0x1 << 29),
+        MAX_LOADING_TIMEWAIT = ((Int64)0x1 << 29),
+        ABORT = ((Int64)0x1 << 28),
 
         // CAPTRUE_PROTOCOL 개별
         BONUS = ((Int64)0x1 << 31),
@@ -158,6 +161,12 @@ public partial class NetworkManager : MonoBehaviour
 
         [MarshalAs(UnmanagedType.I4)]
         public int captureCount;   // 점령해본 건물 개수 
+
+        [MarshalAs(UnmanagedType.I4)]
+        public int captureNum;     // 점령중인 건물 개수
+
+        [MarshalAs(UnmanagedType.I4)]
+        public int captureScore;   // 점령한 건물 토대로 얻은 점수
 
         public byte[] Serialize()
         {

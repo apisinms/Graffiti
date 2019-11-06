@@ -249,4 +249,18 @@ public partial class NetworkManager : MonoBehaviour
         else
             return false;
     }
+
+    // 최대 로딩 대기시간넘어갔으면
+    public bool CheckMaxLoadingTime()
+    {
+        if (state == STATE_PROTOCOL.INGAME_STATE &&
+           protocol == PROTOCOL.DISCONNECT_PROTOCOL &&
+           result == RESULT.MAX_LOADING_TIMEWAIT)
+        {
+            return true;
+        }
+
+        else
+            return false;
+    }
 }

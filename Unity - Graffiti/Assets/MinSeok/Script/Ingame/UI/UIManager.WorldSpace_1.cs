@@ -249,7 +249,7 @@ public partial class UIManager : MonoBehaviour
 
     public void Initialization_WeaponInfo_1()
     {
-        weaponAddPos = new Vector3(0.3f, 1.8f, -1.85f);
+        weaponAddPos = new Vector3(-0.15f, 1.8f, -1.85f);
 
         weaponInfo.obj_parent = Instantiate(obj_prefebWeaponInfo, GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
         weaponInfo.img_mainW = weaponInfo.obj_parent.transform.GetChild(1).GetComponent<Image>();
@@ -534,7 +534,6 @@ public partial class UIManager : MonoBehaviour
 
     public IEnumerator Cor_CheckCaptureNoticeTime()
     {
-        Debug.Log("실행되었다");
         yield return YieldInstructionCache.WaitForSeconds(2.0f);
         UIManager.instance.txt_captureNotice.gameObject.SetActive(false);
         yield break;

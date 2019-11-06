@@ -80,7 +80,6 @@ public class GameManager : MonoBehaviour
         PlayersManager.instance.Initialization_GameInfo();              // 얻어온 정보대로 초기화
         BridgeClientToServer.instance.Initialization_PlayerViewer();    // 게임 시작시 플레이어 뷰어 셋팅
 
-
 #else
         if (SceneManager.GetActiveScene().name == "MainGame_2vs2")
             gameInfo.gameType = 0;
@@ -124,7 +123,7 @@ public class GameManager : MonoBehaviour
         gameInfo.maxSpeed = 4.0f;
         gameInfo.maxHealth = 100.0f;
         gameInfo.respawnTime = 3;
-        gameInfo.gameTime = 300;
+        gameInfo.gameTime = 180;
         gameInfo.killPoint = 25;
         gameInfo.capturePoint = 100;
 
@@ -193,18 +192,19 @@ public class GameManager : MonoBehaviour
     public void LoadingComplete()
     {
 #if NETWORK
-        //mapMode[gameInfo.gameType].SetActive(true);
+      //////////////// 게임 시작 시 최초로 1회 내 위치정보를 서버로 전송해야함 /////////////////
+      NetworkManager.instance.SendIngamePacket(true);
 
-        // 1. 안들어온 놈들 꺼준다.
-        GameObject notConnectedCharacter;
+      // 1. 안들어온 놈들 꺼준다.
+      GameObject notConnectedCharacter;
         for (int i = gameInfo.maxPlayer; i < C_Global.MAX_CHARACTER; i++)
         {
             notConnectedCharacter = GameObject.FindGameObjectWithTag("Player" + (i + 1).ToString());
 
-            if (notConnectedCharacter != null)
-            {
-                notConnectedCharacter.SetActive(false);
-            }
+         if (notConnectedCharacter != null)
+         {
+            notConnectedCharacter.SetActive(false);
+         }
         }
 
         // 2. 아이콘도 꺼준다.

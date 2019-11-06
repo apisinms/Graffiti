@@ -7,6 +7,41 @@ using TMPro;
 //                  UIManager_Overlay
 public partial class UIManager : MonoBehaviour
 {
+
+    #region KILL_DEATH
+    public _IMG_KD_INFO killDeath;
+
+    public struct _IMG_KD_INFO
+    {
+        public GameObject obj_parent;
+        public TMP_Text txt_kd { get; set; }
+    }
+    #endregion
+
+    #region GAME_TIMER
+    public _IMG_TIMER_INFO timer;
+    private float min, sec1, sec2;
+
+    public struct _IMG_TIMER_INFO
+    {
+        public GameObject obj_parent;
+        public Image img_outline { get; set; }
+        public Image img_back { get; set; }
+        public Text txt_gameTime { get; set; }
+    }
+    #endregion
+
+    #region GAME_SCORE
+    public _IMG_SCORE_INFO[] score;
+
+    public struct _IMG_SCORE_INFO
+    {
+        public GameObject obj_parent;
+        public Image img_back;
+        public TMP_Text txt_score;
+    }
+    #endregion
+
     #region RESPAWN_GAGE
     public _IMG_RESPAWN_INFO respawn;
     private bool isStartRespawnGageCor;
@@ -57,6 +92,44 @@ public partial class UIManager : MonoBehaviour
     }
     #endregion
 
+    private void Initialization_KillDeath()
+    {
+        killDeath = new _IMG_KD_INFO();
+
+        killDeath.obj_parent = GameObject.FindGameObjectWithTag("Canvas_overlay").transform.GetChild(13).gameObject;
+        killDeath.txt_kd = killDeath.obj_parent.transform.GetChild(0).GetComponent<TMP_Text>();
+        killDeath.obj_parent.SetActive(true);
+    }
+
+    private void Initialization_GameTimer()
+    {
+        timer = new _IMG_TIMER_INFO();
+
+        timer.obj_parent = GameObject.FindGameObjectWithTag("Canvas_overlay").transform.GetChild(10).gameObject;
+        timer.img_outline = timer.obj_parent.transform.GetChild(0).GetComponent<Image>();
+        timer.img_back = timer.obj_parent.transform.GetChild(1).GetComponent<Image>();
+        timer.txt_gameTime = timer.obj_parent.transform.GetChild(2).GetComponent<Text>();
+        timer.obj_parent.SetActive(true);
+
+        float tmp = GameManager.instance.gameInfo.gameTime;
+        min = tmp / 60;
+        sec1 = 0;
+        sec2 = 0;
+    }
+
+    private void Initialization_Score()
+    {
+        score = new _IMG_SCORE_INFO[2];
+
+        for (int i = 0; i < score.Length; i++)
+        {
+            score[i].obj_parent = GameObject.FindGameObjectWithTag("Canvas_overlay").transform.GetChild(i + 11).gameObject;
+            score[i].img_back = score[i].obj_parent.transform.GetChild(0).GetComponent<Image>();
+            score[i].txt_score = score[i].obj_parent.transform.GetChild(1).GetComponent<TMP_Text>();
+            score[i].obj_parent.SetActive(true);
+        }
+    }
+
     private void Initialization_RespawnGage()
     {
         respawn.obj_parent = GameObject.FindGameObjectWithTag("Canvas_overlay").transform.GetChild(6).gameObject;
@@ -98,6 +171,82 @@ public partial class UIManager : MonoBehaviour
         grenade.btn_grenade.interactable = true;
         grenade.img_back.fillAmount = 0;
         grenade.img_explosion.gameObject.SetActive(false); 
+    }
+
+    public void StartGameTimer()
+    {
+        if (min >= 0)
+        {
+            if (min == 0) //초단위만 남았을경우 빨간색
+            {
+                timer.txt_gameTime.color = Color.red;
+                timer.img_outline.color = Color.red;
+            }
+            sec2 -= Time.smoothDeltaTime; //초 둘째짜리를 계속깎음
+
+            if (sec2 <= 0) //둘째자리가 0이면
+            {
+                if (sec1 > 0)
+                    sec1--; //첫째자리 초 감소
+                else //첫째가 0이면 분1을 1감소후 다시 60초부터 시작.
+                {
+                    min--;
+                    sec1 += 5.0f;
+                }
+                sec2 += 10.0f;
+            }
+        }
+
+        if (min >= 0)
+            timer.txt_gameTime.text = min.ToString() + " : " + sec1.ToString() + ((int)sec2).ToString();//string.Format("{0:D1}: {1:D1}{2:D1}", font[min], font[(int)sec1], font[(int)sec2]);
+    }
+
+    public void SetScore(int _playerIndex, int _point)
+    {
+        int idx = _playerIndex - 1;
+
+        switch ((C_Global.GameType)GameManager.instance.gameInfo.gameType)
+        {
+            case C_Global.GameType._2vs2:
+                {
+                    if (idx == 0 || idx == 1) //레드
+                    {
+                        int tmp = (int.Parse(score[0].txt_score.text) + _point);
+                        score[0].txt_score.text = tmp.ToString();
+                    }
+                    else if(idx == 2 || idx == 3)
+                    {
+                        int tmp = (int.Parse(score[1].txt_score.text) + _point);
+                        score[1].txt_score.text = tmp.ToString();
+                    }
+                }
+                break;
+
+            case C_Global.GameType._1vs1:
+                {
+                    if (idx == 0) //레드
+                    {
+                        int tmp = (int.Parse(score[0].txt_score.text) + _point);
+                        score[0].txt_score.text = tmp.ToString();
+                    }
+                    else
+                    {
+                        int tmp = (int.Parse(score[1].txt_score.text) + _point);
+                        score[1].txt_score.text = tmp.ToString();
+                    }
+                }
+                break;
+        }
+    }
+
+    public void SetMyKillDeath(string _type)
+    {
+        if(_type.Equals("kill"))
+            PlayersManager.instance.myKill++;
+        else if(_type.Equals("death"))
+            PlayersManager.instance.myDeath++;
+
+        killDeath.txt_kd.text = "K/D:  " + PlayersManager.instance.myKill.ToString() + " / " + PlayersManager.instance.myDeath.ToString();
     }
 
     public void Grenade_Btn()

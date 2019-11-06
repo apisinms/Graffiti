@@ -8,7 +8,7 @@ public partial class UIManager : MonoBehaviour
 {
 	public static UIManager instance;
 	public int myIndex { get; set; }
-	public int[] playersIndex { get; set; }    
+	public int[] playersIndex { get; set; }
 
     #region DeadUI
     GameObject leftJoystick;
@@ -28,6 +28,9 @@ public partial class UIManager : MonoBehaviour
         for (int i = 0; i < GameManager.instance.gameInfo.maxPlayer; i++)
             playersIndex[i] = GameManager.instance.playersIndex[i];
 
+        Initialization_GameTimer();
+        Initialization_Score();
+        Initialization_KillDeath();
         Initialization_HP();
 		Initialization_Nickname();
 		Initialization_Circle();
@@ -61,6 +64,8 @@ public partial class UIManager : MonoBehaviour
 
 	void Update()
 	{
+        StartGameTimer();
+           
         for (int i = 0; i < GameManager.instance.gameInfo.maxPlayer; i++)
 		{
 			nickname[playersIndex[i]].obj_parent.transform.position = PlayersManager.instance.tf_players[playersIndex[i]].transform.position + hpAddPos;
@@ -79,7 +84,7 @@ public partial class UIManager : MonoBehaviour
         line.obj_parent.transform.position = PlayersManager.instance.tf_players[myIndex].transform.position + lineAddPos;
         line2.obj_parent.transform.position = PlayersManager.instance.tf_players[myIndex].transform.position + line2AddPos;
         weaponInfo.obj_parent.transform.position = PlayersManager.instance.tf_players[myIndex].transform.position + weaponAddPos;
-	}
+}
 
 	public int PlayerIndexToAbsoluteIndex(int _playerIndex)
 	{

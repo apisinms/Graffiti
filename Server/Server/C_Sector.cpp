@@ -131,6 +131,15 @@ list<C_ClientInfo*> C_Sector::GetSectorPlayerList(INDEX _idx)
 byte C_Sector::GetMovedSectorPlayerList(INDEX _beforeIdx, INDEX _curIdx,
 	list<C_ClientInfo*>& _enterList, list<C_ClientInfo*>& _exitList)
 {
+	if ((_beforeIdx.i < 0) || (_beforeIdx.i >= ROW)
+		|| (_beforeIdx.j < 0) || (_beforeIdx.j) >= COL
+		|| (_curIdx.i < 0) || (_curIdx.i >= ROW)
+		|| (_curIdx.j < 0) || (_curIdx.j) >= COL)
+	{
+		printf("GetMovedSectorPlayerList()에서 옳지 않은 인덱스 발견\n");
+		return false;
+	}
+
 	// 1. 각각 퇴장할 섹터, 입장한 섹터를 저장(해당섹터+인접섹터)
 	vector<SectorInstance*> exitVector(sectors[_beforeIdx.i][_beforeIdx.j].adjacencySector);
 	exitVector.emplace_back(&sectors[_beforeIdx.i][_beforeIdx.j]);

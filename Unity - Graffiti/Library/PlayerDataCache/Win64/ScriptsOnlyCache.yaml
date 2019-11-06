@@ -16,6 +16,7 @@ ScriptsOnlyBuild:
     - DuloGames.UI.UIFlippable
     - DuloGames.UI.UIRectangularRaycastFilter
     - EffectManager
+    - EndSceneManager
     - GameManager
     - GrenadeCollision
     - InputInfoManager
@@ -69,7 +70,6 @@ ScriptsOnlyBuild:
     - Outline_item
     - PathCreation.Examples.PathFollower
     - PathCreation.Examples.PathSpawner
-    - PlayersGameResult
     - PlayersManager
     - PoolManager
     - PotionCollision
@@ -222,11 +222,11 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 9602}
-    - Class: 114
       Script: {instanceID: 9640}
     - Class: 114
       Script: {instanceID: 9646}
+    - Class: 114
+      Script: {instanceID: 9648}
     - Class: 114
       Script: {instanceID: 9652}
     - Class: 114
@@ -547,6 +547,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 11164}
     - Class: 114
       Script: {instanceID: 11272}
+    - Class: 114
+      Script: {instanceID: 2624956}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -762,6 +764,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 11164}
     - Class: 114
       Script: {instanceID: 11272}
+    - Class: 114
+      Script: {instanceID: 2624956}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -1879,7 +1883,7 @@ ScriptsOnlyBuild:
     className: MessageBoxExample
   - hash:
       serializedVersion: 2
-      Hash: e7e19f36a2e5605005557378783205ca
+      Hash: 57cb4042a6ac17665526618bb145ae94
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: SetResultEnd
@@ -1969,7 +1973,7 @@ ScriptsOnlyBuild:
     className: AudioManager
   - hash:
       serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+      Hash: dee1d1bb3263c5b7cb13efd05d102fd5
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: PlayersManager
@@ -2083,7 +2087,7 @@ ScriptsOnlyBuild:
     className: UIPagination
   - hash:
       serializedVersion: 2
-      Hash: 9b5b085b8d69e3378e16d589d87cbdd7
+      Hash: 1c15718bb96e1738cdd4d0a89c828d6a
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: UIManager
@@ -2659,7 +2663,7 @@ ScriptsOnlyBuild:
     className: Test_UIUnitFrame_Bar
   - hash:
       serializedVersion: 2
-      Hash: a05559457e8e379ef5b38c913179daad
+      Hash: 658d7bbc397a9cb4685833e5b79d69cd
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: CountScore
@@ -2837,6 +2841,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: EndSceneManager
   platform: 19
   scenePathNames:
   - Assets/Scenes/MainMenu.unity
