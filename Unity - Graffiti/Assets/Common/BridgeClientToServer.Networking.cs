@@ -279,11 +279,12 @@ public partial class BridgeClientToServer : MonoBehaviour
 
     public void TimeSync(double _time)
     {
-
+        uiManager.gameTime = _time;
     }
 
     public void OtherPlayerHitByCar(int _playerNum, float _posX, float _posZ)
     {
+        Debug.Log("다른놈");
         // 맞은 놈 튕기게 하고
         Rigidbody rigid = playersManager.obj_players[_playerNum - 1].GetComponent<Rigidbody>();
         Vector3 force = new Vector3(_posX, 0.0f, _posZ);
@@ -375,7 +376,7 @@ public partial class BridgeClientToServer : MonoBehaviour
 
 	public void ItemEffectProcess(ref IngamePacket _packet, int _itemCode)
 	{
-		switch((ItemCode)_itemCode)
+        switch ((ItemCode)_itemCode)
 		{
 			case ItemCode.HP_NORMAL:
 				{

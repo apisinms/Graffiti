@@ -65,7 +65,7 @@ public partial class UIManager : MonoBehaviour
 	void Update()
 	{
         StartGameTimer();
-           
+
         for (int i = 0; i < GameManager.instance.gameInfo.maxPlayer; i++)
 		{
 			nickname[playersIndex[i]].obj_parent.transform.position = PlayersManager.instance.tf_players[playersIndex[i]].transform.position + hpAddPos;

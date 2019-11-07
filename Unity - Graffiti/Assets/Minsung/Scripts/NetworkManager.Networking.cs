@@ -455,8 +455,9 @@ public partial class NetworkManager : MonoBehaviour
                                                     double time = 0.0;
 
                                                     UnPackPacket(info[i].packet, out seed, out time);
-                                                    bridge.CarSpawn(seed);
-                                                    bridge.TimeSync(time);
+                                                    bridge.CarSpawn(seed);                                               
+                                                    bridge.TimeSync(GameManager.instance.gameInfo.gameTime - time);
+                                                    //Debug.Log(GameManager.instance.gameInfo.gameTime - time);
                                                 }
                                             }
                                             break;

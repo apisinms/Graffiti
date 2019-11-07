@@ -404,6 +404,56 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 74717879}
   m_CullTransparentMesh: 0
+--- !u!1 &78435208
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 78435209}
+  - component: {fileID: 78435210}
+  m_Layer: 0
+  m_Name: PotionSound
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &78435209
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 78435208}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 721979478}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &78435210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 78435208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af2f8d4512b7d4e4498a9833dce0e5ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_bypassAudioManager: {fileID: 721979479}
+  m_audioFile: potion.wav
+  m_priority: 1
+  m_volume: 0.5
+  m_rate: 1
+  m_playOnAwake: 0
+  m_loop: 0
 --- !u!1 &117322480
 GameObject:
   m_ObjectHideFlags: 0
@@ -2921,7 +2971,7 @@ PrefabInstance:
     - target: {fileID: 5283580370990223409, guid: 5cc1abd50e1583d4680e5d7a66b39284,
         type: 3}
       propertyPath: soundPool.Array.size
-      value: 11
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 5283580370990223409, guid: 5cc1abd50e1583d4680e5d7a66b39284,
         type: 3}
@@ -2957,7 +3007,7 @@ PrefabInstance:
         type: 3}
       propertyPath: soundPool.Array.data[11]
       value: 
-      objectReference: {fileID: 39258050}
+      objectReference: {fileID: 78435210}
     - target: {fileID: 5283580370702024845, guid: 5cc1abd50e1583d4680e5d7a66b39284,
         type: 3}
       propertyPath: m_volume
@@ -2976,12 +3026,12 @@ PrefabInstance:
     - target: {fileID: 999565226429933482, guid: 5cc1abd50e1583d4680e5d7a66b39284,
         type: 3}
       propertyPath: m_volume
-      value: 0.5
+      value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: 4586540225530162359, guid: 5cc1abd50e1583d4680e5d7a66b39284,
         type: 3}
       propertyPath: m_volume
-      value: 0.5
+      value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: 4586540224851053327, guid: 5cc1abd50e1583d4680e5d7a66b39284,
         type: 3}
@@ -2996,7 +3046,7 @@ PrefabInstance:
     - target: {fileID: 4586540225911554106, guid: 5cc1abd50e1583d4680e5d7a66b39284,
         type: 3}
       propertyPath: m_volume
-      value: 0.25
+      value: 0.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5cc1abd50e1583d4680e5d7a66b39284, type: 3}
@@ -6803,21 +6853,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 5342489377444345362, guid: f21284bf9ef31c741a1f10b95494f446,
-        type: 3}
-      propertyPath: m_Color.r
-      value: 0.08235294
-      objectReference: {fileID: 0}
-    - target: {fileID: 5342489377444345362, guid: f21284bf9ef31c741a1f10b95494f446,
-        type: 3}
-      propertyPath: m_Color.g
-      value: 0.08235294
-      objectReference: {fileID: 0}
-    - target: {fileID: 5342489377444345362, guid: f21284bf9ef31c741a1f10b95494f446,
-        type: 3}
-      propertyPath: m_Color.b
-      value: 0.08235294
-      objectReference: {fileID: 0}
     - target: {fileID: 5342489376398739487, guid: f21284bf9ef31c741a1f10b95494f446,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -6862,6 +6897,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_padding
       value: 1.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5342489377444345362, guid: f21284bf9ef31c741a1f10b95494f446,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.08235294
+      objectReference: {fileID: 0}
+    - target: {fileID: 5342489377444345362, guid: f21284bf9ef31c741a1f10b95494f446,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.08235294
+      objectReference: {fileID: 0}
+    - target: {fileID: 5342489377444345362, guid: f21284bf9ef31c741a1f10b95494f446,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.08235294
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f21284bf9ef31c741a1f10b95494f446, type: 3}
@@ -7160,6 +7210,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 641599355}
     m_Modifications:
+    - target: {fileID: 8070829846413750731, guid: 48ecb6acb10f1464abe3b5407ad9a6db,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6234289312042932419, guid: 48ecb6acb10f1464abe3b5407ad9a6db,
         type: 3}
       propertyPath: m_Name
@@ -7269,11 +7324,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8070829846413750731, guid: 48ecb6acb10f1464abe3b5407ad9a6db,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 48ecb6acb10f1464abe3b5407ad9a6db, type: 3}
@@ -7453,7 +7503,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 429a036b4766ca04492d1c073515df06, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0
+  m_Volume: 0.4
   m_Pitch: 1
   Loop: 1
   Mute: 0

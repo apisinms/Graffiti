@@ -20,7 +20,8 @@ public partial class UIManager : MonoBehaviour
 
     #region GAME_TIMER
     public _IMG_TIMER_INFO timer;
-    private float min, sec1, sec2;
+    public double gameTime { get; set; }
+    private int min, sec;
 
     public struct _IMG_TIMER_INFO
     {
@@ -111,10 +112,7 @@ public partial class UIManager : MonoBehaviour
         timer.txt_gameTime = timer.obj_parent.transform.GetChild(2).GetComponent<Text>();
         timer.obj_parent.SetActive(true);
 
-        float tmp = GameManager.instance.gameInfo.gameTime;
-        min = tmp / 60;
-        sec1 = 0;
-        sec2 = 0;
+        gameTime = GameManager.instance.gameInfo.gameTime;
     }
 
     private void Initialization_Score()
@@ -175,30 +173,23 @@ public partial class UIManager : MonoBehaviour
 
     public void StartGameTimer()
     {
-        if (min >= 0)
-        {
-            if (min == 0) //초단위만 남았을경우 빨간색
-            {
-                timer.txt_gameTime.color = Color.red;
-                timer.img_outline.color = Color.red;
-            }
-            sec2 -= Time.smoothDeltaTime; //초 둘째짜리를 계속깎음
+        if (gameTime <= 0)
+            return;
 
-            if (sec2 <= 0) //둘째자리가 0이면
-            {
-                if (sec1 > 0)
-                    sec1--; //첫째자리 초 감소
-                else //첫째가 0이면 분1을 1감소후 다시 60초부터 시작.
-                {
-                    min--;
-                    sec1 += 5.0f;
-                }
-                sec2 += 10.0f;
-            }
+        gameTime -= Time.smoothDeltaTime;
+        min = (int)gameTime / 60;
+        sec = (int)gameTime % 60;
+        
+        if (sec < 0 && min > 1)
+            min--;
+
+        if ((int)min <= 0) //초단위만 남았을경우 빨간색
+        {
+            timer.txt_gameTime.color = Color.red;
+            timer.img_outline.color = Color.red;
         }
 
-        if (min >= 0)
-            timer.txt_gameTime.text = min.ToString() + " : " + sec1.ToString() + ((int)sec2).ToString();//string.Format("{0:D1}: {1:D1}{2:D1}", font[min], font[(int)sec1], font[(int)sec2]);
+        timer.txt_gameTime.text = ((int)min).ToString() + " : " + sec.ToString("00");
     }
 
     public void SetScore(int _playerIndex, int _point)

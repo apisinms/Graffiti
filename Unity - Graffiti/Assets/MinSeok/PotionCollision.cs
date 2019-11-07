@@ -26,6 +26,7 @@ public class PotionCollision : MonoBehaviour
 
                     // 아이템 코드 서버로 전송
                     NetworkManager.instance.SendItemCode(ItemCode.HP_NORMAL);
+                    AudioManager.Instance.Play(11);
                 }
                 else
                 {
