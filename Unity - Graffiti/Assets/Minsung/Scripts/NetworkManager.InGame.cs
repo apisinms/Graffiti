@@ -23,12 +23,12 @@ public partial class NetworkManager : MonoBehaviour
         bw.Write(sendBuf, 0, packetSize);
     }
 
-    // 서버로 전송했던 무기 정보가 성공적으로 전달됐는지 조회
+    // 서버로 전송했던 무기 정보가 성공적으로 전달됐고, 게임 정보를 저장했는지 조회
     public bool CheckWeaponSelectSuccess()
     {
         if (state == STATE_PROTOCOL.INGAME_STATE &&
            protocol == PROTOCOL.START_PROTOCOL &&
-           result == RESULT.INGAME_SUCCESS)
+           result == RESULT.INIT_INFO)
             return true;
 
         else
@@ -40,7 +40,8 @@ public partial class NetworkManager : MonoBehaviour
     {
         // 타이머 프로토콜일 때
         if (state == STATE_PROTOCOL.INGAME_STATE &&
-           protocol == PROTOCOL.TIMER_PROTOCOL)
+           protocol == PROTOCOL.TIMER_PROTOCOL &&
+		   result == RESULT.WEAPON)
         {
             // 이전 시간과 같지 않다면 "~초"를 지속적으로 업데이트
             if (string.Compare(_beforeTime, sysMsg) != 0)
@@ -54,7 +55,8 @@ public partial class NetworkManager : MonoBehaviour
     public bool CheckTimerEnd()
     {
         if (state == STATE_PROTOCOL.INGAME_STATE &&
-           protocol == PROTOCOL.WEAPON_PROTOCOL)
+           protocol == PROTOCOL.WEAPON_PROTOCOL &&
+		   result == RESULT.NODATA)
         {
             return true;
         }
@@ -222,18 +224,45 @@ public partial class NetworkManager : MonoBehaviour
 
     }
 
-	public void SendItemCode(ItemCode _code)
-	{
-		int packetSize = 0;
+    public void SendItemCode(ItemCode _code)
+    {
+        int packetSize = 0;
 
-		// 아이템 프로토콜 전송
-		protocol = SetProtocol(
-		   STATE_PROTOCOL.INGAME_STATE,
-		   PROTOCOL.ITEM_PROTOCOL,
-		   RESULT.INGAME_SUCCESS);
+        // 아이템 프로토콜 전송
+        protocol = SetProtocol(
+           STATE_PROTOCOL.INGAME_STATE,
+           PROTOCOL.ITEM_PROTOCOL,
+           RESULT.INGAME_SUCCESS);
 
-		// 아이템 프로토콜 코드와 함께 전송
-		PackPacket(ref sendBuf, protocol, (int)_code, out packetSize);
-		bw.Write(sendBuf, 0, packetSize);
-	}
+        // 아이템 프로토콜 코드와 함께 전송
+        PackPacket(ref sendBuf, protocol, (int)_code, out packetSize);
+        bw.Write(sendBuf, 0, packetSize);
+    }
+
+    public bool CheckSomeoneQuitBeforeGameLoad()
+    {
+        if (state == STATE_PROTOCOL.INGAME_STATE &&
+           protocol == PROTOCOL.DISCONNECT_PROTOCOL &&
+           result == RESULT.BEFORE_LOAD)
+        {
+            return true;
+        }
+
+        else
+            return false;
+    }
+
+    // 최대 로딩 대기시간넘어갔으면
+    public bool CheckMaxLoadingTime()
+    {
+        if (state == STATE_PROTOCOL.INGAME_STATE &&
+           protocol == PROTOCOL.DISCONNECT_PROTOCOL &&
+           result == RESULT.MAX_LOADING_TIMEWAIT)
+        {
+            return true;
+        }
+
+        else
+            return false;
+    }
 }

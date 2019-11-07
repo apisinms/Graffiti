@@ -224,7 +224,7 @@ bool LoginManager::LoginProcess(C_ClientInfo* _ptr, char* _buf)
 	TCHAR msg[MSGSIZE] = { 0, };
 	PROTOCOL_LOGIN protocol;
 	char buf[BUFSIZE] = { 0, };
-	int packetSize;
+	int packetSize = 0;
 
 	UserInfo tmpUserInfo;
 	memset(&tmpUserInfo, 0, sizeof(UserInfo));
@@ -429,8 +429,12 @@ bool LoginManager::LoginListDelete(UserInfo* _userInfo)
 	int beforeSize = (int)loginList.size();
 
 	loginList.remove(_userInfo);
-	delete _userInfo;
-	_userInfo = nullptr;
+
+	if (_userInfo != nullptr)
+	{
+		delete _userInfo;
+		_userInfo = nullptr;
+	}
 
 	if (beforeSize < (int)loginList.size())
 	{

@@ -1,6 +1,7 @@
 #pragma once
 #include "C_Global.h"
 #include "C_Sector.h"
+#include "C_Timer.h"
 
 #define MAX_BUILDINGS_2VS2	5
 #define MAX_BUILDINGS_1VS1	3
@@ -11,12 +12,12 @@ class C_ClientInfo;
 struct TeamInfo
 {
 	vector<C_ClientInfo*> teamMemberList;	// 이 팀에 속한 플레이어들
-	int teamKillScore;						// 이 팀의 킬 스코어
-	int teamCaptureScore;					// 이 팀의 점령 스코어
-	int teamTotalScore;						// 이 팀의 킬 + 점령 스코어
-	int teamCaptureNum;						// 이 팀의 점령 개수
+	//int teamKillScore;						// 이 팀의 킬 스코어
+	//int teamCaptureScore;					// 이 팀의 점령 스코어
+	//int teamTotalScore;						// 이 팀의 킬 + 점령 스코어
+	//int teamCaptureNum;						// 이 팀의 점령 개수
 
-	TeamInfo() { memset(this, 0, sizeof(TeamInfo)); }
+	TeamInfo() {}
 };
 
 
@@ -24,8 +25,9 @@ struct TeamInfo
 struct RoomInfo
 {
 private:
-	HANDLE InGameTimerHandle;			// 인게임 타이머 핸들
-	int weaponTimeElapsedSec;			// 무기 선택 경과 시간(초)
+	HANDLE InGameTimerHandle = nullptr;	// 인게임 타이머 쓰레드 핸들
+	C_Timer* InGameTimer = nullptr;		// 인게임 타이머(게임 시간만)
+	double InGameTimeSyncElapsed;		// 인게임 시간 동기화 경과 시간
 	double carSpawnTimeElapsed;			// 자동차 스폰 경과 시간
 	double captureBonusTimeElapsed;		// 점령 보너스 경과 시간
 	int gameType;						// 이 방의 게임 타입 정보
@@ -33,8 +35,8 @@ private:
 	int maxPlayer;						// 이 방 최대 플레이어 수
 	ROOMSTATUS roomStatus;				// 방의 상태
 	vector<C_ClientInfo*>players;		// 유저들을 벡터에 저장
-	C_Sector* sector;					// 이 방의 섹터 매니저
-	TeamInfo* teamInfo;					// 팀 정보
+	C_Sector* sector = nullptr;			// 이 방의 섹터 매니저
+	TeamInfo* teamInfo = nullptr;		// 팀 정보
 	vector<BuildingInfo*>buildings;		// 건물 정보
 	
 public:
@@ -57,8 +59,18 @@ public:
 	void SetInGameTimerHandle(HANDLE _handle) { InGameTimerHandle = _handle; }
 	HANDLE GetInGameTimerHandle() { return InGameTimerHandle; }
 
-	int GetWeaponTimeElapsed() { return weaponTimeElapsedSec; }
-	void SetWeaponTimeElasped(int _elaspedTime) { weaponTimeElapsedSec = _elaspedTime; }
+	C_Timer* GetInGameTimer() { return InGameTimer; }
+	void SetInGameTimer(C_Timer* _timer) 
+	{
+		if (InGameTimer != nullptr)
+		{
+			delete InGameTimer;
+		}
+		InGameTimer = _timer;
+	}
+
+	double GetSyncTimeElapsed() { return InGameTimeSyncElapsed; }
+	void SetSyncTimeElasped(double _elaspedTime) { InGameTimeSyncElapsed = _elaspedTime; }
 
 	double GetCarSpawnTimeElapsed() { return carSpawnTimeElapsed; }
 	void SetCarSpawnTimeElasped(double _elaspedTime) { carSpawnTimeElapsed = _elaspedTime; }
@@ -80,10 +92,37 @@ public:
 	vector<C_ClientInfo*>& GetPlayers() { return players; }	// 플레이어 벡터를 리턴해주되, 어차피 복사본이 전달되므로 원본은 영향이 없다.
 
 	C_ClientInfo* GetPlayerByIndex(int _idx) { return players[_idx]; }
+	C_ClientInfo* GetPlayerByPlayerNum(int _playerNum)
+	{ 
+		for (size_t i = 0; i < players.size(); i++)
+		{
+			if (players[i]->GetPlayerInfo()->GetPlayerNum() == _playerNum)
+			{
+				return players[i];
+			}
+		}
+		return nullptr;
+	}
 	
 	C_Sector* GetSector() { return sector; }
+	void SetSector(C_Sector* _sector) 
+	{ 
+		if (sector != nullptr)
+		{
+			delete sector;
+		}
+		sector = _sector; 
+	}
 	
 	TeamInfo& GetTeamInfo(int _teamNum) { return teamInfo[_teamNum]; }
+	void DeleteTeam()
+	{
+		if (teamInfo != nullptr)
+		{
+			delete[] teamInfo;
+			teamInfo = nullptr;
+		}
+	}
 
 	vector<BuildingInfo*>& GetBuildings() { return buildings; }
 };

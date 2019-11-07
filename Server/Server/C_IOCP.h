@@ -4,9 +4,9 @@
 class C_IOCP : public C_SyncCS<C_IOCP>
 {
 protected:
-	HANDLE hcp;								// 입출력 완료 포트
+	HANDLE hcp = nullptr;					// 입출력 완료 포트
 	vector<HANDLE> vThread;					// 공간 메모리 를 할당해주어야함 (Init메서드)
-	C_Socket* listenSock;					// 리스닝 소켓 포인터
+	C_Socket* listenSock = nullptr;					// 리스닝 소켓 포인터
 	static DWORD WINAPI WorkerThread(LPVOID _this);
 
 public:

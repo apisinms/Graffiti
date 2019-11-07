@@ -175,6 +175,7 @@
     <Compile Include="Assets\Gwangil\Scripts\BypassAudioSource.cs" />
     <Compile Include="Assets\Gwangil\Scripts\Chasing.cs" />
     <Compile Include="Assets\Gwangil\Scripts\CountScore.cs" />
+    <Compile Include="Assets\Gwangil\Scripts\EndSceneManager.cs" />
     <Compile Include="Assets\Gwangil\Scripts\LobbyNickName.cs" />
     <Compile Include="Assets\Gwangil\Scripts\ObjectPool.cs" />
     <Compile Include="Assets\Gwangil\Scripts\PooledObject.cs" />

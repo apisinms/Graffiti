@@ -16,6 +16,7 @@ ScriptsOnlyBuild:
     - DuloGames.UI.UIFlippable
     - DuloGames.UI.UIRectangularRaycastFilter
     - EffectManager
+    - EndSceneManager
     - GameManager
     - GrenadeCollision
     - InputInfoManager
@@ -69,7 +70,6 @@ ScriptsOnlyBuild:
     - Outline_item
     - PathCreation.Examples.PathFollower
     - PathCreation.Examples.PathSpawner
-    - PlayersGameResult
     - PlayersManager
     - PoolManager
     - PotionCollision
@@ -220,11 +220,11 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 9602}
-    - Class: 114
       Script: {instanceID: 9640}
     - Class: 114
       Script: {instanceID: 9646}
+    - Class: 114
+      Script: {instanceID: 9648}
     - Class: 114
       Script: {instanceID: 9652}
     - Class: 114
@@ -238,9 +238,9 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 10602}
     - Class: 114
-      Script: {instanceID: 10786}
+      Script: {instanceID: 10788}
     - Class: 114
-      Script: {instanceID: 11078}
+      Script: {instanceID: 11080}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -333,13 +333,13 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 10602}
     - Class: 114
-      Script: {instanceID: 10776}
+      Script: {instanceID: 10778}
     - Class: 114
-      Script: {instanceID: 10786}
+      Script: {instanceID: 10788}
     - Class: 114
-      Script: {instanceID: 10990}
+      Script: {instanceID: 10992}
     - Class: 114
-      Script: {instanceID: 11212}
+      Script: {instanceID: 11214}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -522,29 +522,31 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 10726}
     - Class: 114
-      Script: {instanceID: 10774}
+      Script: {instanceID: 10748}
     - Class: 114
-      Script: {instanceID: 10786}
+      Script: {instanceID: 10776}
     - Class: 114
-      Script: {instanceID: 10934}
+      Script: {instanceID: 10788}
     - Class: 114
-      Script: {instanceID: 10938}
+      Script: {instanceID: 10936}
     - Class: 114
-      Script: {instanceID: 10948}
+      Script: {instanceID: 10940}
     - Class: 114
-      Script: {instanceID: 10978}
+      Script: {instanceID: 10950}
     - Class: 114
-      Script: {instanceID: 10990}
+      Script: {instanceID: 10980}
     - Class: 114
       Script: {instanceID: 10992}
     - Class: 114
-      Script: {instanceID: 11052}
+      Script: {instanceID: 10994}
     - Class: 114
-      Script: {instanceID: 11084}
+      Script: {instanceID: 11054}
     - Class: 114
-      Script: {instanceID: 11164}
+      Script: {instanceID: 11086}
     - Class: 114
-      Script: {instanceID: 11272}
+      Script: {instanceID: 11166}
+    - Class: 114
+      Script: {instanceID: 11274}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -737,29 +739,31 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 10726}
     - Class: 114
-      Script: {instanceID: 10774}
+      Script: {instanceID: 10748}
     - Class: 114
-      Script: {instanceID: 10786}
+      Script: {instanceID: 10776}
     - Class: 114
-      Script: {instanceID: 10934}
+      Script: {instanceID: 10788}
     - Class: 114
-      Script: {instanceID: 10938}
+      Script: {instanceID: 10936}
     - Class: 114
-      Script: {instanceID: 10948}
+      Script: {instanceID: 10940}
     - Class: 114
-      Script: {instanceID: 10978}
+      Script: {instanceID: 10950}
     - Class: 114
-      Script: {instanceID: 10990}
+      Script: {instanceID: 10980}
     - Class: 114
       Script: {instanceID: 10992}
     - Class: 114
-      Script: {instanceID: 11052}
+      Script: {instanceID: 10994}
     - Class: 114
-      Script: {instanceID: 11084}
+      Script: {instanceID: 11054}
     - Class: 114
-      Script: {instanceID: 11164}
+      Script: {instanceID: 11086}
     - Class: 114
-      Script: {instanceID: 11272}
+      Script: {instanceID: 11166}
+    - Class: 114
+      Script: {instanceID: 11274}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -964,21 +968,21 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 10746}
     - Class: 114
-      Script: {instanceID: 10786}
+      Script: {instanceID: 10788}
     - Class: 114
-      Script: {instanceID: 10962}
+      Script: {instanceID: 10964}
     - Class: 114
-      Script: {instanceID: 11092}
+      Script: {instanceID: 11094}
     - Class: 114
-      Script: {instanceID: 11136}
+      Script: {instanceID: 11138}
     - Class: 114
-      Script: {instanceID: 11198}
+      Script: {instanceID: 11200}
     - Class: 114
-      Script: {instanceID: 11216}
+      Script: {instanceID: 11218}
     - Class: 114
-      Script: {instanceID: 11230}
+      Script: {instanceID: 11232}
     - Class: 114
-      Script: {instanceID: 11308}
+      Script: {instanceID: 11310}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -1745,7 +1749,7 @@ ScriptsOnlyBuild:
     className: CaptureManager
   - hash:
       serializedVersion: 2
-      Hash: 1df184a1376e23f565b7d7c11bef593b
+      Hash: 66bd16be9587800d34776558ed3e0bce
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: LeftJoystick
@@ -1877,7 +1881,7 @@ ScriptsOnlyBuild:
     className: MessageBoxExample
   - hash:
       serializedVersion: 2
-      Hash: e7e19f36a2e5605005557378783205ca
+      Hash: 57cb4042a6ac17665526618bb145ae94
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: SetResultEnd
@@ -1967,7 +1971,7 @@ ScriptsOnlyBuild:
     className: AudioManager
   - hash:
       serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+      Hash: dee1d1bb3263c5b7cb13efd05d102fd5
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: PlayersManager
@@ -2081,7 +2085,7 @@ ScriptsOnlyBuild:
     className: UIPagination
   - hash:
       serializedVersion: 2
-      Hash: 9b5b085b8d69e3378e16d589d87cbdd7
+      Hash: 1c15718bb96e1738cdd4d0a89c828d6a
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: UIManager
@@ -2465,6 +2469,12 @@ ScriptsOnlyBuild:
     className: UIManagerInputField
   - hash:
       serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: EndSceneManager
+  - hash:
+      serializedVersion: 2
       Hash: 58e68364412c67eae2bdb4954be2dcc2
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
@@ -2657,7 +2667,7 @@ ScriptsOnlyBuild:
     className: Test_UIUnitFrame_Bar
   - hash:
       serializedVersion: 2
-      Hash: a05559457e8e379ef5b38c913179daad
+      Hash: 658d7bbc397a9cb4685833e5b79d69cd
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: CountScore

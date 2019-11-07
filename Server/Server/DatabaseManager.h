@@ -22,7 +22,14 @@ private:
 	int stat;
 
 private:
-	DatabaseManager() {}
+	DatabaseManager() 
+	{
+		memset(&conn, 0, sizeof(conn));
+		connPtr = nullptr;
+		result = nullptr;
+		memset(&row, 0, sizeof(row));
+		stat = 0;
+	}
 	~DatabaseManager() {}
 	static DatabaseManager* instance;
 

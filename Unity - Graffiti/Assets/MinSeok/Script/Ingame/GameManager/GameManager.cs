@@ -1,4 +1,4 @@
-﻿ 
+﻿
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -80,7 +80,6 @@ public class GameManager : MonoBehaviour
         PlayersManager.instance.Initialization_GameInfo();              // 얻어온 정보대로 초기화
         BridgeClientToServer.instance.Initialization_PlayerViewer();    // 게임 시작시 플레이어 뷰어 셋팅
 
-
 #else
         if (SceneManager.GetActiveScene().name == "MainGame_2vs2")
             gameInfo.gameType = 0;
@@ -88,28 +87,10 @@ public class GameManager : MonoBehaviour
             gameInfo.gameType = 1;
 
         gameInfo.gameType = 0;
-        gameInfo.gameTime = 180;
+        gameInfo.gameTime = 165;
         gameInfo.respawnTime = 5;
         CarSeed = 0;
         StartCoroutine(GameObject.Find("Spawner").GetComponent<PathCreation.Examples.PathSpawner>().Cor_SpawnPrefabs());
-#endif
-    }
-
-    private void OnEnable()
-    {
-        // 이벤트 등록하고, 로딩 완료되면 호출하게 함
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-    void OnSceneLoaded(Scene _scene, LoadSceneMode _mode)
-    {
-        //로딩이 완료되었다고 서버로 보내준다.
-#if NETWORK
-        NetworkManager.instance.SendLoadingComplete();
 #endif
     }
 
@@ -142,7 +123,7 @@ public class GameManager : MonoBehaviour
         gameInfo.maxSpeed = 4.0f;
         gameInfo.maxHealth = 100.0f;
         gameInfo.respawnTime = 3;
-        gameInfo.gameTime = 300;
+        gameInfo.gameTime = 180;
         gameInfo.killPoint = 25;
         gameInfo.capturePoint = 100;
 
@@ -211,18 +192,19 @@ public class GameManager : MonoBehaviour
     public void LoadingComplete()
     {
 #if NETWORK
-        //mapMode[gameInfo.gameType].SetActive(true);
+      //////////////// 게임 시작 시 최초로 1회 내 위치정보를 서버로 전송해야함 /////////////////
+      NetworkManager.instance.SendIngamePacket(true);
 
-        // 1. 안들어온 놈들 꺼준다.
-        GameObject notConnectedCharacter;
+      // 1. 안들어온 놈들 꺼준다.
+      GameObject notConnectedCharacter;
         for (int i = gameInfo.maxPlayer; i < C_Global.MAX_CHARACTER; i++)
         {
             notConnectedCharacter = GameObject.FindGameObjectWithTag("Player" + (i + 1).ToString());
 
-			if (notConnectedCharacter != null)
-			{
-				notConnectedCharacter.SetActive(false);
-			}
+         if (notConnectedCharacter != null)
+         {
+            notConnectedCharacter.SetActive(false);
+         }
         }
 
         // 2. 아이콘도 꺼준다.

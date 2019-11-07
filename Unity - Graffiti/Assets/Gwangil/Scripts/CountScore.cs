@@ -8,9 +8,11 @@ public class CountScore : MonoBehaviour
     public float duration = 0.5f; // 카운팅에 걸리는 시간 설정. 
     public TMPro.TMP_Text score;
 
+    public int target;
+
     void Start()
     {
-        StartCoroutine(Count(123456, 0));
+        StartCoroutine(Count(target, 0));
     }
 
     IEnumerator Count(float target, float current)

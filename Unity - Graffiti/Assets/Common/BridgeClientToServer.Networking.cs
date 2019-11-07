@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KetosGames.SceneTransition;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -79,6 +80,28 @@ public partial class BridgeClientToServer : MonoBehaviour
         tmpGameInfo = _gameInfo;
         tmpWeapons = _weapons;
     }
+
+	public void ReadyStart()
+	{
+		 이 함수
+
+		/// 레디 시작했을때 잠깐 조작 못하게 막아놓음
+	}
+
+	public void ReadyEnd()
+	{
+		 이 함수
+
+		/// 레디 끝났을때 다시 조작하게 풀고 문구 안보이게
+	}
+
+	public void SetReadyTimeText(int _time)
+	{
+		이 함수
+
+		/// ReadyStart() 호출 이후에, 서버가 정해놓은 시간동안 조작못함
+		/// 이때 받은 숫자로 3, 2, 1 출력하게 하면 됨(무기선택이랑 똑같게 5, 4, 3 ... 이런 식으로 감)
+	}
 
     // 섹터 진입시
     public void EnterSectorProcess(ref IngamePacket _packet)
@@ -225,18 +248,17 @@ public partial class BridgeClientToServer : MonoBehaviour
 
     public void KillProcess(int _killer, int _victim) //누군가 죽으면 무조건 호출
     {
-        /*
-        if ((_killer - 1) == myIndex) // 내가(_killer - 1) 상대방(_victim - 1)을 죽였을때.
-        {
-            Debug.Log("내가 " + (_victim - 1) + "을 죽였다!");
-        }
-        */
         uiManager.EnqueueKillLog_Player(_killer, _victim); //살인사건시 킬러와 빅팀의 넘버를 킬로그 큐로 보냄
+        uiManager.SetScore(_killer, gameManager.gameInfo.killPoint); //인덱스로 팀판별후 킬점수 누적
+
+        if ((_killer - 1) == myIndex) // 내가(_killer - 1) 상대방(_victim - 1)을 죽였을때.
+            uiManager.SetMyKillDeath("kill");
 
         if ((_victim - 1) == myIndex) // 내가(_victim - 1) 상대방(_killer - 1)에게 죽었을때.
         {
             StateManager.instance.Death(true); //내가 죽은상태로 전환.
-            uiManager.SetDeadUI("당신이(가) " + playersManager.nickname[_killer - 1] + "의 " + weaponManager.GetWeaponName(_killer - 1) + "로 인해 사망했습니다!"); // 죽은 UI로 전환
+            uiManager.SetMyKillDeath("death");
+            uiManager.SetDeadUI("당신이 " + playersManager.nickname[_killer - 1] + "의 " + weaponManager.GetWeaponName(_killer - 1) + "로 인해 사망했습니다!"); // 죽은 UI로 전환
         }
         else
         {
@@ -277,8 +299,14 @@ public partial class BridgeClientToServer : MonoBehaviour
         pathSpawner.SpawnPrefabs(); // 차 생성
     }
 
+    public void TimeSync(double _time)
+    {
+        uiManager.gameTime = _time;
+    }
+
     public void OtherPlayerHitByCar(int _playerNum, float _posX, float _posZ)
     {
+        Debug.Log("다른놈");
         // 맞은 놈 튕기게 하고
         Rigidbody rigid = playersManager.obj_players[_playerNum - 1].GetComponent<Rigidbody>();
         Vector3 force = new Vector3(_posX, 0.0f, _posZ);
@@ -304,6 +332,8 @@ public partial class BridgeClientToServer : MonoBehaviour
     public void CaptureResult(int _capturePlayerNum, int _triggerIdx)
     {
         int idx = _capturePlayerNum - 1;
+
+        uiManager.SetScore(_capturePlayerNum, gameManager.gameInfo.capturePoint); //인덱스로 팀판별하여 점령점수 누적
 
         switch ((C_Global.GameType)GameManager.instance.gameInfo.gameType)
         {
@@ -368,7 +398,7 @@ public partial class BridgeClientToServer : MonoBehaviour
 
 	public void ItemEffectProcess(ref IngamePacket _packet, int _itemCode)
 	{
-		switch((ItemCode)_itemCode)
+        switch ((ItemCode)_itemCode)
 		{
 			case ItemCode.HP_NORMAL:
 				{
@@ -394,13 +424,35 @@ public partial class BridgeClientToServer : MonoBehaviour
         }
     }
 
-	public void GameEndProcess(ref Score[] _scores)
+	public void GameEndProcess()
 	{
-		/// 여기서 _scores 다음 씬까지 저장하고 알아서 EndScene에서 요리해라 광일아
-		SceneManager.LoadScene("EndScene");
-
-        networkManager.SendGotoLobby();	// 나 로비로 갈랭~(얜 호출해줘야 돼)
+		이 함수
+		/// 게임이 종료되었다고 텍스트를 띄우던 뭘 하던 하고, 조작 못하도록 한다.
 	}
+
+    public void ScoreShowPrcess(ref int[] _playersNum, ref Score[] _scores)
+    {
+        /// 여기서 _scores 다음 씬까지 저장하고 알아서 EndScene에서 요리해라 광일아
+        if (moveCor != null)
+            StopCoroutine(moveCor);
+
+        // 지워지지 않는 오브젝트로 정보 이동
+        EndSceneManager.Instance.nickName = PlayersManager.instance.nickname;
+        EndSceneManager.Instance.playerNum = _playersNum;
+        EndSceneManager.Instance.scores = new Score[4];
+        for (int i = 0; i < _scores.Length; i++)
+        {
+            EndSceneManager.Instance.scores[_playersNum[i] - 1] = _scores[i];
+        }
+        EndSceneManager.Instance.gameType = GameManager.instance.gameInfo.gameType;
+
+		/// 여기서 스무스로딩할때 페이크로딩 안넣고 싶음
+        SceneLoader.LoadScene("EndScene");	// 스무스 로딩
+
+        SceneLoader.Instance.waitOtherPlayer = false;
+
+        networkManager.SendGotoLobby();   // 나 로비로 갈랭~(얜 호출해줘야 돼)
+    }
 
     //쐇을때 무조건 1번의 패킷을 보내야됨. 보정용
     public void SendPacketOnce()

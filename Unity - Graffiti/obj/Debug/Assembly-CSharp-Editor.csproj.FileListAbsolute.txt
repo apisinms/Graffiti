@@ -294,3 +294,7 @@ E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\obj\Debug\Assembly-CSharp-
 E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\Assembly-CSharp.pdb
 E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\PathCreator.pdb
 E:\Unity\Projects\forGitHub\Graffiti\Unity - Graffiti\Temp\bin\Debug\PathCreatorEditor.pdb
+C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\obj\Debug\Assembly-CSharp-Editor.csprojAssemblyReference.cache
+C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\obj\Debug\Assembly-CSharp-Editor.csproj.CoreCompileInputs.cache
+C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\obj\Debug\Assembly-CSharp-Editor.dll
+C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\obj\Debug\Assembly-CSharp-Editor.pdb

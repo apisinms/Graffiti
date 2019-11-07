@@ -47,6 +47,7 @@ public partial class UIManager : MonoBehaviour
     public GameObject[] obj_prefebGraffity_2vs2;
     public GameObject[] obj_prefebGraffity_1vs1;
     public _TXT_GRAFFITY_INFO[] graffity;
+    public Sprite[] spr_graffity;
     public Vector3[] graffityAddPos { get; set; }
     public Coroutine[] curSprayingCor { get; set; }
     public bool[] isStartSprayingCor { get; set; }
@@ -278,19 +279,31 @@ public partial class UIManager : MonoBehaviour
         {
             case C_Global.GameType._2vs2:
                 {
+                    if (idx == 0 || idx == 1)
+                        graffity[_triggerIdx].img_graffity.sprite = spr_graffity[0];
+                    else if(idx == 2 || idx == 3)
+                        graffity[_triggerIdx].img_graffity.sprite = spr_graffity[1];
+                    /*
                     if (idx == GameManager.instance.playersIndex[0] || idx == GameManager.instance.playersIndex[1])
                         graffity[_triggerIdx].img_graffity.color = Color.white;
                     else
                         graffity[_triggerIdx].img_graffity.color = Color.red;
+                      */
                 }
                 break;
 
             case C_Global.GameType._1vs1:
                 {
+                    if (idx == 0)
+                        graffity[_triggerIdx].img_graffity.sprite = spr_graffity[0];
+                    else
+                        graffity[_triggerIdx].img_graffity.sprite = spr_graffity[1];
+                    /*
                     if (idx == GameManager.instance.playersIndex[0])
                         graffity[_triggerIdx].img_graffity.color = Color.white;
                     else
                         graffity[_triggerIdx].img_graffity.color = Color.red;
+                        */
                 }
                 break;
         }

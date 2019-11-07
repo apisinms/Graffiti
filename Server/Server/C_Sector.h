@@ -15,6 +15,11 @@ private:
 	//list<C_Item*>itemList;					// 섹터에 존재하는 아이템 리스트(추가해야함)
 	//list<C_Bullet*>bulletList;				// 섹터에 존재하는 총알 리스트(추가할지 애매함)
 
+public:
+	SectorInstance()
+	{ 
+		this->num = 0;
+	}
 };
 
 // 개별로 존재하는 섹터 인스턴스를 총괄하는 섹터클래스

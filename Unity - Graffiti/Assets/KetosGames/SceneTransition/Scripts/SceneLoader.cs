@@ -131,6 +131,32 @@ namespace KetosGames.SceneTransition
         /// </summary>
         void Update()
         {
+            // 로딩 전 강종 시
+            if (NetworkManager.instance.CheckSomeoneQuitBeforeGameLoad() == true)
+            {
+                Destroy(gameObject);
+
+                MessageBox.Show("다른 플레이어가 종료했습니다. 상습적인 강제종료는 계정 정지의 원인이 됩니다.", "강제 종료",
+                   (result) =>
+                   {
+                       SceneManager.LoadScene("Lobby");
+                       NetworkManager.instance.SendGotoLobby();
+                   });
+            }
+
+            // 최대 로딩 대기시간 넘어감
+            if (NetworkManager.instance.CheckMaxLoadingTime() == true)
+            {
+                Destroy(gameObject);
+
+                MessageBox.Show("최대 로딩 대기시간을 초과하였습니다.", "시간 초과",
+                   (result) =>
+                   {
+                       SceneManager.LoadScene("Lobby");
+                       NetworkManager.instance.SendGotoLobby();
+                   });
+            }
+
             if (FadingIn)
             {
                 UpdateFadeIn();
@@ -278,7 +304,7 @@ namespace KetosGames.SceneTransition
             BeginFadeOut();
             while (FadingOut)
             {
-                yield return 0;
+                yield return null;
             }
 
             if (UseSceneForLoadingScreen)
@@ -306,7 +332,7 @@ namespace KetosGames.SceneTransition
                         {
                             break; // the scene is finished loading, lets get out of here
                         }
-                        yield return 0;
+                        yield return null;
                     }
                 }
                 else
@@ -332,7 +358,7 @@ namespace KetosGames.SceneTransition
             while (SceneLoadingOperation.progress < 0.9f)
             {
                 Progress = SceneLoadingOperation.progress;
-                yield return 0;
+                yield return null;
             }
             Progress = 1f;
 
@@ -341,7 +367,7 @@ namespace KetosGames.SceneTransition
             {
                 while (Time.unscaledTime - startTime < MinimumLoadingScreenSeconds)
                 {
-                    yield return 0;
+                    yield return null;
                 }
             }
 
@@ -355,7 +381,7 @@ namespace KetosGames.SceneTransition
                     BeginFadeOut();
                     while (FadingOut)
                     {
-                        yield return 0;
+                        yield return null;
                     }
                 }
                 else
@@ -364,13 +390,27 @@ namespace KetosGames.SceneTransition
                 }
             }
 
+            // 다른 플레이어를 기다려야하는 씬일 경우에만 로딩 패킷 보낸다.
             if (_waitOther == true)
             {
-                if (waitOtherPlayer == false)
+                // 다음 씬 로딩시키고
+                SceneLoadingOperation.allowSceneActivation = true;
+
+                // 다 로딩 될 때까지 기다린다
+                while (!SceneLoadingOperation.isDone)
                 {
                     yield return null;
                 }
-                SceneLoadingOperation.allowSceneActivation = true;
+
+                // 다음 씬이 모두 로딩 됐다면 로딩완료 패킷을 보낸다.
+                NetworkManager.instance.SendLoadingComplete();
+
+                // 아직 다른 플레이어 로딩이 안됐다면 모두 될 때까지 기다려준다.
+                while (waitOtherPlayer == false)
+                {
+                    yield return null;
+                }
+
             }
             else if (_waitOther == false)
             {
@@ -379,7 +419,7 @@ namespace KetosGames.SceneTransition
 
             while (!SceneLoadingOperation.isDone)
             {
-                yield return 0;
+                yield return null;
             }
             if (LoadingScreen != null)
             {
@@ -390,6 +430,8 @@ namespace KetosGames.SceneTransition
             BeginFadeIn();
 
             Loading = false; // At this point is should be safe to start a new load even though it's still fading in
+
+            // 진짜로 로딩이 다 끝나면 
         }
 
         /// <summary>

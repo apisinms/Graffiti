@@ -87,6 +87,9 @@ public class BulletCollision : MonoBehaviour
         {
             ps_effectClone = PoolManager.instance.GetCollisionEffectFromPool("BloodPool1", other.ClosestPointOnBounds(this.transform.position), this.transform.forward);
             EffectManager.instance.StartCoroutine(EffectManager.instance.CheckEffectEnd(ps_effectClone));
+
+            if(returnIdx == myIndex)
+                AudioManager.Instance.Play(UnityEngine.Random.Range(3, 5));
         }
 
         PoolManager.instance.ReturnGunToPool(gameObject, bulletCloneInfo, returnIdx);

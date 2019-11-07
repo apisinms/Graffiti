@@ -110,6 +110,10 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
         playerSGInfo[myIndex].curAmmo--;
         UIManager.instance.SetAmmoStateTxt(playerSGInfo[myIndex].curAmmo);
 
+        #if NETWORK
+        NetworkManager.instance.SendIngamePacket();
+        #endif
+
         switch (playerSGInfo[myIndex].bulletPatternIndex)
         {
             case 0:
@@ -231,11 +235,9 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
 
     public void ReloadAmmoProcess(int _index)
     {
-        /*
         #if NETWORK
         NetworkManager.instance.SendIngamePacket();
         #endif
-        */
 
         if (playerSGInfo[_index].curAmmo >= weaponManager.weaponInfoSG.maxAmmo
             || weaponManager.isReloading == true) //풀탄창이면 재장전안함

@@ -26,9 +26,18 @@ protected:
 	WSABUF sWsabuf;
 
 public:
-	C_Socket() {}
+	C_Socket() 
+	{
+		memset(&sock, 0, sizeof(sock));
+		memset(&rOverlapped, 0, sizeof(rOverlapped));
+		memset(&sOverlapped, 0, sizeof(sOverlapped));
+	}
 	~C_Socket() {}
-	C_Socket(SOCKET _sock, SOCKADDR_IN _addr) : sock(_sock), addr(_addr) {}
+	C_Socket(SOCKET _sock, SOCKADDR_IN _addr) : sock(_sock), addr(_addr) 
+	{
+		memset(&rOverlapped, 0, sizeof(rOverlapped));
+		memset(&sOverlapped, 0, sizeof(sOverlapped));
+	}
 
 	void SetSocket(SOCKET _sock);
 	SOCKET GetSocket();

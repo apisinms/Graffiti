@@ -14,10 +14,9 @@ public partial class NetworkManager : MonoBehaviour
 {
     // 서버 IP와 포트
     private static IPAddress serverIP = IPAddress.Parse("127.0.0.1");
-    //private static IPAddress serverIP = IPAddress.Parse("192.168.0.6");
-    //private static IPAddress serverIP = IPAddress.Parse("211.227.82.184");
+    //private static IPAddress serverIP = IPAddress.Parse("121.164.149.148");
     //private static IPAddress serverIP = IPAddress.Parse("14.32.42.101");
-
+  
     private static int serverPort = 10823;
 
     readonly static int IDSIZE = 255;
@@ -65,23 +64,23 @@ public partial class NetworkManager : MonoBehaviour
         LEAVE_ROOM_PROTOCOL = ((Int64)0x1 << 53),
         CHAT_PROTOCOL = ((Int64)0x1 << 52),
 
-        // InGameState
-        TIMER_PROTOCOL = ((Int64)0x1 << 53),      // 타이머 프로토콜(1초씩 받음)
-        WEAPON_PROTOCOL = ((Int64)0x1 << 52),      // 무기 전송 프로토콜
-        NICKNAME_PROTOCOL = ((Int64)0x1 << 51),   // 본인의 닉네임을 받음
-        START_PROTOCOL = ((Int64)0x1 << 50),      // 게임 시작 프로토콜
-        LOADING_PROTOCOL = ((Int64)0x1 << 49),       // 로딩 여부 프로토콜
-        UPDATE_PROTOCOL = ((Int64)0x1 << 48),      // 패킷 업데이트 프로토콜
-        FOCUS_PROTOCOL = ((Int64)0x1 << 47),      // 포커스 프로토콜
-        GOTO_LOBBY_PROTOCOL = ((Int64)0x1 << 46),      // 로비로 가는 프로토콜
-        CAPTURE_PROTOCOL = ((Int64)0x1 << 45),      // 점령 프로토콜
-        ITEM_PROTOCOL = ((Int64)0x1 << 44),         // 아이템 프로토콜
-		GAME_END_PROTOCOL = ((Int64)0x1 << 43),   // 게임 종료 프로토콜(스코어 보여줘야함)
-
+		// InGameState
+		TIMER_PROTOCOL      = ((Int64)0x1 << 53),  // 1초마다 보내는 타이머
+		WEAPON_PROTOCOL     = ((Int64)0x1 << 52), // 서버측:무기선택받아옴, 클라측:무기선택보내옴
+		INFO_PROTOCOL       = ((Int64)0x1 << 51),   // 정보를 클라로 보냄
+		START_PROTOCOL      = ((Int64)0x1 << 50),  // 게임 시작 프로토콜
+		LOADING_PROTOCOL    = ((Int64)0x1 << 49),    // 로딩 여부 프로토콜
+		UPDATE_PROTOCOL     = ((Int64)0x1 << 48), // 이동 프로토콜
+		FOCUS_PROTOCOL      = ((Int64)0x1 << 47),  // 포커스 프로토콜
+		GOTO_LOBBY_PROTOCOL = ((Int64)0x1 << 46), // 로비로 가는
+		CAPTURE_PROTOCOL    = ((Int64)0x1 << 45),    // 점령
+		ITEM_PROTOCOL       = ((Int64)0x1 << 44),   // 아이템 프로토콜
+		GAME_END_PROTOCOL   = ((Int64)0x1 << 43),   // 게임 종료 프로토콜(스코어 보여줘야함)
+								
 		DISCONNECT_PROTOCOL = ((Int64)0x1 << 34), // 접속 끊김 프로토콜
 
-        // 48 ~ 34
-    };
+		// 48 ~ 34
+	};
 
     // 33 ~ 10
     enum RESULT : Int64
@@ -105,35 +104,54 @@ public partial class NetworkManager : MonoBehaviour
         LEAVE_ROOM_SUCCESS = ((Int64)0x1 << 33),
         LEAVE_ROOM_FAIL = ((Int64)0x1 << 32),
 
-        // InGameState(공통)
-        INGAME_SUCCESS = ((Int64)0x1 << 33),
-        INGAME_FAIL = ((Int64)0x1 << 32),
+		// IngameState 공통
+		INGAME_SUCCESS = ((Int64)0x1 << 33),
+		INGAME_FAIL = ((Int64)0x1 << 32),
 
-        // WEAPON_PROTOCOL 개별
-        NOTIFY_WEAPON = ((Int64)0x1 << 31),   // 무기를 알려줌
+		// TIMER_PROTOCOL 개별
+		WEAPON = ((Int64)0x1 << 31),  // 무기 선택 남은 초
+		READY = ((Int64)0x1 << 30),   // 게임 준비 남은 초
+		INGAME_SYNC = ((Int64)0x1 << 29), // 인게임 시간 싱크 맞추기용
 
-        // UPATE_PROTOCOL 개별
-        ENTER_SECTOR = ((Int64)0x1 << 31),         // 섹터 진입
-        EXIT_SECTOR = ((Int64)0x1 << 30),         // 섹터 퇴장
-        UPDATE_PLAYER = ((Int64)0x1 << 29),         // 플레이어 목록 최신화
-        FORCE_MOVE = ((Int64)0x1 << 28),         // 강제 이동
-        GET_OTHERPLAYER_STATUS = ((Int64)0x1 << 27),         // 다른 플레이어 상태 얻기
-        BULLET_HIT = ((Int64)0x1 << 26),         // 총알 맞음
-        RESPAWN = ((Int64)0x1 << 25),         // 리스폰 요청 및 상대방 리스폰 수신
-        CAR_SPAWN = ((Int64)0x1 << 24),         // 자동차 스폰
-        CAR_HIT = ((Int64)0x1 << 23),         // 자동차에 치여 뒤짐
-        KILL = ((Int64)0x1 << 22),         // 플레이어한테 뒤짐
+		// WEAPON_PROTOCOL 개별
+		NOTIFY_WEAPON = ((Int64)0x1 << 31),   // 무기를 알려줌
 
-        // DISCONNECT_PROTOCOL 개별
-        WEAPON_SEL = ((Int64)0x1 << 31),
-        ABORT = ((Int64)0x1 << 30),
+		// INFO_PROTOCOL 개별
+		NICKNAME = ((Int64)0x1 << 31),        // 닉네임 알려줌
 
-        // CAPTRUE_PROTOCOL 개별
-        BONUS = ((Int64)0x1 << 31),
+		// START_PROTOCOL 개별
+		INIT_INFO = ((Int64)0x1 << 31),
+		READY_START = ((Int64)0x1 << 30),
+		READY_END = ((Int64)0x1 << 29),
 
-        // ~ 11
-        NODATA = ((Int64)0x1 << 10)
-    };
+		// UPDATE_PROTOCOL 개별
+		ENTER_SECTOR = ((Int64)0x1 << 31),        // 섹터 진입
+		EXIT_SECTOR = ((Int64)0x1 << 30),     // 섹터 퇴장
+		UPDATE_PLAYER = ((Int64)0x1 << 29),       // 플레이어 목록 최신화
+		FORCE_MOVE = ((Int64)0x1 << 28),      // 강제 이동
+		GET_OTHERPLAYER_STATUS = ((Int64)0x1 << 27),      // 다른 플레이어 상태 얻기
+		BULLET_HIT = ((Int64)0x1 << 26),      // 총알 맞음
+		RESPAWN = ((Int64)0x1 << 25),     // 리스폰 요청 수신 및 리스폰 프로토콜 전송
+		CAR_SPAWN = ((Int64)0x1 << 24),       // 자동차 스폰 
+		CAR_HIT = ((Int64)0x1 << 23),     // 자동차에 치임
+		KILL = ((Int64)0x1 << 22),        // 플레이어한테 죽음
+
+		// DISCONNECT_PROTOCOL 개별
+		WEAPON_SEL = ((Int64)0x1 << 31),
+		BEFORE_LOAD = ((Int64)0x1 << 30),
+		MAX_LOADING_TIMEWAIT = ((Int64)0x1 << 29),
+		ABORT = ((Int64)0x1 << 28),
+
+		// CAPTRUE_PROTOCOL 개별
+		BONUS = ((Int64)0x1 << 31),
+
+		// GAME_END_PROTOCOL 개별
+		GAME_END_TEXT_SHOW = ((Int64)0x1 << 31),
+		SCORE_SHOW = ((Int64)0x1 << 30),
+
+
+		NODATA = ((Int64)0x1 << 10)
+	};
 
     struct _User_Info
     {
@@ -145,47 +163,53 @@ public partial class NetworkManager : MonoBehaviour
     string nickName;
     public string NickName { get { return nickName; } set { nickName = value; } }
 
-	// 플레이어 개별 스코어
-	[StructLayout(LayoutKind.Sequential)]
-	public struct Score
-	{
-		[MarshalAs(UnmanagedType.I4)]
-		int numOfKill;      // 내가 몇 명 죽였는지
+    // 플레이어 개별 스코어
+    [StructLayout(LayoutKind.Sequential)]
+    public struct Score
+    {
+        [MarshalAs(UnmanagedType.I4)]
+        public int numOfKill;      // 내가 몇 명 죽였는지
 
-		[MarshalAs(UnmanagedType.I4)]
-		int numOfDeath;     // 내가 몇 번 죽었는지
+        [MarshalAs(UnmanagedType.I4)]
+        public int numOfDeath;     // 내가 몇 번 죽었는지
 
-		[MarshalAs(UnmanagedType.I4)]
-		int killScore;      // 킬 점수
+        [MarshalAs(UnmanagedType.I4)]
+        public int killScore;      // 킬 점수
 
-		[MarshalAs(UnmanagedType.I4)]
-		int captureCount;   // 점령해본 건물 개수 
+        [MarshalAs(UnmanagedType.I4)]
+        public int captureCount;   // 점령해본 건물 개수 
 
-		public byte[] Serialize()
-		{
-			// allocate a byte array for the struct data
-			var buffer = new byte[Marshal.SizeOf(typeof(BulletCollisionChecker))];
+        [MarshalAs(UnmanagedType.I4)]
+        public int captureNum;     // 점령중인 건물 개수
 
-			// Allocate a GCHandle and get the array pointer
-			var gch = GCHandle.Alloc(buffer, GCHandleType.Pinned);
-			var pBuffer = gch.AddrOfPinnedObject();
+        [MarshalAs(UnmanagedType.I4)]
+        public int captureScore;   // 점령한 건물 토대로 얻은 점수
 
-			// copy data from struct to array and unpin the gc pointer
-			Marshal.StructureToPtr(this, pBuffer, false);
-			gch.Free();
+        public byte[] Serialize()
+        {
+            // allocate a byte array for the struct data
+            var buffer = new byte[Marshal.SizeOf(typeof(BulletCollisionChecker))];
 
-			return buffer;
-		}
-		public void Deserialize(ref byte[] data)
-		{
-			var gch = GCHandle.Alloc(data, GCHandleType.Pinned);
-			this = (Score)Marshal.PtrToStructure(gch.AddrOfPinnedObject(), typeof(Score));
-			gch.Free();
-		}
-	};
+            // Allocate a GCHandle and get the array pointer
+            var gch = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+            var pBuffer = gch.AddrOfPinnedObject();
 
-	// 총알 충돌 검사 구조체
-	[StructLayout(LayoutKind.Sequential)]
+            // copy data from struct to array and unpin the gc pointer
+            Marshal.StructureToPtr(this, pBuffer, false);
+            gch.Free();
+
+            return buffer;
+        }
+        public void Deserialize(ref byte[] data)
+        {
+            var gch = GCHandle.Alloc(data, GCHandleType.Pinned);
+            this = (Score)Marshal.PtrToStructure(gch.AddrOfPinnedObject(), typeof(Score));
+            gch.Free();
+        }
+    };
+
+    // 총알 충돌 검사 구조체
+    [StructLayout(LayoutKind.Sequential)]
     public struct BulletCollisionChecker
     {
         [MarshalAs(UnmanagedType.I1)]

@@ -23,6 +23,7 @@ public partial class PlayersManager : MonoBehaviour
     #endregion
 
     #region PLAYERS_ATTRIBUTE
+    public int myKill, myDeath;
     public string[] nickname { get; set; }
     public float[] speed { get; set; }
     public float[] hp { get; set; }
@@ -38,7 +39,7 @@ public partial class PlayersManager : MonoBehaviour
             instance = this;
 
         myIndex = GameManager.instance.myIndex; //게임매니저에서 받은 인덱스를 다시등록
-
+      
 #if NETWORK
         networkManager = NetworkManager.instance;
 #endif
