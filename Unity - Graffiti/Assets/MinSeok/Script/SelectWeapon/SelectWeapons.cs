@@ -38,6 +38,8 @@ public class SelectWeapons : UnityEngine.MonoBehaviour
     public Button[] btn_subWeapons = new Button[2]; //보조무기 버튼 3개
     private Vector3[] vt_subWeapons = new Vector3[2]; //보조무기 버튼3개의 포지션
 
+    public Text[] txt_mainWeapons = new Text[3]; //주무기 이름 텍스트 3개
+
     public Button btn_return; //돌아가기 버튼
 
     public Text txt_selectTime; float selectTime = 30.0f; //제한시간 텍스트
@@ -101,13 +103,34 @@ public class SelectWeapons : UnityEngine.MonoBehaviour
                 Debug.Log(myMainWeapon + "선택");
 
                 img_checkMark[0].fillAmount = 1.0f;
-                img_checkMark[0].transform.localPosition = _checkMarkPos; //체크마크 표시
+                img_checkMark[0].transform.localPosition = _checkMarkPos + new Vector3(0, 150, 0) ; //체크마크 표시
 
+                switch(myMainWeapon)
+                {
+                    case _WEAPONS.AR:
+                        txt_mainWeapons[0].gameObject.SetActive(true);
+                        txt_mainWeapons[1].gameObject.SetActive(false);
+                        txt_mainWeapons[2].gameObject.SetActive(false);
+                        break;
+                    case _WEAPONS.SG:
+                        txt_mainWeapons[0].gameObject.SetActive(false);
+                        txt_mainWeapons[1].gameObject.SetActive(true);
+                        txt_mainWeapons[2].gameObject.SetActive(false);
+                        break;
+                    case _WEAPONS.SMG:
+                        txt_mainWeapons[0].gameObject.SetActive(false);
+                        txt_mainWeapons[1].gameObject.SetActive(false);
+                        txt_mainWeapons[2].gameObject.SetActive(true);
+                        break;
+                }
+
+                /*
                 for (int i = 0; i < btn_mainWeapons.Length; i++)
                 {
                     btn_mainWeapons[i].interactable = false; //버튼 비활성화
                 }
                 StartCoroutine(AppearSubWeapon(false)); //보조무기 패널이 스크롤됨.
+                */
                 break;
 
             case _WEAPONS_TYPE.SUB:
@@ -249,6 +272,7 @@ public class SelectWeapons : UnityEngine.MonoBehaviour
                 // 지저분하니까 뒤에 무기 패널 끔
                 panel_mainWeapon.SetActive(false);
                 panel_subWeapon.SetActive(false);
+
 
                 switch ((C_Global.GameType)networkManager.selectMatch)
                 {

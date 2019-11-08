@@ -54,7 +54,7 @@ public partial class BridgeClientToServer : MonoBehaviour
         //보조무기세팅 마찬가지로 같은식. 나중에 추가.
         /*
 
-          */
+            */
 
         EffectManager.instance.InitializeMuzzle(index);
 
@@ -79,6 +79,27 @@ public partial class BridgeClientToServer : MonoBehaviour
     {
         tmpGameInfo = _gameInfo;
         tmpWeapons = _weapons;
+    }
+
+    public void ReadyStart()
+    {
+        //여기
+       /// 레디 시작했을때 잠깐 조작 못하게 막아놓음
+   }
+
+    public void ReadyEnd()
+    {
+        StartCoroutine(uiManager.StartGameTimer());
+
+        //여기
+       /// 레디 끝났을때 다시 조작하게 풀고 문구 안보이게
+   }
+
+    public void SetReadyTimeText(int _time)
+    {
+        //여기
+       /// ReadyStart() 호출 이후에, 서버가 정해놓은 시간동안 조작못함
+       /// 이때 받은 숫자로 3, 2, 1 출력하게 하면 됨(무기선택이랑 똑같게 5, 4, 3 ... 이런 식으로 감)
     }
 
     // 섹터 진입시
@@ -204,24 +225,24 @@ public partial class BridgeClientToServer : MonoBehaviour
         networkManager.SetIngamePacket(_packet.playerNum - 1, ref _packet);
 
         /*
-        // 체력 0이하가 되면 죽음 처리
-        if (_packet.health <= 0.0f)
-        {
-            // 내가 죽은 경우
-            if ((_packet.playerNum - 1) == myIndex)
-            {
-                StateManager.instance.Death(true); //내가 죽은상태로 전환.
-                uiManager.SetDeadUI("당신이(가) 죽었습니다!");
-            }
+          // 체력 0이하가 되면 죽음 처리
+          if (_packet.health <= 0.0f)
+          {
+              // 내가 죽은 경우
+              if ((_packet.playerNum - 1) == myIndex)
+              {
+                  StateManager.instance.Death(true); //내가 죽은상태로 전환.
+                  uiManager.SetDeadUI("당신이(가) 죽었습니다!");
+              }
 
-            // 다른 플레이어가 죽은 경우
-            else
-            {
-                gameManager.SetLocalAndNetworkActionState(_packet.playerNum - 1, _ACTION_STATE.DEATH);
-                uiManager.OffPlayerUI(_packet.playerNum - 1);
-            }
-        }
-        */
+              // 다른 플레이어가 죽은 경우
+              else
+              {
+                  gameManager.SetLocalAndNetworkActionState(_packet.playerNum - 1, _ACTION_STATE.DEATH);
+                  uiManager.OffPlayerUI(_packet.playerNum - 1);
+              }
+          }
+          */
     }
 
     public void KillProcess(int _killer, int _victim) //누군가 죽으면 무조건 호출
@@ -374,18 +395,18 @@ public partial class BridgeClientToServer : MonoBehaviour
         UIManager.instance.isStartCaptureCor[_triggerIdx] = false;
     }
 
-	public void ItemEffectProcess(ref IngamePacket _packet, int _itemCode)
-	{
+    public void ItemEffectProcess(ref IngamePacket _packet, int _itemCode)
+    {
         switch ((ItemCode)_itemCode)
-		{
-			case ItemCode.HP_NORMAL:
-				{
-					HealthChanger(ref _packet); // 피 변경
-					Debug.Log("채운 피:" + _packet.health);
-				}
-				break;
-		}
-	}
+        {
+            case ItemCode.HP_NORMAL:
+                {
+                    HealthChanger(ref _packet); // 피 변경
+                    Debug.Log("채운 피:" + _packet.health);
+                }
+                break;
+        }
+    }
 
     // 다른 플레이어의 접속이 끊겼을때, 플레이어 로빈 오브젝트를 비활성화.
     public void OnOtherPlayerDisconnected(int _quitPlayerNum)
@@ -402,7 +423,13 @@ public partial class BridgeClientToServer : MonoBehaviour
         }
     }
 
-    public void GameEndProcess(ref int[] _playersNum, ref Score[] _scores)
+    public void GameEndProcess()
+    {
+        //여기
+       /// 게임이 종료되었다고 텍스트를 띄우던 뭘 하던 하고, 조작 못하도록 한다.
+   }
+
+    public void ScoreShowPrcess(ref int[] _playersNum, ref Score[] _scores)
     {
         /// 여기서 _scores 다음 씬까지 저장하고 알아서 EndScene에서 요리해라 광일아
         if (moveCor != null)
@@ -418,7 +445,9 @@ public partial class BridgeClientToServer : MonoBehaviour
         }
         EndSceneManager.Instance.gameType = GameManager.instance.gameInfo.gameType;
 
-        SceneManager.LoadScene("EndScene");
+        /// 여기서 스무스로딩할때 페이크로딩 안넣고 싶음
+        SceneLoader.LoadScene("EndScene");  // 스무스 로딩
+
         SceneLoader.Instance.waitOtherPlayer = false;
 
         networkManager.SendGotoLobby();   // 나 로비로 갈랭~(얜 호출해줘야 돼)

@@ -164,35 +164,35 @@ public partial class UIManager : MonoBehaviour
         isStartSprayingCor = new bool[CaptureManager.instance.MAX_TERRITORY_NUM];
         graffityAddPos = new Vector3[CaptureManager.instance.MAX_TERRITORY_NUM];
 
-		/*// 할당먼저
-		if (CaptureManager.instance.MAX_TERRITORY_NUM == 5)
-			obj_prefebGraffity_2vs2 = new GameObject[CaptureManager.instance.MAX_TERRITORY_NUM];
-		else if (CaptureManager.instance.MAX_TERRITORY_NUM == 3)
-			obj_prefebGraffity_1vs1 = new GameObject[CaptureManager.instance.MAX_TERRITORY_NUM];
+        /*// 할당먼저
+        if (CaptureManager.instance.MAX_TERRITORY_NUM == 5)
+           obj_prefebGraffity_2vs2 = new GameObject[CaptureManager.instance.MAX_TERRITORY_NUM];
+        else if (CaptureManager.instance.MAX_TERRITORY_NUM == 3)
+           obj_prefebGraffity_1vs1 = new GameObject[CaptureManager.instance.MAX_TERRITORY_NUM];
 
-		// 오브젝트 셋팅
-		GameObject territory = null;
-		for (int i = 0; i < CaptureManager.instance.MAX_TERRITORY_NUM; i++, territory = null)
-		{
-			territory = GameObject.FindGameObjectWithTag("Territory" + (i + 1).ToString());
+        // 오브젝트 셋팅
+        GameObject territory = null;
+        for (int i = 0; i < CaptureManager.instance.MAX_TERRITORY_NUM; i++, territory = null)
+        {
+           territory = GameObject.FindGameObjectWithTag("Territory" + (i + 1).ToString());
 
-			if(territory != null)
-			{
-				if (CaptureManager.instance.MAX_TERRITORY_NUM == 5)
-					obj_prefebGraffity_2vs2[i] = territory;
-				else if (CaptureManager.instance.MAX_TERRITORY_NUM == 3)
-					obj_prefebGraffity_1vs1[i] = territory;
-			}
-		}*/
+           if(territory != null)
+           {
+              if (CaptureManager.instance.MAX_TERRITORY_NUM == 5)
+                 obj_prefebGraffity_2vs2[i] = territory;
+              else if (CaptureManager.instance.MAX_TERRITORY_NUM == 3)
+                 obj_prefebGraffity_1vs1[i] = territory;
+           }
+        }*/
 
         for (int i = 0; i < graffity.Length; i++)
         {
             curSprayingCor[i] = null;
 
-			if (CaptureManager.instance.MAX_TERRITORY_NUM == 5)
-				graffity[i].obj_parent = Instantiate(obj_prefebGraffity_2vs2[i], GameObject.FindGameObjectWithTag("Canvas_worldSpace2").transform);
-			else if (CaptureManager.instance.MAX_TERRITORY_NUM == 3)
-				graffity[i].obj_parent = Instantiate(obj_prefebGraffity_1vs1[i], GameObject.FindGameObjectWithTag("Canvas_worldSpace2").gameObject.transform);
+            if (CaptureManager.instance.MAX_TERRITORY_NUM == 5)
+                graffity[i].obj_parent = Instantiate(obj_prefebGraffity_2vs2[i], GameObject.FindGameObjectWithTag("Canvas_worldSpace2").transform);
+            else if (CaptureManager.instance.MAX_TERRITORY_NUM == 3)
+                graffity[i].obj_parent = Instantiate(obj_prefebGraffity_1vs1[i], GameObject.FindGameObjectWithTag("Canvas_worldSpace2").gameObject.transform);
 
             graffity[i].img_graffity = graffity[i].obj_parent.transform.GetChild(0).GetComponent<Image>();
             graffity[i].obj_parent.SetActive(true);
@@ -235,7 +235,10 @@ public partial class UIManager : MonoBehaviour
         {
             if (isStartSprayingCor[_triggerIdx] == false)
             {
-                curSprayingCor[_triggerIdx] = StartCoroutine(Cor_StartGraffitySpraying(4.0f, _triggerIdx, _tag)); //내 점령지 인덱스를 넘김
+                curSprayingCor[_triggerIdx] = StartCoroutine(Cor_StartGraffitySpraying(
+               GameManager.instance.gameInfo.mainSprayingTime,
+               _triggerIdx,
+               _tag)); //내 점령지 인덱스를 넘김
             }
         }
         else
@@ -281,7 +284,7 @@ public partial class UIManager : MonoBehaviour
                 {
                     if (idx == 0 || idx == 1)
                         graffity[_triggerIdx].img_graffity.sprite = spr_graffity[0];
-                    else if(idx == 2 || idx == 3)
+                    else if (idx == 2 || idx == 3)
                         graffity[_triggerIdx].img_graffity.sprite = spr_graffity[1];
                     /*
                     if (idx == GameManager.instance.playersIndex[0] || idx == GameManager.instance.playersIndex[1])

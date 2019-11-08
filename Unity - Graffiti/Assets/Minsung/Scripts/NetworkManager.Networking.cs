@@ -111,18 +111,18 @@ public partial class NetworkManager : MonoBehaviour
         for (int i = 0; i < queue.Count; i++)
         {
             /*// 만약에 큐에 쌓인게 (최대 큐사이즈 / 2)보다 많다면 이전에 쌓인건 걍 스킵한다.
-            if(queue.Count >= (MAX_QUEUE_SIZE * 0.5)
-               && queue.Count < MAX_QUEUE_SIZE)
-            {
-               // 이전에 있던것들 절반은 다 없애버림 걍
-               for (int j = 0; j < (MAX_QUEUE_SIZE * 0.5); j++)
-                  queue.Dequeue();
+               if(queue.Count >= (MAX_QUEUE_SIZE * 0.5)
+                  && queue.Count < MAX_QUEUE_SIZE)
+               {
+                  // 이전에 있던것들 절반은 다 없애버림 걍
+                  for (int j = 0; j < (MAX_QUEUE_SIZE * 0.5); j++)
+                     queue.Dequeue();
 
-               //i = (int)MAX_QUEUE_SIZE * 0.5;
-               i = (int)MAX_QUEUE_SIZE / 2;
+                  //i = (int)MAX_QUEUE_SIZE * 0.5;
+                  i = (int)MAX_QUEUE_SIZE / 2;
 
-               continue;   // 건너 뜀
-            }*/
+                  continue;   // 건너 뜀
+               }*/
 
             info[i] = queue.Dequeue();   // 하나씩 꺼내와서 처리
 
@@ -212,9 +212,9 @@ public partial class NetworkManager : MonoBehaviour
 
                                                     // 클라가 매칭 성공을 수신했다라는 프로토콜 셋팅
                                                     PROTOCOL gotoIngameProtocol = SetProtocol(
-                                                        STATE_PROTOCOL.LOBBY_STATE,
-                                                        PROTOCOL.GOTO_INGAME_PROTOCOL,
-                                                        RESULT.NODATA);
+                                                       STATE_PROTOCOL.LOBBY_STATE,
+                                                       PROTOCOL.GOTO_INGAME_PROTOCOL,
+                                                       RESULT.NODATA);
 
                                                     // 시작 프로토콜 + 플레이어 번호 패킹 및 전송
                                                     int packetSize;
@@ -258,16 +258,51 @@ public partial class NetworkManager : MonoBehaviour
                             // 타이머 프로토콜이 넘겨져오면
                             case PROTOCOL.TIMER_PROTOCOL:
                                 {
-                                    // result 생략
-
-                                    // 넘겨온 초를 string으로 변환해서 sysMsg에 저장한다.
-                                    lock (key)
+                                    switch (result)
                                     {
-                                        sysMsg = string.Empty;
+                                        // 남은 무기 선택 시간
+                                        case RESULT.WEAPON:
+                                            {
+                                                lock (key)
+                                                {
+                                                    sysMsg = string.Empty;
 
-                                        int sec = 0;
-                                        UnPackPacket(info[i].packet, out sec);
-                                        sysMsg = sec.ToString() + "초";
+                                                    int sec = 0;
+                                                    UnPackPacket(info[i].packet, out sec);
+                                                    sysMsg = sec.ToString() + " Sec";
+                                                }
+                                            }
+                                            break;
+
+                                        // 레디 남은 시간
+                                        case RESULT.READY:
+                                            {
+                                                lock (key)
+                                                {
+                                                    int time = 0;
+                                                    UnPackPacket(info[i].packet, out time);
+
+                                                    Debug.Log("남은 레디 시간" + time + "초");
+
+                                                    bridge.SetReadyTimeText(time);
+                                                }
+                                            }
+                                            break;
+
+                                        // 게임 남은 시간 타이머 동기화
+                                        case RESULT.INGAME_SYNC:
+                                            {
+                                                lock (key)
+                                                {
+                                                    double time = 0.0;
+
+                                                    UnPackPacket(info[i].packet, out time);
+                                                    bridge.TimeSync(GameManager.instance.gameInfo.gameTime - time);
+
+                                                    Debug.Log("현재 인게임 시간" + time);
+                                                }
+                                            }
+                                            break;
                                     }
                                 }
                                 break;
@@ -293,16 +328,24 @@ public partial class NetworkManager : MonoBehaviour
                                 }
                                 break;
 
-                            // 모든 플레이어의 닉네임을 설정함(본인 포함)
-                            case PROTOCOL.NICKNAME_PROTOCOL:
-                                {
-                                    lock (key)
-                                    {
-                                        int playerNum;
-                                        string nickName;
-                                        UnPackPacket(info[i].packet, out playerNum, out nickName);
 
-                                        bridge.SetPlayerNickName(nickName, (playerNum - 1));
+                            case PROTOCOL.INFO_PROTOCOL:
+                                {
+                                    switch (result)
+                                    {
+                                        // 모든 플레이어의 닉네임을 설정함(본인 포함)
+                                        case RESULT.NICKNAME:
+                                            {
+                                                lock (key)
+                                                {
+                                                    int playerNum;
+                                                    string nickName;
+                                                    UnPackPacket(info[i].packet, out playerNum, out nickName);
+
+                                                    bridge.SetPlayerNickName(nickName, (playerNum - 1));
+                                                }
+                                            }
+                                            break;
                                     }
                                 }
                                 break;
@@ -310,21 +353,46 @@ public partial class NetworkManager : MonoBehaviour
                             // 게임 시작 프로토콜
                             case PROTOCOL.START_PROTOCOL:
                                 {
-                                    // result 생략
-
-                                    lock (key)
+                                    switch (result)
                                     {
-                                        // 모든 게임 정보를 받아가지고 옴
-                                        GameInfo gameInfo = new GameInfo();
-                                        WeaponInfo[] weapons = null;
+                                        case RESULT.INIT_INFO:
+                                            {
+                                                lock (key)
+                                                {
+                                                    // 모든 게임 정보를 받아가지고 옴
+                                                    GameInfo gameInfo = new GameInfo();
+                                                    WeaponInfo[] weapons = null;
 
-                                        UnPackPacket(info[i].packet, ref gameInfo, ref weapons);
+                                                    UnPackPacket(info[i].packet, ref gameInfo, ref weapons);
 
-                                        // 받은 정보를 브릿지에 세팅함
-                                        bridge.SetGameInfoToBridge(ref gameInfo, ref weapons);
+                                                    // 받은 정보를 브릿지에 세팅함
+                                                    bridge.SetGameInfoToBridge(ref gameInfo, ref weapons);
 
-                                        // 패킷 구조체를 플레이어 수만큼 할당
-                                        ingamePackets = new IngamePacket[gameInfo.maxPlayer];
+                                                    // 패킷 구조체를 플레이어 수만큼 할당
+                                                    ingamePackets = new IngamePacket[gameInfo.maxPlayer];
+                                                }
+                                            }
+                                            break;
+
+                                        case RESULT.READY_START:
+                                            {
+                                                lock (key)
+                                                {
+                                                    bridge.ReadyStart();
+                                                    Debug.Log("레디 시작!");
+                                                }
+                                            }
+                                            break;
+
+                                        case RESULT.READY_END:
+                                            {
+                                                lock (key)
+                                                {
+                                                    bridge.ReadyEnd();
+                                                    Debug.Log("레디 종료!");
+                                                }
+                                            }
+                                            break;
                                     }
                                 }
                                 break;
@@ -452,12 +520,9 @@ public partial class NetworkManager : MonoBehaviour
                                                 lock (key)
                                                 {
                                                     int seed = 0;
-                                                    double time = 0.0;
 
-                                                    UnPackPacket(info[i].packet, out seed, out time);
-                                                    bridge.CarSpawn(seed);                                               
-                                                    bridge.TimeSync(GameManager.instance.gameInfo.gameTime - time);
-                                                    //Debug.Log(GameManager.instance.gameInfo.gameTime - time);
+                                                    UnPackPacket(info[i].packet, out seed);
+                                                    bridge.CarSpawn(seed);
                                                 }
                                             }
                                             break;
@@ -565,16 +630,37 @@ public partial class NetworkManager : MonoBehaviour
 
                             case PROTOCOL.GAME_END_PROTOCOL:
                                 {
-                                    lock (key)
+                                    switch (result)
                                     {
+                                        // 게임 끝났다고 문구 보여줘라
+                                        case RESULT.GAME_END_TEXT_SHOW:
+                                            {
+                                                lock (key)
+                                                {
+                                                    Debug.Log("게임 끝!");
 
-                                        int[] playersNum = null;   // 끝가지 있던 모든 플레이어 번호
-                                        Score[] scores = null;      // 모든 플레이어의 스코어
+                                                    bridge.GameEndProcess();
+                                                }
+                                            }
+                                            break;
 
-                                        UnPackPacket(info[i].packet, ref playersNum, ref scores);
+                                        // 스코어 보여줘라
+                                        case RESULT.SCORE_SHOW:
+                                            {
+                                                lock (key)
+                                                {
+                                                    Debug.Log("스코어!");
 
-                                        // 받은 스코어 넘기고, 게임 종료 처리
-                                        bridge.GameEndProcess(ref playersNum, ref scores);
+                                                    int[] playersNum = null;   // 끝가지 있던 모든 플레이어 번호
+                                                    Score[] scores = null;      // 모든 플레이어의 스코어
+
+                                                    UnPackPacket(info[i].packet, ref playersNum, ref scores);
+
+                                                    // 받은 스코어 넘기고, 게임 종료 처리
+                                                    bridge.ScoreShowPrcess(ref playersNum, ref scores);
+                                                }
+                                            }
+                                            break;
                                     }
                                 }
                                 break;

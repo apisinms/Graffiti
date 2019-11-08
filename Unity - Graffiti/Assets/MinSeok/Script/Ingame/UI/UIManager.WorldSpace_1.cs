@@ -315,7 +315,7 @@ public partial class UIManager : MonoBehaviour
         yield return YieldInstructionCache.WaitForSeconds(0.6f);
 
 #if NETWORK
-		hp[_index].img_middle.fillAmount = _curHP;
+      hp[_index].img_middle.fillAmount = _curHP;
 #else
         hp[_index].img_middle.fillAmount -= _curHP;
 #endif
@@ -349,7 +349,10 @@ public partial class UIManager : MonoBehaviour
         {
             if (isStartCaptureSubCor[_triggerIdx] == false)
             {
-                curCaptureSubCor[_triggerIdx] = StartCoroutine(Cor_DecreaseCaptureGageSubImg(1.0f, _triggerIdx, _tag)); //내 점령지 인덱스를 넘김
+                curCaptureSubCor[_triggerIdx] = StartCoroutine(Cor_DecreaseCaptureGageSubImg(
+               GameManager.instance.gameInfo.subSprayingTime,
+               _triggerIdx,
+               _tag)); //내 점령지 인덱스를 넘김
             }
         }
         else
@@ -403,7 +406,10 @@ public partial class UIManager : MonoBehaviour
         if (_value == true)
         {
             if (isStartCaptureCor[_triggerIdx] == false)
-                curCaptureCor[_triggerIdx] = StartCoroutine(Cor_DecreaseCaptureGageImg(4.0f, _triggerIdx, _tag)); //내 점령지 인덱스를 넘김
+                curCaptureCor[_triggerIdx] = StartCoroutine(Cor_DecreaseCaptureGageImg(
+               GameManager.instance.gameInfo.mainSprayingTime,
+               _triggerIdx,
+               _tag)); //내 점령지 인덱스를 넘김
         }
         else
         {
@@ -518,10 +524,10 @@ public partial class UIManager : MonoBehaviour
                 if (_playerTag.Equals(GameManager.instance.myTag))
                 {
                     StateManager.instance.Idle(true); //점령완료 후 다시 IDLE상태변환
-                    #if NETWORK
+#if NETWORK
                     NetworkManager.instance.SendIngamePacket();
                     NetworkManager.instance.SendCaptureSuccess(_triggerIdx);
-                    #endif
+#endif
                 }
                 yield break;
             }

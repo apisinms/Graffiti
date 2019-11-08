@@ -13,7 +13,7 @@ void C_IOCP::IOCP_Init()
 	SYSTEM_INFO si;
 	GetSystemInfo(&si);
 
-	vThread.reserve((int)si.dwNumberOfProcessors * 2);	// 벡터에 미리 CPU갯수만큼 할당
+	vThread.reserve((size_t)si.dwNumberOfProcessors * 2);	// 벡터에 미리 CPU갯수만큼 할당
 
 	// 쓰레드를 생성한다.
 	HANDLE hThread;

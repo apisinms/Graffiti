@@ -9,9 +9,9 @@ public partial class NetworkManager : MonoBehaviour
     {
         // 프로토콜 셋팅
         protocol = SetProtocol(
-            STATE_PROTOCOL.INGAME_STATE,
-            PROTOCOL.WEAPON_PROTOCOL,
-            RESULT.NODATA);
+           STATE_PROTOCOL.INGAME_STATE,
+           PROTOCOL.WEAPON_PROTOCOL,
+           RESULT.NODATA);
 
         WeaponPacket weapon = new WeaponPacket();
         weapon.mainW = mainW;
@@ -23,12 +23,12 @@ public partial class NetworkManager : MonoBehaviour
         bw.Write(sendBuf, 0, packetSize);
     }
 
-    // 서버로 전송했던 무기 정보가 성공적으로 전달됐는지 조회
+    // 서버로 전송했던 무기 정보가 성공적으로 전달됐고, 게임 정보를 저장했는지 조회
     public bool CheckWeaponSelectSuccess()
     {
         if (state == STATE_PROTOCOL.INGAME_STATE &&
            protocol == PROTOCOL.START_PROTOCOL &&
-           result == RESULT.INGAME_SUCCESS)
+           result == RESULT.INIT_INFO)
             return true;
 
         else
@@ -40,7 +40,8 @@ public partial class NetworkManager : MonoBehaviour
     {
         // 타이머 프로토콜일 때
         if (state == STATE_PROTOCOL.INGAME_STATE &&
-           protocol == PROTOCOL.TIMER_PROTOCOL)
+           protocol == PROTOCOL.TIMER_PROTOCOL &&
+           result == RESULT.WEAPON)
         {
             // 이전 시간과 같지 않다면 "~초"를 지속적으로 업데이트
             if (string.Compare(_beforeTime, sysMsg) != 0)
@@ -54,7 +55,8 @@ public partial class NetworkManager : MonoBehaviour
     public bool CheckTimerEnd()
     {
         if (state == STATE_PROTOCOL.INGAME_STATE &&
-           protocol == PROTOCOL.WEAPON_PROTOCOL)
+           protocol == PROTOCOL.WEAPON_PROTOCOL &&
+           result == RESULT.NODATA)
         {
             return true;
         }
@@ -94,18 +96,18 @@ public partial class NetworkManager : MonoBehaviour
         {
             // 시작 프로토콜 셋팅
             protocol = SetProtocol(
-                STATE_PROTOCOL.INGAME_STATE,
-                PROTOCOL.START_PROTOCOL,
-                RESULT.NODATA);
+               STATE_PROTOCOL.INGAME_STATE,
+               PROTOCOL.START_PROTOCOL,
+               RESULT.NODATA);
         }
 
         else
         {
             // MOVE 프로토콜 셋팅
             protocol = SetProtocol(
-                STATE_PROTOCOL.INGAME_STATE,
-                PROTOCOL.UPDATE_PROTOCOL,
-                RESULT.NODATA);
+               STATE_PROTOCOL.INGAME_STATE,
+               PROTOCOL.UPDATE_PROTOCOL,
+               RESULT.NODATA);
         }
 
         ingameSendPacket.playerNum = myPlayerNum;
@@ -137,11 +139,11 @@ public partial class NetworkManager : MonoBehaviour
 
         // 프로토콜 셋팅(포커스 없어짐)
         protocol = SetProtocol(
-            STATE_PROTOCOL.INGAME_STATE,
-            PROTOCOL.FOCUS_PROTOCOL,
-            (_focus == true
-            ? RESULT.INGAME_SUCCESS
-            : RESULT.INGAME_FAIL));
+           STATE_PROTOCOL.INGAME_STATE,
+           PROTOCOL.FOCUS_PROTOCOL,
+           (_focus == true
+           ? RESULT.INGAME_SUCCESS
+           : RESULT.INGAME_FAIL));
 
         // 패킹 및 전송
         int packetSize;
@@ -154,9 +156,9 @@ public partial class NetworkManager : MonoBehaviour
     {
         // 프로토콜 셋팅(차에 치임)
         protocol = SetProtocol(
-            STATE_PROTOCOL.INGAME_STATE,
-            PROTOCOL.UPDATE_PROTOCOL,
-            RESULT.CAR_HIT);
+           STATE_PROTOCOL.INGAME_STATE,
+           PROTOCOL.UPDATE_PROTOCOL,
+           RESULT.CAR_HIT);
 
         // 패킹 및 전송
         int packetSize;
@@ -168,9 +170,9 @@ public partial class NetworkManager : MonoBehaviour
     {
         // 리스폰 프로토콜 셋팅
         protocol = SetProtocol(
-            STATE_PROTOCOL.INGAME_STATE,
-            PROTOCOL.UPDATE_PROTOCOL,
-            RESULT.RESPAWN);
+           STATE_PROTOCOL.INGAME_STATE,
+           PROTOCOL.UPDATE_PROTOCOL,
+           RESULT.RESPAWN);
 
 
         ingameSendPacket.playerNum = myPlayerNum;

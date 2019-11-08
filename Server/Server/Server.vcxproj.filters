@@ -73,6 +73,9 @@
     <Filter Include="헤더 파일\Item">
       <UniqueIdentifier>{4883a042-3c39-4423-9042-d14034ba6d76}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Utility">
+      <UniqueIdentifier>{085ce8ce-5de6-4e75-994a-842b57ce8259}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UtilityManager.h">
@@ -174,6 +177,9 @@
     <ClInclude Include="Item.h">
       <Filter>헤더 파일\Item</Filter>
     </ClInclude>
+    <ClInclude Include="C_Timer.h">
+      <Filter>헤더 파일\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -241,6 +247,9 @@
     </ClCompile>
     <ClCompile Include="Item.cpp">
       <Filter>소스 파일\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="C_Timer.cpp">
+      <Filter>소스 파일\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -23,11 +23,17 @@ public class GameManager : MonoBehaviour
         [MarshalAs(UnmanagedType.R4)]
         public float maxHealth;    // 최대 체력
 
-        [MarshalAs(UnmanagedType.I4)]
-        public int respawnTime;     // 리스폰 시간
+        [MarshalAs(UnmanagedType.R4)]
+        public float respawnTime;     // 리스폰 시간
 
-        [MarshalAs(UnmanagedType.I4)]
-        public int gameTime;       // 게임 시간(ex 180초)
+        [MarshalAs(UnmanagedType.R4)]
+        public float subSprayingTime; // 스프레이 전 시간
+
+        [MarshalAs(UnmanagedType.R8)]
+        public float mainSprayingTime;     // 실제 스프레이 시간
+
+        [MarshalAs(UnmanagedType.R8)]
+        public double gameTime;       // 게임 시간
 
         [MarshalAs(UnmanagedType.I4)]
         public int killPoint;       // 킬 점수

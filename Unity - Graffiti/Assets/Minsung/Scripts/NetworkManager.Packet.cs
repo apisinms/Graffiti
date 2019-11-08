@@ -412,6 +412,21 @@ public partial class NetworkManager : MonoBehaviour
         // 이제 다시 int로 변환
         _num = BitConverter.ToInt32(arrNum, 0);
     }
+
+    private void UnPackPacket(byte[] _buf, out double _time)
+    {
+        byte[] arrTime = new byte[sizeof(double)];
+
+        int offset = sizeof(PROTOCOL);
+
+        // 일단 byte 배열로 받고
+        Buffer.BlockCopy(_buf, offset, arrTime, 0, sizeof(double));
+        offset += sizeof(double);
+
+        // 이제 다시 double로 변환
+        _time = BitConverter.ToDouble(arrTime, 0);
+    }
+
     private void UnPackPacket(byte[] _buf, out int _num1, out int _num2)
     {
         byte[] arrNum = new byte[sizeof(int)];
@@ -433,27 +448,6 @@ public partial class NetworkManager : MonoBehaviour
 
         // 이제 다시 int로 변환
         _num2 = BitConverter.ToInt32(arrNum, 0);
-    }
-
-    private void UnPackPacket(byte[] _buf, out int _num, out double _time)
-    {
-        int offset = sizeof(PROTOCOL);
-
-        // 1. 일단 byte 배열로 받고(seed)
-        byte[] arr = new byte[sizeof(int)];
-        Buffer.BlockCopy(_buf, offset, arr, 0, sizeof(int));
-        offset += sizeof(int);
-
-        // 이제 다시 int로 변환
-        _num = BitConverter.ToInt32(arr, 0);
-
-        // 2. 일단 byte 배열로 받고(time)
-        arr = new byte[sizeof(double)];
-        Buffer.BlockCopy(_buf, offset, arr, 0, sizeof(double));
-        offset += sizeof(double);
-
-        // 이제 다시 double로 변환
-        _time = BitConverter.ToDouble(arr, 0);
     }
 
     private void UnPackPacket(byte[] _buf, out int _playerNum, out float _posX, out float _posZ)

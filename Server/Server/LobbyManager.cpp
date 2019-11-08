@@ -220,7 +220,7 @@ void LobbyManager::SendPacket_Room(C_ClientInfo* _ptr, char* _buf, PROTOCOL_LOBB
 	int packetSize = 0;
 	int i = 1;
 
-	vector<C_ClientInfo*> playerList = _ptr->GetRoom()->GetPlayers();	// 플레이어들의 목록 얻어옴
+	vector<C_ClientInfo*>& playerList = _ptr->GetRoom()->GetPlayers();	// 플레이어들의 목록 얻어옴
 	C_ClientInfo* player = nullptr;
 	for (auto iter = playerList.begin(); iter != playerList.end(); ++iter)
 	{

@@ -64,7 +64,7 @@ public partial class UIManager : MonoBehaviour
 
 	void Update()
 	{
-        StartGameTimer();
+        //StartGameTimer();
 
         for (int i = 0; i < GameManager.instance.gameInfo.maxPlayer; i++)
 		{

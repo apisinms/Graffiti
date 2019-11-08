@@ -50,7 +50,8 @@ bool C_Socket::Listen(int _backlog)
 bool C_Socket::Connect()
 {
 	SOCKADDR_IN clientAddr;
-	int addrLen;
+	memset(&clientAddr, 0, sizeof(clientAddr));	// 초기화 필수
+	int addrLen = 0;							// 초기화 필수
 
 	// connect()
 	addrLen = sizeof(clientAddr);

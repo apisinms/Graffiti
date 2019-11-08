@@ -18,7 +18,7 @@ private:
 public:
 	SectorInstance()
 	{ 
-		int num = 0;
+		this->num = 0;
 	}
 };
 

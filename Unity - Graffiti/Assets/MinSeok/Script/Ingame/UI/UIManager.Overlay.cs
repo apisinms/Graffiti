@@ -168,28 +168,33 @@ public partial class UIManager : MonoBehaviour
 
         grenade.btn_grenade.interactable = true;
         grenade.img_back.fillAmount = 0;
-        grenade.img_explosion.gameObject.SetActive(false); 
+        grenade.img_explosion.gameObject.SetActive(false);
     }
 
-    public void StartGameTimer()
+    public IEnumerator StartGameTimer()
     {
-        if (gameTime <= 0)
-            return;
-
-        gameTime -= Time.smoothDeltaTime;
-        min = (int)gameTime / 60;
-        sec = (int)gameTime % 60;
-        
-        if (sec < 0 && min > 1)
-            min--;
-
-        if ((int)min <= 0) //초단위만 남았을경우 빨간색
+        while (true)
         {
-            timer.txt_gameTime.color = Color.red;
-            timer.img_outline.color = Color.red;
-        }
+            if (gameTime <= 0)
+                yield break;
 
-        timer.txt_gameTime.text = ((int)min).ToString() + " : " + sec.ToString("00");
+            gameTime -= Time.smoothDeltaTime;
+            min = (int)gameTime / 60;
+            sec = (int)gameTime % 60;
+
+            if (sec < 0 && min > 1)
+                min--;
+
+            if ((int)min <= 0) //초단위만 남았을경우 빨간색
+            {
+                timer.txt_gameTime.color = Color.red;
+                timer.img_outline.color = Color.red;
+            }
+
+            timer.txt_gameTime.text = ((int)min).ToString() + " : " + sec.ToString("00");
+
+            yield return null;
+        }
     }
 
     public void SetScore(int _playerIndex, int _point)
@@ -205,7 +210,7 @@ public partial class UIManager : MonoBehaviour
                         int tmp = (int.Parse(score[0].txt_score.text) + _point);
                         score[0].txt_score.text = tmp.ToString();
                     }
-                    else if(idx == 2 || idx == 3)
+                    else if (idx == 2 || idx == 3)
                     {
                         int tmp = (int.Parse(score[1].txt_score.text) + _point);
                         score[1].txt_score.text = tmp.ToString();
@@ -232,9 +237,9 @@ public partial class UIManager : MonoBehaviour
 
     public void SetMyKillDeath(string _type)
     {
-        if(_type.Equals("kill"))
+        if (_type.Equals("kill"))
             PlayersManager.instance.myKill++;
-        else if(_type.Equals("death"))
+        else if (_type.Equals("death"))
             PlayersManager.instance.myDeath++;
 
         killDeath.txt_kd.text = "K/D:  " + PlayersManager.instance.myKill.ToString() + " / " + PlayersManager.instance.myDeath.ToString();
@@ -275,7 +280,7 @@ public partial class UIManager : MonoBehaviour
 
         while (true)
         {
-            for(int i=0; i<spr_explosion.Length; i++)
+            for (int i = 0; i < spr_explosion.Length; i++)
             {
                 grenade.img_explosion.sprite = spr_explosion[i];
                 grenade.img_explosion.SetNativeSize();

@@ -68,6 +68,9 @@ UserInfo* DatabaseManager::LoadUserInfo()
 
 	if (isLoad == false)
 	{
+		// 불러오기전에 게스트 계정은 모두 삭제한다 어차피 일회용이니까
+		QueryToMySQL("Delete FROM tbl_userinfo WHERE UserID Like 'Guest%'");
+
 		// mysql에 테이블 정보를 모두 가져오라고 요청한다.
 		if (QueryToMySQL("SELECT * FROM tbl_userinfo") == true)
 		{
@@ -155,14 +158,16 @@ GameInfo* DatabaseManager::LoadGameInfo()
 		GameInfo info;
 		memset(&info, 0, sizeof(GameInfo));
 
-		info.gameType      = atoi(row[0]);
-		info.maxPlayer     = atoi(row[1]);
-		info.maxSpeed      = (float)atof(row[2]);
-		info.maxHealth     = (float)atof(row[3]);
-		info.respawnTime   = atoi(row[4]);
-		info.gameTime      = atoi(row[5]);
-		info.killPoint     = atoi(row[6]);
-		info.capturePoint  = atoi(row[7]);
+		info.gameType         = atoi(row[0]);
+		info.maxPlayer        = atoi(row[1]);
+		info.maxSpeed         = (float)atof(row[2]);
+		info.maxHealth        = (float)atof(row[3]);
+		info.respawnTime      = (float)atoi(row[4]);
+		info.subSprayingTime  = (float)atof(row[5]);
+		info.mainSprayingTime = (float)atof(row[6]);
+		info.gameTime         = atoi(row[7]);
+		info.killPoint        = atoi(row[8]);
+		info.capturePoint     = atoi(row[9]);
 
 		// 동적 할당 후 리턴
 		GameInfo* ptr = new GameInfo(info);
