@@ -1,0 +1,29 @@
+﻿  stdafx.cpp
+  C_ClientInfo.cpp
+  C_Encrypt.cpp
+  C_IOCP.cpp
+  C_Packet.cpp
+  C_Sector.cpp
+  C_Select.cpp
+  C_Socket.cpp
+  ChatManager.cpp
+  DatabaseManager.cpp
+  InGameManager.cpp
+  Item.cpp
+  LobbyManager.cpp
+  LogManager.cpp
+  LoginManager.cpp
+  Main.cpp
+  MainManager.cpp
+  MatchManager.cpp
+  RandomManager.cpp
+  RoomManager.cpp
+  SessionManager.cpp
+  컴파일하고 있습니다...
+  UtilityManager.cpp
+  코드를 생성하고 있습니다.
+  65 of 1385 functions ( 4.7%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    10 functions had inline decision re-evaluated but remain unchanged
+  코드를 생성했습니다.
+  Server.vcxproj -> C:\_PROGRAMMING_\_Portfolio\Graffiti\Server\x64\Release\Server.exe

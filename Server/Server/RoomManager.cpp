@@ -81,11 +81,14 @@ bool RoomInfo::LeaveRoom(C_ClientInfo* _player)
 	// 내가 나간다는 것을 같은 방에 있는 플레이어들에게 보내줌
 	if (InGameManager::GetInstance()->LeaveProcess(_player) == true)
 	{
-		// 방 인원수를 감소하고, 자신의 흔적을 지운다.
-		numOfPlayer--;					// 방 인원수 감소
+		// 1. 방 인원수를 감소하고, 자신의 흔적을 지운다.
+		numOfPlayer--;
 		sector->Remove(_player, _player->GetPlayerInfo()->GetIndex());
 		players.erase(remove(players.begin(), players.end(), _player), players.end());		// 방의 플레이어 리스트에서 제거
 		
+		// 2. 다른 플레이어들에게 섹터에 있는 플레이어 리스트를 업데이트 시켜준다.
+		InGameManager::GetInstance()->UpdatePlayerList(_player->GetRoom()->GetPlayers(), _player);
+
 		return true;
 	}
 
@@ -179,23 +182,7 @@ bool RoomManager::DeleteRoom(RoomInfo* _room)
 	// 안돌아가는 중이면 그냥 바로 delete
 	else
 	{
-		int beforeSize = (int)roomList.size();
-
-		// 방에 있는 건물들 싹 지움
-		for (auto iter = _room->GetBuildings().begin(); iter != _room->GetBuildings().end(); ++iter)
-		{
-			delete *iter;
-		}
-
-		roomList.remove(_room);
-		delete _room;
-		_room = nullptr;
-
-		if (beforeSize > (int)roomList.size())
-		{
-			printf("[방 소멸 성공]사이즈:%d\n", (int)roomList.size());
-			return true;	// 정상 방 삭제
-		}
+		OnlyDeleteRoom(_room);
 	}
 
 	return false;
@@ -205,15 +192,35 @@ bool RoomManager::OnlyDeleteRoom(RoomInfo* _room)
 {
 	int beforeSize = (int)roomList.size();
 
-	// 방에 있는 건물들 싹 지움
+	// 1. 방에 있는 건물들 싹 지움
 	for (auto iter = _room->GetBuildings().begin(); iter != _room->GetBuildings().end(); ++iter)
 	{
-		delete *iter;
+		if (*iter != nullptr)
+		{
+			delete *iter;
+			*iter = nullptr;
+		}
 	}
 
+	// 2. 팀 포인터 지움
+	_room->DeleteTeam();
+
+	// 3. 섹터 지움
+	C_Sector* sector = _room->GetSector();
+	if (sector != nullptr)
+	{
+		delete sector;
+		sector = nullptr;
+	}
+
+	// 4. 방 자체를 지움
 	roomList.remove(_room);
-	delete _room;
-	_room = nullptr;
+
+	if (_room != nullptr)
+	{
+		delete _room;
+		_room = nullptr;
+	}
 
 	if (beforeSize > (int)roomList.size())
 	{
@@ -246,16 +253,27 @@ bool RoomManager::CheckLeaveRoom(C_ClientInfo* _ptr)
 	if (_ptr->GetRoom() != nullptr)
 	{
 		RoomInfo* room = _ptr->GetRoom();
+		int playerTeamNum = _ptr->GetPlayerInfo()->GetTeamNum();
 
 		// 방을 나갈 수 있는지 검사해서 나갔다면
 		if (room->LeaveRoom(_ptr) == true)
 		{
-			/// 그리고 같은 팀 2명이 모두 나가면 그냥 게임 끝나야함
+			// 1. 본인이 속한 팀 멤버리스트에서 지워준다.
+			vector<C_ClientInfo*>& memberList = _ptr->GetRoom()->GetTeamInfo(playerTeamNum).teamMemberList;
+			memberList.erase(remove(memberList.begin(), memberList.end(), _ptr), memberList.end());		// 팀 멤버 리스트에서 제거
 
-			// 방금 나간사람이 마지막이었다면 방을 없앰
+			// 방금 나간사람이 마지막이었다면 방을 지운다.
 			if (room->IsPlayerListEmpty() == true)
 			{
+				InGameManager::GetInstance()->ResetPlayerInfo(_ptr);	// 나간 이 친구 플레이어 정보 초기화
 				DeleteRoom(room);
+			}
+
+			// 게임중에 팀원이 모두 나갔으면 게임 끝!
+			if (room->GetRoomStatus() == ROOMSTATUS::ROOM_GAME
+				&& memberList.size() == 0)
+			{
+				InGameManager::GetInstance()->GameEndProcess(_ptr->GetRoom());
 			}
 
 			_ptr->SetRoom(nullptr);	// 여기서 지워줘야 DeleteRoom()도 호출가능

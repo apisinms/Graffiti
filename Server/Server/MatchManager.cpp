@@ -37,22 +37,28 @@ void MatchManager::WaitListRemove(C_ClientInfo* _ptr)
 	int gameType = _ptr->GetGameType();
 	if (gameType != -1)
 	{
+		// 지워졌을때만 출력함
+		int beforeSize = (int)waitList[gameType].size();
 		waitList[gameType].remove(_ptr);
-		_ptr->SetGameType(-1);	// -1로 설정
 
-		switch ((RoomInfo::GameType)gameType)
+		if (beforeSize > (int)waitList[gameType].size())
 		{
+			_ptr->SetGameType(-1);	// -1로 설정
+
+			switch ((RoomInfo::GameType)gameType)
+			{
 			case RoomInfo::GameType::_2vs2:
 			{
-				wprintf(L"2:2 대기리스트 삭제 성공 : %d\n", (int)waitList[gameType].size());
+				printf("2:2 대기리스트 삭제 성공 : %d\n", (int)waitList[gameType].size());
 			}
 			break;
 
 			case RoomInfo::GameType::_1vs1:
 			{
-				wprintf(L"1:1 대기리스트 삭제 성공 : %d\n", (int)waitList[gameType].size());
+				printf("1:1 대기리스트 삭제 성공 : %d\n", (int)waitList[gameType].size());
 			}
 			break;
+			}
 		}
 	}
 }

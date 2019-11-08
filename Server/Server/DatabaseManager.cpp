@@ -68,11 +68,14 @@ UserInfo* DatabaseManager::LoadUserInfo()
 
 	if (isLoad == false)
 	{
+		// 불러오기전에 게스트 계정은 모두 삭제한다 어차피 일회용이니까
+		QueryToMySQL("Delete FROM tbl_userinfo WHERE UserID Like 'Guest%'");
+
 		// mysql에 테이블 정보를 모두 가져오라고 요청한다.
 		if (QueryToMySQL("SELECT * FROM tbl_userinfo") == true)
 		{
 			isLoad = true;
-			numOfUserInfoRows = (int)mysql_num_rows(result);	// 유저 행 정보 얻음
+			numOfUserInfoRows = (int)mysql_num_rows(result);   // 유저 행 정보 얻음
 		}
 	}
 
@@ -80,7 +83,7 @@ UserInfo* DatabaseManager::LoadUserInfo()
 
 	if (row == nullptr)
 	{
-		mysql_free_result(result);	// 결과 메모리 반납
+		mysql_free_result(result);   // 결과 메모리 반납
 
 		return nullptr;
 	}

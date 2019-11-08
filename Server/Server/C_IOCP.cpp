@@ -80,6 +80,7 @@ DWORD CALLBACK C_IOCP::WorkerThread(LPVOID _this)
 		{
 			LogManager::GetInstance()->WSAOverlappedResultPrintf("GetQueuedCompletionStatus", overlapped);
 			iocp->IOCP_Disconnected(ptr);
+			ptr = nullptr;
 		}
 
 		if (ptr != nullptr)

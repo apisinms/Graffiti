@@ -60,8 +60,12 @@ C_ClientInfo* SessionManager::FindWithSocket(SOCKET _sock)
 void SessionManager::Remove(C_ClientInfo* _info)
 {
 	clientList.remove(_info);
-	delete _info;
-	_info = nullptr;
+
+	if (_info != nullptr)
+	{
+		delete _info;
+		_info = nullptr;
+	}
 
 
 
