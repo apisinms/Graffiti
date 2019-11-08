@@ -242,11 +242,16 @@ public class SelectWeapons : UnityEngine.MonoBehaviour
         {
             if (networkManager.CheckWeaponSelectSuccess() == true)
             {
+                Debug.Log(myMainWeapon);
+                Debug.Log(mySubWeapon);
+                Debug.Log("itemselect 성공");
+
                 // 지저분하니까 뒤에 무기 패널 끔
                 panel_mainWeapon.SetActive(false);
                 panel_subWeapon.SetActive(false);
 
-                switch ((C_Global.GameType)networkManager.selectMatch)
+				SceneLoader.Instance.FadeSeconds = 0.3f;
+				switch ((C_Global.GameType)networkManager.selectMatch)
                 {
                     case C_Global.GameType._2vs2:
                         {

@@ -171,28 +171,33 @@ public partial class UIManager : MonoBehaviour
         grenade.img_explosion.gameObject.SetActive(false); 
     }
 
-    public void StartGameTimer()
-    {
-        if (gameTime <= 0)
-            return;
+	public IEnumerator StartGameTimer()
+	{
+		while(true)
+		{
+			if (gameTime <= 0)
+				yield break;
 
-        gameTime -= Time.smoothDeltaTime;
-        min = (int)gameTime / 60;
-        sec = (int)gameTime % 60;
-        
-        if (sec < 0 && min > 1)
-            min--;
+			gameTime -= Time.smoothDeltaTime;
+			min = (int)gameTime / 60;
+			sec = (int)gameTime % 60;
 
-        if ((int)min <= 0) //초단위만 남았을경우 빨간색
-        {
-            timer.txt_gameTime.color = Color.red;
-            timer.img_outline.color = Color.red;
-        }
+			if (sec < 0 && min > 1)
+				min--;
 
-        timer.txt_gameTime.text = ((int)min).ToString() + " : " + sec.ToString("00");
-    }
+			if ((int)min <= 0) //초단위만 남았을경우 빨간색
+			{
+				timer.txt_gameTime.color = Color.red;
+				timer.img_outline.color = Color.red;
+			}
 
-    public void SetScore(int _playerIndex, int _point)
+			timer.txt_gameTime.text = ((int)min).ToString() + " : " + sec.ToString("00");
+
+			yield return null;
+		}
+	}
+
+	public void SetScore(int _playerIndex, int _point)
     {
         int idx = _playerIndex - 1;
 

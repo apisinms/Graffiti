@@ -374,7 +374,7 @@ bool InGameManager::LoadingProcess(C_ClientInfo* _ptr)
 	// 1. 플레이어의 로딩 상태를 완료로 바꾼다.
 	_ptr->GetPlayerInfo()->SetLoadStatus(true);
 
-	// 2. 같은 방에 있는 플레이어 리스트를 얻어온다.
+	// 2-1. 같은 방에 있는 플레이어 리스트를 얻어온다.
 	vector<C_ClientInfo*>& playerList = _ptr->GetRoom()->GetPlayers();
 
 	// 3. 모든 플레이어가 레디상태인지 검사한다.
@@ -770,13 +770,6 @@ bool InGameManager::GameEndProcess(RoomInfo* _room, RESULT_INGAME _result)
 
 bool InGameManager::LeaveProcess(C_ClientInfo* _ptr)
 {
-	// 방이 없는 경우 나가게 예외처리
-	if (_ptr->GetRoom()->GetRoomStatus() != ROOMSTATUS::ROOM_GAME)
-	{
-		printf("나갔는데 방이 없음\n");
-		return false;
-	}
-
 	PROTOCOL_INGAME protocol;
 	char buf[BUFSIZE] = { 0, };
 	int packetSize = 0;
@@ -1416,6 +1409,14 @@ void InGameManager::ChangeHealthAmount(C_ClientInfo* _player, float _amount)
 
 void InGameManager::Kill(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer)
 {
+	// 방이 없는 경우 나가게 예외처리
+	if (_shotPlayer->GetRoom() == nullptr
+	|| _shotPlayer->GetRoom()->GetRoomStatus() != ROOMSTATUS::ROOM_GAME)
+	{
+		printf("죽였는데 방이 없음\n");
+		return;
+	}
+
 	_shotPlayer->GetPlayerInfo()->GetScore().numOfKill++;	// 쏜 놈
 	_hitPlayer->GetPlayerInfo()->GetScore().numOfDeath++;	// 죽은 놈
 
@@ -1567,6 +1568,10 @@ void InGameManager::ListSendPacket(list<C_ClientInfo*>& _list, C_ClientInfo* _ex
 		{
 			player = *iter;
 
+			// 유효한 클라가 아니면 걍 건너 뜀
+			if (SessionManager::GetInstance()->IsClientExist(player) == false)
+				continue;
+
 			// 전송 제외할 클라 건너뜀
 			if (player == _exceptClient)
 				continue;
@@ -1596,6 +1601,10 @@ void InGameManager::ListSendPacket(vector<C_ClientInfo*>& _list, C_ClientInfo* _
 		for (vector<C_ClientInfo*>::iterator iter = _list.begin(); iter != _list.end(); ++iter)
 		{
 			player = *iter;
+
+			// 유효한 클라가 아니면 걍 건너 뜀
+			if (SessionManager::GetInstance()->IsClientExist(player) == false)
+				continue;
 
 			// 전송 제외할 클라 건너뜀
 			if (player == _exceptClient)
@@ -1909,7 +1918,7 @@ void InGameManager::InGameTimeSync(RoomInfo* _room)
 	double InGameTotalTimeElapsed = _room->GetInGameTimer()->ElapsedSeconds();
 
 	// 시간 동기화할 시간 되면
-	if (InGameSyncTimeElapsed >= TIME_SYNC_INTERVAL)
+	if (InGameSyncTimeElapsed >= TIME_SYNC_INTERVAL)	// 많이 정밀하게 1초로 잡아야할듯
 	{
 		// 방에 있는 모든 플레이어들에게 현재 인게임 흘러간 시간 보내줌
 		protocol = SetProtocol(

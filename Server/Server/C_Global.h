@@ -341,14 +341,16 @@ struct WeaponInfo
 
 struct GameInfo
 {
-	int gameType;		// 게임 타입(나중에 모드가 여러 개 생길 수도 있으니)
-	int maxPlayer;		// 최대 플레이어 수
-	float maxSpeed;		// 최대 이동속도
-	float maxHealth;	// 최대 체력
-	int respawnTime;	// 리스폰 시간
-	int gameTime;		// 게임 시간(ex 180초)
-	int killPoint;		// 킬 점수
-	int capturePoint;	// 점령 점수
+	int gameType;				// 게임 타입(나중에 모드가 여러 개 생길 수도 있으니)
+	int maxPlayer;				// 최대 플레이어 수
+	float maxSpeed;				// 최대 이동속도
+	float maxHealth;			// 최대 체력
+	float respawnTime;			// 리스폰 시간
+	float subSprayingTime;		// 스프레이 전 시간
+	float mainSprayingTime;		// 스프레이 시간
+	double gameTime;			// 게임 시간
+	int killPoint;				// 킬 점수
+	int capturePoint;			// 점령 점수
 
 	GameInfo() 
 	{ 

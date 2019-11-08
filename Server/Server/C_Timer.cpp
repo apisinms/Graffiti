@@ -27,7 +27,7 @@ double C_Timer::ElapsedMilliseconds()
 		nowEndTime = endTime;
 	}
 
-	return duration_cast<milliseconds>(nowEndTime - startTime).count();
+	return (double)duration_cast<milliseconds>(nowEndTime - startTime).count();
 }
 
 double C_Timer::ElapsedSeconds()

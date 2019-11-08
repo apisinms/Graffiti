@@ -349,7 +349,10 @@ public partial class UIManager : MonoBehaviour
         {
             if (isStartCaptureSubCor[_triggerIdx] == false)
             {
-                curCaptureSubCor[_triggerIdx] = StartCoroutine(Cor_DecreaseCaptureGageSubImg(1.0f, _triggerIdx, _tag)); //내 점령지 인덱스를 넘김
+                curCaptureSubCor[_triggerIdx] = StartCoroutine(Cor_DecreaseCaptureGageSubImg(
+					GameManager.instance.gameInfo.subSprayingTime,
+					_triggerIdx, 
+					_tag)); //내 점령지 인덱스를 넘김
             }
         }
         else
@@ -403,7 +406,10 @@ public partial class UIManager : MonoBehaviour
         if (_value == true)
         {
             if (isStartCaptureCor[_triggerIdx] == false)
-                curCaptureCor[_triggerIdx] = StartCoroutine(Cor_DecreaseCaptureGageImg(4.0f, _triggerIdx, _tag)); //내 점령지 인덱스를 넘김
+                curCaptureCor[_triggerIdx] = StartCoroutine(Cor_DecreaseCaptureGageImg(
+					GameManager.instance.gameInfo.mainSprayingTime, 
+					_triggerIdx, 
+					_tag)); //내 점령지 인덱스를 넘김
         }
         else
         {

@@ -235,7 +235,10 @@ public partial class UIManager : MonoBehaviour
         {
             if (isStartSprayingCor[_triggerIdx] == false)
             {
-                curSprayingCor[_triggerIdx] = StartCoroutine(Cor_StartGraffitySpraying(4.0f, _triggerIdx, _tag)); //내 점령지 인덱스를 넘김
+                curSprayingCor[_triggerIdx] = StartCoroutine(Cor_StartGraffitySpraying(
+					GameManager.instance.gameInfo.mainSprayingTime,
+					_triggerIdx, 
+					_tag)); //내 점령지 인덱스를 넘김
             }
         }
         else
