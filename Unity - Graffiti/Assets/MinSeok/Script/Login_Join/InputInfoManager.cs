@@ -155,7 +155,15 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
 
                 //로그인이 성공하면 아래작성
                 else if (networkManager.CheckLoginSuccess() == true)
+                {
+                    AudioSource source = GameObject.Find("AudioManager").GetComponent<AudioSource>();
+                    if (source != null)
+                    {
+                        StartCoroutine(AudioManager.FadeOut(source, 0.0015f));
+                    }
+
                     SceneLoader.LoadScene("Lobby");
+                }
 
                 btn_login_enter.SetActive(true);   // 버튼 다시 원상 복구
                 yield break;
@@ -299,8 +307,15 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
             {
                 //로그인이 성공하면 아래로(어차피 게스트회원가입시에 다 걸러놔서 무조건 로그인 성공함)
                 if (networkManager.CheckLoginSuccess() == true)
+                {
+                    AudioSource source = GameObject.Find("AudioManager").GetComponent<AudioSource>();
+                    if (source != null)
+                    {
+                        StartCoroutine(AudioManager.FadeOut(source, 0.0015f));
+                    }
                     SceneLoader.LoadScene("Lobby");
-
+                }
+  
                 yield break;
             }
         }

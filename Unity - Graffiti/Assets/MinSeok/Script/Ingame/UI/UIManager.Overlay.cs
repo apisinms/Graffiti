@@ -7,6 +7,16 @@ using TMPro;
 //                  UIManager_Overlay
 public partial class UIManager : MonoBehaviour
 {
+    #region READY_COUNT
+    public _IMG_COUNT_INFO readyCount;
+    public Animator am_readyCount;
+
+    public struct _IMG_COUNT_INFO
+    {
+        public GameObject obj_parent;
+        public Image img_readyCount { get; set; }
+    }
+    #endregion
 
     #region KILL_DEATH
     public _IMG_KD_INFO killDeath;
@@ -93,6 +103,15 @@ public partial class UIManager : MonoBehaviour
     }
     #endregion
 
+    private void Initialization_ReadyCount()
+    {
+        readyCount = new _IMG_COUNT_INFO();
+
+        readyCount.obj_parent = GameObject.FindGameObjectWithTag("Canvas_overlay").transform.GetChild(14).gameObject;
+        readyCount.img_readyCount = readyCount.obj_parent.transform.GetChild(0).GetComponent<Image>();
+        readyCount.obj_parent.SetActive(false);
+    }
+
     private void Initialization_KillDeath()
     {
         killDeath = new _IMG_KD_INFO();
@@ -170,8 +189,43 @@ public partial class UIManager : MonoBehaviour
         grenade.img_back.fillAmount = 0;
         grenade.img_explosion.gameObject.SetActive(false);
     }
+    
+    public IEnumerator Cor_StartReadyCount()
+    {
+        readyCount.obj_parent.SetActive(true);
 
-    public IEnumerator StartGameTimer()
+        int i = 3;
+
+        while (true)
+        {
+            switch(i)
+            {
+                case 3:
+                    am_readyCount.SetTrigger("3");
+                    break;
+                case 2:
+                    am_readyCount.SetTrigger("2");
+                    break;
+                case 1:
+                    am_readyCount.SetTrigger("1");
+                    break;
+                case 0:
+                    am_readyCount.SetTrigger("start");
+                    break;
+            }
+            yield return YieldInstructionCache.WaitForSeconds(1.0f);
+
+            if(i <= 0)
+            {
+                readyCount.obj_parent.SetActive(false);
+                yield break;
+            }
+            else
+                i--;
+        }
+    }
+
+    public IEnumerator Cor_StartGameTimer()
     {
         while (true)
         {
@@ -185,10 +239,22 @@ public partial class UIManager : MonoBehaviour
             if (sec < 0 && min > 1)
                 min--;
 
-            if ((int)min <= 0) //초단위만 남았을경우 빨간색
+            if ((int)min <= 0) //초단위만 남았을경우 빨간색, 브금교체
             {
-                timer.txt_gameTime.color = Color.red;
-                timer.img_outline.color = Color.red;
+                if (timer.txt_gameTime.color != Color.red && timer.img_outline.color != Color.red)
+                {
+                    timer.txt_gameTime.color = Color.red;
+                    timer.img_outline.color = Color.red;
+
+                    /*
+                    AudioSource source = GameObject.Find("AudioManager").GetComponent<AudioSource>();
+                    if (source != null)
+                    {
+                        StartCoroutine(AudioManager.FadeOut(source, 0.0016f));
+                    }
+                    */
+                    AudioManager.Instance.playBGM(0);
+                }
             }
 
             timer.txt_gameTime.text = ((int)min).ToString() + " : " + sec.ToString("00");

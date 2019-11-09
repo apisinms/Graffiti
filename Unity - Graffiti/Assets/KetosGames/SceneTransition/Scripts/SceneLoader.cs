@@ -136,12 +136,12 @@ namespace KetosGames.SceneTransition
             {
                 Destroy(gameObject);
 
-                MessageBox.Show("다른 플레이어가 종료했습니다. 상습적인 강제종료는 계정 정지의 원인이 됩니다.", "강제 종료",
-                   (result) =>
-                   {
-                       SceneManager.LoadScene("Lobby");
-                       NetworkManager.instance.SendGotoLobby();
-                   });
+                MessageBox.Show("다른 플레이어가 종료했습니다.");
+
+                // 3초 뒤에 그냥 바로 로비로 감
+                YieldInstructionCache.WaitForSeconds(3);
+                SceneManager.LoadScene("Lobby");
+                NetworkManager.instance.SendGotoLobby();
             }
 
             // 최대 로딩 대기시간 넘어감
@@ -149,12 +149,12 @@ namespace KetosGames.SceneTransition
             {
                 Destroy(gameObject);
 
-                MessageBox.Show("최대 로딩 대기시간을 초과하였습니다.", "시간 초과",
-                   (result) =>
-                   {
-                       SceneManager.LoadScene("Lobby");
-                       NetworkManager.instance.SendGotoLobby();
-                   });
+                MessageBox.Show("최대 로딩 대기시간을 초과하였습니다.");
+
+                // 3초 뒤에 그냥 바로 로비로 감
+                YieldInstructionCache.WaitForSeconds(3);
+                SceneManager.LoadScene("Lobby");
+                NetworkManager.instance.SendGotoLobby();
             }
 
             if (FadingIn)

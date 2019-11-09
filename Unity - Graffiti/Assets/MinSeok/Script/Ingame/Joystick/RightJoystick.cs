@@ -8,8 +8,10 @@ using UnityEngine.EventSystems;
 public class RightJoystick : MonoBehaviour, IJoystickControll
 {
     public static RightJoystick instance;
+
     public Image img_joystick_back;
     public Image img_joystick_stick;
+    public static bool inputLock_right { get; set; }
 	private static bool isRightDrag;
     public static bool RightTouch { get { return isRightDrag; } }
 
@@ -37,11 +39,15 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
         float can = transform.parent.GetComponent<RectTransform>().localScale.x;  // 캔버스 크기에대한 반지름 조절.
         right_joystick.maxMoveArea *= can;
 
+        inputLock_right = false;
         isRightDrag = false;
     }
 
     public void DragStart()
     {
+        if (inputLock_right == true)
+            return;
+
 #if NETWORK
 		// 처음 터치할 때만
 		if (LeftJoystick.LeftTouch == false && RightJoystick.RightTouch == false)
@@ -52,7 +58,7 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
 
     public void Drag(BaseEventData _Data)
     {
-        if (PlayersManager.instance.actionState[myIndex] == _ACTION_STATE.DEATH)
+        if (PlayersManager.instance.actionState[myIndex] == _ACTION_STATE.DEATH || inputLock_right == true)
             return;
 
         PointerEventData data = _Data as PointerEventData;
@@ -129,6 +135,9 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
     }
     public void DragEnd()
     {
+        if (inputLock_right == true)
+            return;
+
         StateManager.instance.Aim(false);
         img_joystick_stick.transform.position = right_joystick.stickFirstPos;
         right_joystick.stickDir = Vector3.zero; // 방향을 0으로.

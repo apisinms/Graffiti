@@ -110,8 +110,7 @@ public partial class NetworkManager : MonoBehaviour
 
         // TIMER_PROTOCOL 개별
         WEAPON = ((Int64)0x1 << 31),  // 무기 선택 남은 초
-        READY = ((Int64)0x1 << 30),   // 게임 준비 남은 초
-        INGAME_SYNC = ((Int64)0x1 << 29), // 인게임 시간 싱크 맞추기용
+        INGAME_SYNC = ((Int64)0x1 << 30), // 인게임 시간 싱크 맞추기용
 
         // WEAPON_PROTOCOL 개별
         NOTIFY_WEAPON = ((Int64)0x1 << 31),   // 무기를 알려줌

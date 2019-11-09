@@ -5,6 +5,7 @@
 //struct UserInfo;
 //struct WeaponInfo;
 //struct GameInfo;
+#define MAX_QUERY_LEN 256
 
 class DatabaseManager : public C_SyncCS<DatabaseManager> 
 {

@@ -54,13 +54,25 @@ public class btn_start : UnityEngine.MonoBehaviour
 			// 매칭에 성공했다면 씬을 로드하고
 			else
 			{
-				SceneManager.LoadScene("SelectWeapons");
-				yield break;    // 코루틴 종료
+                AudioSource source = GameObject.Find("AudioManager").GetComponent<AudioSource>();
+                if (source != null)
+                {
+                    StartCoroutine(AudioManager.FadeOut(source, 0.003f));
+                }
+
+                Invoke("LoadWeaponScene", 2.0f);
+
+                yield break;    // 코루틴 종료
 			}
 		}
 	}
 
-	private IEnumerator CheckMatchCancel()
+    private void LoadWeaponScene()
+    {
+        SceneManager.LoadScene("SelectWeapons");
+    }
+
+    private IEnumerator CheckMatchCancel()
 	{
 		while (true)
 		{

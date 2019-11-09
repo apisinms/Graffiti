@@ -1,7 +1,97 @@
 fileFormatVersion: 2
 guid: 26252e31f55a4d04fa59ebeac99eaace
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: -7966706468624883287
+    second: Num_2_8x5_40_0
+  - first:
+      213: 2511056533985443265
+    second: Num_2_8x5_40_1
+  - first:
+      213: 2350056982281752005
+    second: Num_2_8x5_40_2
+  - first:
+      213: -3595930623979764279
+    second: Num_2_8x5_40_3
+  - first:
+      213: 7696542884905818496
+    second: Num_2_8x5_40_4
+  - first:
+      213: 1966840519081843842
+    second: Num_2_8x5_40_5
+  - first:
+      213: -2248750972864279595
+    second: Num_2_8x5_40_6
+  - first:
+      213: -2208754065270095613
+    second: Num_2_8x5_40_7
+  - first:
+      213: -901088091063448657
+    second: Num_2_8x5_40_8
+  - first:
+      213: -4663634169891912946
+    second: Num_2_8x5_40_9
+  - first:
+      213: -8891059884561803237
+    second: Num_2_8x5_40_10
+  - first:
+      213: 7530165739049151072
+    second: Num_2_8x5_40_11
+  - first:
+      213: -2344321081741901446
+    second: Num_2_8x5_40_12
+  - first:
+      213: 2294629636794993101
+    second: Num_2_8x5_40_13
+  - first:
+      213: 5928120966156049594
+    second: Num_2_8x5_40_14
+  - first:
+      213: 119098025107172223
+    second: Num_2_8x5_40_15
+  - first:
+      213: -7071163799741779795
+    second: Num_2_8x5_40_16
+  - first:
+      213: 9156427547151280866
+    second: Num_2_8x5_40_17
+  - first:
+      213: 3682803464062363689
+    second: Num_2_8x5_40_18
+  - first:
+      213: -4149262012685915616
+    second: Num_2_8x5_40_19
+  - first:
+      213: -7109513651930190123
+    second: Num_2_8x5_40_20
+  - first:
+      213: -4947607041304135630
+    second: Num_2_8x5_40_21
+  - first:
+      213: -6470632219200486415
+    second: Num_2_8x5_40_22
+  - first:
+      213: -1572082723091640439
+    second: Num_2_8x5_40_23
+  - first:
+      213: -1218327542335272650
+    second: Num_2_8x5_40_24
+  - first:
+      213: 9158210630571734755
+    second: Num_2_8x5_40_25
+  - first:
+      213: 1521121928144260460
+    second: Num_2_8x5_40_26
+  - first:
+      213: 470301834340418494
+    second: Num_2_8x5_40_27
+  - first:
+      213: -7284646194892441931
+    second: Num_2_8x5_40_28
+  - first:
+      213: 647099678228416344
+    second: Num_2_8x5_40_29
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -31,16 +121,16 @@ TextureImporter:
   maxTextureSize: 4096
   textureSettings:
     serializedVersion: 2
-    filterMode: -1
+    filterMode: 0
     aniso: -1
     mipBias: -100
-    wrapU: -1
-    wrapV: -1
+    wrapU: 1
+    wrapV: 1
     wrapW: -1
-  nPOTScale: 1
+  nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 0
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -49,9 +139,9 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
-  alphaIsTransparency: 0
+  alphaIsTransparency: 1
   spriteTessellationDetail: -1
-  textureType: 0
+  textureType: 8
   textureShape: 1
   singleChannelComponent: 0
   maxTextureSizeSet: 0
@@ -69,13 +159,665 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Android
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Num_2_8x5_40_0
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 2097
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 852641c14ab35bb439b72b1a0a6e9240
+      internalID: -7966706468624883287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_1
+      rect:
+        serializedVersion: 2
+        x: 566
+        y: 2097
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 714ba026628c2ce409340f5ab6199b47
+      internalID: 2511056533985443265
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_2
+      rect:
+        serializedVersion: 2
+        x: 1078
+        y: 2092
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 513085b69b34b7e45965112324aaf44d
+      internalID: 2350056982281752005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_3
+      rect:
+        serializedVersion: 2
+        x: 1595
+        y: 2092
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 23a7e14a7bbf5004cb8e96786f694d22
+      internalID: -3595930623979764279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_4
+      rect:
+        serializedVersion: 2
+        x: 2107
+        y: 2092
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf7498daaca53a146a0472dfee083622
+      internalID: 7696542884905818496
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_5
+      rect:
+        serializedVersion: 2
+        x: 2613
+        y: 2092
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca1c85473b6088e4eab8ebfef0000a2f
+      internalID: 1966840519081843842
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_6
+      rect:
+        serializedVersion: 2
+        x: 3130
+        y: 2087
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d7f3a22dc0179c4d8465eae2fe2dd26
+      internalID: -2248750972864279595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_7
+      rect:
+        serializedVersion: 2
+        x: 3636
+        y: 2082
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1e76874b4a6cf274e94697cbe177b50c
+      internalID: -2208754065270095613
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_8
+      rect:
+        serializedVersion: 2
+        x: 60
+        y: 1570
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 130d2d2f5efa38e4bbc1f94d0cee1f04
+      internalID: -901088091063448657
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_9
+      rect:
+        serializedVersion: 2
+        x: 561
+        y: 1570
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b75a2d1f67d7d1a45a72212ffc2f0bec
+      internalID: -4663634169891912946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_10
+      rect:
+        serializedVersion: 2
+        x: 1073
+        y: 1575
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa894ee1661ecd244ba14f5086f60932
+      internalID: -8891059884561803237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_11
+      rect:
+        serializedVersion: 2
+        x: 1579
+        y: 1580
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c872545663ae9a74abad92c73aa0b634
+      internalID: 7530165739049151072
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_12
+      rect:
+        serializedVersion: 2
+        x: 2101
+        y: 1580
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a59eeeeb311aa26438ccfa4827ae4530
+      internalID: -2344321081741901446
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_13
+      rect:
+        serializedVersion: 2
+        x: 2613
+        y: 1575
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2418f0a39c4841f4b8a89444f96a41e4
+      internalID: 2294629636794993101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_14
+      rect:
+        serializedVersion: 2
+        x: 3125
+        y: 1569
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5cf6188973c5504488aaa9b45a67bd2a
+      internalID: 5928120966156049594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_15
+      rect:
+        serializedVersion: 2
+        x: 3637
+        y: 1570
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a68f291e76ee99542b6aad4b52792b5a
+      internalID: 119098025107172223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_16
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 1064
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 83480529dab2c8b4da5ae0269eab632f
+      internalID: -7071163799741779795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_17
+      rect:
+        serializedVersion: 2
+        x: 567
+        y: 1064
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f22b5bd7e3cb494cb6a0403b5971898
+      internalID: 9156427547151280866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_18
+      rect:
+        serializedVersion: 2
+        x: 1079
+        y: 1069
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4d98263fe96bef64ca1838cae798f4d8
+      internalID: 3682803464062363689
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_19
+      rect:
+        serializedVersion: 2
+        x: 1585
+        y: 1064
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a51694e239a8dd344aa058bd61a7ec91
+      internalID: -4149262012685915616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_20
+      rect:
+        serializedVersion: 2
+        x: 2107
+        y: 1069
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 042cd4bfe43f1b64082ff784da217512
+      internalID: -7109513651930190123
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_21
+      rect:
+        serializedVersion: 2
+        x: 2608
+        y: 1069
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c11b256679c3fa42a9112d5aae7a81e
+      internalID: -4947607041304135630
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_22
+      rect:
+        serializedVersion: 2
+        x: 3125
+        y: 1064
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1593080f885ee94880fbfaaed59ef61
+      internalID: -6470632219200486415
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_23
+      rect:
+        serializedVersion: 2
+        x: 3637
+        y: 1064
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0302bb9019ec57d41b41ff24e218d157
+      internalID: -1572082723091640439
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_24
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 547
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fa5cf5bb8bfbe3d4bba7d08b6cb50eca
+      internalID: -1218327542335272650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_25
+      rect:
+        serializedVersion: 2
+        x: 562
+        y: 552
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7bfbacbb0dfbaed41a5220529d882eb5
+      internalID: 9158210630571734755
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_26
+      rect:
+        serializedVersion: 2
+        x: 1079
+        y: 557
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a080ee87650e854994316f14f8bb1c0
+      internalID: 1521121928144260460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_27
+      rect:
+        serializedVersion: 2
+        x: 2097
+        y: 547
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 84929aeb872247447a6be112b1789545
+      internalID: 470301834340418494
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_28
+      rect:
+        serializedVersion: 2
+        x: 2614
+        y: 552
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e6fbfb37d1191a0488c354a5eda7b651
+      internalID: -7284646194892441931
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Num_2_8x5_40_29
+      rect:
+        serializedVersion: 2
+        x: 1591
+        y: 552
+        width: 427
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 85bc13586e0533240bc9fe9e04bbbd0e
+      internalID: 647099678228416344
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: d6358f037615f9941a16316df52b092d
     internalID: 0
     vertices: []
     indices: 

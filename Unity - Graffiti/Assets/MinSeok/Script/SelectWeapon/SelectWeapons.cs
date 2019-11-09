@@ -273,6 +273,7 @@ public class SelectWeapons : UnityEngine.MonoBehaviour
                 panel_mainWeapon.SetActive(false);
                 panel_subWeapon.SetActive(false);
 
+                SceneLoader.Instance.FadeSeconds = 0.3f;
 
                 switch ((C_Global.GameType)networkManager.selectMatch)
                 {

@@ -31,6 +31,9 @@ public partial class BridgeClientToServer : MonoBehaviour
     // 플레이어 무기 세팅
     public void SetWeapon(int _playerNum, ref WeaponPacket _weapon)
     {
+        if (weaponManager == null)
+            return;
+
         int index = _playerNum - 1;
 
         //무기정보 저장
@@ -64,6 +67,9 @@ public partial class BridgeClientToServer : MonoBehaviour
 
     public void SetPlayerNickName(string _nickName, int _idx)
     {
+        if (uiManager == null)
+            return;
+
         uiManager.SetNickname(_nickName, _idx);
         playersManager.nickname[_idx] = _nickName;
 
@@ -83,23 +89,16 @@ public partial class BridgeClientToServer : MonoBehaviour
 
     public void ReadyStart()
     {
-        //여기
-       /// 레디 시작했을때 잠깐 조작 못하게 막아놓음
-   }
+        LeftJoystick.inputLock_left = true; //조이스틱을 잠금
+        RightJoystick.inputLock_right = true; //조이스틱을 잠금
+        StartCoroutine(uiManager.Cor_StartReadyCount());
+    }
 
     public void ReadyEnd()
     {
-        StartCoroutine(uiManager.StartGameTimer());
-
-        //여기
-       /// 레디 끝났을때 다시 조작하게 풀고 문구 안보이게
-   }
-
-    public void SetReadyTimeText(int _time)
-    {
-        //여기
-       /// ReadyStart() 호출 이후에, 서버가 정해놓은 시간동안 조작못함
-       /// 이때 받은 숫자로 3, 2, 1 출력하게 하면 됨(무기선택이랑 똑같게 5, 4, 3 ... 이런 식으로 감)
+        LeftJoystick.inputLock_left = false; //조이스틱을 잠금
+        RightJoystick.inputLock_right = false; //조이스틱을 잠금
+        StartCoroutine(uiManager.Cor_StartGameTimer());
     }
 
     // 섹터 진입시
@@ -305,7 +304,6 @@ public partial class BridgeClientToServer : MonoBehaviour
 
     public void OtherPlayerHitByCar(int _playerNum, float _posX, float _posZ)
     {
-        Debug.Log("다른놈");
         // 맞은 놈 튕기게 하고
         Rigidbody rigid = playersManager.obj_players[_playerNum - 1].GetComponent<Rigidbody>();
         Vector3 force = new Vector3(_posX, 0.0f, _posZ);
@@ -346,8 +344,8 @@ public partial class BridgeClientToServer : MonoBehaviour
                         UIManager.instance.txt_captureNotice.text = (_triggerIdx + 1).ToString() + "번 점령지를 탈취 했습니다 !";
                         CaptureManager.instance.captureResult_team[_triggerIdx] = _CAPTURE_RESULT.GET;
                         CaptureManager.instance.captureResult_enemy[_triggerIdx] = _CAPTURE_RESULT.LOSE;
-                        CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.green;
-                        CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.green;
+                        //CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.green;
+                        //CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.green;
                     }
                     else
                     {
@@ -356,8 +354,8 @@ public partial class BridgeClientToServer : MonoBehaviour
                         UIManager.instance.txt_captureNotice.text = (_triggerIdx + 1).ToString() + "번 점령지를 빼앗겼습니다 !";
                         CaptureManager.instance.captureResult_team[_triggerIdx] = _CAPTURE_RESULT.LOSE;
                         CaptureManager.instance.captureResult_enemy[_triggerIdx] = _CAPTURE_RESULT.GET;
-                        CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.red;
-                        CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.red;
+                        //CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.red;
+                        //CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.red;
                     }
                 }
                 break;
@@ -372,8 +370,8 @@ public partial class BridgeClientToServer : MonoBehaviour
                         UIManager.instance.txt_captureNotice.text = (_triggerIdx + 1).ToString() + "번 점령지를 탈취 했습니다 !";
                         CaptureManager.instance.captureResult_team[_triggerIdx] = _CAPTURE_RESULT.GET;
                         CaptureManager.instance.captureResult_enemy[_triggerIdx] = _CAPTURE_RESULT.LOSE;
-                        CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.green;
-                        CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.green;
+                       // CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.green;
+                        //CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.green;
                     }
                     else
                     {
@@ -382,8 +380,8 @@ public partial class BridgeClientToServer : MonoBehaviour
                         UIManager.instance.txt_captureNotice.text = (_triggerIdx + 1).ToString() + "번 점령지를 빼앗겼습니다 !";
                         CaptureManager.instance.captureResult_team[_triggerIdx] = _CAPTURE_RESULT.LOSE;
                         CaptureManager.instance.captureResult_enemy[_triggerIdx] = _CAPTURE_RESULT.GET;
-                        CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.red;
-                        CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.red;
+                        //CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.red;
+                       // CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.red;
                     }
                 }
                 break;
@@ -425,9 +423,22 @@ public partial class BridgeClientToServer : MonoBehaviour
 
     public void GameEndProcess()
     {
-        //여기
-       /// 게임이 종료되었다고 텍스트를 띄우던 뭘 하던 하고, 조작 못하도록 한다.
-   }
+        LeftJoystick.inputLock_left = true; //조이스틱을 잠금
+        RightJoystick.inputLock_right = true; //조이스틱을 잠금
+        LeftJoystick.instance.ResetDrag();
+        RightJoystick.instance.ResetDrag();
+
+        StopCoroutine(uiManager.Cor_StartGameTimer());
+
+        uiManager.readyCount.obj_parent.SetActive(true);
+        uiManager.am_readyCount.SetTrigger("end");
+
+        AudioSource source = GameObject.Find("AudioManager").GetComponent<AudioSource>();
+        if (source != null)
+        {
+            StartCoroutine(AudioManager.FadeOut(source, 0.0016f));
+        }
+    }
 
     public void ScoreShowPrcess(ref int[] _playersNum, ref Score[] _scores)
     {

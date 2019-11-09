@@ -28,6 +28,7 @@ public partial class UIManager : MonoBehaviour
         for (int i = 0; i < GameManager.instance.gameInfo.maxPlayer; i++)
             playersIndex[i] = GameManager.instance.playersIndex[i];
 
+        Initialization_ReadyCount();
         Initialization_GameTimer();
         Initialization_Score();
         Initialization_KillDeath();
@@ -64,8 +65,6 @@ public partial class UIManager : MonoBehaviour
 
 	void Update()
 	{
-        //StartGameTimer();
-
         for (int i = 0; i < GameManager.instance.gameInfo.maxPlayer; i++)
 		{
 			nickname[playersIndex[i]].obj_parent.transform.position = PlayersManager.instance.tf_players[playersIndex[i]].transform.position + hpAddPos;
@@ -84,7 +83,29 @@ public partial class UIManager : MonoBehaviour
         line.obj_parent.transform.position = PlayersManager.instance.tf_players[myIndex].transform.position + lineAddPos;
         line2.obj_parent.transform.position = PlayersManager.instance.tf_players[myIndex].transform.position + line2AddPos;
         weaponInfo.obj_parent.transform.position = PlayersManager.instance.tf_players[myIndex].transform.position + weaponAddPos;
-}
+
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            am_readyCount.SetTrigger("1");
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            am_readyCount.SetTrigger("2");
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            am_readyCount.SetTrigger("3");
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            am_readyCount.SetTrigger("start");
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            am_readyCount.SetTrigger("end");
+        }
+    }
 
 	public int PlayerIndexToAbsoluteIndex(int _playerIndex)
 	{

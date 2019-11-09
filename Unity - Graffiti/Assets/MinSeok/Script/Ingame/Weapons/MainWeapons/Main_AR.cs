@@ -279,7 +279,7 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
 
             //장전 이전상태가 사격중이였을경우 계속 이어서쏨
             if (PlayersManager.instance.actionState[_index] == _ACTION_STATE.SHOT ||
-                PlayersManager.instance.actionState[_index] == _ACTION_STATE.CIR_AIM_SHOT)
+                PlayersManager.instance.actionState[_index] == _ACTION_STATE.CIR_AIM_SHOT || RightJoystick.RightTouch == true)
             {
                 StateManager.instance.Shot(false);
                 #if NETWORK
