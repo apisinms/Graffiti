@@ -255,7 +255,7 @@ public partial class UIManager : MonoBehaviour
     public IEnumerator Cor_StartGraffitySpraying(float _time, int _triggerIdx, string _playerTag)
     {
         if (isStartSprayingCor[_triggerIdx] == true)
-            yield break; ;
+            yield break; 
 
         isStartSprayingCor[_triggerIdx] = true;
 

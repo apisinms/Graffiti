@@ -344,8 +344,15 @@ public partial class BridgeClientToServer : MonoBehaviour
                         UIManager.instance.txt_captureNotice.text = (_triggerIdx + 1).ToString() + "번 점령지를 탈취 했습니다 !";
                         CaptureManager.instance.captureResult_team[_triggerIdx] = _CAPTURE_RESULT.GET;
                         CaptureManager.instance.captureResult_enemy[_triggerIdx] = _CAPTURE_RESULT.LOSE;
-                        //CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.green;
-                        //CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.green;
+                        CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.green;
+                        CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.green;
+
+                        if (idx == 0 || idx == 1)
+                            uiManager.graffity[_triggerIdx].img_graffity.sprite = uiManager.spr_graffity[0];
+                        else if (idx == 2 || idx == 3)
+                            uiManager.graffity[_triggerIdx].img_graffity.sprite = uiManager.spr_graffity[1];
+
+                        uiManager.graffity[_triggerIdx].img_graffity.fillAmount = 1.0f;
                     }
                     else
                     {
@@ -354,8 +361,15 @@ public partial class BridgeClientToServer : MonoBehaviour
                         UIManager.instance.txt_captureNotice.text = (_triggerIdx + 1).ToString() + "번 점령지를 빼앗겼습니다 !";
                         CaptureManager.instance.captureResult_team[_triggerIdx] = _CAPTURE_RESULT.LOSE;
                         CaptureManager.instance.captureResult_enemy[_triggerIdx] = _CAPTURE_RESULT.GET;
-                        //CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.red;
-                        //CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.red;
+                        CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.red;
+                        CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.red;
+
+                        if (idx == 0 || idx == 1)
+                            uiManager.graffity[_triggerIdx].img_graffity.sprite = uiManager.spr_graffity[0];
+                        else if (idx == 2 || idx == 3)
+                            uiManager.graffity[_triggerIdx].img_graffity.sprite = uiManager.spr_graffity[1];
+
+                        uiManager.graffity[_triggerIdx].img_graffity.fillAmount = 1.0f;
                     }
                 }
                 break;
@@ -370,8 +384,15 @@ public partial class BridgeClientToServer : MonoBehaviour
                         UIManager.instance.txt_captureNotice.text = (_triggerIdx + 1).ToString() + "번 점령지를 탈취 했습니다 !";
                         CaptureManager.instance.captureResult_team[_triggerIdx] = _CAPTURE_RESULT.GET;
                         CaptureManager.instance.captureResult_enemy[_triggerIdx] = _CAPTURE_RESULT.LOSE;
-                       // CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.green;
-                        //CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.green;
+                        CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.green;
+                        CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.green;
+
+                        if (idx == 0)
+                            uiManager.graffity[_triggerIdx].img_graffity.sprite = uiManager.spr_graffity[0];
+                        else if (idx == 1)
+                            uiManager.graffity[_triggerIdx].img_graffity.sprite = uiManager.spr_graffity[1];
+
+                        uiManager.graffity[_triggerIdx].img_graffity.fillAmount = 1.0f;
                     }
                     else
                     {
@@ -380,8 +401,15 @@ public partial class BridgeClientToServer : MonoBehaviour
                         UIManager.instance.txt_captureNotice.text = (_triggerIdx + 1).ToString() + "번 점령지를 빼앗겼습니다 !";
                         CaptureManager.instance.captureResult_team[_triggerIdx] = _CAPTURE_RESULT.LOSE;
                         CaptureManager.instance.captureResult_enemy[_triggerIdx] = _CAPTURE_RESULT.GET;
-                        //CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.red;
-                       // CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.red;
+                        CaptureManager.instance.territoryOutline[_triggerIdx].OutlineColor = Color.red;
+                        CaptureManager.instance.territoryOutline[_triggerIdx].HaloColor = Color.red;
+
+                        if (idx == 0)
+                            uiManager.graffity[_triggerIdx].img_graffity.sprite = uiManager.spr_graffity[0];
+                        else if (idx == 1)
+                            uiManager.graffity[_triggerIdx].img_graffity.sprite = uiManager.spr_graffity[1];
+
+                        uiManager.graffity[_triggerIdx].img_graffity.fillAmount = 1.0f;
                     }
                 }
                 break;

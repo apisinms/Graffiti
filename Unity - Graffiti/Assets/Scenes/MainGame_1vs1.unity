@@ -8740,6 +8740,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: obj_ReadyCount
       objectReference: {fileID: 0}
+    - target: {fileID: 6127856543556148871, guid: a3ae91ae646e8e54d890ec0e47d923dc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6127856543556148864, guid: a3ae91ae646e8e54d890ec0e47d923dc,
         type: 3}
       propertyPath: m_LocalPosition.x
