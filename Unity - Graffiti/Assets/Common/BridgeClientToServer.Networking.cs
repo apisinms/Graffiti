@@ -95,13 +95,6 @@ public partial class BridgeClientToServer : MonoBehaviour
 		/// 레디 끝났을때 다시 조작하게 풀고 문구 안보이게
 	}
 
-	public void SetReadyTimeText(int _time)
-	{
-		//여기
-		/// ReadyStart() 호출 이후에, 서버가 정해놓은 시간동안 조작못함
-		/// 이때 받은 숫자로 3, 2, 1 출력하게 하면 됨(무기선택이랑 똑같게 5, 4, 3 ... 이런 식으로 감)
-	}
-
 	// 섹터 진입시
 	public void EnterSectorProcess(ref IngamePacket _packet)
 	{

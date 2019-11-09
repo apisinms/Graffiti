@@ -55,7 +55,6 @@ public:
 	bool LeaveRoom(C_ClientInfo* _player);
 	bool IsPlayerListEmpty() { return players.empty(); }
 
-
 	void SetInGameTimerHandle(HANDLE _handle) { InGameTimerHandle = _handle; }
 	HANDLE GetInGameTimerHandle() { return InGameTimerHandle; }
 

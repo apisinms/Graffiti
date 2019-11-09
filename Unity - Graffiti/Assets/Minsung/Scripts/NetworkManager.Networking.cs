@@ -274,21 +274,6 @@ public partial class NetworkManager : MonoBehaviour
 											}
 											break;
 
-										// 레디 남은 시간
-										case RESULT.READY:
-											{
-												lock (key)
-												{
-													int time = 0;
-													UnPackPacket(info[i].packet, out time);
-
-													Debug.Log("남은 레디 시간" + time + "초");
-
-													bridge.SetReadyTimeText(time);
-												}
-											}
-											break;
-
 										// 게임 남은 시간 타이머 동기화
 										case RESULT.INGAME_SYNC:
 											{

@@ -27,6 +27,8 @@ using namespace std;
 #define KEEPALIVE_TIME 3000								// TIME ms마다 keep-alive 신호를 주고받는다
 #define KEEPALIVE_INTERVAL (KEEPALIVE_TIME / 20)		// Heart-beat가 없을시 INTERVAL ms마다 재전송한다(10번)
 
+#define SECOND 1
+
 class C_ClientInfo;
 
 // 플레이어 플래그
@@ -189,31 +191,82 @@ struct Score
 	}
 };
 
-struct PlayerRespawnInfo
+struct PositionInfo
 {
-	float respawnPosX;			// 리스폰 위치 x
-	float respawnPosZ;			// 리스폰 위치 z
-	bool isRespawning;			// 리스폰 중인지
-	double elapsedSec;				// 리스폰 on 일때 경과한 시간(초)
+	int gameType;
+	int playerNum;
+	float posX;
+	float posZ;
 
-	PlayerRespawnInfo()
+	PositionInfo()
 	{
-		respawnPosX = respawnPosZ = 0.0f;
-		isRespawning = false;
-		elapsedSec = 0.0;
+		gameType = playerNum = 0;
+		posX = posZ = 0.0f;
 	}
+};
 
-	void RespawnDone()
+struct LocationInfo
+{
+	PositionInfo respawnInfo;
+	PositionInfo firstPosInfo;
+
+	LocationInfo() {}
+};
+
+struct WeaponInfo
+{
+	int num;			// 무기 번호
+	int numOfPattern;	// 패턴 갯수
+	int bulletPerShot;	// 한 번 쏘면 몇 발 나가는지
+	int maxAmmo;		// 최대 총알
+	float fireRate;		// 발사 속도
+	float damage;		// 데미지
+	float accuracy;		// 정확도
+	float range;		// 사정거리
+	float speed;		// 탄속
+	float reloadTime;	// 재장전 시간
+	TCHAR weaponName[WEAPON_NAME_SIZE];	// 무기 이름
+
+	WeaponInfo()
 	{
-		elapsedSec = 0.0;
-		isRespawning = false;
+		num = numOfPattern = bulletPerShot = maxAmmo = 0;
+		fireRate = damage = accuracy = range = speed = reloadTime = 0.0f;
+		memset(weaponName, 0, WEAPON_NAME_SIZE);
 	}
+};
 
-	void ResetPlayerRespawnInfo()
+struct GameInfo
+{
+	int gameType;				// 게임 타입(나중에 모드가 여러 개 생길 수도 있으니)
+	int maxPlayer;				// 최대 플레이어 수
+	float maxSpeed;				// 최대 이동속도
+	float maxHealth;			// 최대 체력
+	float respawnTime;			// 리스폰 시간
+	float subSprayingTime;		// 스프레이 전 시간
+	float mainSprayingTime;		// 스프레이 시간
+	double gameTime;			// 게임 시간
+	int killPoint;				// 킬 점수
+	int capturePoint;			// 점령 점수
+
+	GameInfo()
 	{
-		respawnPosX = respawnPosZ = 0.0f;
-		isRespawning = false;
-		elapsedSec = 0.0;
+		gameType = maxPlayer = 0;
+		maxSpeed = maxHealth = 0.0f;
+		respawnTime = subSprayingTime = mainSprayingTime = 0.0f;
+		gameTime = 0.0;
+		killPoint = capturePoint = 0;
+	}
+};
+
+struct BuildingInfo
+{
+	int buildingIndex;
+	C_ClientInfo* owner;
+
+	BuildingInfo()
+	{
+		buildingIndex = 0;
+		owner = nullptr;
 	}
 };
 
@@ -226,7 +279,9 @@ private:
 	INDEX index;				// 현재 플레이어의 섹터 인덱스
 	Weapon* weapon;				// 무기
 	int bullet;					// 총알
-	PlayerRespawnInfo playerRespawnInfo;	// 리스폰 정보
+	vector<PositionInfo*>respawnInfo;	// 리스폰 정보
+	bool isRespawning;			// 리스폰 중인지
+	double respawnElapsedTime;	// 리스폰 on 일때 경과한 시간(초)
 	Score score;				// 내 스코어
 	int teamNum;				// 팀 번호
 	list<C_ClientInfo*> sectorPlayerList;	// 인접 섹터에 있는 플레이어 리스트
@@ -237,10 +292,16 @@ public:
 		loadStatus = false;
 		isFocus = true;	// 포커스는 반드시 true여야함!!
 		bullet = 0;
+		isRespawning = false;
+		respawnElapsedTime = 0.0;
 		teamNum = 0;
 
 		weapon = nullptr;
 		gamePacket = nullptr;
+	}
+	~PlayerInfo()
+	{
+		ResetPlayerInfo();
 	}
 
 	void ResetPlayerInfo()
@@ -258,8 +319,18 @@ public:
 			delete weapon;
 			weapon = nullptr;
 		}
-		playerRespawnInfo.ResetPlayerRespawnInfo();
+		for (size_t i = 0; i < respawnInfo.size(); i++)
+		{
+			if (respawnInfo[i] != nullptr)
+			{
+				delete respawnInfo[i];
+				respawnInfo[i] = nullptr;
+			}
+		}
+		vector<PositionInfo*>().swap(respawnInfo);	// 빈 벡터와 swap하여 벡터를 완전히 Clear시켜준다.
 		score.ResetScore();
+		isRespawning = false;
+		respawnElapsedTime = 0.0;
 		teamNum = 0;
 		sectorPlayerList.clear();
 	}
@@ -305,8 +376,24 @@ public:
 	int GetBullet() { return bullet; }
 	void SetBullet(int _bullet) { bullet = _bullet; }
 
-	PlayerRespawnInfo& GetPlayerRespawnInfo() { return playerRespawnInfo; }
-	void SetPlayerRespawnInfo(PlayerRespawnInfo& _info) { playerRespawnInfo = _info; }
+	//PlayerRespawnInfo& GetPlayerRespawnInfo() { return playerRespawnInfo; }
+	//void SetPlayerRespawnInfo(PlayerRespawnInfo& _info) { playerRespawnInfo = _info; }
+
+	vector<PositionInfo*>& GetPlayerRespawnInfoList() { return respawnInfo; }
+	PositionInfo* GetPlayerRespawnInfo(int _idx)
+	{
+		if (_idx < 0 || _idx > respawnInfo.size())
+			return nullptr;
+
+		return respawnInfo[_idx];
+	}
+
+	bool IsRespawning() { return isRespawning; }
+	void RespawnOn() { isRespawning = true; }
+	void RespawnOff() { respawnElapsedTime = 0.0; isRespawning = false; }
+	
+	double GetRespawnElapsedTime() { return respawnElapsedTime; }
+	void SetRespawnElapsedTime(double _time) { respawnElapsedTime = _time; }
 
 	Score& GetScore() { return score; }
 
@@ -315,83 +402,6 @@ public:
 
 	list<C_ClientInfo*>& GetSectorPlayerList() { return sectorPlayerList; }
 	void SetSectorPlayerList(list<C_ClientInfo*> _playerList) { sectorPlayerList = _playerList; }	// Set할때는 참조로 받으면 지역변수 소멸되면서 불법접근 됨
-};
-
-struct WeaponInfo
-{
-	int num;			// 무기 번호
-	int numOfPattern;	// 패턴 갯수
-	int bulletPerShot;	// 한 번 쏘면 몇 발 나가는지
-	int maxAmmo;		// 최대 총알
-	float fireRate;		// 발사 속도
-	float damage;		// 데미지
-	float accuracy;		// 정확도
-	float range;		// 사정거리
-	float speed;		// 탄속
-	float reloadTime;	// 재장전 시간
-	TCHAR weaponName[WEAPON_NAME_SIZE];	// 무기 이름
-
-	WeaponInfo() 
-	{ 
-		num = numOfPattern = bulletPerShot = maxAmmo = 0;
-		fireRate = damage = accuracy = range = speed = reloadTime = 0.0f;
-		memset(weaponName, 0, WEAPON_NAME_SIZE);
-	}
-};
-
-struct GameInfo
-{
-	int gameType;				// 게임 타입(나중에 모드가 여러 개 생길 수도 있으니)
-	int maxPlayer;				// 최대 플레이어 수
-	float maxSpeed;				// 최대 이동속도
-	float maxHealth;			// 최대 체력
-	float respawnTime;			// 리스폰 시간
-	float subSprayingTime;		// 스프레이 전 시간
-	float mainSprayingTime;		// 스프레이 시간
-	double gameTime;			// 게임 시간
-	int killPoint;				// 킬 점수
-	int capturePoint;			// 점령 점수
-
-	GameInfo() 
-	{ 
-		gameType = maxPlayer = 0;
-		maxSpeed = maxHealth = 0.0f;
-		respawnTime = gameTime = killPoint = capturePoint = 0;
-	}
-};
-
-struct PositionInfo
-{
-	int gameType;
-	int playerNum;
-	float posX;
-	float posZ;
-
-	PositionInfo() 
-	{ 
-		gameType = playerNum = 0;
-		posX = posZ = 0.0f;
-	}
-};
-
-struct LocationInfo
-{
-	PositionInfo respawnInfo;
-	PositionInfo firstPosInfo;
-
-	LocationInfo() {}
-};
-
-struct BuildingInfo
-{
-	int buildingIndex;
-	C_ClientInfo* owner;
-
-	BuildingInfo() 
-	{ 
-		buildingIndex = 0;
-		owner = nullptr;
-	}
 };
 
 enum STATE : int

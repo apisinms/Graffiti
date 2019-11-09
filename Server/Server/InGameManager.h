@@ -51,8 +51,7 @@ class InGameManager : public C_SyncCS<InGameManager>
 
 		// TIMER_PROTOCOL 개별
 		WEAPON		= ((__int64)0x1 << 31),	// 무기 선택 남은 초
-		READY       = ((__int64)0x1 << 30),	// 게임 준비 남은 초
-		INGAME_SYNC = ((__int64)0x1 << 29),	// 인게임 시간 싱크 맞추기용
+		INGAME_SYNC = ((__int64)0x1 << 30),	// 인게임 시간 싱크 맞추기용
 
 		// WEAPON_PROTOCOL 개별
 		NOTIFY_WEAPON = ((__int64)0x1 << 31),	// 무기를 알려줌
@@ -159,7 +158,6 @@ private:
 	void ChangeHealthAmount(C_ClientInfo* _player, float _amount);
 
 	void Kill(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer);
-	void Respawn(C_ClientInfo* _player);
 
 	void AddCaptureBonus(RoomInfo* _room, int& _team1CaptureBonus, int& _team2CaptureBonus);	// 점령 보너스
 

@@ -601,9 +601,9 @@ bool InGameManager::HitAndRunProcess(C_ClientInfo* _ptr, char* _buf)
 	ListSendPacket(_ptr->GetPlayerInfo()->GetSectorPlayerList(), _ptr, protocol, buf, packetSize, true);	// 나 빼고 전송
 
 	// 차에 치이면 이따가 리스폰 시켜줘야됨
-	if (_ptr->GetPlayerInfo()->GetPlayerRespawnInfo().isRespawning == false)
+	if (_ptr->GetPlayerInfo()->IsRespawning() == false)
 	{
-		Respawn(_ptr);
+		_ptr->GetPlayerInfo()->RespawnOn();	// 리스폰 시작
 	}
 
 	return true;
@@ -846,8 +846,11 @@ void InGameManager::InitalizePlayersInfo(RoomInfo* _room)
 		// 초기 체력, 총알 설정
 		player->GetPlayerInfo()->GetIngamePacket()->health = gameInfo[_room->GetGameType()]->maxHealth;
 		player->GetPlayerInfo()->SetBullet(weaponInfo[player->GetPlayerInfo()->GetWeapon()->mainW]->maxAmmo);
+		
+		// 리스폰 정보
+		vector<PositionInfo*>& respawnInfo = player->GetPlayerInfo()->GetPlayerRespawnInfoList();
 
-		// 리스폰 위치 찾아서
+		// 본인 초기위치랑 리스폰 정보 다 얻어옴
 		for (int i = 0; i < locationInfo.size(); i++)
 		{
 			gameType = player->GetRoom()->GetGameType();
@@ -857,25 +860,26 @@ void InGameManager::InitalizePlayersInfo(RoomInfo* _room)
 			if (gameType == locationInfo[i]->respawnInfo.gameType
 				&& playerNum == locationInfo[i]->respawnInfo.playerNum)
 			{
-				// 1. 리스폰 위치 저장
-				player->GetPlayerInfo()->GetPlayerRespawnInfo().respawnPosX = locationInfo[i]->respawnInfo.posX;
-				player->GetPlayerInfo()->GetPlayerRespawnInfo().respawnPosZ = locationInfo[i]->respawnInfo.posZ;
+				// 1. 리스폰 정보 추가
+				respawnInfo.emplace_back(new PositionInfo(locationInfo[i]->respawnInfo));
 
-				// 2. 초기 위치를 토대로 인덱스 저장 및 섹터의 플레이어 리스트에 추가
-				C_Sector* sector = player->GetRoom()->GetSector();	// 이 방의 섹터 매니저를 얻는다.
-				INDEX getIdx;
-				if (sector->GetIndex(player->GetPlayerInfo()->GetIndex(), getIdx, locationInfo[i]->firstPosInfo.posX, locationInfo[i]->firstPosInfo.posZ) == true)
+				// 2. 만약 초기 위치가 포함됐다면 이를 초기위치로 보고 인덱스 저장 및 섹터의 플레이어 리스트에 추가
+				if (locationInfo[i]->firstPosInfo.posX != 0.0f
+					&&locationInfo[i]->firstPosInfo.posZ != 0.0f)
 				{
-					player->GetPlayerInfo()->SetIndex(getIdx);
-					sector->Add(player, getIdx);
-				}
+					C_Sector* sector = player->GetRoom()->GetSector();	// 이 방의 섹터 매니저를 얻는다.
+					INDEX getIdx;
+					if (sector->GetIndex(player->GetPlayerInfo()->GetIndex(), getIdx, locationInfo[i]->firstPosInfo.posX, locationInfo[i]->firstPosInfo.posZ) == true)
+					{
+						player->GetPlayerInfo()->SetIndex(getIdx);
+						sector->Add(player, getIdx);
+					}
 
-				else
-				{
-					printf("유효하지 않은 인덱스!! %d, %d\n", getIdx.i, getIdx.j);
+					else
+					{
+						printf("유효하지 않은 인덱스!! %d, %d\n", getIdx.i, getIdx.j);
+					}
 				}
-
-				break;
 			}
 		}
 	}
@@ -1318,7 +1322,7 @@ void InGameManager::BulletHitSend(C_ClientInfo* _shotPlayer, const vector<C_Clie
 
 		// 피 0이면 시간 지나면 리스폰 시켜줘야됨
 		if (_hitPlayers[i]->GetPlayerInfo()->GetIngamePacket()->health <= 0
-			&& _hitPlayers[i]->GetPlayerInfo()->GetPlayerRespawnInfo().isRespawning == false)
+			&& _hitPlayers[i]->GetPlayerInfo()->IsRespawning() == false)
 		{
 			Kill(_shotPlayer, _hitPlayers[i]);	// 죽였으니 전적, 스코어 처리하고
 
@@ -1339,7 +1343,7 @@ void InGameManager::BulletHitSend(C_ClientInfo* _shotPlayer, const vector<C_Clie
 			ListSendPacket(allPlayersInRoom, nullptr, protocol, buf, packetSize, true);
 
 			// 그리고 이따가 부활시키게 리스폰
-			Respawn(_hitPlayers[i]);
+			_hitPlayers[i]->GetPlayerInfo()->RespawnOn();
 		}
 	}
 }
@@ -1424,13 +1428,6 @@ void InGameManager::Kill(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer)
 	_shotPlayer->GetPlayerInfo()->GetScore().killScore +=
 		gameInfo[_shotPlayer->GetGameType()]->killPoint;
 
-}
-void InGameManager::Respawn(C_ClientInfo* _player)
-{
-	//std::thread respawnThread(RespawnWaitAndRevive, _player);		// 1회용 리스폰 쓰레드 생성
-	//respawnThread.detach();											// 이 쓰레드에서 손 뗌 넌 자유
-
-	_player->GetPlayerInfo()->GetPlayerRespawnInfo().isRespawning = true;	// 리스폰 시작
 }
 
 void InGameManager::ResetPlayerInfo(C_ClientInfo* _player)
@@ -1683,8 +1680,8 @@ DWORD WINAPI InGameManager::InGameTimerThread(LPVOID _arg)
 				timer->Start();
 			}
 
-			// 1초 슬립 후 게임 대기 시간 검사
-			std::this_thread::sleep_for(std::chrono::seconds(1));	// 1초에 한번씩 들어오면 됨
+			// 게임 대기 시간 검사
+			std::this_thread::sleep_for(std::chrono::milliseconds(TIMER_INTERVAL));	// 꼭 넣어줘야함 아니면 혼자 CPU 다 잡아먹음
 			gameManager->ReadyTimeChecker(room);
 		}
 		break;
@@ -1698,14 +1695,14 @@ DWORD WINAPI InGameManager::InGameTimerThread(LPVOID _arg)
 				room->GetInGameTimer()->Start();
 			}
 
-			// 슬립 후 시간 증가
-			std::this_thread::sleep_for(std::chrono::milliseconds(TIMER_INTERVAL));	// 꼭 넣어줘야함 아니면 혼자 CPU 다 잡아먹음
-
 			gameManager->RespawnChecker(room);		// 리스폰 검사
 			gameManager->CarSpawnChecker(room);		// 차 스폰 검사
 			gameManager->InGameTimeSync(room);		// 시간 동기화 검사
 			gameManager->CaptureBonusTimeChecker(room);	// 점령 보너스 검사
 			gameManager->GameEndTimeChecker(room);	// 게임 종료 검사
+			
+			// 슬립 후 시간 증가
+			std::this_thread::sleep_for(std::chrono::milliseconds(TIMER_INTERVAL));	// 꼭 넣어줘야함 아니면 혼자 CPU 다 잡아먹음
 		}
 		break;
 
@@ -1775,16 +1772,17 @@ void InGameManager::RespawnChecker(RoomInfo* _room)
 	{
 		player = *iter;
 
-		// 플레이어 리스폰 정보를 얻어온다.
-		PlayerRespawnInfo& playerRespawnInfo = player->GetPlayerInfo()->GetPlayerRespawnInfo();
-
 		// 죽어서 리스폰 대기중인 상태라면
-		if (playerRespawnInfo.isRespawning == true)
+		if (player->GetPlayerInfo()->IsRespawning() == true)
 		{
+			// 리스폰 대기 후 얼마나 지났는지 얻어온다.
+			double respawnElapsedTime = player->GetPlayerInfo()->GetRespawnElapsedTime();
+			
 			// 아직 리스폰 시간만큼 안됐으면 그냥 경과 시간만 늘림
-			if (playerRespawnInfo.elapsedSec < gameInfo[_room->GetGameType()]->respawnTime)
+			if (respawnElapsedTime < gameInfo[_room->GetGameType()]->respawnTime)
 			{
-				playerRespawnInfo.elapsedSec += TIMER_INTERVAL_TIMES_MILLISEC;	// 밀리초 단위로 더함
+				respawnElapsedTime += TIMER_INTERVAL_TIMES_MILLISEC;	// 밀리초 단위로 더함
+				player->GetPlayerInfo()->SetRespawnElapsedTime(respawnElapsedTime);	// 그리고 세팅
 			}
 
 			// 리스폰 되야하면
@@ -1795,8 +1793,10 @@ void InGameManager::RespawnChecker(RoomInfo* _room)
 				memcpy(&packet, player->GetPlayerInfo()->GetIngamePacket(), sizeof(IngamePacket));
 
 				// 얻은 패킷 정보에서 위치만 리스폰 위치로 바꿔준다.
-				packet.posX = player->GetPlayerInfo()->GetPlayerRespawnInfo().respawnPosX;
-				packet.posZ = player->GetPlayerInfo()->GetPlayerRespawnInfo().respawnPosZ;
+				vector<PositionInfo*>& respawnInfo = player->GetPlayerInfo()->GetPlayerRespawnInfoList();
+				int rand = RandomManager::GetInstance()->GetIntNumRandom(0, (int)(respawnInfo.size() - 1));	// 랜덤 인덱스 얻음
+				packet.posX = respawnInfo[rand]->posX;
+				packet.posZ = respawnInfo[rand]->posZ;
 				packet.action = 0;	// 그리고 아이들 상태로!
 
 				// 1. 리스폰 위치로 변경된 인게임 패킷 저장
@@ -1836,7 +1836,7 @@ void InGameManager::RespawnChecker(RoomInfo* _room)
 					return;
 				}
 
-				playerRespawnInfo.RespawnDone();	// 리스폰 끝!
+				player->GetPlayerInfo()->RespawnOff();	// 리스폰 끝!
 			}
 		}
 	}
@@ -2095,10 +2095,10 @@ void InGameManager::ReadyTimeChecker(RoomInfo* _room)
 	vector<C_ClientInfo*>& playerList = _room->GetPlayers();
 
 	// 지금까지 흐른 초를 얻어옴
-	double readyTimeElapsed = _room->GetInGameTimer()->ElapsedSeconds();
+	double readyTimeElapsedSec = _room->GetInGameTimer()->ElapsedSeconds();
 
 	// 레디 시간 지나면
-	if (readyTimeElapsed >= READY_TIME)
+	if (readyTimeElapsedSec >= READY_TIME)
 	{
 		// 로그 함 찍고
 		printf("레디시간 끝\n");
@@ -2114,18 +2114,6 @@ void InGameManager::ReadyTimeChecker(RoomInfo* _room)
 
 		_room->GetInGameTimer()->Stop();				// 레디 타이머 끝!
 		_room->SetRoomStatus(ROOMSTATUS::ROOM_GAME);	// 이제 게임상태로!
-	}
-
-	// 아직 레디 시간 남았다면 남은 시간을 보내준다.
-	else
-	{
-		// 같은 방에 있는 "모든" 플레이어에게 게임 대기 종료까지 남은 시간 보내줌
-		protocol = SetProtocol(
-			INGAME_STATE,
-			PROTOCOL_INGAME::TIMER_PROTOCOL, 
-			RESULT_INGAME::READY);
-		PackPacket(buf, (int)((READY_TIME - (int)readyTimeElapsed)), packetSize);
-		ListSendPacket(playerList, nullptr, protocol, buf, packetSize, false);
 	}
 }
 
