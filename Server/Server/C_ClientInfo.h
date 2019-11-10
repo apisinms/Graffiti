@@ -54,4 +54,6 @@ public:
 
 	void SetGameType(int _gameType) { selectGameType = _gameType; }
 	int GetGameType() { return selectGameType; }
+
+	void ResetClientInfo();
 };

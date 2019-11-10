@@ -61,26 +61,7 @@ void SessionManager::Remove(C_ClientInfo* _info)
 {
 	clientList.remove(_info);
 
-	if (_info != nullptr)
-	{
-		delete _info;
-		_info = nullptr;
-	}
-
-
-
-	/*try
-	{
-		clientList.remove(_info);
-		delete _info;
-		_info = nullptr;
-	}
-	catch (const std::exception& _exception)
-	{
-		std::cout << "SessionManager::Remove()에서 예외 발생" << endl;
-		std::cout << _exception.what() << endl;
-	}*/
-
+	_info->ResetClientInfo();	// 어차피 이 함수를 호출하기 이전에 다 delete 해주고 난 다음이라 그냥 null로 가리키게 하면 상관없다.
 }
 
 int SessionManager::GetSize()

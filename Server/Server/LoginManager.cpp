@@ -423,17 +423,16 @@ LoginManager::RESULT_LOGIN LoginManager::CheckLogin(C_ClientInfo* _ptr, UserInfo
 }
 
 
-bool LoginManager::LoginListDelete(UserInfo* _userInfo)
+bool LoginManager::LoginListDelete(C_ClientInfo* _ptr)
 {
 	// 지우고 난 뒤에 사이즈가 줄었으면 정상 삭제임
 	int beforeSize = (int)loginList.size();
 
-	loginList.remove(_userInfo);
+	loginList.remove(_ptr->GetUserInfo());
 
-	if (_userInfo != nullptr)
+	if (_ptr->GetUserInfo() != nullptr)
 	{
-		delete _userInfo;
-		_userInfo = nullptr;
+		_ptr->SetUserInfo(nullptr);
 	}
 
 	if (beforeSize < (int)loginList.size())

@@ -297,6 +297,11 @@ bool C_Socket::WSA_Send(LPWSAOVERLAPPED_COMPLETION_ROUTINE _routine)
 {
 	IC_CS cs;	// 동기화!
 
+	if (sendQueue == nullptr)
+	{
+		return false;
+	}
+
 	int retval;
 	DWORD sendbytes;
 	DWORD flags = 0;
@@ -304,7 +309,7 @@ bool C_Socket::WSA_Send(LPWSAOVERLAPPED_COMPLETION_ROUTINE _routine)
 	ZeroMemory(&sOverlapped.overlapped, sizeof(sOverlapped.overlapped));
 
 	// 큐 제일 앞에 저장된 데이터 불러옴
-	S_SendBuf* ptr = sendQueue.front();
+	S_SendBuf* ptr = sendQueue->front();
 
 	// 이제 그 내용을 버퍼, 길이에 채워줌
 	sWsabuf.buf = ptr->sendBuf + ptr->compSendBytes;
@@ -331,19 +336,24 @@ int C_Socket::CompleteSend(int _completebyte)
 	// que의 front 해서 (갖고온 놈의)compSendBytes == sendBytes라면 pop해준다.
 	// 여기에서 pop을 한다.
 
-	size_t size = sendQueue.size();
-	S_SendBuf* sendData = sendQueue.front();
+	if (sendQueue == nullptr)
+	{
+		return SOC_ERROR;
+	}
+
+	S_SendBuf* sendData = nullptr;
+	sendData = sendQueue->front();
 
 	sendData->compSendBytes += _completebyte;
 
 	// 모두 다 보냈을 경우.
 	if (sendData->compSendBytes == sendData->sendBytes)
 	{
-		sendQueue.pop();	// queue를 pop해준다.
+		sendQueue->pop();	// queue를 pop해준다.
 		delete sendData;	// 지워주고
 
 		// pop 했는데 큐에 남아있는 데이터가 있다면 그 데이터를 전송한다.
-		if (sendQueue.empty() == false)
+		if (sendQueue->empty() == false)
 		{
 			if (!WSA_Send(nullptr))
 			{

@@ -59,7 +59,7 @@ void C_Packet::SetPacket(__int64& _protocol, char* _setBuf, int _packetSize)
 
 	///////////// push하기 전에 동기화! 중요!
 	C_Socket::IC_CS socketCS;	
-	sendQueue.push(ptr);	// 큐에 넣어주도록 한다.
+	sendQueue->push(ptr);	// 큐에 넣어주도록 한다.
 
 	// (동기)마지막으로 암호화된 encryptBuf를 sendBuf에 저장한다.
 	// memcpy(sendBuf, encryptBuf, size);
@@ -71,7 +71,7 @@ bool C_Packet::SendPacket(__int64 _protocol, char* _buf, int _size)
 {
 	SetPacket(_protocol, _buf, _size);
 
-	if (sendQueue.size() == 1)
+	if (sendQueue->size() == 1)
 	{
 		// first Send
 		if (!WSA_Send(nullptr))

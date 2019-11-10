@@ -61,11 +61,6 @@ C_State* C_ClientInfo::GetLoginState() { return (C_State*)loginState; }
 C_State* C_ClientInfo::GetInGameState() { return (C_State*)inGameState; }
 void C_ClientInfo::SetUserInfo(UserInfo* _userInfo)
 { 
-	if (userInfo != nullptr)
-	{
-		delete userInfo;
-	}
-
 	userInfo = _userInfo;
 }
 UserInfo* C_ClientInfo::GetUserInfo() { return userInfo; }
@@ -85,12 +80,24 @@ RoomInfo* C_ClientInfo::GetRoom() { return room; }
 // 인게임에서 사용되는 정보인 PlayerInfo를 리턴해줘서, 그 자체의 public method를 이용해 접근하게 하는게 바람직하다. 아니면 C_ClientInfo의 메소드 코드가 너무 길어짐..
 void C_ClientInfo::SetPlayerInfo(PlayerInfo* _playerInfo)
 { 
-	if (playerInfo != nullptr)
-		delete playerInfo;
-
 	playerInfo = _playerInfo; 
 }
 PlayerInfo* C_ClientInfo::GetPlayerInfo() {return playerInfo;}
+
+void C_ClientInfo::ResetClientInfo()
+{
+	memset(&this->addr, 0, sizeof(this->addr));
+	this->loginState = nullptr;
+	this->lobbyState = nullptr;
+	this->inGameState = nullptr;
+	this->state = nullptr;
+	this->stateStack = nullptr;
+	this->playerInfo = nullptr;
+	this->room = nullptr;
+	this->sendQueue = nullptr;
+	this->selectGameType = -1;
+	this->userInfo = nullptr;
+}
 
 //PositionPacket* C_ClientInfo::GetPosition() { return playerInfo->GetPosition(); }
 //void C_ClientInfo::SetPosition(PositionPacket* _position) { playerInfo->SetPosition(_position); }

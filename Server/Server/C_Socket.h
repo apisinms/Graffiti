@@ -12,7 +12,7 @@ struct WSAOVERLAPPED_EX
 class C_Socket : public C_SyncCS<C_Socket>
 {
 protected:
-	queue<S_SendBuf*> sendQueue;	// Send용 메시지 큐이다.
+	queue<S_SendBuf*>* sendQueue;	// Send용 메시지 큐이다.
 	SOCKET sock;
 	SOCKADDR_IN addr;
 
@@ -31,6 +31,8 @@ public:
 		memset(&sock, 0, sizeof(sock));
 		memset(&rOverlapped, 0, sizeof(rOverlapped));
 		memset(&sOverlapped, 0, sizeof(sOverlapped));
+		
+		sendQueue = new queue<S_SendBuf*>();
 	}
 	~C_Socket() {}
 	C_Socket(SOCKET _sock, SOCKADDR_IN _addr) : sock(_sock), addr(_addr) 
@@ -67,6 +69,10 @@ public:
 
 
 	C_Socket* GetMySocket() { return this; }
+	void ResetSendQueue()
+	{
+		sendQueue = nullptr;
+	}
 	//void SetMySocket(C_Socket* _sock) { sock = _sock->GetSocket(); addr = _sock->GetAddress(); }
 	//int GetSendBytes() { return sendBytes; }
 };
