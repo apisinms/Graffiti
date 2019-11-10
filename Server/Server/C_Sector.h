@@ -34,9 +34,6 @@ private:
 
 	SectorInstance** sectors;	// 전체 섹터
 
-private:
-	byte FlagPlayerBit(vector<SectorInstance*> _enterSector);
-
 public:
 	C_Sector();
 	~C_Sector();
@@ -100,7 +97,10 @@ public:
 		}
 	}
 
-	// 인덱스를 토대로 해당 섹터 + 인접 섹터의 플레이어 리스트를 하나로 병합하여 리턴해줌
+	byte FlagPlayerBit(vector<SectorInstance*>& _enterSector);
+	byte FlagPlayerBit(list<C_ClientInfo*>& _playerList);
+	
+		// 인덱스를 토대로 해당 섹터 + 인접 섹터의 플레이어 리스트를 하나로 병합하여 리턴해줌
 	list<C_ClientInfo*> GetSectorPlayerList(INDEX _Idx);
 
 	byte GetMovedSectorPlayerList(INDEX _beforeIdx, INDEX _curIdx,

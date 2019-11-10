@@ -54,7 +54,7 @@ public partial class PlayersManager : MonoBehaviour
         while (true)
         {
             Anime_Circuit(myIndex);
-            BlockCollisionEachOther();
+            //BlockCollisionEachOther();
             UIManager.instance.UpdateAimDirectionImg(false);
             UIManager.instance.UpdateDirectionImg(true);
 
@@ -108,8 +108,8 @@ public partial class PlayersManager : MonoBehaviour
                  Anime_AimingWithCircuit(myIndex, 4);
              }
 
-             BlockCollisionEachOther();
-             UIManager.instance.UpdateAimDirectionImg(true);
+            //BlockCollisionEachOther();
+            UIManager.instance.UpdateAimDirectionImg(true);
             UIManager.instance.UpdateDirectionImg(false);
 
             //tf_players[myIndex].localRotation = Quaternion.LookRotation(direction2[myIndex]);

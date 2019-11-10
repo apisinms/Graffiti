@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scenes/MainGame_2vs2.unity
+- path: Assets/Scenes/MainGame_1vs1.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

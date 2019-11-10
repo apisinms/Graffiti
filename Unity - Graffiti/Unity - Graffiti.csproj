@@ -732,9 +732,11 @@
     <Compile Include="Assets\Gwangil\Scripts\Chasing.cs" />
     <Compile Include="Assets\Gwangil\Scripts\CountScore.cs" />
     <Compile Include="Assets\Gwangil\Scripts\EndSceneManager.cs" />
+    <Compile Include="Assets\Gwangil\Scripts\ExitBtn.cs" />
     <Compile Include="Assets\Gwangil\Scripts\LobbyNickName.cs" />
     <Compile Include="Assets\Gwangil\Scripts\ObjectPool.cs" />
     <Compile Include="Assets\Gwangil\Scripts\PooledObject.cs" />
+    <Compile Include="Assets\Gwangil\Scripts\RandomLoadImage.cs" />
     <Compile Include="Assets\Gwangil\Scripts\Sample.cs" />
     <Compile Include="Assets\Gwangil\Scripts\SetResultEnd.cs" />
     <Compile Include="Assets\Gwangil\Scripts\Singleton.cs" />
@@ -861,8 +863,7 @@
     <Compile Include="Assets\Modern UI Pack\Scripts\UI Manager\UIManagerSwitch.cs" />
     <Compile Include="Assets\Modern UI Pack\Scripts\UI Manager\UIManagerToggle.cs" />
     <Compile Include="Assets\Modern UI Pack\Scripts\UI Manager\UIManagerTooltip.cs" />
-    <Compile Include="Assets\QuickOutline\Scripts\Outline.cs" />
-    <Compile Include="Assets\QuickOutline\Scripts\Outline_item.cs" />
+    <Compile Include="Assets\Outline\Outline.cs" />
     <Compile Include="Assets\scrollViewTest.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\uGUI Message Box Modal Dialog\Source\DialogResult.cs" />
@@ -883,12 +884,10 @@
     <None Include="Assets\KetosGames\SceneTransition\README.txt" />
     <None Include="Assets\KetosGames\SceneTransition\Shaders\Unlit Transparent HUD.shader" />
     <None Include="Assets\Modern UI Pack\Read Me.txt" />
+    <None Include="Assets\Outline\outlineShader.shader" />
     <None Include="Assets\ProDrawCallOptimizer\Examples\ExamplesReadme.txt" />
     <None Include="Assets\ProDrawCallOptimizer\README.txt" />
     <None Include="Assets\ProDrawCallOptimizer\VersionHistory.txt" />
-    <None Include="Assets\QuickOutline\Readme.txt" />
-    <None Include="Assets\QuickOutline\Resources\Shaders\OutlineFill.shader" />
-    <None Include="Assets\QuickOutline\Resources\Shaders\OutlineMask.shader" />
     <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />

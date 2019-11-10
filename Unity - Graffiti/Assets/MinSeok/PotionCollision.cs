@@ -37,7 +37,7 @@ public class PotionCollision : MonoBehaviour
 
                 // 플레이어랑 충돌하기만 했으면 아이템 꺼줌
                 this.gameObject.SetActive(false);
-                ItemManager.instance.StartCoroutine(ItemManager.instance.Cor_PosionSpawnCoolTime(this.gameObject, 3.0f));
+                ItemManager.instance.StartCoroutine(ItemManager.instance.Cor_PosionSpawnCoolTime(this.gameObject, 5.0f));
 
                 break;
             }
@@ -54,7 +54,7 @@ public class PotionCollision : MonoBehaviour
                 UIManager.instance.hp[i].img_front.fillAmount += 0.3f; // UI체력만 회복
 
                 this.gameObject.SetActive(false);
-                ItemManager.instance.StartCoroutine(ItemManager.instance.Cor_PosionSpawnCoolTime(this.gameObject, 3.0f));
+                ItemManager.instance.StartCoroutine(ItemManager.instance.Cor_PosionSpawnCoolTime(this.gameObject, 5.0f));
                 break;
             }
         }

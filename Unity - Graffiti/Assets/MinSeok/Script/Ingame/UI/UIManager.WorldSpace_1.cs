@@ -7,6 +7,18 @@ using TMPro;
 //                   UIManager_WorldSpace_1
 public partial class UIManager : MonoBehaviour
 {
+    #region MARKER
+    public GameObject obj_prefebsMarker;
+    public _IMG_MARKER_INFO marker;
+    public Vector3 markerAddPos { get; set; }
+
+    public struct _IMG_MARKER_INFO //체력바는 맨뒤 중간 맨앞 이미지 3개가 겹쳐진 구성임.
+    {
+        public GameObject obj_parent;
+        public Image img_marker { get; set; }
+    }
+    #endregion
+
     #region HP
     public GameObject[] obj_prefebsHP;   //0나, 1팀, 2적
     public _IMG_HP_INFO[] hp;
@@ -92,11 +104,39 @@ public partial class UIManager : MonoBehaviour
     }
     #endregion
 
+    public void Initialization_Marker()
+    {
+        markerAddPos = new Vector3(0, 2.3f, 2.1f);
+        marker.obj_parent = Instantiate(obj_prefebsMarker, GameObject.FindGameObjectWithTag("Canvas_worldSpace1").transform);
+        marker.img_marker = marker.obj_parent.transform.GetChild(0).GetComponent<Image>();
+        marker.obj_parent.SetActive(true);
+
+        switch (GameManager.instance.gameInfo.gameType)
+        {
+            case (int)C_Global.GameType._2vs2:
+                {
+                    if (myIndex == 0 || myIndex == 1)
+                        marker.img_marker.color = Color.red;
+                    else if (myIndex == 2 || myIndex == 3)
+                        marker.img_marker.color = Color.blue;
+                }
+                break;
+
+            case (int)C_Global.GameType._1vs1:
+                {
+                    if (myIndex == 0)
+                        marker.img_marker.color = Color.red;
+                    else
+                        marker.img_marker.color = Color.blue;
+                }
+                break;
+        }
+    }
 
     private void Initialization_HP()
     {
         hp = new _IMG_HP_INFO[GameManager.instance.gameInfo.maxPlayer];
-        hpAddPos = new Vector3(0, 2.1f, 1.3f);
+        hpAddPos = new Vector3(0, 2.1f, 1.35f);
         curHpCor = null;
 
         for (int i = 0; i < hp.Length; i++)

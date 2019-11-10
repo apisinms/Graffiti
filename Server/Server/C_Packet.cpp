@@ -57,6 +57,8 @@ void C_Packet::SetPacket(__int64& _protocol, char* _setBuf, int _packetSize)
 	ptr->sendBytes = size;
 	memcpy(ptr->sendBuf, encryptBuf, size);
 
+	///////////// push하기 전에 동기화! 중요!
+	C_Socket::IC_CS socketCS;	
 	sendQueue.push(ptr);	// 큐에 넣어주도록 한다.
 
 	// (동기)마지막으로 암호화된 encryptBuf를 sendBuf에 저장한다.

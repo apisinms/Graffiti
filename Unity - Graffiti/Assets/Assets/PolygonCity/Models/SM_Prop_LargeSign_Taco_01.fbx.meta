@@ -77,7 +77,7 @@ ModelImporter:
     secondaryUVPackMargin: 4
     useFileScale: 1
   tangentSpace:
-    normalSmoothAngle: 5
+    normalSmoothAngle: 180
     normalImportMode: 1
     tangentImportMode: 1
     normalCalculationMode: 0

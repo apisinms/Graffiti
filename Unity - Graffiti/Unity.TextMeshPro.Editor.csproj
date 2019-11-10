@@ -684,12 +684,10 @@
     <None Include="Assets\KetosGames\SceneTransition\README.txt" />
     <None Include="Assets\KetosGames\SceneTransition\Shaders\Unlit Transparent HUD.shader" />
     <None Include="Assets\Modern UI Pack\Read Me.txt" />
+    <None Include="Assets\Outline\outlineShader.shader" />
     <None Include="Assets\ProDrawCallOptimizer\Examples\ExamplesReadme.txt" />
     <None Include="Assets\ProDrawCallOptimizer\README.txt" />
     <None Include="Assets\ProDrawCallOptimizer\VersionHistory.txt" />
-    <None Include="Assets\QuickOutline\Readme.txt" />
-    <None Include="Assets\QuickOutline\Resources\Shaders\OutlineFill.shader" />
-    <None Include="Assets\QuickOutline\Resources\Shaders\OutlineMask.shader" />
     <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
