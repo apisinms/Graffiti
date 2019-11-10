@@ -187,6 +187,12 @@ void MainManager::IOCP_Disconnected(void* _ptr)
 
 	C_ClientInfo* ptr = (C_ClientInfo*)_ptr;
 
+	// 주소 정보에 포트가 만약 0이라면 이미 지워져서 초기화 된 이후이다. 함수 빠져나간다.
+	if (ptr->GetAddress().sin_port == 0)
+	{
+		return;
+	}
+
 	// 접속 로그에 기록해줌
 	LogManager::GetInstance()->ConnectFileWrite("[TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",
 		inet_ntoa(ptr->GetAddress().sin_addr), ntohs(ptr->GetAddress().sin_port));
