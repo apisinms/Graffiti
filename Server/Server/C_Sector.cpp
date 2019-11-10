@@ -206,8 +206,7 @@ void C_Sector::Remove(C_ClientInfo* _player, INDEX _index)
 	sectors[_index.i][_index.j].playerList.remove(_player);
 }
 
-//////// private method
-byte C_Sector::FlagPlayerBit(vector<SectorInstance*>_enterSector)
+byte C_Sector::FlagPlayerBit(vector<SectorInstance*>&_enterSector)
 {
 	byte playerBit = 0;
 
@@ -243,6 +242,40 @@ byte C_Sector::FlagPlayerBit(vector<SectorInstance*>_enterSector)
 					break;
 				}
 			}
+		}
+	}
+
+	return playerBit;
+}
+
+byte C_Sector::FlagPlayerBit(list<C_ClientInfo*>& _playerList)
+{
+	byte playerBit = 0;
+
+	C_ClientInfo* otherPlayer = nullptr;
+	// 입장한 인접 섹터를 다 돌면서 어느 플레이어가 있는지 bit를 활성화 시킨다.
+	for (auto iter = _playerList.begin(); iter != _playerList.end(); ++iter)
+	{
+		otherPlayer = *iter;
+
+		// 플레이어 넘버를 읽어서 bit를 활성화 시킴(ex : 1011 << 1,3,4 플레이어가 같은 섹터에 있음)
+		switch (otherPlayer->GetPlayerInfo()->GetPlayerNum())
+		{
+		case 1:
+			playerBit |= PLAYER_1;
+			break;
+
+		case 2:
+			playerBit |= PLAYER_2;
+			break;
+
+		case 3:
+			playerBit |= PLAYER_3;
+			break;
+
+		case 4:
+			playerBit |= PLAYER_4;
+			break;
 		}
 	}
 

@@ -295,6 +295,8 @@ int C_Socket::CompleteRecv(int _completebyte)
 }
 bool C_Socket::WSA_Send(LPWSAOVERLAPPED_COMPLETION_ROUTINE _routine)
 {
+	IC_CS cs;	// 동기화!
+
 	int retval;
 	DWORD sendbytes;
 	DWORD flags = 0;
@@ -324,8 +326,12 @@ bool C_Socket::WSA_Send(LPWSAOVERLAPPED_COMPLETION_ROUTINE _routine)
 }
 int C_Socket::CompleteSend(int _completebyte)
 {
+	IC_CS cs;	// 동기화!
+
 	// que의 front 해서 (갖고온 놈의)compSendBytes == sendBytes라면 pop해준다.
 	// 여기에서 pop을 한다.
+
+	size_t size = sendQueue.size();
 	S_SendBuf* sendData = sendQueue.front();
 
 	sendData->compSendBytes += _completebyte;
