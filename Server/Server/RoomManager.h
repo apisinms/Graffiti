@@ -126,7 +126,7 @@ public:
 	vector<BuildingInfo*>& GetBuildings() { return buildings; }
 };
 
-class RoomManager
+class RoomManager : public C_SyncCS<RoomManager>
 {
 	//C_List<RoomInfo*>* roomList;
 	list<RoomInfo*> roomList;
@@ -146,6 +146,5 @@ public:
 	bool CreateRoom(list<C_ClientInfo*>&_players, int _numOfPlayer);
 	bool DeleteRoom(RoomInfo* _room);		// 타이머 핸들 살았는지 보고 지우기
 	bool OnlyDeleteRoom(RoomInfo* _room);	// 그냥 방만 지우기
-	bool LeaveAllPlayersInRoom(RoomInfo* _room);	// 방에 있는 모든 플레이어들 나가게
 	bool CheckLeaveRoom(C_ClientInfo* _ptr);
 };

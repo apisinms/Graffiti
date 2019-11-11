@@ -25,6 +25,7 @@ public class SetResultEnd : MonoBehaviour
     public TMP_Text[] deathCount;
     public TMP_Text[] captureCount;
     public Animator[] playersAnim;
+    public Animator[] am_sprEffect;
 
     private GAME_RESSULT result;
     int checkGameMode = 1;
@@ -34,7 +35,10 @@ public class SetResultEnd : MonoBehaviour
         redScore.target = 0;
         blueScore.target = 0;
 
-        if((int)C_Global.GameType._1vs1 == EndSceneManager.Instance.gameType)
+        am_sprEffect[0].transform.parent.gameObject.SetActive(false);
+        am_sprEffect[2].transform.parent.gameObject.SetActive(false);
+
+        if ((int)C_Global.GameType._1vs1 == EndSceneManager.Instance.gameType)
         {
             checkGameMode = 0;
         }
@@ -103,7 +107,7 @@ public class SetResultEnd : MonoBehaviour
                 {
                     if (EndSceneManager.Instance.playerNum[0] == 1 )
                     {
-                        result = GAME_RESSULT.REDWIN;
+                        result = GAME_RESSULT.REDWIN;                      
                     }
                     else if (EndSceneManager.Instance.playerNum[0] == 2)
                     {
@@ -141,30 +145,97 @@ public class SetResultEnd : MonoBehaviour
         switch(result)
         {
             case GAME_RESSULT.REDWIN:
-                resultRed.text = "Win!!";
-                resultBlue.text = "Lose";
-                playersAnim[0].SetTrigger("Win_1");
-                playersAnim[1].SetTrigger("Win_2");
+                {
+                    Debug.Log(EndSceneManager.Instance.myIndex);
 
-                playersAnim[2].SetTrigger("Lose_1");
-                playersAnim[3].SetTrigger("Lose_2");
+                    switch (EndSceneManager.Instance.gameType)
+                    {
+                        case (int)C_Global.GameType._1vs1:
+                            {
+                                if (EndSceneManager.Instance.myIndex == 0)
+                                    AudioManager.Instance.Play(0);
+                                else
+                                    AudioManager.Instance.Play(1);
+                            }
+                            break;
+                        case (int)C_Global.GameType._2vs2:
+                            {
+                                if (EndSceneManager.Instance.myIndex == 0 || EndSceneManager.Instance.myIndex == 1)
+                                    AudioManager.Instance.Play(0);
+                                else if (EndSceneManager.Instance.myIndex == 2 || EndSceneManager.Instance.myIndex == 3)
+                                    AudioManager.Instance.Play(1);
+                            }
+                            break;
+                    }
+
+                    resultRed.text = "Win!!";
+                    resultBlue.text = "Lose";
+
+                    playersAnim[0].SetTrigger("Win_1");
+                    playersAnim[1].SetTrigger("Win_2");
+                    playersAnim[2].SetTrigger("Lose_1");
+                    playersAnim[3].SetTrigger("Lose_2");
+
+                    am_sprEffect[0].transform.parent.gameObject.SetActive(true);
+                    am_sprEffect[2].transform.parent.gameObject.SetActive(true);
+                    am_sprEffect[0].SetTrigger("Win_1");
+                    am_sprEffect[1].SetTrigger("Win_1");
+                    am_sprEffect[2].SetTrigger("Lose_1");
+                    am_sprEffect[3].SetTrigger("Lose_1");
+                }
                 break;
+
             case GAME_RESSULT.DRAW:
-                resultRed.text = "Draw";
-                resultBlue.text = "Draw";
-                playersAnim[0].SetTrigger("Lose_1");
-                playersAnim[1].SetTrigger("Lose_1");
-                playersAnim[2].SetTrigger("Lose_1");
-                playersAnim[3].SetTrigger("Lose_1");
-                break;
-            case GAME_RESSULT.BLUEWIN:
-                resultRed.text = "Lose!!";
-                resultBlue.text = "Win";
-                playersAnim[0].SetTrigger("Lose_1");
-                playersAnim[1].SetTrigger("Lose_2");
+                {
+                    resultRed.text = "Draw";
+                    resultBlue.text = "Draw";
 
-                playersAnim[2].SetTrigger("Win_1");
-                playersAnim[3].SetTrigger("Win_2");
+                    playersAnim[0].SetTrigger("Lose_1");
+                    playersAnim[1].SetTrigger("Lose_1");
+                    playersAnim[2].SetTrigger("Lose_1");
+                    playersAnim[3].SetTrigger("Lose_1");
+                }
+                break;
+
+            case GAME_RESSULT.BLUEWIN:
+                {
+                    Debug.Log(EndSceneManager.Instance.myIndex);
+
+                    switch (EndSceneManager.Instance.gameType)
+                    {
+                        case (int)C_Global.GameType._1vs1:
+                            {
+                                if (EndSceneManager.Instance.myIndex == 1)
+                                    AudioManager.Instance.Play(0);
+                                else
+                                    AudioManager.Instance.Play(1);
+                            }
+                            break;
+                        case (int)C_Global.GameType._2vs2:
+                            {
+                                if (EndSceneManager.Instance.myIndex == 0 || EndSceneManager.Instance.myIndex == 1)
+                                    AudioManager.Instance.Play(1);
+                                else if (EndSceneManager.Instance.myIndex == 2 || EndSceneManager.Instance.myIndex == 3)
+                                    AudioManager.Instance.Play(0);
+                            }
+                            break;
+                    }
+
+                    resultRed.text = "Lose!!";
+                    resultBlue.text = "Win";
+
+                    playersAnim[0].SetTrigger("Lose_1");
+                    playersAnim[1].SetTrigger("Lose_2");
+                    playersAnim[2].SetTrigger("Win_1");
+                    playersAnim[3].SetTrigger("Win_2");
+
+                    am_sprEffect[0].transform.parent.gameObject.SetActive(true);
+                    am_sprEffect[2].transform.parent.gameObject.SetActive(true);
+                    am_sprEffect[0].SetTrigger("Lose_1");
+                    am_sprEffect[1].SetTrigger("Lose_1");
+                    am_sprEffect[2].SetTrigger("Win_1");
+                    am_sprEffect[3].SetTrigger("Win_1");
+                }
                 break;
         }
         //결과를 표시하기 위한 작업

@@ -192,7 +192,16 @@ bool RoomManager::DeleteRoom(RoomInfo* _room)
 
 bool RoomManager::OnlyDeleteRoom(RoomInfo* _room)
 {
+	IC_CS cs;
+
 	int beforeSize = (int)roomList.size();
+
+	// 0. 방에 있는 모든 플레이어들이 더이상 이 방의 포인터를 가리키지 않도록 함
+	for (auto iter = _room->GetPlayers().begin(); iter < _room->GetPlayers().end(); ++iter)
+	{
+		(*iter)->SetRoom(nullptr);
+		(*iter)->SetGameType(-1);
+	}
 
 	// 1. 방에 있는 건물들 싹 지움
 	for (auto iter = _room->GetBuildings().begin(); iter != _room->GetBuildings().end(); ++iter)
@@ -231,24 +240,10 @@ bool RoomManager::OnlyDeleteRoom(RoomInfo* _room)
 	return false;
 }
 
-bool RoomManager::LeaveAllPlayersInRoom(RoomInfo* _room)
-{
-	if (_room == nullptr)
-	{
-		return false;
-	}
-
-	// 한명씩 나감처리
-	for (int i = 0; i < _room->GetNumOfPlayer(); i++)
-	{
-		CheckLeaveRoom(_room->GetPlayerByIndex(i));
-	}
-
-	return true;
-}
-
 bool RoomManager::CheckLeaveRoom(C_ClientInfo* _ptr)
 {
+	IC_CS cs;
+
 	// 속한 방이 있다면
 	if (_ptr->GetRoom() != nullptr)
 	{

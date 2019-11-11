@@ -27,6 +27,9 @@ public class GameManager : MonoBehaviour
         public float respawnTime;     // 리스폰 시간
 
         [MarshalAs(UnmanagedType.R4)]
+        public float healPackTime;     // 체력킷 스폰 쿨타임
+
+        [MarshalAs(UnmanagedType.R4)]
         public float subSprayingTime; // 스프레이 전 시간
 
         [MarshalAs(UnmanagedType.R8)]

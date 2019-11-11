@@ -8,6 +8,7 @@ public class EndSceneManager : Singleton<EndSceneManager>
     public string[] nickName { get; set; }
     public NetworkManager.Score[] scores { get; set; }
     public int gameType { get; set; }
+    public int myIndex { get; set; }
 
 private void Start()
     {

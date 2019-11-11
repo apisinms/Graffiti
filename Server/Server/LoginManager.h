@@ -80,5 +80,5 @@ public:
 	bool CanILogin(C_ClientInfo* _ptr);		// 로그인이 되는지
 	//bool CanILogout(C_ClientInfo* _ptr);	// 로그아웃이 되는지
 
-	bool LoginListDelete(UserInfo* _ptr);	// 외부에서 호출하는, 로그인 목록에서 이 클라를 지워달라는 함수
+	bool LoginListDelete(C_ClientInfo* _ptr);	// 외부에서 호출하는, 로그인 목록에서 이 클라를 지워달라는 함수
 };

@@ -108,8 +108,10 @@ ScriptsOnlyBuild:
     UnityEditor.Graphs.dll:
     - UnityEditor.Graphs.AnimationBlendTree.Graph
     - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.AnyStateNode
     - UnityEditor.Graphs.AnimationStateMachine.Graph
     - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.StateNode
     - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.TestListCacheData
@@ -208,6 +210,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 74
       Script: {instanceID: 0}
+    - Class: 81
+      Script: {instanceID: 0}
     - Class: 90
       Script: {instanceID: 0}
     - Class: 91
@@ -235,9 +239,15 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 10116}
     - Class: 114
+      Script: {instanceID: 10142}
+    - Class: 114
+      Script: {instanceID: 10186}
+    - Class: 114
       Script: {instanceID: 10610}
     - Class: 114
       Script: {instanceID: 10794}
+    - Class: 114
+      Script: {instanceID: 10998}
     - Class: 114
       Script: {instanceID: 11086}
     - Class: 115
@@ -247,6 +257,8 @@ ScriptsOnlyBuild:
     - Class: 137
       Script: {instanceID: 0}
     - Class: 157
+      Script: {instanceID: 0}
+    - Class: 212
       Script: {instanceID: 0}
     - Class: 213
       Script: {instanceID: 0}
@@ -327,6 +339,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 10062}
     - Class: 114
       Script: {instanceID: 10142}
+    - Class: 114
+      Script: {instanceID: 10186}
     - Class: 114
       Script: {instanceID: 10224}
     - Class: 114
@@ -915,6 +929,8 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 10122}
     - Class: 114
+      Script: {instanceID: 10142}
+    - Class: 114
       Script: {instanceID: 10152}
     - Class: 114
       Script: {instanceID: 10172}
@@ -922,6 +938,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 10176}
     - Class: 114
       Script: {instanceID: 10178}
+    - Class: 114
+      Script: {instanceID: 10186}
     - Class: 114
       Script: {instanceID: 10204}
     - Class: 114
@@ -972,6 +990,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 10794}
     - Class: 114
       Script: {instanceID: 10970}
+    - Class: 114
+      Script: {instanceID: 10998}
     - Class: 114
       Script: {instanceID: 11100}
     - Class: 114
@@ -1884,7 +1904,7 @@ ScriptsOnlyBuild:
     className: MessageBoxExample
   - hash:
       serializedVersion: 2
-      Hash: 57cb4042a6ac17665526618bb145ae94
+      Hash: 7041f454d6c87c30ba8ac485979552f5
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: SetResultEnd
@@ -2848,6 +2868,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
+  - hash:
+      serializedVersion: 2
+      Hash: 5f7dc0ec4fa7611ba0b32da0469f3346
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: sample
   platform: 19
   scenePathNames:
   - Assets/Scenes/MainMenu.unity

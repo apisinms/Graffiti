@@ -116,12 +116,15 @@ public partial class BridgeClientToServer : MonoBehaviour
 
         playersManager.obj_players[_packet.playerNum - 1].transform.localPosition = tmpVec;
         playersManager.obj_players[_packet.playerNum - 1].transform.localEulerAngles = tmpAngle;
+
+        uiManager.OnPlayerUI(_packet.playerNum - 1);
     }
 
     // 섹터 아웃시
     public void ExitSectorProcess(ref IngamePacket _packet)
     {
         playersManager.obj_players[_packet.playerNum - 1].SetActive(false);   // 끄고
+        uiManager.OffPlayerUI(_packet.playerNum - 1);
     }
 
     public void UpdatePlayerProcess(byte _playerBit)
@@ -411,6 +414,7 @@ public partial class BridgeClientToServer : MonoBehaviour
                 break;
         }
 
+        AudioManager.Instance.Play(14); //캡처완료 두둥.
         UIManager.instance.txt_captureNotice.gameObject.SetActive(true); //셋팅한거 켜주고
         UIManager.instance.StartCoroutine(UIManager.instance.Cor_CheckCaptureNoticeTime()); // x초뒤에 캡처 알림 텍스트 셋엑티브펄스.
         UIManager.instance.isStartCaptureSubCor[_triggerIdx] = false; //서브코루틴 종료는 여기서 초기화되어야함. 메인캡처코루틴이 끝난후
@@ -464,7 +468,7 @@ public partial class BridgeClientToServer : MonoBehaviour
         }
     }
 
-    public void ScoreShowPrcess(ref int[] _playersNum, ref Score[] _scores)
+    public void ScoreShowProcess(ref int[] _playersNum, ref Score[] _scores)
     {
         /// 여기서 _scores 다음 씬까지 저장하고 알아서 EndScene에서 요리해라 광일아
         if (moveCor != null)
@@ -473,6 +477,7 @@ public partial class BridgeClientToServer : MonoBehaviour
         // 지워지지 않는 오브젝트로 정보 이동
         EndSceneManager.Instance.nickName = PlayersManager.instance.nickname;
         EndSceneManager.Instance.playerNum = _playersNum;
+        EndSceneManager.Instance.myIndex = GameManager.instance.myIndex;
         EndSceneManager.Instance.scores = new Score[4];
         for (int i = 0; i < _scores.Length; i++)
         {

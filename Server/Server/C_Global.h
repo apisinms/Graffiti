@@ -242,6 +242,7 @@ struct GameInfo
 	float maxSpeed;				// 최대 이동속도
 	float maxHealth;			// 최대 체력
 	float respawnTime;			// 리스폰 시간
+	float healPackTime;           //체력킷 리스폰 시간
 	float subSprayingTime;		// 스프레이 전 시간
 	float mainSprayingTime;		// 스프레이 시간
 	double gameTime;			// 게임 시간
@@ -252,7 +253,7 @@ struct GameInfo
 	{
 		gameType = maxPlayer = 0;
 		maxSpeed = maxHealth = 0.0f;
-		respawnTime = subSprayingTime = mainSprayingTime = 0.0f;
+		healPackTime = respawnTime = subSprayingTime = mainSprayingTime = 0.0f;
 		gameTime = 0.0;
 		killPoint = capturePoint = 0;
 	}

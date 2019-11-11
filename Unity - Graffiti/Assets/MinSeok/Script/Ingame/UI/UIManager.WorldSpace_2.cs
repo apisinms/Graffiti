@@ -246,6 +246,7 @@ public partial class UIManager : MonoBehaviour
             if (isStartSprayingCor[_triggerIdx] == true)
             {
                 isStartSprayingCor[_triggerIdx] = false;
+                AudioManager.Instance.Stop(13);
                 graffity[_triggerIdx].img_graffity.fillAmount = 0;
                 StopCoroutine(curSprayingCor[_triggerIdx]);
             }
@@ -310,6 +311,9 @@ public partial class UIManager : MonoBehaviour
                 }
                 break;
         }
+
+        if (_playerTag.Equals(GameManager.instance.myTag)) //내가 점령중일때만 스프레이 치이익.
+            AudioManager.Instance.Play(13); 
 
         while (true)
         {

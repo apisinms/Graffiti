@@ -10,6 +10,15 @@ public class AudioManager : Singleton<AudioManager>
     public static float OriginalBGMVolume = 0.3f;
 
     public List<BypassAudioSource> soundPool = new List<BypassAudioSource>();
+    private List<float> originVolume = new List<float>();
+
+    private void Start()
+    {
+        for(int i=0; i < soundPool.Count; i++)
+        {
+            originVolume.Add(soundPool[i].m_volume); // 사운드 스탑이 없어서 볼륨컨트롤을 위해 초기 음량을 저장.
+        }
+    }
 
     public void playBGM(int _index)
     {
@@ -18,9 +27,15 @@ public class AudioManager : Singleton<AudioManager>
         bgmPlayer.Play();
     }
 
-    public void Play(int index)
+    public void Play(int _index)
     {
-        soundPool[index].Play();
+        soundPool[_index].m_volume = originVolume[_index];
+        soundPool[_index].Play();     
+    }
+ 
+    public void Stop(int _index)
+    {
+        soundPool[_index].m_volume = 0.0f;
     }
 
     public static IEnumerator FadeOut(AudioSource _source, float _speed)

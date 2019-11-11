@@ -15,7 +15,9 @@ public class btn_start : UnityEngine.MonoBehaviour
 
 	public void BtnStart() //매칭버튼 눌렀을때.
 	{
-		flag = 1 - flag;
+        AudioManager.Instance.Play(0); //클릭음
+
+        flag = 1 - flag;
 
 		if (flag == 0)
 		{

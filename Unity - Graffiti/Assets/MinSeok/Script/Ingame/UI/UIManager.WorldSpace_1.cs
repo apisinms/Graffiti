@@ -400,6 +400,7 @@ public partial class UIManager : MonoBehaviour
             if (isStartCaptureSubCor[_triggerIdx] == true)
             {
                 isStartCaptureSubCor[_triggerIdx] = false;
+                AudioManager.Instance.Stop(12);
                 captureGageSub[_triggerIdx].img_captureSub.fillAmount = 1;
                 captureGageSub[_triggerIdx].obj_parent.SetActive(false);
                 StopCoroutine(curCaptureSubCor[_triggerIdx]);
@@ -415,6 +416,9 @@ public partial class UIManager : MonoBehaviour
         isStartCaptureSubCor[_triggerIdx] = true;
 
         captureGageSub[_triggerIdx].obj_parent.SetActive(true);
+
+        if (_playerTag.Equals(GameManager.instance.myTag)) //나일때만 스프레이 뚜껑따는 사운드재생
+            AudioManager.Instance.Play(12);
 
         while (true)
         {
@@ -580,7 +584,7 @@ public partial class UIManager : MonoBehaviour
 
     public IEnumerator Cor_CheckCaptureNoticeTime()
     {
-        yield return YieldInstructionCache.WaitForSeconds(2.0f);
+        yield return YieldInstructionCache.WaitForSeconds(2.5f);
         UIManager.instance.txt_captureNotice.gameObject.SetActive(false);
         yield break;
     }

@@ -40,23 +40,30 @@ namespace AndroidAudioBypass {
 
         private int m_soundId;
 
-        public void Start() {
-            if (String.IsNullOrEmpty(m_audioFile)) {
+        public void Start()
+        {
+            if (String.IsNullOrEmpty(m_audioFile))
+            {
                 Debug.LogError("Audio file not specified in " + gameObject.name);
                 return;
             }
+
             m_soundId = m_bypassAudioManager.RegisterSoundFile(m_audioFile);
 
-            if (m_playOnAwake) {
+            if (m_playOnAwake)
+            {
                 Play();
             }
         }
 
-        public void Play() {
-            if (m_rate < 0.5f) {
+        public void Play()
+        {
+            if (m_rate < 0.5f)
+            {
                 m_rate = 0.5f;
             }
-            if (m_rate > 2.0f) {
+            if (m_rate > 2.0f)
+            {
                 m_rate = 2.0f;
             }
 

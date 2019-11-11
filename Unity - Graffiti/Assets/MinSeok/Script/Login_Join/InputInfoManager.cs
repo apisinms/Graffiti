@@ -37,6 +37,7 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
 
     public void EnablePanel(int _type) //로그인창이냐 회원가입창이냐.
     {
+        AudioManager.Instance.Play(0); //클릭음
 
         switch (_type)
         {
@@ -101,6 +102,8 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
 
     public void BtnEnterLogin() //로그인 정보 입력후 확인버튼
     {
+        AudioManager.Instance.Play(0); //클릭음
+
         //공백이 없을시에만
         if (inputField_login_id.text.Length == 0 || inputField_login_pw.text.Length == 0)
         {
@@ -173,6 +176,8 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
 
     public void BtnEnterJoin() //회원가입 정보 입력후 확인버튼
     {
+        AudioManager.Instance.Play(0); //클릭음
+
         //공백이 없을시에만
         if (inputField_join_id.text.Length == 0 || inputField_join_pw.text.Length == 0 || inputField_join_nick.text.Length == 0)
         {
@@ -240,12 +245,15 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
 
     public void BtnQuit() //로그인 패널에서 종료를 누르면
     {
+        AudioManager.Instance.Play(0); //클릭음
         networkManager.Disconnect();
         Application.Quit();
     }
 
     public void GuestJoin()   // 게스트 회원가입
     {
+        AudioManager.Instance.Play(0); //클릭음
+
         // 게스트용 랜덤 ID, PW, NickName을 얻어온다.
         guestID = MakeGuestInfo("GuestID_");
         guestPW = MakeGuestInfo();

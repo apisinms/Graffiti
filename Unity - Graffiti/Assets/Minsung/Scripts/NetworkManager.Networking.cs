@@ -284,7 +284,7 @@ public partial class NetworkManager : MonoBehaviour
                                                     UnPackPacket(info[i].packet, out time);
                                                     bridge.TimeSync(GameManager.instance.gameInfo.gameTime - time);
 
-                                                    Debug.Log("현재 인게임 시간" + time);
+                                                    //Debug.Log("현재 인게임 시간" + time);
                                                 }
                                             }
                                             break;
@@ -642,7 +642,7 @@ public partial class NetworkManager : MonoBehaviour
                                                     UnPackPacket(info[i].packet, ref playersNum, ref scores);
 
                                                     // 받은 스코어 넘기고, 게임 종료 처리
-                                                    bridge.ScoreShowPrcess(ref playersNum, ref scores);
+                                                    bridge.ScoreShowProcess(ref playersNum, ref scores);
                                                 }
                                             }
                                             break;

@@ -162,15 +162,16 @@ GameInfo* DatabaseManager::LoadGameInfo()
 		memset(&info, 0, sizeof(GameInfo));
 
 		info.gameType         = atoi(row[0]);
-		info.maxPlayer        = atoi(row[1]);
+		info.maxPlayer         = atoi(row[1]);
 		info.maxSpeed         = (float)atof(row[2]);
 		info.maxHealth        = (float)atof(row[3]);
 		info.respawnTime      = (float)atoi(row[4]);
-		info.subSprayingTime  = (float)atof(row[5]);
-		info.mainSprayingTime = (float)atof(row[6]);
-		info.gameTime         = atoi(row[7]);
-		info.killPoint        = atoi(row[8]);
-		info.capturePoint     = atoi(row[9]);
+		info.healPackTime     = (float)atoi(row[5]);
+		info.subSprayingTime  = (float)atof(row[6]);
+		info.mainSprayingTime = (float)atof(row[7]);
+		info.gameTime         = atoi(row[8]);
+		info.killPoint        = atoi(row[9]);
+		info.capturePoint     = atoi(row[10]);
 
 		// 동적 할당 후 리턴
 		GameInfo* ptr = new GameInfo(info);

@@ -54,6 +54,8 @@ namespace Michsky.UI.ModernUIPack
 
         public void PreviousClick()
         {
+            AudioManager.Instance.Play(0); //클릭음
+
             if (loopSelection == false)
             {
                 if (index != 0)
@@ -108,13 +110,14 @@ namespace Michsky.UI.ModernUIPack
                 if (saveValue == true)
                     PlayerPrefs.SetInt(selectorTag + "HSelectorValue", index);
 
-
 				NetworkManager.instance.selectMatch ^= 1;	// 토글
 			}
         }
 
         public void ForwardClick()
         {
+            AudioManager.Instance.Play(0); //클릭음
+
             if (loopSelection == false)
             {
                 if (index != itemList.Count - 1)
