@@ -41,6 +41,24 @@ public class btn_start : UnityEngine.MonoBehaviour
 		}
 	}
 
+	private void OnApplicationPause(bool pause)
+	{
+#if NETWORK
+		// 포커스 잃는다면
+		if (pause == true)
+		{
+			if (flag == 0)
+			{
+				NetworkManager.instance.MayICancelMatch();  // 매칭 취소가 가능한지 서버로 전송
+				StartCoroutine(CheckMatchCancel());         // 매칭 취소 결과 받을 때까지 코루틴 돌림
+
+				flag = 1 - flag;
+			}
+		}
+#endif
+	}
+
+
 	private IEnumerator CheckMatch()
 	{
 		while (true)

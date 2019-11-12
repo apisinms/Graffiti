@@ -246,20 +246,22 @@ public partial class UIManager : MonoBehaviour
                     timer.txt_gameTime.color = Color.red;
                     timer.img_outline.color = Color.red;
 
-                    /*
                     AudioSource source = GameObject.Find("AudioManager").GetComponent<AudioSource>();
                     if (source != null)
                     {
-                        StartCoroutine(AudioManager.FadeOut(source, 0.0016f));
-                    }
-                    */
-                    AudioManager.Instance.playBGM(0);
+                        StartCoroutine(AudioManager.FadeOutInGameBGM(source, 0.0016f));
+						//Invoke("AudioManage.Instance.playBGM", 1.5f);
+					}
                 }
             }
 
-            timer.txt_gameTime.text = ((int)min).ToString() + " : " + sec.ToString("00");
+			if (timer.txt_gameTime.text != null
+				&& UIManager.instance != null)
+			{
+				timer.txt_gameTime.text = ((int)min).ToString() + " : " + sec.ToString("00");
+			}
 
-            yield return null;
+			yield return null;
         }
     }
 

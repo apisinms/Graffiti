@@ -46,8 +46,10 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
                 {
                     panel_join.SetActive(false);
 
-                    // 게스트 로그인 버튼 켜주기 
+                    // 게스트 로그인, 회원가입, 로그인 버튼 켜주기 
                     btn_GuestLogin.gameObject.SetActive(true);
+					btn_join_enter.gameObject.SetActive(true);
+					btn_login_enter.gameObject.SetActive(true);
 
                 }
                 else if (panel_login.gameObject.activeSelf == true) // 로그인 창이 켜져있다면
@@ -58,8 +60,11 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
                     inputField_join_id.text = "";
                     inputField_join_pw.text = "";
                     txt_join_result.text = "";
+
                     btn_GuestLogin.gameObject.SetActive(false);
-                }
+					btn_join_enter.gameObject.SetActive(false);
+					btn_login_enter.gameObject.SetActive(false);
+				}
                 else
                 {
                     inputField_join_nick.text = "";
@@ -67,8 +72,11 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
                     inputField_join_pw.text = "";
                     txt_join_result.text = "";
                     panel_join.SetActive(true);
+
                     btn_GuestLogin.gameObject.SetActive(false);
-                }
+					btn_join_enter.gameObject.SetActive(false);
+					btn_login_enter.gameObject.SetActive(false);
+				}
                 break;
             case 2: //로그인 창 클릭
                 if (panel_login.gameObject.activeSelf == true) // 로그인 창이 이미 켜져있다면
@@ -77,7 +85,9 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
 
                     // 게스트 로그인 버튼 켜주기 
                     btn_GuestLogin.gameObject.SetActive(true);
-                }
+					btn_join_enter.gameObject.SetActive(true);
+					btn_login_enter.gameObject.SetActive(true);
+				}
                 else if (panel_join.gameObject.activeSelf == true) // 가입창이 켜져있다면
                 {
                     panel_join.SetActive(false);
@@ -85,17 +95,23 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
                     inputField_login_id.text = "";
                     inputField_login_pw.text = "";
                     txt_login_result.text = "";
-                    btn_GuestLogin.gameObject.SetActive(false);
 
-                }
+                    btn_GuestLogin.gameObject.SetActive(false);
+					btn_join_enter.gameObject.SetActive(false);
+					btn_login_enter.gameObject.SetActive(false);
+
+				}
                 else
                 {
                     inputField_login_id.text = "";
                     inputField_login_pw.text = "";
                     txt_login_result.text = "";
                     panel_login.SetActive(true);
+
                     btn_GuestLogin.gameObject.SetActive(false);
-                }
+					btn_join_enter.gameObject.SetActive(false);
+					btn_login_enter.gameObject.SetActive(false);
+				}
                 break;
         }
     }
@@ -159,6 +175,8 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
                 //로그인이 성공하면 아래작성
                 else if (networkManager.CheckLoginSuccess() == true)
                 {
+					panel_login.gameObject.SetActive(false);
+
                     AudioSource source = GameObject.Find("AudioManager").GetComponent<AudioSource>();
                     if (source != null)
                     {
@@ -168,7 +186,7 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
                     SceneLoader.LoadScene("Lobby");
                 }
 
-                btn_login_enter.SetActive(true);   // 버튼 다시 원상 복구
+                //btn_login_enter.SetActive(true);   // 버튼 다시 원상 복구
                 yield break;
             }
         }
@@ -237,7 +255,7 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
                     txt_join_result.text = retMsg;
                 }
 
-                btn_join_enter.SetActive(true); // 버튼 원복
+                //btn_join_enter.SetActive(true); // 버튼 원복
                 yield break;
             }
         }

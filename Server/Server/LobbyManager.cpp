@@ -110,6 +110,12 @@ LobbyManager::PROTOCOL_LOBBY LobbyManager::GetBufferAndProtocol(C_ClientInfo* _p
 // 매칭할 수 있는지
 bool LobbyManager::CanIMatch(C_ClientInfo* _ptr)
 {
+	if (_ptr == nullptr)
+	{
+		printf("CanIMatch() 플레이어 nullptr!\n");
+		return false;
+	}
+
 	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
 	PROTOCOL_LOBBY protocol = GetBufferAndProtocol(_ptr, buf);
 
@@ -141,6 +147,13 @@ bool LobbyManager::CanIMatch(C_ClientInfo* _ptr)
 // 매칭 취소 할 수 있는지
 bool LobbyManager::CanICancelMatch(C_ClientInfo* _ptr)
 {
+	if (_ptr == nullptr )
+	{
+		printf("CanICancelMatch() 플레이어 nullptr!\n");
+		return false;
+	}
+
+
 	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
 	PROTOCOL_LOBBY protocol = GetBufferAndProtocol(_ptr, buf);
 
@@ -182,12 +195,24 @@ bool LobbyManager::CanILeaveLobby(C_ClientInfo* _ptr)
 // 게임을 시작할 수 있는지
 bool LobbyManager::CanIGotoInGame(C_ClientInfo* _ptr)
 {
+	if (_ptr == nullptr)
+	{
+		printf("CanIGotoIngame() 플레이어 nullptr!\n");
+		return false;
+	}
+
 	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
 	PROTOCOL_LOBBY protocol = GetBufferAndProtocol(_ptr, buf);
 
 	// 만약 4인 매칭이 성공하여 성공했던 클라가 나에게 시작 프로토콜을 보낸다면 인게임의 무기선택 창으로 들어가야한다.
 	if (protocol == GOTO_INGAME_PROTOCOL)
 	{
+		if (_ptr->GetRoom() == nullptr)
+		{
+			printf("CanIGotoIngame() 방이 nullptr!\n");
+			return false;
+		}
+
 		printf("%d인 매칭성공\n", _ptr->GetRoom()->GetMaxPlayer());
 
 		// 만약 방이 생성되고 아무런 진행도 하지 않았다면

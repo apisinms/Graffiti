@@ -43,8 +43,8 @@ public class SetResultEnd : MonoBehaviour
             checkGameMode = 0;
         }
 
-        for (int i = 0; i < EndSceneManager.Instance.playerNum.Length; i++)
-        {
+		for (int i = 0; i < EndSceneManager.Instance.playerNum.Length; i++)
+		{
             nickName[EndSceneManager.Instance.playerNum[i] - checkGameMode].text =
                 EndSceneManager.Instance.nickName[EndSceneManager.Instance.playerNum[i] - 1];
 
@@ -57,7 +57,15 @@ public class SetResultEnd : MonoBehaviour
             captureCount[EndSceneManager.Instance.playerNum[i] - checkGameMode].text =
                 EndSceneManager.Instance.scores[EndSceneManager.Instance.playerNum[i] - 1].captureCount.ToString();
 
-            player[EndSceneManager.Instance.playerNum[i] - checkGameMode].SetActive(true);
+			// 본인 닉네임만 볼드처리
+			if (nickName[EndSceneManager.Instance.playerNum[i] - checkGameMode].text
+				== NetworkManager.instance.NickName)
+			{
+				nickName[EndSceneManager.Instance.playerNum[i] - checkGameMode].fontStyle = FontStyles.Bold;
+				nickName[EndSceneManager.Instance.playerNum[i] - checkGameMode].color = Color.yellow;
+			}
+
+			player[EndSceneManager.Instance.playerNum[i] - checkGameMode].SetActive(true);
             switch (EndSceneManager.Instance.gameType)
             {
                 case (int)C_Global.GameType._1vs1:
@@ -87,7 +95,6 @@ public class SetResultEnd : MonoBehaviour
                     break;
             }
         }
-
 
         // 2초후 ActiveTrue
         Invoke("SetResult", 2.0f);

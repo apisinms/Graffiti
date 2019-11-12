@@ -65,6 +65,12 @@ void MatchManager::WaitListRemove(C_ClientInfo* _ptr)
 
 bool MatchManager::MatchProcess(C_ClientInfo* _ptr)
 {
+	if (_ptr == nullptr)
+	{
+		printf("MatchProcess() ptrÀÌ nullÀÓ\n");
+		return false;
+	}
+
 	IC_CS cs;
 
 	int gameType = _ptr->GetGameType();

@@ -20,7 +20,7 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
 
-    public void playBGM(int _index)
+    public void playBGM(int _index = 0)
     {
         bgmPlayer.Stop();
         bgmPlayer.clip = bgmClip[_index];
@@ -42,11 +42,15 @@ public class AudioManager : Singleton<AudioManager>
     {
         while (true)
         {
+			if(_source == null)
+			{
+				yield break;
+			}
+
             if (_source.volume <= 0.0f)
             {
-                Debug.Log("페이드아웃 탈출");
-                yield break;
-            }
+				yield break;
+			}
 
             _source.volume -= _speed;
             yield return null;
@@ -58,11 +62,34 @@ public class AudioManager : Singleton<AudioManager>
         _source.volume = 0.0f;
         while (true)
         {
-            if (_source.volume >= OriginalBGMVolume)
+			if (_source == null)
+				yield break;
+
+			if (_source.volume >= OriginalBGMVolume)
                 yield break;
 
             _source.volume += _speed;
             yield return null;
         }
     }
+
+	public static IEnumerator FadeOutInGameBGM(AudioSource _source, float _speed)
+	{
+		_source.volume = OriginalBGMVolume;
+		while (true)
+		{
+			if (_source == null)
+				yield break;
+
+			if (_source.volume <= 0.0f)
+			{
+				_source.volume = OriginalBGMVolume;
+				Instance.playBGM(0);
+				yield break;
+			}
+
+			_source.volume -= _speed;
+			yield return null;
+		}
+	}
 }

@@ -26,7 +26,7 @@ public partial class BridgeClientToServer : MonoBehaviour
 
 #if NETWORK
       //////////////// 게임 시작 시 최초로 1회 내 위치정보를 서버로 전송해야함 /////////////////
-      networkManager.SendIngamePacket(true);
+      //networkManager.SendIngamePacket(true);
 #endif
 
 #if !NETWORK

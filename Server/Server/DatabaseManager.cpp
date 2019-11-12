@@ -162,7 +162,7 @@ GameInfo* DatabaseManager::LoadGameInfo()
 		memset(&info, 0, sizeof(GameInfo));
 
 		info.gameType         = atoi(row[0]);
-		info.maxPlayer         = atoi(row[1]);
+		info.maxPlayer        = atoi(row[1]);
 		info.maxSpeed         = (float)atof(row[2]);
 		info.maxHealth        = (float)atof(row[3]);
 		info.respawnTime      = (float)atoi(row[4]);
