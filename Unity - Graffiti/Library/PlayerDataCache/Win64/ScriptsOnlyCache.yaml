@@ -96,6 +96,7 @@ ScriptsOnlyBuild:
     - btn_option
     - btn_start
     PathCreator.dll:
+    - PathCreation.GlobalDisplaySettings
     - PathCreation.PathCreator
     Unity.TextMeshPro.dll:
     - TMPro.TMP_FontAsset

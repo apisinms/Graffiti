@@ -1612,11 +1612,6 @@ C:\Users\kgl87\OneDrive\문서\GitHub\민석\Graffiti\UNITY-~1\obj\Debug\Assembl
 C:\Users\kgl87\OneDrive\문서\GitHub\민석\Graffiti\UNITY-~1\obj\Debug\Assembly-CSharp.csproj.CopyComplete
 C:\Users\kgl87\OneDrive\문서\GitHub\민석\Graffiti\UNITY-~1\obj\Debug\Assembly-CSharp.dll
 C:\Users\kgl87\OneDrive\문서\GitHub\민석\Graffiti\UNITY-~1\obj\Debug\Assembly-CSharp.pdb
-C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\Boo.Lang.dll
-C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEditor.UI.dll
-C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\PathCreator.pdb
-C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\PathCreatorEditor.pdb
-C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEditor.UI.xml
 D:\Projects\Unity - Graffiti\Temp\bin\Debug\Assembly-CSharp.dll
 D:\Projects\Unity - Graffiti\Temp\bin\Debug\Assembly-CSharp.pdb
 D:\Projects\Unity - Graffiti\Temp\bin\Debug\Microsoft.Win32.Primitives.dll
@@ -2444,3 +2439,8 @@ D:\Project\Unity - Graffiti\Unity - Graffiti\obj\Debug\Assembly-CSharp.csproj.Co
 D:\Project\Unity - Graffiti\Unity - Graffiti\obj\Debug\Assembly-CSharp.csproj.CopyComplete
 D:\Project\Unity - Graffiti\Unity - Graffiti\obj\Debug\Assembly-CSharp.dll
 D:\Project\Unity - Graffiti\Unity - Graffiti\obj\Debug\Assembly-CSharp.pdb
+C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\Boo.Lang.dll
+C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEditor.UI.dll
+C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\PathCreator.pdb
+C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\PathCreatorEditor.pdb
+C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEditor.UI.xml

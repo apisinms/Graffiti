@@ -501,11 +501,12 @@ bool InGameManager::UpdateProcess(C_ClientInfo* _ptr, char* _buf)
 	IngamePacket recvPacket;
 	UnPackPacket(_buf, recvPacket);
 
-	// 1. 움직임 검사(false이면 불법 움직임은 false리턴)
-	CheckMovement(_ptr, recvPacket);
-
-	// 2. 총알 검사
-	CheckBullet(_ptr, recvPacket);
+	// 1. 총알 검사
+	if (CheckBullet(_ptr, recvPacket) == false)
+	{
+		// 2. 움직임 검사(false이면 불법 움직임은 false리턴)
+		CheckMovement(_ptr, recvPacket);
+	}
 
 	return true;   // 걍 다 true여
 }
@@ -952,6 +953,8 @@ void InGameManager::InitalizePlayersInfo(RoomInfo* _room)
 
 bool InGameManager::CheckMovement(C_ClientInfo* _ptr, IngamePacket& _recvPacket)
 {
+	//IC_CS cs;
+
 	PROTOCOL_INGAME protocol;
 	char buf[BUFSIZE] = { 0, };
 	int packetSize = 0;
@@ -1159,7 +1162,7 @@ void InGameManager::UpdatePlayerList(vector<C_ClientInfo*>& _players, C_ClientIn
 /// about bullet
 bool InGameManager::CheckBullet(C_ClientInfo* _ptr, IngamePacket& _recvPacket)
 {
-	IC_CS cs;
+	//IC_CS cs;
 
 	vector<C_ClientInfo*> hitPlayers;	// _ptr의 총에 맞은놈들 리스트
 
@@ -1198,21 +1201,22 @@ bool InGameManager::CheckBulletRange(C_ClientInfo* _shotPlayer, C_ClientInfo* _h
 bool InGameManager::CheckMaxFire(C_ClientInfo* _shotPlayer, int _numOfBullet)
 {
 	WeaponInfo* shotPlayerWeapon = weaponInfo[_shotPlayer->GetPlayerInfo()->GetWeapon()->mainW];
-	bool result = false;
+	/*bool result = false;
 
+	// 이 부분은 2명 이상의 플레이어가 쏴서 맞은 경우에 무효가 될 수 있으니 일단 보류한다.
 	// 원래 0.1초당 나갈 수 있는 발 수를 계산해서 검사해야하지만 최소 1발(정수)은 보장해야하기 때문에 간단히 검사함
 	if ((_numOfBullet <= shotPlayerWeapon->bulletPerShot) && (_numOfBullet > 0))
 	{
 		result = true;
-	}
+	}*/
 
-	return result;
+	//return result;
+	return true;
 }
 int InGameManager::GetNumOfBullet(int _shootCountBit, byte _hitPlayerNum)
 {
 	int shifter = 0;
 	int bulletCount = 0;
-	int TEMP_MAX_PLAYER = 4;
 	byte bitMask = 0xFF;			// 8비트 지우기 마스크(1111 1111)
 
 	// 0이 매개변수로 넘어오면 발사된 전체 총알 갯수를 달라는 의미다.
@@ -1240,14 +1244,19 @@ int InGameManager::GetNumOfBullet(int _shootCountBit, byte _hitPlayerNum)
 
 	return bulletCount;
 }
-bool InGameManager::BulletHitProcess(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer, int _numOfBullet)
+bool InGameManager::BulletHitProcess(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer, int _numOfBullet, float _nowHealth)
 {
 	WeaponInfo* shotPlayerWeapon = weaponInfo[_shotPlayer->GetPlayerInfo()->GetWeapon()->mainW];
 	float originalHealth = _hitPlayer->GetPlayerInfo()->GetIngamePacket()->health;
 	float totalDamage = (shotPlayerWeapon->damage * _numOfBullet);
 
-	// 이미 피 0이면 걍 나감
+	// 이미 피 0이거나, 이전에 쏜 총알일 경우 피가 더 적다. 이런 경우에 그냥 빠져나간다.
 	if (originalHealth == 0)
+	{
+		return false;
+	}
+
+	if (_nowHealth > originalHealth)
 	{
 		return false;
 	}
@@ -1318,6 +1327,8 @@ bool InGameManager::CheckBulletHitAndGetHitPlayers(C_ClientInfo* _ptr, IngamePac
 			// 플레이어 비트가 활성화 되어 있으면
 			if ((bitMask & _recvPacket.collisionCheck.playerBit) > 0)
 			{
+				C_ClientInfo* hitPlayer = _ptr->GetRoom()->GetPlayerByPlayerNum(i + 1);	// 받은 플레이어 포인터를 얻는다.
+
 				// 같은 팀이면 맞았어도 걍 무시
 				if (CheckSameTeam(_ptr, (i + 1)) == true)
 				{
@@ -1332,13 +1343,11 @@ bool InGameManager::CheckBulletHitAndGetHitPlayers(C_ClientInfo* _ptr, IngamePac
 				}
 
 				// 유효한 발 수라면 사정거리 검사 -> 총알 개수 감소 -> 실제 데미지 적용 순으로 간다.
-				C_ClientInfo* hitPlayer = _ptr->GetRoom()->GetPlayerByPlayerNum(i + 1);	// 플레이어 번호로 찾자
-
 				// 사정거리 검사해서 거리이내라면 데미지를 입힌다.
 				if (CheckBulletRange(_ptr, hitPlayer) == true)
 				{
-					// 이전 피가 이미 0이라면 검사없이 그냥 넘어간다.
-					if (BulletHitProcess(_ptr, hitPlayer, numOfBullet) == false)
+					// 이전 피가 이미 0이거나 지금보다 낮은 체력이면 빠져나간다.
+					if (BulletHitProcess(_ptr, hitPlayer, numOfBullet, _recvPacket.collisionCheck.healths.health[i]) == false)
 					{
 						continue;
 					}
@@ -2077,7 +2086,7 @@ void InGameManager::WeaponTimerChecker(RoomInfo* _room)
 	double weaponTimeElapsedSec = _room->GetInGameTimer()->ElapsedSeconds();
 
 	// 만약 아이템 선택시간(상수)을 넘었다면 무기를 보내라고 프로토콜을 보내준다.
-	if (weaponTimeElapsedSec >= WEAPON_SELTIME)
+	if ((int)weaponTimeElapsedSec >= WEAPON_SELTIME)
 	{
 		// 무기 정보를 얻어오기위한 프로토콜 조립
 		protocol = SetProtocol(

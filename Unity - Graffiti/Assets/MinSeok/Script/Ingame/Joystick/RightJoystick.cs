@@ -49,6 +49,7 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
             return;
 
 #if NETWORK
+
 		// 처음 터치할 때만
 		if (LeftJoystick.LeftTouch == false && RightJoystick.RightTouch == false)
 			BridgeClientToServer.instance.StartMoveCor();

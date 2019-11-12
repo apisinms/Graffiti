@@ -124,7 +124,7 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
                 yield break;
             }
 
-            yield return YieldInstructionCache.WaitForSeconds(weaponManager.weaponInfoSMG.fireRate);
+			yield return YieldInstructionCache.WaitForSeconds(weaponManager.weaponInfoSMG.fireRate);
         }
     }
 

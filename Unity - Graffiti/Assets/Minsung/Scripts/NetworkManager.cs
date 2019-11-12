@@ -206,8 +206,15 @@ public partial class NetworkManager : MonoBehaviour
         }
     };
 
-    // 총알 충돌 검사 구조체
-    [StructLayout(LayoutKind.Sequential)]
+	[StructLayout(LayoutKind.Sequential)]
+	public struct HitPlayersHealth
+	{
+		[MarshalAs(UnmanagedType.ByValArray, SizeConst = C_Global.MAX_CHARACTER)]
+		public float[] health;
+	};
+
+	// 총알 충돌 검사 구조체
+	[StructLayout(LayoutKind.Sequential)]
     public struct BulletCollisionChecker
     {
         [MarshalAs(UnmanagedType.I1)]
@@ -216,13 +223,22 @@ public partial class NetworkManager : MonoBehaviour
         [MarshalAs(UnmanagedType.I4)]
         public int playerHitCountBit;
 
-        private static BulletCollisionChecker dummy = new BulletCollisionChecker();
+		public HitPlayersHealth healths;
+
+		private static BulletCollisionChecker dummy = new BulletCollisionChecker(C_Global.MAX_CHARACTER);
         public static BulletCollisionChecker GetDummy()
         {
             return dummy;
         }
 
-        public byte[] Serialize()
+		public BulletCollisionChecker(int _MAX_CHARACTER)
+		{
+			playerBit = 0;
+			playerHitCountBit = 0;
+			healths.health = new float[_MAX_CHARACTER];
+		}
+
+		public byte[] Serialize()
         {
             // allocate a byte array for the struct data
             var buffer = new byte[Marshal.SizeOf(typeof(BulletCollisionChecker))];

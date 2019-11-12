@@ -7,7 +7,7 @@
 #define TIMER_INTERVAL	50	// 타이머 간격
 #define TIMER_INTERVAL_TIMES_MILLISEC	(TIMER_INTERVAL * 0.001)	// 타이머 간격 * 밀리초단위
 
-#define WEAPON_SELTIME			10 + 3			// 무기 선택 시간(3초 정도는 로딩 + 클라 Invoke 시간 고려)
+#define WEAPON_SELTIME			5 + 3			// 무기 선택 시간(3초 정도는 로딩 + 클라 Invoke 시간 고려)
 #define CAR_SPAWN_TIME_2vs2_SEC	5				// 차 생성 주기(2vs2)
 #define CAR_SPAWN_TIME_1vs1_SEC	7 				// 차 생성 주기(1vs1)
 #define CAPTURE_BONUS_TIME_SEC	10 				// 점령 보너스 시간 주기
@@ -146,7 +146,7 @@ private:
 	bool CheckBulletRange(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer);
 	bool CheckMaxFire(C_ClientInfo* _shotPlayer, int _numOfBullet);
 	int GetNumOfBullet(int _shootCountBit, byte _hitPlayerNum);
-	bool BulletHitProcess(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer, int _numOfBullet);
+	bool BulletHitProcess(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer, int _numOfBullet, float _nowHealth);
 	void BulletDecrease(C_ClientInfo* _shotPlayer, int _numOfBullet);
 	bool CheckBulletHitAndGetHitPlayers(C_ClientInfo* _ptr, IngamePacket& _recvPacket, vector<C_ClientInfo*>& _hitPlayers);
 	void BulletHitSend(C_ClientInfo* _shotPlayer, const vector<C_ClientInfo*>& _hitPlayers);
