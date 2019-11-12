@@ -11,7 +11,7 @@ class DatabaseManager : public C_SyncCS<DatabaseManager>
 {
 private:
 	const char* USERID = "root";
-	const char* PASSWORD = "1234";
+	const char* PASSWORD = "GomBangDae!@#$";
 	const char* HOSTIP = "localhost";
 	const char* DBNAME = "db_graffiti";
 	const unsigned int PORT = 3306;
