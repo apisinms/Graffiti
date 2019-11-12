@@ -1,4 +1,5 @@
 ﻿
+using KetosGames.SceneTransition;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -201,9 +202,6 @@ public class GameManager : MonoBehaviour
     public void LoadingComplete()
     {
 #if NETWORK
-      //////////////// 게임 시작 시 최초로 1회 내 위치정보를 서버로 전송해야함 /////////////////
-      NetworkManager.instance.SendIngamePacket(true);
-
       // 1. 안들어온 놈들 꺼준다.
       GameObject notConnectedCharacter;
         for (int i = gameInfo.maxPlayer; i < C_Global.MAX_CHARACTER; i++)
@@ -225,7 +223,7 @@ public class GameManager : MonoBehaviour
                 icons[j].HideItem();
         }
 #endif
-    }
+	}
 
     public void SetLocalAndNetworkActionState(int _idx, _ACTION_STATE _action)
     {

@@ -139,7 +139,7 @@ namespace KetosGames.SceneTransition
                 MessageBox.Show("다른 플레이어가 종료했습니다.");
 
                 // 3초 뒤에 그냥 바로 로비로 감
-                YieldInstructionCache.WaitForSeconds(3);
+                YieldInstructionCache.WaitForSeconds(5.0f);
                 SceneManager.LoadScene("Lobby");
                 NetworkManager.instance.SendGotoLobby();
             }
@@ -152,7 +152,7 @@ namespace KetosGames.SceneTransition
                 MessageBox.Show("최대 로딩 대기시간을 초과하였습니다.");
 
                 // 3초 뒤에 그냥 바로 로비로 감
-                YieldInstructionCache.WaitForSeconds(3);
+                YieldInstructionCache.WaitForSeconds(5.0f);
                 SceneManager.LoadScene("Lobby");
                 NetworkManager.instance.SendGotoLobby();
             }
@@ -219,6 +219,12 @@ namespace KetosGames.SceneTransition
             setFadeColor(Color.clear);
             SetFadersEnabled(false);
             FadingIn = false;
+
+			// 만약 인게임으로 들어가는 FadeIn이었다면 FadeIn 끝나고 초기 인게임 패킷 보내준다.
+			if(waitOtherPlayer == true)
+			{
+				NetworkManager.instance.SendIngamePacket(true);
+			}
         }
 
         /// <summary>
@@ -430,8 +436,6 @@ namespace KetosGames.SceneTransition
             BeginFadeIn();
 
             Loading = false; // At this point is should be safe to start a new load even though it's still fading in
-
-            // 진짜로 로딩이 다 끝나면 
         }
 
         /// <summary>

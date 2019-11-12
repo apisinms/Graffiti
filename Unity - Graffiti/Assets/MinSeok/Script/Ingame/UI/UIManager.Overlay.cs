@@ -255,7 +255,8 @@ public partial class UIManager : MonoBehaviour
                 }
             }
 
-			if (timer.txt_gameTime.text != null)
+			if (timer.txt_gameTime.text != null
+				&& UIManager.instance != null)
 			{
 				timer.txt_gameTime.text = ((int)min).ToString() + " : " + sec.ToString("00");
 			}

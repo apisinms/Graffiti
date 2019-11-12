@@ -493,9 +493,8 @@ public partial class BridgeClientToServer : MonoBehaviour
 		EndSceneManager.Instance.gameType = GameManager.instance.gameInfo.gameType;
 
 		/// 여기서 스무스로딩할때 페이크로딩 안넣고 싶음
-		SceneLoader.LoadScene("EndScene");  // 스무스 로딩
-
 		SceneLoader.Instance.waitOtherPlayer = false;
+		SceneLoader.LoadScene("EndScene");  // 스무스 로딩
 
 		networkManager.SendGotoLobby();   // 나 로비로 갈랭~(얜 호출해줘야 돼)
 	}

@@ -453,6 +453,8 @@ bool InGameManager::InitProcess(C_ClientInfo* _ptr, char* _buf)
 	ListSendPacket(playerList, nullptr, protocol, buf, packetSize, false);
 
 	// 2. 모든 플레이어에게 자신의 닉네임 정보를 보내준다(본인 제외)
+	memset(buf, BUFSIZE, 0);
+	packetSize = 0;
 	protocol = SetProtocol(
 		INGAME_STATE,
 		PROTOCOL_INGAME::INFO_PROTOCOL,
@@ -476,7 +478,8 @@ bool InGameManager::InitProcess(C_ClientInfo* _ptr, char* _buf)
 			INGAME_STATE,
 			PROTOCOL_INGAME::START_PROTOCOL,
 			RESULT_INGAME::READY_START);
-		PackPacket(buf, _ptr->GetPlayerInfo()->GetPlayerNum(), _ptr->GetUserInfo()->nickname, packetSize);
+		memset(buf, BUFSIZE, 0);
+		packetSize = 0;
 		ListSendPacket(playerList, nullptr, protocol, buf, packetSize, false);
 
 		_ptr->GetRoom()->SetRoomStatus(ROOMSTATUS::ROOM_READY);	// 방이 레디 상태로 들어간다.
@@ -869,10 +872,6 @@ void InGameManager::InitalizePlayersInfo(RoomInfo* _room)
 		printf("InitalizePlayersInfo() 방이 nullptr임!\n");
 		return;
 	}
-
-	PROTOCOL_INGAME protocol;
-	char buf[BUFSIZE] = { 0, };
-	int packetSize = 0;
 
 	// 리스폰 좌표 설정용
 	int gameType = 0;

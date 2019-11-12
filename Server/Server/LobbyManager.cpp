@@ -110,6 +110,12 @@ LobbyManager::PROTOCOL_LOBBY LobbyManager::GetBufferAndProtocol(C_ClientInfo* _p
 // 매칭할 수 있는지
 bool LobbyManager::CanIMatch(C_ClientInfo* _ptr)
 {
+	if (_ptr == nullptr)
+	{
+		printf("CanIMatch() 플레이어 nullptr!\n");
+		return false;
+	}
+
 	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
 	PROTOCOL_LOBBY protocol = GetBufferAndProtocol(_ptr, buf);
 
@@ -141,6 +147,13 @@ bool LobbyManager::CanIMatch(C_ClientInfo* _ptr)
 // 매칭 취소 할 수 있는지
 bool LobbyManager::CanICancelMatch(C_ClientInfo* _ptr)
 {
+	if (_ptr == nullptr )
+	{
+		printf("CanICancelMatch() 플레이어 nullptr!\n");
+		return false;
+	}
+
+
 	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
 	PROTOCOL_LOBBY protocol = GetBufferAndProtocol(_ptr, buf);
 
@@ -182,6 +195,12 @@ bool LobbyManager::CanILeaveLobby(C_ClientInfo* _ptr)
 // 게임을 시작할 수 있는지
 bool LobbyManager::CanIGotoInGame(C_ClientInfo* _ptr)
 {
+	if (_ptr == nullptr)
+	{
+		printf("CanIGotoIngame() 플레이어 nullptr!\n");
+		return false;
+	}
+
 	char buf[BUFSIZE] = { 0, }; // 암호화가 끝난 패킷을 가지고 있을 버프 
 	PROTOCOL_LOBBY protocol = GetBufferAndProtocol(_ptr, buf);
 

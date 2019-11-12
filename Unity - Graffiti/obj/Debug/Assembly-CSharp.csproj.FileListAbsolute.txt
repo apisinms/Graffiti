@@ -2444,4 +2444,3 @@ D:\Project\Unity - Graffiti\Unity - Graffiti\obj\Debug\Assembly-CSharp.csproj.Co
 D:\Project\Unity - Graffiti\Unity - Graffiti\obj\Debug\Assembly-CSharp.csproj.CopyComplete
 D:\Project\Unity - Graffiti\Unity - Graffiti\obj\Debug\Assembly-CSharp.dll
 D:\Project\Unity - Graffiti\Unity - Graffiti\obj\Debug\Assembly-CSharp.pdb
-C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEngine.Advertisements.dll
