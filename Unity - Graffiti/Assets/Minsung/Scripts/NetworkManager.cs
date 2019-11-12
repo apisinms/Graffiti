@@ -14,7 +14,7 @@ public partial class NetworkManager : MonoBehaviour
 {
     // 서버 IP와 포트
     //private static IPAddress serverIP = IPAddress.Parse("127.0.0.1");
-    private static IPAddress serverIP = IPAddress.Parse("118.176.246.58");
+    private static IPAddress serverIP = IPAddress.Parse("211.195.240.25");
 
     private static int serverPort = 10823;
 

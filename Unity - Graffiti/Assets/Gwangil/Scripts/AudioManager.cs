@@ -42,10 +42,15 @@ public class AudioManager : Singleton<AudioManager>
     {
         while (true)
         {
+			if(_source == null)
+			{
+				yield break;
+			}
+
             if (_source.volume <= 0.0f)
             {
 				yield break;
-            }
+			}
 
             _source.volume -= _speed;
             yield return null;
@@ -57,7 +62,10 @@ public class AudioManager : Singleton<AudioManager>
         _source.volume = 0.0f;
         while (true)
         {
-            if (_source.volume >= OriginalBGMVolume)
+			if (_source == null)
+				yield break;
+
+			if (_source.volume >= OriginalBGMVolume)
                 yield break;
 
             _source.volume += _speed;
@@ -70,6 +78,9 @@ public class AudioManager : Singleton<AudioManager>
 		_source.volume = OriginalBGMVolume;
 		while (true)
 		{
+			if (_source == null)
+				yield break;
+
 			if (_source.volume <= 0.0f)
 			{
 				_source.volume = OriginalBGMVolume;

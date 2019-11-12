@@ -7,7 +7,7 @@
 #define TIMER_INTERVAL	50	// 타이머 간격
 #define TIMER_INTERVAL_TIMES_MILLISEC	(TIMER_INTERVAL * 0.001)	// 타이머 간격 * 밀리초단위
 
-#define WEAPON_SELTIME			13				// 무기 선택 시간
+#define WEAPON_SELTIME			10 + 3			// 무기 선택 시간(3초 정도는 로딩 + 클라 Invoke 시간 고려)
 #define CAR_SPAWN_TIME_2vs2_SEC	5				// 차 생성 주기(2vs2)
 #define CAR_SPAWN_TIME_1vs1_SEC	7 				// 차 생성 주기(1vs1)
 #define CAPTURE_BONUS_TIME_SEC	10 				// 점령 보너스 시간 주기
