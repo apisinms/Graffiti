@@ -242,6 +242,7 @@ struct GameInfo
 	float maxSpeed;				// 최대 이동속도
 	float maxHealth;			// 최대 체력
 	float respawnTime;			// 리스폰 시간
+	float healPackTime;			// 힐팩 재생 시간
 	float subSprayingTime;		// 스프레이 전 시간
 	float mainSprayingTime;		// 스프레이 시간
 	double gameTime;			// 게임 시간

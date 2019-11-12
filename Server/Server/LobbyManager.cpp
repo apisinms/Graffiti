@@ -188,6 +188,12 @@ bool LobbyManager::CanIGotoInGame(C_ClientInfo* _ptr)
 	// 만약 4인 매칭이 성공하여 성공했던 클라가 나에게 시작 프로토콜을 보낸다면 인게임의 무기선택 창으로 들어가야한다.
 	if (protocol == GOTO_INGAME_PROTOCOL)
 	{
+		if (_ptr->GetRoom() == nullptr)
+		{
+			printf("CanIGotoIngame() 방이 nullptr!\n");
+			return false;
+		}
+
 		printf("%d인 매칭성공\n", _ptr->GetRoom()->GetMaxPlayer());
 
 		// 만약 방이 생성되고 아무런 진행도 하지 않았다면

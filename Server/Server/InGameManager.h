@@ -7,14 +7,14 @@
 #define TIMER_INTERVAL	50	// 타이머 간격
 #define TIMER_INTERVAL_TIMES_MILLISEC	(TIMER_INTERVAL * 0.001)	// 타이머 간격 * 밀리초단위
 
-#define WEAPON_SELTIME			1				// 무기 선택 시간
+#define WEAPON_SELTIME			13				// 무기 선택 시간
 #define CAR_SPAWN_TIME_2vs2_SEC	5				// 차 생성 주기(2vs2)
 #define CAR_SPAWN_TIME_1vs1_SEC	7 				// 차 생성 주기(1vs1)
 #define CAPTURE_BONUS_TIME_SEC	10 				// 점령 보너스 시간 주기
 #define MAX_LOADING_WAIT_TIME	10				// 최대 로딩 대기시간
 #define READY_TIME				3				// 게임 레디 시간
 #define GAME_END_WAIT_TIME		3				// 게임 끝나고 잠깐 기다렸다가 스코어보드로 갈 시간
-#define TIME_SYNC_INTERVAL		0.5				// 클라 시간 동기화 주기
+#define TIME_SYNC_INTERVAL		5				// 클라 시간 동기화 주기
 
 class C_ClientInfo;
 

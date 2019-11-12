@@ -935,7 +935,7 @@ void InGameManager::InitalizePlayersInfo(RoomInfo* _room)
 		players[i]->GetPlayerInfo()->SetSectorPlayerList(playerList);
 	}
 
-	byte playerBit = 0;
+	/*byte playerBit = 0;
 	for (size_t i = 0; i < players.size(); i++)
 	{
 		// 각각 본인들에게 인접 섹터의 플레이어 리스트를 활성화된 비트로 보내준다.
@@ -946,7 +946,7 @@ void InGameManager::InitalizePlayersInfo(RoomInfo* _room)
 		playerBit = players[i]->GetRoom()->GetSector()->FlagPlayerBit(players[i]->GetPlayerInfo()->GetSectorPlayerList());
 		PackPacket(buf, playerBit, packetSize);
 		players[i]->SendPacket(protocol, buf, packetSize);   // 전송
-	}
+	}*/
 }
 
 /// about movement
