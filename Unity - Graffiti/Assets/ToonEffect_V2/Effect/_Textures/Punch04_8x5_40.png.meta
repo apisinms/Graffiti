@@ -1,0 +1,760 @@
+fileFormatVersion: 2
+guid: a7e38419b291b7a4e8cdfc0842ce4cbc
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3546893499405356803
+    second: Punch04_8x5_40_0
+  - first:
+      213: 9043875388852103090
+    second: Punch04_8x5_40_1
+  - first:
+      213: 1864219367123303687
+    second: Punch04_8x5_40_2
+  - first:
+      213: -9027311202557013673
+    second: Punch04_8x5_40_3
+  - first:
+      213: -7948275031378141585
+    second: Punch04_8x5_40_4
+  - first:
+      213: 7930180666552039780
+    second: Punch04_8x5_40_5
+  - first:
+      213: 2946485389615978466
+    second: Punch04_8x5_40_6
+  - first:
+      213: -2700660578991620327
+    second: Punch04_8x5_40_7
+  - first:
+      213: -6484906886033623007
+    second: Punch04_8x5_40_8
+  - first:
+      213: 3376392184023750580
+    second: Punch04_8x5_40_9
+  - first:
+      213: 553833108282945044
+    second: Punch04_8x5_40_10
+  - first:
+      213: 739938823820517853
+    second: Punch04_8x5_40_11
+  - first:
+      213: -7035707161360838769
+    second: Punch04_8x5_40_12
+  - first:
+      213: 9058394507053833945
+    second: Punch04_8x5_40_13
+  - first:
+      213: 7301865814410904679
+    second: Punch04_8x5_40_14
+  - first:
+      213: 7977936644247676075
+    second: Punch04_8x5_40_15
+  - first:
+      213: 3840014163633882744
+    second: Punch04_8x5_40_16
+  - first:
+      213: -296970473707559394
+    second: Punch04_8x5_40_17
+  - first:
+      213: 5358180502578170603
+    second: Punch04_8x5_40_18
+  - first:
+      213: 2745988930194326738
+    second: Punch04_8x5_40_19
+  - first:
+      213: 1920127210434666966
+    second: Punch04_8x5_40_20
+  - first:
+      213: 6919147217200559729
+    second: Punch04_8x5_40_21
+  - first:
+      213: 5994424379000117197
+    second: Punch04_8x5_40_22
+  - first:
+      213: -2236674726281498352
+    second: Punch04_8x5_40_23
+  - first:
+      213: -5837987331189033916
+    second: Punch04_8x5_40_24
+  - first:
+      213: 4504935605078668897
+    second: Punch04_8x5_40_25
+  - first:
+      213: 2047623577220894300
+    second: Punch04_8x5_40_26
+  externalObjects: {}
+  serializedVersion: 10
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 4096
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: -1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - serializedVersion: 2
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Android
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Punch04_8x5_40_0
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 2081
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e493e3cface40c4fa1739ab0c229eca
+      internalID: 3546893499405356803
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_1
+      rect:
+        serializedVersion: 2
+        x: 1573
+        y: 2081
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5945f5e266b365047b0d838ca734473c
+      internalID: 9043875388852103090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_2
+      rect:
+        serializedVersion: 2
+        x: 2117
+        y: 2076
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e556dbcc824a0124c9746c1afcc273ad
+      internalID: 1864219367123303687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_3
+      rect:
+        serializedVersion: 2
+        x: 2682
+        y: 2103
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2550316c6e5e474cb572927baa0aea9
+      internalID: -9027311202557013673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_4
+      rect:
+        serializedVersion: 2
+        x: 3199
+        y: 2098
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 05715c9f5b7181c42ae014b329e655e8
+      internalID: -7948275031378141585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_5
+      rect:
+        serializedVersion: 2
+        x: 3679
+        y: 2093
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 81ac17e5a94e0774485d873145b582aa
+      internalID: 7930180666552039780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_6
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 1592
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 886a642c06840874f8b28f65c2b99dcd
+      internalID: 2946485389615978466
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_7
+      rect:
+        serializedVersion: 2
+        x: 583
+        y: 1587
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6221dcacc4ea264ca08b4f5a1c6aeff
+      internalID: -2700660578991620327
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_8
+      rect:
+        serializedVersion: 2
+        x: 1052
+        y: 1598
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a6a76cb0bacaa2648b54f5d9a8413b0f
+      internalID: -6484906886033623007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_9
+      rect:
+        serializedVersion: 2
+        x: 1569
+        y: 1609
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22fa4abc7c6831e4799c2200b4cb5f0d
+      internalID: 3376392184023750580
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_10
+      rect:
+        serializedVersion: 2
+        x: 2097
+        y: 1614
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a756ef4668ba9d449fd815c7e464bba
+      internalID: 553833108282945044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_11
+      rect:
+        serializedVersion: 2
+        x: 2641
+        y: 1598
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 090686b3d5d0005459883162ba89eb78
+      internalID: 739938823820517853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_12
+      rect:
+        serializedVersion: 2
+        x: 3147
+        y: 1598
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9da22d3847777c9418e15bff13c4928b
+      internalID: -7035707161360838769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_13
+      rect:
+        serializedVersion: 2
+        x: 3659
+        y: 1582
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4d31c3bf1ae9cb45ac196433d4c2a36
+      internalID: 9058394507053833945
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_14
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 1086
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 71e14c8d0766b524dac650ae6513532f
+      internalID: 7301865814410904679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_15
+      rect:
+        serializedVersion: 2
+        x: 579
+        y: 1102
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d7ee257737d2c0b438ba0dcc63dc90fe
+      internalID: 7977936644247676075
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_16
+      rect:
+        serializedVersion: 2
+        x: 1075
+        y: 1086
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94083898bdb6cd5439ccc9854a0e2aa3
+      internalID: 3840014163633882744
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_17
+      rect:
+        serializedVersion: 2
+        x: 1587
+        y: 1091
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b810f36143bd24478305347eee6ab55
+      internalID: -296970473707559394
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_18
+      rect:
+        serializedVersion: 2
+        x: 2093
+        y: 1086
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9364a92e55455254597e6c7a6b6ef5d0
+      internalID: 5358180502578170603
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_19
+      rect:
+        serializedVersion: 2
+        x: 2589
+        y: 1086
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7bb58b27fc9b89d4385a9349e7b3d8b8
+      internalID: 2745988930194326738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_20
+      rect:
+        serializedVersion: 2
+        x: 3101
+        y: 1091
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a11ef6ed191138f4f9bd61dbbffba813
+      internalID: 1920127210434666966
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_21
+      rect:
+        serializedVersion: 2
+        x: 3602
+        y: 1091
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a37492d4ee82061478c11dd039c26552
+      internalID: 6919147217200559729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_22
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 542
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3c115f4cc3a84de4d9aafd78b0ab8392
+      internalID: 5994424379000117197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_23
+      rect:
+        serializedVersion: 2
+        x: 565
+        y: 531
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 89310d7dc671b94478f7a0c63fc24534
+      internalID: -2236674726281498352
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_24
+      rect:
+        serializedVersion: 2
+        x: 1087
+        y: 536
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bece3ef622c778e4ba02bafa96e07e28
+      internalID: -5837987331189033916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_25
+      rect:
+        serializedVersion: 2
+        x: 1599
+        y: 552
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d4e874743d34b9e4aaa63f7d857545f9
+      internalID: 4504935605078668897
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch04_8x5_40_26
+      rect:
+        serializedVersion: 2
+        x: 2111
+        y: 541
+        width: 358
+        height: 346
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 014f4cd83b989ba4f8aeaed0fcbef309
+      internalID: 2047623577220894300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 332c19c9cf31cb6488bd7dfd636f7104
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Player1
+  - Player2
+  - Player3
+  - Player4
+  - Ar
+  - Smg
+  - Sg
+  - Bullet
+  - BulletPool1
+  - BulletPool2
+  - BulletPool3
+  - BulletPool4
+  - Bullet1
+  - Bullet2
+  - Bullet3
+  - Bullet4
+  - Effects
+  - ConcretePool1
+  - IronPool1
+  - Concrete1
+  - Iron1
+  - Canvas
+  - EndPoint
+  - Canvas_overlay
+  - Canvas_worldSpace1
+  - Canvas_worldSpace2
+  - BloodPool1
+  - Blood1
+  - FX
+  - ShellPool1
+  - ShellPool2
+  - ShellPool3
+  - ShellPool4
+  - Shell
+  - Shell1
+  - Shell2
+  - Shell3
+  - Shell4
+  - Territory3
+  - Territory2
+  - Territory5
+  - Territory1
+  - Territory4
+  - GrenadePool1
+  - GrenadePool2
+  - GrenadePool3
+  - GrenadePool4
+  - Grenade1
+  - Grenade2
+  - Grenade3
+  - Grenade4
+  - Potion
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - Bullet
+  - MAP
+  - Car
+  - Player
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0

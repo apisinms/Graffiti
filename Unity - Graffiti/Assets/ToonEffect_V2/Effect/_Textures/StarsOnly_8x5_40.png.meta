@@ -1,0 +1,1000 @@
+fileFormatVersion: 2
+guid: 8026240b773c6ec4b84e21f8897d6bc1
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7630830391700413686
+    second: StarsOnly_8x5_40_0
+  - first:
+      213: -7618009039062989766
+    second: StarsOnly_8x5_40_1
+  - first:
+      213: -7494707232272707566
+    second: StarsOnly_8x5_40_2
+  - first:
+      213: 2023114916623542276
+    second: StarsOnly_8x5_40_3
+  - first:
+      213: -2905560222678128721
+    second: StarsOnly_8x5_40_4
+  - first:
+      213: -2902399481951315216
+    second: StarsOnly_8x5_40_5
+  - first:
+      213: -296732154197707308
+    second: StarsOnly_8x5_40_6
+  - first:
+      213: 996076680243321453
+    second: StarsOnly_8x5_40_7
+  - first:
+      213: 1968111198540081741
+    second: StarsOnly_8x5_40_8
+  - first:
+      213: 439183544658015853
+    second: StarsOnly_8x5_40_9
+  - first:
+      213: 3197085390268229292
+    second: StarsOnly_8x5_40_10
+  - first:
+      213: -9156816922209370439
+    second: StarsOnly_8x5_40_11
+  - first:
+      213: -5407163512192976267
+    second: StarsOnly_8x5_40_12
+  - first:
+      213: 8174673436062567866
+    second: StarsOnly_8x5_40_13
+  - first:
+      213: 8867424547542313468
+    second: StarsOnly_8x5_40_14
+  - first:
+      213: 3361428373148479851
+    second: StarsOnly_8x5_40_15
+  - first:
+      213: 6108714522690409885
+    second: StarsOnly_8x5_40_16
+  - first:
+      213: -2753194595869584929
+    second: StarsOnly_8x5_40_17
+  - first:
+      213: -8791279177744740249
+    second: StarsOnly_8x5_40_18
+  - first:
+      213: -1323515059021068122
+    second: StarsOnly_8x5_40_19
+  - first:
+      213: 8084741851748523028
+    second: StarsOnly_8x5_40_20
+  - first:
+      213: 1192430259018806892
+    second: StarsOnly_8x5_40_21
+  - first:
+      213: -2077237219159260521
+    second: StarsOnly_8x5_40_22
+  - first:
+      213: 307970201614226501
+    second: StarsOnly_8x5_40_23
+  - first:
+      213: 8612870331343785445
+    second: StarsOnly_8x5_40_24
+  - first:
+      213: 6435131146774503512
+    second: StarsOnly_8x5_40_25
+  - first:
+      213: 6899635849786467956
+    second: StarsOnly_8x5_40_26
+  - first:
+      213: -2413839438907617927
+    second: StarsOnly_8x5_40_27
+  - first:
+      213: 2518272030688395397
+    second: StarsOnly_8x5_40_28
+  - first:
+      213: -5251466479087618687
+    second: StarsOnly_8x5_40_29
+  - first:
+      213: -761737388125444473
+    second: StarsOnly_8x5_40_30
+  - first:
+      213: 2354660489545242764
+    second: StarsOnly_8x5_40_31
+  - first:
+      213: -7388497957882522284
+    second: StarsOnly_8x5_40_32
+  - first:
+      213: 2364113357217143890
+    second: StarsOnly_8x5_40_33
+  - first:
+      213: 7310373156617610916
+    second: StarsOnly_8x5_40_34
+  - first:
+      213: 8493781054717380455
+    second: StarsOnly_8x5_40_35
+  - first:
+      213: -659620800608687983
+    second: StarsOnly_8x5_40_36
+  externalObjects: {}
+  serializedVersion: 10
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 4096
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: -1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - serializedVersion: 2
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Android
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_0
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 2088
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2f81fabe832d9b34da154eacfaaacac5
+      internalID: 7630830391700413686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_1
+      rect:
+        serializedVersion: 2
+        x: 551
+        y: 2088
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3dd012c1354dfcb48a8678ea9ae9c6f5
+      internalID: -7618009039062989766
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_2
+      rect:
+        serializedVersion: 2
+        x: 1063
+        y: 2088
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 269d02740bd039a449e65b330e4c934e
+      internalID: -7494707232272707566
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_3
+      rect:
+        serializedVersion: 2
+        x: 1569
+        y: 2077
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a009d559d4cef6f469d5d6cbe2fcc6f8
+      internalID: 2023114916623542276
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_4
+      rect:
+        serializedVersion: 2
+        x: 2081
+        y: 2072
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4ff378ef30b18747a28a8bc79c49d08
+      internalID: -2905560222678128721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_5
+      rect:
+        serializedVersion: 2
+        x: 2598
+        y: 2083
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9bcbe26ce3b961f45b2a66f6876f3367
+      internalID: -2902399481951315216
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_6
+      rect:
+        serializedVersion: 2
+        x: 3115
+        y: 2078
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1345fe1e064da8547a7c619fe5f59456
+      internalID: -296732154197707308
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_7
+      rect:
+        serializedVersion: 2
+        x: 3632
+        y: 2089
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cb70103fa8b1e1342bfadfb59d2db331
+      internalID: 996076680243321453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_8
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 1583
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 68dd81633edbcfe47bb79594093ac86a
+      internalID: 1968111198540081741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_9
+      rect:
+        serializedVersion: 2
+        x: 578
+        y: 1588
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1e7be3bc81f84cc45803c75dd3048b8f
+      internalID: 439183544658015853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_10
+      rect:
+        serializedVersion: 2
+        x: 1095
+        y: 1577
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 92da3ff233ed13046b7d702c6fa96475
+      internalID: 3197085390268229292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_11
+      rect:
+        serializedVersion: 2
+        x: 1601
+        y: 1582
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2c93bc077a6cb9c4baeeed8f2f2e4b19
+      internalID: -9156816922209370439
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_12
+      rect:
+        serializedVersion: 2
+        x: 2113
+        y: 1577
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4610a9591f30c9c4693aa5a9a6828df7
+      internalID: -5407163512192976267
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_13
+      rect:
+        serializedVersion: 2
+        x: 2630
+        y: 1588
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f62bbaab11dd8b04da6f76de37709908
+      internalID: 8174673436062567866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_14
+      rect:
+        serializedVersion: 2
+        x: 3131
+        y: 1583
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 381b6e462df0eef428bdd363c575c114
+      internalID: 8867424547542313468
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_15
+      rect:
+        serializedVersion: 2
+        x: 3648
+        y: 1588
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1048beda476a52e47a521cd0bafd9223
+      internalID: 3361428373148479851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_16
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 1071
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d2208d1ff10d5e42941e368dd9a5e83
+      internalID: 6108714522690409885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_17
+      rect:
+        serializedVersion: 2
+        x: 589
+        y: 1082
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ac4e4d9e3ce9c6642995046526b6833c
+      internalID: -2753194595869584929
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_18
+      rect:
+        serializedVersion: 2
+        x: 1106
+        y: 1082
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 56a99fd89e50a2b44890d72ab693b634
+      internalID: -8791279177744740249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_19
+      rect:
+        serializedVersion: 2
+        x: 1623
+        y: 1082
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ff047ada2815f64c81cecd6f5b4e178
+      internalID: -1323515059021068122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_20
+      rect:
+        serializedVersion: 2
+        x: 2124
+        y: 1093
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 53fe2d33b6c3c214d8f3eb11acb4ebe4
+      internalID: 8084741851748523028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_21
+      rect:
+        serializedVersion: 2
+        x: 2641
+        y: 1088
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2950a1c0bbd12f489635356806ad011
+      internalID: 1192430259018806892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_22
+      rect:
+        serializedVersion: 2
+        x: 3153
+        y: 1083
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 912401affa0e5404792b38083ea6426a
+      internalID: -2077237219159260521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_23
+      rect:
+        serializedVersion: 2
+        x: 3648
+        y: 1083
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4d55a9ff0fccd1f4982f3b03b9e63142
+      internalID: 307970201614226501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_24
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 603
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 189c506f45d8f5c479a87b7c771414e4
+      internalID: 8612870331343785445
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_25
+      rect:
+        serializedVersion: 2
+        x: 589
+        y: 603
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 66ed5cbc7865d2f48a7355a063082af3
+      internalID: 6435131146774503512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_26
+      rect:
+        serializedVersion: 2
+        x: 1106
+        y: 608
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f58cf3f1ccba7194ba9bc3d2a72ae51b
+      internalID: 6899635849786467956
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_27
+      rect:
+        serializedVersion: 2
+        x: 1612
+        y: 608
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6581582d0acc73545a81dae75e440062
+      internalID: -2413839438907617927
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_28
+      rect:
+        serializedVersion: 2
+        x: 2134
+        y: 603
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 90288226b9336a541989e1e7d88ea769
+      internalID: 2518272030688395397
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_29
+      rect:
+        serializedVersion: 2
+        x: 2640
+        y: 598
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f0c495c10975c84bbc6d985c1c45865
+      internalID: -5251466479087618687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_30
+      rect:
+        serializedVersion: 2
+        x: 3152
+        y: 603
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3619502937e200240b458e780c5f7de6
+      internalID: -761737388125444473
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_31
+      rect:
+        serializedVersion: 2
+        x: 3648
+        y: 592
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1880d740194067a4999178866db02f54
+      internalID: 2354660489545242764
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_32
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 129
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f3157724e04e1ee4bab8ce0f3e4e8941
+      internalID: -7388497957882522284
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_33
+      rect:
+        serializedVersion: 2
+        x: 546
+        y: 140
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a0cf1195db089b44ad46ccc85315a1c
+      internalID: 2364113357217143890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_34
+      rect:
+        serializedVersion: 2
+        x: 1090
+        y: 156
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f3872544626bbe440a05a12444f97f01
+      internalID: 7310373156617610916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_35
+      rect:
+        serializedVersion: 2
+        x: 1554
+        y: 156
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: df246df99e16eb54f979fb05f678e573
+      internalID: 8493781054717380455
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StarsOnly_8x5_40_36
+      rect:
+        serializedVersion: 2
+        x: 2087
+        y: 161
+        width: 448
+        height: 431
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2c6cde9e9370ab4392ea87f0d5ffeea
+      internalID: -659620800608687983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5ca780c2e4ec8c643a408e683c739ecd
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

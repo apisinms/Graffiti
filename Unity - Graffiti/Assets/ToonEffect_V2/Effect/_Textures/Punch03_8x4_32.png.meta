@@ -1,0 +1,568 @@
+fileFormatVersion: 2
+guid: 8915534f3ad68954c956d8740c10e095
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7914756238644294153
+    second: Punch03_8x4_32_0
+  - first:
+      213: -4041488233300394818
+    second: Punch03_8x4_32_1
+  - first:
+      213: 263507709324214153
+    second: Punch03_8x4_32_2
+  - first:
+      213: 2602751215039839535
+    second: Punch03_8x4_32_3
+  - first:
+      213: -4769052323297502739
+    second: Punch03_8x4_32_4
+  - first:
+      213: 6296831633859657427
+    second: Punch03_8x4_32_5
+  - first:
+      213: -5870245557376139629
+    second: Punch03_8x4_32_6
+  - first:
+      213: 6228134937345917376
+    second: Punch03_8x4_32_7
+  - first:
+      213: -6337297715715115227
+    second: Punch03_8x4_32_8
+  - first:
+      213: -5829969117589192438
+    second: Punch03_8x4_32_9
+  - first:
+      213: 8726925287845141993
+    second: Punch03_8x4_32_10
+  - first:
+      213: -4572698031910026977
+    second: Punch03_8x4_32_11
+  - first:
+      213: 7059130540003988480
+    second: Punch03_8x4_32_12
+  - first:
+      213: -7318892267297609619
+    second: Punch03_8x4_32_13
+  - first:
+      213: 1921459622496189747
+    second: Punch03_8x4_32_14
+  - first:
+      213: -7905806397347709899
+    second: Punch03_8x4_32_15
+  - first:
+      213: 4886494805142447965
+    second: Punch03_8x4_32_16
+  - first:
+      213: 8927164887328141861
+    second: Punch03_8x4_32_17
+  - first:
+      213: 7219659214798298828
+    second: Punch03_8x4_32_18
+  externalObjects: {}
+  serializedVersion: 10
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 4096
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: -1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - serializedVersion: 2
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Standalone
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Android
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Punch03_8x4_32_0
+      rect:
+        serializedVersion: 2
+        x: 556
+        y: 1587
+        width: 453
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fd18fc5e851dc0443b2b08ab73befff8
+      internalID: 7914756238644294153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch03_8x4_32_1
+      rect:
+        serializedVersion: 2
+        x: 1057
+        y: 1582
+        width: 453
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: afbcab708f85ab34d8f0a71e84821e56
+      internalID: -4041488233300394818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch03_8x4_32_2
+      rect:
+        serializedVersion: 2
+        x: 1579
+        y: 1582
+        width: 453
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e6764acf8feff2846806da38287457b9
+      internalID: 263507709324214153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch03_8x4_32_3
+      rect:
+        serializedVersion: 2
+        x: 2096
+        y: 1577
+        width: 453
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 688f6e90c1e6de34d85348dd739714eb
+      internalID: 2602751215039839535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch03_8x4_32_4
+      rect:
+        serializedVersion: 2
+        x: 2613
+        y: 1577
+        width: 453
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e52256f3a514d64190c68c52f04a3fb
+      internalID: -4769052323297502739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch03_8x4_32_5
+      rect:
+        serializedVersion: 2
+        x: 3114
+        y: 1577
+        width: 453
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a9c3ec19b05eca746b8603234372dd91
+      internalID: 6296831633859657427
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch03_8x4_32_6
+      rect:
+        serializedVersion: 2
+        x: 3615
+        y: 1566
+        width: 453
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1cbead2b8fc03d4408ffa5f2bae31e23
+      internalID: -5870245557376139629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch03_8x4_32_7
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 1076
+        width: 453
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 586f4451850fe7f4180bf503f44c4824
+      internalID: 6228134937345917376
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch03_8x4_32_8
+      rect:
+        serializedVersion: 2
+        x: 545
+        y: 1065
+        width: 453
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3b4354472f2f5214281427ee92603805
+      internalID: -6337297715715115227
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch03_8x4_32_9
+      rect:
+        serializedVersion: 2
+        x: 1046
+        y: 1054
+        width: 453
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b201f345f87c1e4391c58b7c51e1296
+      internalID: -5829969117589192438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch03_8x4_32_10
+      rect:
+        serializedVersion: 2
+        x: 1568
+        y: 1054
+        width: 453
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 026ef551d5be40c4ea0e095813c91a9a
+      internalID: 8726925287845141993
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch03_8x4_32_11
+      rect:
+        serializedVersion: 2
+        x: 2058
+        y: 1065
+        width: 453
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 333f05ae92c5e4441926acecc23a3030
+      internalID: -4572698031910026977
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch03_8x4_32_12
+      rect:
+        serializedVersion: 2
+        x: 2596
+        y: 1054
+        width: 453
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0fba70dad8b32d544a2c33cafa7606be
+      internalID: 7059130540003988480
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch03_8x4_32_13
+      rect:
+        serializedVersion: 2
+        x: 3102
+        y: 1054
+        width: 453
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e72cad16cae01c242b0b028ff106a647
+      internalID: -7318892267297609619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch03_8x4_32_14
+      rect:
+        serializedVersion: 2
+        x: 3619
+        y: 1065
+        width: 453
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0bc683c06b9a4b148b8c651c7a2ebb74
+      internalID: 1921459622496189747
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch03_8x4_32_15
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 553
+        width: 453
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 153d1176230ff1744ae3d2b51d8a734b
+      internalID: -7905806397347709899
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch03_8x4_32_16
+      rect:
+        serializedVersion: 2
+        x: 538
+        y: 558
+        width: 453
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 420acb6cb49eda24fb6a22c2ba38a685
+      internalID: 4886494805142447965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch03_8x4_32_17
+      rect:
+        serializedVersion: 2
+        x: 1066
+        y: 553
+        width: 453
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3f6bc6a2710d6f1499cb0947f4c47ad3
+      internalID: 8927164887328141861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Punch03_8x4_32_18
+      rect:
+        serializedVersion: 2
+        x: 1542
+        y: 558
+        width: 453
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9642361579ac68c4aae51cf0e1abd635
+      internalID: 7219659214798298828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 6bd75320f8b07b648917d9264752744e
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

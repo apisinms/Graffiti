@@ -1,9 +1,2 @@
-﻿  C_ClientInfo.cpp
-  InGameManager.cpp
-c:\_programming_\_portfolio\graffiti\server\server\ingamemanager.cpp(873): warning C4101: 'protocol' :참조되지 않은 지역 변수입니다.
-  LobbyManager.cpp
-  MainManager.cpp
-  MatchManager.cpp
-  RoomManager.cpp
-  코드를 생성하고 있습니다...
+﻿  LobbyManager.cpp
   Server.vcxproj -> C:\_PROGRAMMING_\_Portfolio\Graffiti\Server\x64\Debug\Server.exe
