@@ -1,0 +1,96 @@
+﻿  ChatManager.cpp
+c:\_programming_\_portfolio\graffiti\server\server\c_global.h(386): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
+  C_ClientInfo.cpp
+c:\_programming_\_portfolio\graffiti\server\server\c_global.h(386): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
+  C_Encrypt.cpp
+c:\_programming_\_portfolio\graffiti\server\server\c_global.h(386): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
+  C_IOCP.cpp
+c:\_programming_\_portfolio\graffiti\server\server\c_global.h(386): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
+  C_Timer.cpp
+c:\_programming_\_portfolio\graffiti\server\server\c_global.h(386): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
+  Item.cpp
+c:\_programming_\_portfolio\graffiti\server\server\c_global.h(386): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
+  C_Packet.cpp
+c:\_programming_\_portfolio\graffiti\server\server\c_global.h(386): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
+  C_Sector.cpp
+c:\_programming_\_portfolio\graffiti\server\server\c_global.h(386): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
+c:\_programming_\_portfolio\graffiti\server\server\c_sector.cpp(116): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\_programming_\_portfolio\graffiti\server\server\c_sector.cpp(166): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\_programming_\_portfolio\graffiti\server\server\c_sector.cpp(175): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\_programming_\_portfolio\graffiti\server\server\c_sector.cpp(215): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  C_Select.cpp
+c:\_programming_\_portfolio\graffiti\server\server\c_global.h(386): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
+  C_Socket.cpp
+c:\_programming_\_portfolio\graffiti\server\server\c_global.h(386): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
+c:\_programming_\_portfolio\graffiti\server\server\c_socket.cpp(104): error C4996: 'inet_ntoa': Use inet_ntop() or InetNtop() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winsock2.h(1849): note: 'inet_ntoa' 선언을 참조하십시오.
+c:\_programming_\_portfolio\graffiti\server\server\c_socket.cpp(108): error C4996: 'inet_ntoa': Use inet_ntop() or InetNtop() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winsock2.h(1849): note: 'inet_ntoa' 선언을 참조하십시오.
+  DatabaseManager.cpp
+c:\_programming_\_portfolio\graffiti\server\server\c_global.h(386): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
+  InGameManager.cpp
+c:\_programming_\_portfolio\graffiti\server\server\c_global.h(386): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
+c:\_programming_\_portfolio\graffiti\server\server\ingamemanager.cpp(905): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\_programming_\_portfolio\graffiti\server\server\ingamemanager.cpp(1423): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  LobbyManager.cpp
+c:\_programming_\_portfolio\graffiti\server\server\c_global.h(386): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
+  LoginManager.cpp
+c:\_programming_\_portfolio\graffiti\server\server\c_global.h(386): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
+  LogManager.cpp
+c:\_programming_\_portfolio\graffiti\server\server\c_global.h(386): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
+c:\_programming_\_portfolio\graffiti\server\server\logmanager.cpp(15): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(208): note: 'fopen' 선언을 참조하십시오.
+c:\_programming_\_portfolio\graffiti\server\server\logmanager.cpp(22): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(208): note: 'fopen' 선언을 참조하십시오.
+c:\_programming_\_portfolio\graffiti\server\server\logmanager.cpp(29): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(208): note: 'fopen' 선언을 참조하십시오.
+c:\_programming_\_portfolio\graffiti\server\server\logmanager.cpp(71): error C4996: 'vsprintf': This function or variable may be unsafe. Consider using vsprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(1469): note: 'vsprintf' 선언을 참조하십시오.
+c:\_programming_\_portfolio\graffiti\server\server\logmanager.cpp(75): error C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\string.h(90): note: 'strcat' 선언을 참조하십시오.
+c:\_programming_\_portfolio\graffiti\server\server\logmanager.cpp(91): error C4996: 'localtime': This function or variable may be unsafe. Consider using localtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\time.h(506): note: 'localtime' 선언을 참조하십시오.
+c:\_programming_\_portfolio\graffiti\server\server\logmanager.cpp(103): error C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(1774): note: 'sprintf' 선언을 참조하십시오.
+c:\_programming_\_portfolio\graffiti\server\server\logmanager.cpp(106): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\string.h(133): note: 'strcpy' 선언을 참조하십시오.
+c:\_programming_\_portfolio\graffiti\server\server\logmanager.cpp(110): error C4996: 'vsprintf': This function or variable may be unsafe. Consider using vsprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(1469): note: 'vsprintf' 선언을 참조하십시오.
+c:\_programming_\_portfolio\graffiti\server\server\logmanager.cpp(114): error C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\string.h(90): note: 'strcat' 선언을 참조하십시오.
+c:\_programming_\_portfolio\graffiti\server\server\logmanager.cpp(124): error C4996: 'localtime': This function or variable may be unsafe. Consider using localtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\time.h(506): note: 'localtime' 선언을 참조하십시오.
+c:\_programming_\_portfolio\graffiti\server\server\logmanager.cpp(128): error C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(1774): note: 'sprintf' 선언을 참조하십시오.
+c:\_programming_\_portfolio\graffiti\server\server\logmanager.cpp(131): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\string.h(133): note: 'strcpy' 선언을 참조하십시오.
+c:\_programming_\_portfolio\graffiti\server\server\logmanager.cpp(135): error C4996: 'vsprintf': This function or variable may be unsafe. Consider using vsprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(1469): note: 'vsprintf' 선언을 참조하십시오.
+c:\_programming_\_portfolio\graffiti\server\server\logmanager.cpp(147): error C4996: 'localtime': This function or variable may be unsafe. Consider using localtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\time.h(506): note: 'localtime' 선언을 참조하십시오.
+c:\_programming_\_portfolio\graffiti\server\server\logmanager.cpp(151): error C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(1774): note: 'sprintf' 선언을 참조하십시오.
+c:\_programming_\_portfolio\graffiti\server\server\logmanager.cpp(154): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\string.h(133): note: 'strcpy' 선언을 참조하십시오.
+c:\_programming_\_portfolio\graffiti\server\server\logmanager.cpp(158): error C4996: 'vsprintf': This function or variable may be unsafe. Consider using vsprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(1469): note: 'vsprintf' 선언을 참조하십시오.
+c:\_programming_\_portfolio\graffiti\server\server\logmanager.cpp(171): error C4996: 'localtime': This function or variable may be unsafe. Consider using localtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\time.h(506): note: 'localtime' 선언을 참조하십시오.
+c:\_programming_\_portfolio\graffiti\server\server\logmanager.cpp(175): error C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(1774): note: 'sprintf' 선언을 참조하십시오.
+c:\_programming_\_portfolio\graffiti\server\server\logmanager.cpp(178): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\string.h(133): note: 'strcpy' 선언을 참조하십시오.
+c:\_programming_\_portfolio\graffiti\server\server\logmanager.cpp(182): error C4996: 'vsprintf': This function or variable may be unsafe. Consider using vsprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\ucrt\stdio.h(1469): note: 'vsprintf' 선언을 참조하십시오.
+  Main.cpp
+c:\_programming_\_portfolio\graffiti\server\server\c_global.h(386): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
+  MainManager.cpp
+c:\_programming_\_portfolio\graffiti\server\server\c_global.h(386): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
+c:\_programming_\_portfolio\graffiti\server\server\mainmanager.cpp(198): error C4996: 'inet_ntoa': Use inet_ntop() or InetNtop() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winsock2.h(1849): note: 'inet_ntoa' 선언을 참조하십시오.
+c:\_programming_\_portfolio\graffiti\server\server\mainmanager.cpp(201): error C4996: 'inet_ntoa': Use inet_ntop() or InetNtop() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  c:\program files (x86)\windows kits\10\include\10.0.17763.0\um\winsock2.h(1849): note: 'inet_ntoa' 선언을 참조하십시오.
+  MatchManager.cpp
+c:\_programming_\_portfolio\graffiti\server\server\c_global.h(386): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
+c:\_programming_\_portfolio\graffiti\server\server\matchmanager.cpp(99): warning C4018: '>=': signed 또는 unsigned가 일치하지 않습니다.
+  코드를 생성하고 있습니다...

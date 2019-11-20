@@ -242,7 +242,7 @@ MonoBehaviour:
   m_bypassAudioManager: {fileID: 721979479}
   m_audioFile: crackation.wav
   m_priority: 1
-  m_volume: 0.3
+  m_volume: 1
   m_rate: 1
   m_playOnAwake: 0
   m_loop: 0
@@ -910,7 +910,7 @@ MonoBehaviour:
   m_bypassAudioManager: {fileID: 721979479}
   m_audioFile: Spray2vs2.wav
   m_priority: 1
-  m_volume: 0.3
+  m_volume: 1
   m_rate: 1.1
   m_playOnAwake: 0
   m_loop: 0
@@ -1162,7 +1162,7 @@ MonoBehaviour:
   m_bypassAudioManager: {fileID: 721979479}
   m_audioFile: potion.wav
   m_priority: 1
-  m_volume: 0.5
+  m_volume: 1
   m_rate: 1
   m_playOnAwake: 0
   m_loop: 0
@@ -2855,7 +2855,7 @@ MonoBehaviour:
   m_bypassAudioManager: {fileID: 721979479}
   m_audioFile: PrepareSpray.wav
   m_priority: 1
-  m_volume: 0.3
+  m_volume: 1
   m_rate: 1
   m_playOnAwake: 0
   m_loop: 0
@@ -3494,42 +3494,42 @@ PrefabInstance:
     - target: {fileID: 5283580370702024845, guid: 5cc1abd50e1583d4680e5d7a66b39284,
         type: 3}
       propertyPath: m_volume
-      value: 0.15
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 999565227605105633, guid: 5cc1abd50e1583d4680e5d7a66b39284,
         type: 3}
       propertyPath: m_volume
-      value: 0.25
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 5283580371518454248, guid: 5cc1abd50e1583d4680e5d7a66b39284,
         type: 3}
       propertyPath: m_volume
-      value: 0.15
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 999565226429933482, guid: 5cc1abd50e1583d4680e5d7a66b39284,
         type: 3}
       propertyPath: m_volume
-      value: 0.35
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4586540225530162359, guid: 5cc1abd50e1583d4680e5d7a66b39284,
         type: 3}
       propertyPath: m_volume
-      value: 0.35
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4586540224851053327, guid: 5cc1abd50e1583d4680e5d7a66b39284,
         type: 3}
       propertyPath: m_volume
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4586540225358644936, guid: 5cc1abd50e1583d4680e5d7a66b39284,
         type: 3}
       propertyPath: m_volume
-      value: 0.25
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4586540225911554106, guid: 5cc1abd50e1583d4680e5d7a66b39284,
         type: 3}
       propertyPath: m_volume
-      value: 0.2
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5cc1abd50e1583d4680e5d7a66b39284, type: 3}
@@ -6211,7 +6211,7 @@ MonoBehaviour:
   m_bypassAudioManager: {fileID: 721979479}
   m_audioFile: noAmmo.wav
   m_priority: 1
-  m_volume: 0.3
+  m_volume: 0.8
   m_rate: 1
   m_playOnAwake: 0
   m_loop: 0
@@ -6833,7 +6833,7 @@ MonoBehaviour:
   m_bypassAudioManager: {fileID: 721979479}
   m_audioFile: reload.wav
   m_priority: 1
-  m_volume: 0.3
+  m_volume: 0.8
   m_rate: 1
   m_playOnAwake: 0
   m_loop: 0
@@ -7363,7 +7363,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 257, y: 223}
+  m_AnchoredPosition: {x: 358, y: 328}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1691429876
@@ -8038,7 +8038,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 429a036b4766ca04492d1c073515df06, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.2
+  m_Volume: 1
   m_Pitch: 1
   Loop: 1
   Mute: 0

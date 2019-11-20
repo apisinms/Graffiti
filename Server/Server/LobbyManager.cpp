@@ -147,7 +147,7 @@ bool LobbyManager::CanIMatch(C_ClientInfo* _ptr)
 // 매칭 취소 할 수 있는지
 bool LobbyManager::CanICancelMatch(C_ClientInfo* _ptr)
 {
-	if (_ptr == nullptr )
+	if (_ptr == nullptr)
 	{
 		printf("CanICancelMatch() 플레이어 nullptr!\n");
 		return false;
@@ -213,8 +213,6 @@ bool LobbyManager::CanIGotoInGame(C_ClientInfo* _ptr)
 			return false;
 		}
 
-		printf("%d인 매칭성공\n", _ptr->GetRoom()->GetMaxPlayer());
-
 		// 만약 방이 생성되고 아무런 진행도 하지 않았다면
 		if (_ptr->GetRoom()->GetRoomStatus() == ROOMSTATUS::ROOM_NONE)
 		{
@@ -232,6 +230,8 @@ bool LobbyManager::CanIGotoInGame(C_ClientInfo* _ptr)
 					0,
 					nullptr)
 			);
+
+			printf("%d인 매칭성공\n", _ptr->GetRoom()->GetMaxPlayer());
 		}
 
 		return true;

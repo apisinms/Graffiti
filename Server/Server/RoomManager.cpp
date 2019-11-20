@@ -128,6 +128,11 @@ void RoomManager::Destroy()
 bool RoomManager::CreateRoom(list<C_ClientInfo*>&_players, int _numOfPlayer)
 {
 	int gameType = (_players.front())->GetGameType();	// 게임 타입!
+	if (gameType < 0)
+	{
+		printf("gameType이 음수다\n");
+		return false;
+	}
 	
 	// 플레이어 목록을 토대로 방을 만듦.
 	RoomInfo* room = new RoomInfo(
@@ -147,15 +152,15 @@ bool RoomManager::CreateRoom(list<C_ClientInfo*>&_players, int _numOfPlayer)
 	int nowSize = (int)roomList.size();
 	bool ret = (beforeSize < nowSize) && (room != nullptr);	// 방이 정상적으로 만들어지고, 리스트에 추가됐으면 true
 
-	switch ((RoomInfo::GameType)gameType)
+	switch ((GameType)gameType)
 	{
-		case RoomInfo::GameType::_2vs2:
+		case GameType::_2vs2:
 		{
 			printf("[2:2][방생성] 총 갯수 : %d\n", nowSize);
 		}
 		break;
 
-		case RoomInfo::GameType::_1vs1:
+		case GameType::_1vs1:
 		{
 			printf("[1:1][방생성] 총 갯수 : %d\n", nowSize);
 		}

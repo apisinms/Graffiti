@@ -435,7 +435,7 @@ public partial class BridgeClientToServer : MonoBehaviour
 			case ItemCode.HP_NORMAL:
 				{
 					HealthChanger(ref _packet); // 피 변경
-					Debug.Log("채운 피:" + _packet.health);
+					//Debug.Log("채운 피:" + _packet.health);
 				}
 				break;
 		}
@@ -471,7 +471,7 @@ public partial class BridgeClientToServer : MonoBehaviour
 		AudioSource source = GameObject.Find("AudioManager").GetComponent<AudioSource>();
 		if (source != null)
 		{
-			StartCoroutine(AudioManager.FadeOut(source, 0.0016f));
+			StartCoroutine(AudioManager.FadeOut(source, 0.01f));
 		}
 	}
 

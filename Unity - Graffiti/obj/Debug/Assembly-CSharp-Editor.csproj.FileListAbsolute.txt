@@ -508,6 +508,9 @@ C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\Boo.Lang.Pa
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\Boo.Lang.Parser.dll
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\Boo.Lang.Useful.dll
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\Unity.CecilTools.dll
+C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\Assembly-CSharp.pdb
+C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\PathCreator.pdb
+C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\PathCreatorEditor.pdb
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEngine.xml
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEditor.xml
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\Unity.Timeline.Editor.pdb
@@ -585,5 +588,3 @@ C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\obj\Debug\Assembly-CSharp-
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\obj\Debug\Assembly-CSharp-Editor.csproj.CopyComplete
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\obj\Debug\Assembly-CSharp-Editor.dll
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\obj\Debug\Assembly-CSharp-Editor.pdb
-C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\PathCreator.pdb
-C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\PathCreatorEditor.pdb

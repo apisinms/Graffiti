@@ -40,16 +40,6 @@ private:
 	vector<BuildingInfo*>buildings;		// 건물 정보
 	
 public:
-	enum GameType
-	{
-		_2vs2,
-		_1vs1,
-		
-		_MAX_GAMETYPE	// 게임 타입 개수
-	};
-
-
-public:
 	RoomInfo(int _gameType, const list<C_ClientInfo*>& _playerList, int _numOfPlayer);
 	
 	bool LeaveRoom(C_ClientInfo* _player);

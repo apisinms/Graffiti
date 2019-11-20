@@ -239,7 +239,8 @@ public partial class UIManager : MonoBehaviour
             if (sec < 0 && min > 1)
                 min--;
 
-            if ((int)min <= 0) //초단위만 남았을경우 빨간색, 브금교체
+            //if ((int)min <= 0) //초단위만 남았을경우 빨간색, 브금교체
+            if ((int)sec <= 30 && (int)min <= 0) //30초 남았을경우 빨간색, 브금교체
             {
                 if (timer.txt_gameTime.color != Color.red && timer.img_outline.color != Color.red)
                 {
@@ -249,7 +250,8 @@ public partial class UIManager : MonoBehaviour
                     AudioSource source = GameObject.Find("AudioManager").GetComponent<AudioSource>();
                     if (source != null)
                     {
-                        StartCoroutine(AudioManager.FadeOutInGameBGM(source, 0.0016f));
+                        StartCoroutine(AudioManager.FadeOutInGameBGM(source, 0.01f));
+						//StartCoroutine(AudioManager.FadeOutInGameBGM(source, 0.0016f));
 						//Invoke("AudioManage.Instance.playBGM", 1.5f);
 					}
                 }

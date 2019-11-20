@@ -17,7 +17,7 @@ MatchManager* MatchManager::GetInstance()
 
 void MatchManager::Init()
 {
-	waitList = new list<C_ClientInfo*>[RoomInfo::GameType::_MAX_GAMETYPE];
+	waitList = new list<C_ClientInfo*>[GameType::_MAX_GAMETYPE];
 }
 
 void MatchManager::End()
@@ -45,15 +45,15 @@ void MatchManager::WaitListRemove(C_ClientInfo* _ptr)
 		{
 			_ptr->SetGameType(-1);	// -1로 설정
 
-			switch ((RoomInfo::GameType)gameType)
+			switch ((GameType)gameType)
 			{
-			case RoomInfo::GameType::_2vs2:
+			case GameType::_2vs2:
 			{
 				printf("2:2 대기리스트 삭제 성공 : %d\n", (int)waitList[gameType].size());
 			}
 			break;
 
-			case RoomInfo::GameType::_1vs1:
+			case GameType::_1vs1:
 			{
 				printf("1:1 대기리스트 삭제 성공 : %d\n", (int)waitList[gameType].size());
 			}
@@ -79,22 +79,22 @@ bool MatchManager::MatchProcess(C_ClientInfo* _ptr)
 	// DB에서 불러온 정보대로 저장
 	int MaxPlayerOfThisGameType = InGameManager::GetInstance()->GetGameInfo(gameType)->maxPlayer;
 
-	switch ((RoomInfo::GameType)gameType)
+	switch ((GameType)gameType)
 	{
-		case RoomInfo::GameType::_2vs2:
-		{
-			printf("2:2 대기 리스트에 삽입 성공 사이즈 : %d\n", (int)waitList[gameType].size());
-		}
-		break;
+	case GameType::_2vs2:
+	{
+		printf("2:2 대기 리스트에 삽입 성공 사이즈 : %d\n", (int)waitList[gameType].size());
+	}
+	break;
 
-		case RoomInfo::GameType::_1vs1:
-		{
-			printf("1:1 대기 리스트에 삽입 성공 사이즈 : %d\n", (int)waitList[gameType].size());
-		}
-		break;
+	case GameType::_1vs1:
+	{
+		printf("1:1 대기 리스트에 삽입 성공 사이즈 : %d\n", (int)waitList[gameType].size());
+	}
+	break;
 	}
 
-	
+
 	// 인원수가 찼다면
 	if (waitList[gameType].size() >= MaxPlayerOfThisGameType)
 	{
@@ -116,4 +116,3 @@ bool MatchManager::MatchProcess(C_ClientInfo* _ptr)
 	// 아직 매칭이 안잡히는 상황이라면
 	return false;
 }
-

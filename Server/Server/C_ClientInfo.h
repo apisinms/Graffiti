@@ -52,7 +52,22 @@ public:
 	void SetPlayerInfo(PlayerInfo* _playerInfo);
 	PlayerInfo* GetPlayerInfo();
 
-	void SetGameType(int _gameType) { selectGameType = _gameType; }
+	void SetGameType(int _gameType) 
+	{ 
+		if (_gameType >= GameType::_MAX_GAMETYPE
+			|| _gameType < -1)
+		{
+			selectGameType = 0;
+			
+			printf("SetGameType에서 오류! %d\n", _gameType);
+			return;
+		}
+
+		else
+		{
+			selectGameType = _gameType;
+		}
+	}
 	int GetGameType() { return selectGameType; }
 
 	void ResetClientInfo();

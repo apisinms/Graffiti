@@ -125,7 +125,7 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
     #endregion
 
     // 누가, 몇 발의 총알을 맞았는지 담을 구조체. (로컬 플레이어만 쓴다)
-    private NetworkManager.BulletCollisionChecker colChecker = new NetworkManager.BulletCollisionChecker(C_Global.MAX_CHARACTER);
+    private NetworkManager.BulletCollisionChecker colChecker = new NetworkManager.BulletCollisionChecker();
 
 	void Awake()
     {
@@ -272,7 +272,6 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
 
 		if (hitPlayerNum != -1)
 		{
-			colChecker.healths.health[hitPlayerNum - 1] = PlayersManager.instance.hp[hitPlayerNum - 1];		// 내가 쏜놈의 현재 체력을 저장시켜 함께 보낸다.
 			IncPlayerHitCountBit(hitPlayerNum);
 		}
 	}
@@ -340,10 +339,5 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
 	{
 		colChecker.playerBit = 0;
 		colChecker.playerHitCountBit = 0;
-
-		for (int i = 0; i < C_Global.MAX_CHARACTER; i++)
-		{
-			colChecker.healths.health[i] = 0.0f;
-		}
 	}
 }

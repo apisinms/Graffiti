@@ -106,6 +106,8 @@ SOCKET C_Socket::Accept()
 		// 접속 로그에 기록해줌
 		LogManager::GetInstance()->ConnectFileWrite("[TCP 서버] 클라이언트 접속: IP 주소=%s, 포트 번호=%d\n",
 			inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port));
+
+		printf("현재 클라이언트 수 : %d\n", SessionManager::GetInstance()->GetSize());
 	}
 
 	return clientSock;
@@ -323,6 +325,8 @@ bool C_Socket::WSA_Send(LPWSAOVERLAPPED_COMPLETION_ROUTINE _routine)
 		if (WSAGetLastError() != WSA_IO_PENDING)
 		{
 			LogManager::GetInstance()->ErrorPrintf("WSASend()");
+			/// 여기에서 IOCP_Disconnect()를 호출해야되나?
+			/// 호출하려면 ptr이 필요하다.
 			return false;
 		}
 	}

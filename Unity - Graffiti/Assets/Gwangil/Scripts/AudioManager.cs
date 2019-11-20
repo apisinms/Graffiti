@@ -7,7 +7,7 @@ public class AudioManager : Singleton<AudioManager>
 {
     public AudioClip[] bgmClip;
     public AudioSource bgmPlayer;
-    public static float OriginalBGMVolume = 0.3f;
+    public static float OriginalBGMVolume = 1.0f;
 
     public List<BypassAudioSource> soundPool = new List<BypassAudioSource>();
     private List<float> originVolume = new List<float>();

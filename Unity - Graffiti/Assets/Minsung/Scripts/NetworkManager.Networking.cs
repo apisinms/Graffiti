@@ -283,8 +283,6 @@ public partial class NetworkManager : MonoBehaviour
 
                                                     UnPackPacket(info[i].packet, out time);
                                                     bridge.TimeSync(GameManager.instance.gameInfo.gameTime - time);
-
-                                                    //Debug.Log("현재 인게임 시간" + time);
                                                 }
                                             }
                                             break;
@@ -479,20 +477,13 @@ public partial class NetworkManager : MonoBehaviour
                                                 {
                                                     UnPackPacket(info[i].packet, ref tmpIngamePacket);       // 패킷을 받고
 
-													// 지금 받은 체력이 더 낮아야만 체력을 업데이트 해준다. 그리고 죽었으면 업데이트 안한다.
-													/*if (playersManager.hp[tmpIngamePacket.playerNum - 1] > tmpIngamePacket.health
+                                                    // 지금 받은 체력이 더 낮아야만 체력을 업데이트 해준다. 그리고 죽었으면 업데이트 안한다.
+                                                    if (playersManager.hp[tmpIngamePacket.playerNum - 1] > tmpIngamePacket.health
                                                        && playersManager.actionState[tmpIngamePacket.playerNum - 1] != _ACTION_STATE.DEATH)
                                                     {
                                                         bridge.HealthChanger(ref tmpIngamePacket);
-                                                    }*/
-
-
-													// 지금 받은 체력이 더 낮아야만 체력을 업데이트 해준다. 그리고 죽었으면 업데이트 안한다.
-													if (playersManager.actionState[tmpIngamePacket.playerNum - 1] != _ACTION_STATE.DEATH)
-													{
-														bridge.HealthChanger(ref tmpIngamePacket);
-													}
-												}
+                                                    }
+                                                }
                                             }
                                             break;
 

@@ -199,7 +199,7 @@ void MainManager::IOCP_Disconnected(void* _ptr)
 
 	printf("[TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",
 		inet_ntoa(ptr->GetAddress().sin_addr), ntohs(ptr->GetAddress().sin_port));
-	
+
 	// 1. 로그인 목록에서 지움
 	// 2. 대기접속큐(or리스트)에서 지움
 	// 3. 방 목록에서 지움
@@ -211,6 +211,8 @@ void MainManager::IOCP_Disconnected(void* _ptr)
 	MatchManager::GetInstance()->WaitListRemove(ptr);	// 매칭 대기 목록에 있다면 지워준다.
 	RoomManager::GetInstance()->CheckLeaveRoom(ptr);	// 방에 있다면 방 정보에서 지워줌
 	SessionManager::GetInstance()->Remove(ptr);			// 세션 매니저에서 지움
+
+	printf("현재 클라이언트 수 : %d\n", SessionManager::GetInstance()->GetSize());
 }
 
 BOOL WINAPI MainManager::CtrlHandler(DWORD _fdwCtrlType)

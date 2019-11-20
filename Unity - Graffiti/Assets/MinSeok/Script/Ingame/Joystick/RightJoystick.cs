@@ -49,7 +49,6 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
             return;
 
 #if NETWORK
-
 		// 처음 터치할 때만
 		if (LeftJoystick.LeftTouch == false && RightJoystick.RightTouch == false)
 			BridgeClientToServer.instance.StartMoveCor();
@@ -127,9 +126,9 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
     {
         if (_distance >= 0 && _distance <= right_joystick.maxMoveArea * 0.5f) //0단계때
             return 0;
-        else if (_distance >= right_joystick.maxMoveArea * 0.5f && _distance <= right_joystick.maxMoveArea * 1.3f) //1단계 조준단계
+        else if (_distance >= right_joystick.maxMoveArea * 0.5f && _distance <= right_joystick.maxMoveArea * 1.1f) //1단계 조준단계
             return 1;
-        else if (_distance >= right_joystick.maxMoveArea * 1.3f) //2단계 발사단계
+        else if (_distance >= right_joystick.maxMoveArea * 1.1f) //2단계 발사단계
             return 2;
 
         return -1;

@@ -77,10 +77,10 @@ public class btn_start : UnityEngine.MonoBehaviour
                 AudioSource source = GameObject.Find("AudioManager").GetComponent<AudioSource>();
                 if (source != null)
                 {
-                    StartCoroutine(AudioManager.FadeOut(source, 0.003f));
+                    StartCoroutine(AudioManager.FadeOut(source, 0.015f));
                 }
 
-                Invoke("LoadWeaponScene", 2.0f);
+                Invoke("LoadWeaponScene", 1.0f);
 
                 yield break;    // 코루틴 종료
 			}

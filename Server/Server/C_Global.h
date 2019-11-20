@@ -27,7 +27,7 @@ using namespace std;
 #define KEEPALIVE_TIME 3000								// TIME ms마다 keep-alive 신호를 주고받는다
 #define KEEPALIVE_INTERVAL (KEEPALIVE_TIME / 20)		// Heart-beat가 없을시 INTERVAL ms마다 재전송한다(10번)
 
-#define TEMP_MAX_PLAYER	4
+#define SECOND 1
 
 class C_ClientInfo;
 
@@ -66,23 +66,11 @@ struct COORD_DOUBLE
 	COORD_DOUBLE() { x = z = 0.0; }
 };
 
-struct HitPlayersHealth
-{
-	float health[TEMP_MAX_PLAYER];
-
-	HitPlayersHealth()
-	{
-		memset(health, 0.0f, sizeof(health));
-	}
-};
-
 // 총알 충돌 검사 구조체
 struct BulletCollisionChecker
 {
 	byte playerBit;
 	int playerHitCountBit;
-	HitPlayersHealth healths;
-
 	BulletCollisionChecker()
 	{
 		playerBit = 0;
@@ -93,7 +81,6 @@ struct BulletCollisionChecker
 	{
 		playerBit = 0;
 		playerHitCountBit = 0;
-		memset(&healths, 0, sizeof(healths));
 	}
 };
 
@@ -154,6 +141,14 @@ enum WEAPONS : char
 	TRAP,
 	GRENADE,
 	SUB_MAX_LENGTH,
+};
+
+enum GameType
+{
+	_2vs2,
+	_1vs1,
+
+	_MAX_GAMETYPE	// 게임 타입 개수
 };
 
 struct Weapon
@@ -266,7 +261,7 @@ struct GameInfo
 	{
 		gameType = maxPlayer = 0;
 		maxSpeed = maxHealth = 0.0f;
-		respawnTime = healPackTime = subSprayingTime = mainSprayingTime = 0.0f;
+		respawnTime = subSprayingTime = mainSprayingTime = 0.0f;
 		gameTime = 0.0;
 		killPoint = capturePoint = 0;
 	}

@@ -14,7 +14,7 @@ public partial class NetworkManager : MonoBehaviour
 {
     // 서버 IP와 포트
     //private static IPAddress serverIP = IPAddress.Parse("127.0.0.1");
-    private static IPAddress serverIP = IPAddress.Parse("211.195.240.25");
+    private static IPAddress serverIP = IPAddress.Parse("121.164.136.215");
 
     private static int serverPort = 10823;
 
@@ -206,15 +206,8 @@ public partial class NetworkManager : MonoBehaviour
         }
     };
 
-	[StructLayout(LayoutKind.Sequential)]
-	public struct HitPlayersHealth
-	{
-		[MarshalAs(UnmanagedType.ByValArray, SizeConst = C_Global.MAX_CHARACTER)]
-		public float[] health;
-	};
-
-	// 총알 충돌 검사 구조체
-	[StructLayout(LayoutKind.Sequential)]
+    // 총알 충돌 검사 구조체
+    [StructLayout(LayoutKind.Sequential)]
     public struct BulletCollisionChecker
     {
         [MarshalAs(UnmanagedType.I1)]
@@ -223,22 +216,13 @@ public partial class NetworkManager : MonoBehaviour
         [MarshalAs(UnmanagedType.I4)]
         public int playerHitCountBit;
 
-		public HitPlayersHealth healths;
-
-		private static BulletCollisionChecker dummy = new BulletCollisionChecker(C_Global.MAX_CHARACTER);
+        private static BulletCollisionChecker dummy = new BulletCollisionChecker();
         public static BulletCollisionChecker GetDummy()
         {
             return dummy;
         }
 
-		public BulletCollisionChecker(int _MAX_CHARACTER)
-		{
-			playerBit = 0;
-			playerHitCountBit = 0;
-			healths.health = new float[_MAX_CHARACTER];
-		}
-
-		public byte[] Serialize()
+        public byte[] Serialize()
         {
             // allocate a byte array for the struct data
             var buffer = new byte[Marshal.SizeOf(typeof(BulletCollisionChecker))];

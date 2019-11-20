@@ -180,7 +180,7 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
                     AudioSource source = GameObject.Find("AudioManager").GetComponent<AudioSource>();
                     if (source != null)
                     {
-                        StartCoroutine(AudioManager.FadeOut(source, 0.0015f));
+                        StartCoroutine(AudioManager.FadeOut(source, 0.0075f));
                     }
 
                     SceneLoader.LoadScene("Lobby");
@@ -277,7 +277,7 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
         guestPW = MakeGuestInfo();
         guestNick = MakeGuestInfo("Guest_");
 
-        Debug.Log("ID = " + guestID + "PW = " + guestPW + "Nick = " + guestNick);
+        //Debug.Log("ID = " + guestID + "PW = " + guestPW + "Nick = " + guestNick);
 
         networkManager.SysMsg = string.Empty;
 
@@ -337,7 +337,7 @@ public class InputInfoManager : UnityEngine.MonoBehaviour
                     AudioSource source = GameObject.Find("AudioManager").GetComponent<AudioSource>();
                     if (source != null)
                     {
-                        StartCoroutine(AudioManager.FadeOut(source, 0.0015f));
+                        StartCoroutine(AudioManager.FadeOut(source, 0.0075f));
                     }
                     SceneLoader.LoadScene("Lobby");
                 }
