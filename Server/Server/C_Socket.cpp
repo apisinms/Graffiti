@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "C_Socket.h"
+#include "MainManager.h"
 
 void C_Socket::SetSocket(SOCKET _sock)
 {
@@ -325,8 +326,9 @@ bool C_Socket::WSA_Send(LPWSAOVERLAPPED_COMPLETION_ROUTINE _routine)
 		if (WSAGetLastError() != WSA_IO_PENDING)
 		{
 			LogManager::GetInstance()->ErrorPrintf("WSASend()");
-			/// 여기에서 IOCP_Disconnect()를 호출해야되나?
-			/// 호출하려면 ptr이 필요하다.
+
+			MainManager::GetInstance()->IOCP_Disconnected(sOverlapped.ptr);
+			printf("WSASend()에서 IOCP_Disconnected() 호출함\n");
 			return false;
 		}
 	}

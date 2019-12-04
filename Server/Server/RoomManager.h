@@ -76,7 +76,19 @@ public:
 	int GetMaxPlayer() { return maxPlayer; }
 
 	void SetRoomStatus(ROOMSTATUS _roomStatus) { roomStatus = _roomStatus; }
-	ROOMSTATUS GetRoomStatus() { return roomStatus; }
+	ROOMSTATUS GetRoomStatus() 
+	{ 
+		if (this == nullptr)
+		{
+			printf("GetRoomStatus() this가 nullptr임\n");
+			return ROOMSTATUS::ROOM_NONE;
+		}
+		
+		else
+		{
+			return roomStatus;
+		}
+	}
 	
 	vector<C_ClientInfo*>& GetPlayers() { return players; }	// 플레이어 벡터를 리턴해주되, 어차피 복사본이 전달되므로 원본은 영향이 없다.
 

@@ -1890,6 +1890,10 @@ DWORD WINAPI InGameManager::InGameTimerThread(LPVOID _arg)
 		}
 		break;
 
+		// ROOM_NONE은 빠져나감
+		case ROOMSTATUS::ROOM_NONE:
+			return -1;
+
 		// 그 이외에는 그냥 CPU 시간 양보한다.
 		default:
 		{
