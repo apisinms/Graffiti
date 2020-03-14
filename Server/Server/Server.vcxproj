@@ -145,7 +145,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ChatManager.h" />
-    <ClInclude Include="C_ChatState.h" />
     <ClInclude Include="C_ClientInfo.h" />
     <ClInclude Include="C_ComfortableCS.h" />
     <ClInclude Include="C_Encrypt.h" />
@@ -154,16 +153,11 @@
     <ClInclude Include="C_IOCP.h" />
     <ClInclude Include="C_Timer.h" />
     <ClInclude Include="Item.h" />
-    <ClInclude Include="C_LinkedList.h" />
-    <ClInclude Include="C_List.h" />
     <ClInclude Include="C_LobbyState.h" />
     <ClInclude Include="C_LoginState.h" />
-    <ClInclude Include="C_Node.h" />
     <ClInclude Include="C_Packet.h" />
     <ClInclude Include="C_Sector.h" />
-    <ClInclude Include="C_Select.h" />
     <ClInclude Include="C_Socket.h" />
-    <ClInclude Include="C_Stack.h" />
     <ClInclude Include="C_State.h" />
     <ClInclude Include="C_SyncCS.h" />
     <ClInclude Include="DatabaseManager.h" />
@@ -173,6 +167,7 @@
     <ClInclude Include="LogManager.h" />
     <ClInclude Include="MainManager.h" />
     <ClInclude Include="MatchManager.h" />
+    <ClInclude Include="C_MemoryPool.h" />
     <ClInclude Include="RandomManager.h" />
     <ClInclude Include="RoomManager.h" />
     <ClInclude Include="SessionManager.h" />
@@ -209,7 +204,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

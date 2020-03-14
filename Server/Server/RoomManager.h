@@ -12,11 +12,6 @@ class C_ClientInfo;
 struct TeamInfo
 {
 	vector<C_ClientInfo*> teamMemberList;	// 이 팀에 속한 플레이어들
-	//int teamKillScore;						// 이 팀의 킬 스코어
-	//int teamCaptureScore;					// 이 팀의 점령 스코어
-	//int teamTotalScore;						// 이 팀의 킬 + 점령 스코어
-	//int teamCaptureNum;						// 이 팀의 점령 개수
-
 	TeamInfo() {}
 };
 
@@ -90,9 +85,17 @@ public:
 		}
 	}
 	
-	vector<C_ClientInfo*>& GetPlayers() { return players; }	// 플레이어 벡터를 리턴해주되, 어차피 복사본이 전달되므로 원본은 영향이 없다.
+	vector<C_ClientInfo*>& GetPlayers() { return players; }	// 플레이어 벡터를 리턴
 
-	C_ClientInfo* GetPlayerByIndex(int _idx) { return players[_idx]; }
+	C_ClientInfo* GetPlayerByIndex(int _idx) 
+	{ 
+		if (_idx < 0 || _idx >= players.size())
+		{
+			return nullptr;
+		}
+
+		return players[_idx]; 
+	}
 	C_ClientInfo* GetPlayerByPlayerNum(int _playerNum)
 	{ 
 		for (size_t i = 0; i < players.size(); i++)
@@ -115,7 +118,10 @@ public:
 		sector = _sector; 
 	}
 	
-	TeamInfo& GetTeamInfo(int _teamNum) { return teamInfo[_teamNum]; }
+	TeamInfo& GetTeamInfo(int _teamNum) 
+	{ 
+		return teamInfo[_teamNum];
+	}
 	void DeleteTeam()
 	{
 		if (teamInfo != nullptr)
@@ -130,7 +136,6 @@ public:
 
 class RoomManager : public C_SyncCS<RoomManager>
 {
-	//C_List<RoomInfo*>* roomList;
 	list<RoomInfo*> roomList;
 
 private:

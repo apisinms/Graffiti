@@ -200,8 +200,10 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
 
 	public void CheckFireRange(GameObject _obj_bullet, BulletCollision._BULLET_CLONE_INFO _info_bullet, int _index)
     {
-        if (Vector3.Distance(_obj_bullet.transform.position, PlayersManager.instance.obj_players[_index].transform.position) >= Main_SMG.instance.weaponManager.weaponInfoSMG.range)
-            PoolManager.instance.ReturnGunToPool(_obj_bullet, _info_bullet, _index);
+		if (Vector3.Distance(_obj_bullet.transform.position, PlayersManager.instance.obj_players[_index].transform.position) >= Main_SMG.instance.weaponManager.weaponInfoSMG.range)
+		{
+			PoolManager.instance.ReturnGunToPool(_obj_bullet, _info_bullet, _index);
+		}
     }
 
     private void StartDecreaseReloadGage(int _index)
@@ -264,9 +266,10 @@ public class Main_SMG : MonoBehaviour, IMainWeaponType
 			weaponManager.isReloading = true;
             #if NETWORK
 			NetworkManager.instance.SendIngamePacket();
-            #endif
+			#endif
 
-            UIManager.instance.StartCoroutine(UIManager.instance.Cor_DecreaseReloadGageImg(weaponManager.weaponInfoSMG.reloadTime, _index));
+
+			UIManager.instance.StartCoroutine(UIManager.instance.Cor_DecreaseReloadGageImg(weaponManager.weaponInfoSMG.reloadTime, _index));
 
             yield return YieldInstructionCache.WaitForSeconds(weaponManager.weaponInfoSMG.reloadTime);
 

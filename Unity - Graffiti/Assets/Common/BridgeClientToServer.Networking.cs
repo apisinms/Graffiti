@@ -118,14 +118,18 @@ public partial class BridgeClientToServer : MonoBehaviour
 		playersManager.obj_players[_packet.playerNum - 1].transform.localEulerAngles = tmpAngle;
 
 		uiManager.OnPlayerUI(_packet.playerNum - 1);
+
+		View_StartFire(_packet.playerNum - 1);	// 총 쏘던거 있으면 켜주기
 	}
 
 	// 섹터 아웃시
 	public void ExitSectorProcess(ref IngamePacket _packet)
 	{
 		playersManager.obj_players[_packet.playerNum - 1].SetActive(false);   // 끄고
-
 		uiManager.OffPlayerUI(_packet.playerNum - 1);
+
+		// 총 쏘던거 꺼주기
+		View_StopFire(_packet.playerNum - 1);
 	}
 
 	public void UpdatePlayerProcess(byte _playerBit)
@@ -497,11 +501,5 @@ public partial class BridgeClientToServer : MonoBehaviour
 		SceneLoader.LoadScene("EndScene");  // 스무스 로딩
 
 		networkManager.SendGotoLobby();   // 나 로비로 갈랭~(얜 호출해줘야 돼)
-	}
-
-	//쐇을때 무조건 1번의 패킷을 보내야됨. 보정용
-	public void SendPacketOnce()
-	{
-		networkManager.SendIngamePacket();
 	}
 }

@@ -110,8 +110,10 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
         playerSGInfo[myIndex].curAmmo--;
         UIManager.instance.SetAmmoStateTxt(playerSGInfo[myIndex].curAmmo);
 
-        #if NETWORK
-        NetworkManager.instance.SendIngamePacket();
+
+
+		#if NETWORK
+		NetworkManager.instance.SendIngamePacket();
         #endif
 
         switch (playerSGInfo[myIndex].bulletPatternIndex)
@@ -199,9 +201,11 @@ public class Main_SG : MonoBehaviour, IMainWeaponType
 
 	public void CheckFireRange(GameObject _obj_bullet, BulletCollision._BULLET_CLONE_INFO _info_bullet, int _index)
     {
-        if (Vector3.Distance(_obj_bullet.transform.position, PlayersManager.instance.obj_players[_index].transform.position) >= Main_SG.instance.weaponManager.weaponInfoSG.range)
-            PoolManager.instance.ReturnGunToPool(_obj_bullet, _info_bullet, _index);
-    }
+		if (Vector3.Distance(_obj_bullet.transform.position, PlayersManager.instance.obj_players[_index].transform.position) >= Main_SG.instance.weaponManager.weaponInfoSG.range)
+		{
+			PoolManager.instance.ReturnGunToPool(_obj_bullet, _info_bullet, _index);
+		}
+	}
 
     private void StartDecreaseReloadGage(int _index)
     {

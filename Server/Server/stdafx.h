@@ -8,7 +8,7 @@
 #pragma comment(lib, "ws2_32")
 #include <WinSock2.h>
 #include <Windows.h>
-#include<iostream>
+#include <iostream>
 #include <stdio.h>
 #include <time.h>
 #include <tchar.h>
@@ -16,18 +16,14 @@
 #include <locale.h>
 #include <mstcpip.h>
 #include <random>
+#include <memory>
+
 
 // STL
 #include <list>
 #include <vector>
 #include <queue>
 #include <algorithm>
-
-// custom STL
-#include "C_LinkedList.h"
-#include "C_List.h"
-#include "C_Node.h"
-#include "C_Stack.h"
 
 // Network Model
 #include "C_IOCP.h"

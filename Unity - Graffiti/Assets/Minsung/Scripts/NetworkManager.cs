@@ -13,9 +13,8 @@ using UnityEngine;
 public partial class NetworkManager : MonoBehaviour
 {
     // 서버 IP와 포트
-    //private static IPAddress serverIP = IPAddress.Parse("127.0.0.1");
-    private static IPAddress serverIP = IPAddress.Parse("192.168.2.249");
-    //private static IPAddress serverIP = IPAddress.Parse("192.168.43.115");
+    private static IPAddress serverIP = IPAddress.Parse("127.0.0.1");
+    //private static IPAddress serverIP = IPAddress.Parse("121.164.148.169");
 
     private static int serverPort = 10823;
 
@@ -217,7 +216,7 @@ public partial class NetworkManager : MonoBehaviour
         [MarshalAs(UnmanagedType.I4)]
         public int playerHitCountBit;
 
-        private static BulletCollisionChecker dummy = new BulletCollisionChecker();
+		private static BulletCollisionChecker dummy = new BulletCollisionChecker();
         public static BulletCollisionChecker GetDummy()
         {
             return dummy;
@@ -303,7 +302,7 @@ public partial class NetworkManager : MonoBehaviour
         [MarshalAs(UnmanagedType.R4)]
         public float health;
 
-        [MarshalAs(UnmanagedType.I1)]
+		[MarshalAs(UnmanagedType.I1)]
         public bool isReloading;
 
         // 총알 맞았는지 판정 구조체
@@ -445,7 +444,7 @@ public partial class NetworkManager : MonoBehaviour
         this.ingamePackets[_idx].health = _hp;
     }
 
-    public void SetReloadState(int _idx, bool _reloadState)
+	public void SetReloadState(int _idx, bool _reloadState)
     {
         ingamePackets[_idx].isReloading = _reloadState;
     }

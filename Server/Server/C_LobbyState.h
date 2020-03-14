@@ -20,15 +20,10 @@ public:
 		// 매칭이 가능한지
 		if (LobbyManager::GetInstance()->CanIMatch(_ptr) == true)
 			state = STATE_LOBBY;
-			//pos = INGAME;
 
 		// 매칭 취소가 가능한지
 		if (LobbyManager::GetInstance()->CanICancelMatch(_ptr) == true)
 			state = STATE_LOBBY;
-
-		//// 로비를 떠나서 로그인 창으로 가는게 가능한지
-		//if (LobbyManager::GetInstance()->CanILeaveLobby(_ptr) == true)
-		//	state = STATE_LOGIN;
 	}
 
 	void Write(C_ClientInfo* _ptr) override

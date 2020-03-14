@@ -69,7 +69,7 @@ public partial class BridgeClientToServer : MonoBehaviour
 
     public void StopMoveCor()
     {
-        SendPacketOnce();
+		networkManager.SendIngamePacket();
         StopCoroutine(moveCor);
     }
 }

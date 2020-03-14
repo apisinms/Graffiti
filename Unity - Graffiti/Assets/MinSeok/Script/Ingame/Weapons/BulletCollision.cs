@@ -68,6 +68,7 @@ public class BulletCollision : MonoBehaviour
         }
 
 #endif
+		// 플레이어 안맞은 경우
         if(!other.CompareTag("Player1") && !other.CompareTag("Player2") && !other.CompareTag("Player3") && !other.CompareTag("Player4"))
         {
             if (other.CompareTag("Concrete1"))

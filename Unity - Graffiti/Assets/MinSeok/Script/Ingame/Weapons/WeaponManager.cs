@@ -270,48 +270,29 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
 	{
 		int hitPlayerNum = SetPlayerBit(_playerTag);   // 1. 맞은 플레이어 비트 활성화
 
-		if (hitPlayerNum != -1)
-		{
-			IncPlayerHitCountBit(hitPlayerNum);
-		}
+		IncPlayerHitCountBit(hitPlayerNum);				// 2. 맞은 횟수 카운트 비트 활성화
 	}
 
     public int SetPlayerBit(string _playerTag)
     {
-        int hitPlayerNum = -1;
-        switch (_playerTag)
-        {
-            case "Player1":
-                {
-                    colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_1;
-                    hitPlayerNum = 1;
-                }
-                break;
+		int hitPlayerNum = 0;
 
+		// 플레이어를 쏜 경우는 맞은 플레이어 비트를 셋팅
+		if(_playerTag.Contains("Player"))
+		{
+			hitPlayerNum = int.Parse(_playerTag[_playerTag.Length - 1].ToString());
+		}
 
-            case "Player2":
-                {
-                    colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_2;
-                    hitPlayerNum = 2;
-                }
-                break;
+		// 허공에 쏜건 본인 플레이어 넘버로 셋팅해서 처리한다.
+		else
+		{
+			hitPlayerNum = (myIndex + 1);
+		}
 
-            case "Player3":
-                {
-                    colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_3;
-                    hitPlayerNum = 3;
-                }
-                break;
+		// 플레이어 비트 Flag시킴
+		colChecker.playerBit |= (byte)(1 << (C_Global.MAX_CHARACTER - hitPlayerNum));
 
-            case "Player4":
-                {
-                    colChecker.playerBit |= (byte)C_Global.PLAYER_BIT.PLAYER_4;
-                    hitPlayerNum = 4;
-                }
-                break;
-        }
-
-        return hitPlayerNum;
+		return hitPlayerNum;
     }
 
     // player의 HitCountBit(맞은 횟수 비트)를 증가한다.
@@ -334,8 +315,8 @@ public class WeaponManager : MonoBehaviour, IMainWeaponType
         colChecker.playerHitCountBit |= (beforeCount << shifter);
     }
 
-    // 총알 충돌 체커 구조체 초기화
-    public void ResetCollisionChecker()
+	// 총알 충돌 체커 구조체 초기화
+	public void ResetCollisionChecker()
 	{
 		colChecker.playerBit = 0;
 		colChecker.playerHitCountBit = 0;

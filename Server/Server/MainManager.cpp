@@ -9,7 +9,6 @@
 #include "MatchManager.h"
 #include "InGameManager.h"
 #include "RandomManager.h"
-//#include <locale.h>
 
 // 초기화
 MainManager* MainManager::instance;			// 싱글톤을 위한 정적 포인터

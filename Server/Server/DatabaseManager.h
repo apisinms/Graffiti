@@ -1,5 +1,4 @@
 #pragma once
-#include "C_SyncCS.h"
 #include <mysql.h>
 
 //struct UserInfo;

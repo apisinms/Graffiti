@@ -1,0 +1,389 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ChatManager" Collapsed="true">
+    <Position X="29.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAACAQAAAAQAgAEAAAABAJAAAAAAAACQAADAAA=</HashCode>
+      <FileName>ChatManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DatabaseManager" Collapsed="true">
+    <Position X="3" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AFIIAIoAAAAAAAACBAEAACwCBCTAAgQACAACIBABAAE=</HashCode>
+      <FileName>DatabaseManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InGameManager" Collapsed="true">
+    <Position X="4.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ZIICEBgiQGwAIKBcgQAcEiIhhABECABCAs0TQAAHIAA=</HashCode>
+      <FileName>InGameManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LobbyManager" Collapsed="true">
+    <Position X="10.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAJAEQAAACYAAAEAAAABABAAQAAAAACQAAiAAA=</HashCode>
+      <FileName>LobbyManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LoginManager" Collapsed="true">
+    <Position X="10" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIoAACAAAQAAAAQAAAUEAAABARAggAAQQACQACCAAA=</HashCode>
+      <FileName>LoginManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LogManager" Collapsed="true">
+    <Position X="12.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAABIAAAAEAgAAABABgAAAgAAACACEwAAA=</HashCode>
+      <FileName>LogManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MainManager" Collapsed="true">
+    <Position X="13.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABIAAACCAAAAAAAAAAAAAAAAJCBAAAAAIAACAgAAAAI=</HashCode>
+      <FileName>MainManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MatchManager" Collapsed="true">
+    <Position X="11.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAACAAAAAFAAAAAABABABAEAAAACAAAAAAA=</HashCode>
+      <FileName>MatchManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RandomManager" Collapsed="true">
+    <Position X="14" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAIAAAAAAAEAAAAFABAAAAAAAQCABAAAAQ=</HashCode>
+      <FileName>RandomManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RoomManager" Collapsed="true">
+    <Position X="6.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAIAIAAAAAAAAAAAAABCBAAAAAAAACAAQAEEA=</HashCode>
+      <FileName>RoomManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SessionManager" Collapsed="true">
+    <Position X="15.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AhIAAAIAAAAAIACAAAAABAAIBABAAAAAACACAAAAAAA=</HashCode>
+      <FileName>SessionManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UtilityManager" Collapsed="true">
+    <Position X="17.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAACAAIAQAAAAASAFABAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>UtilityManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="C_Encrypt" Collapsed="true">
+    <Position X="12.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQIAAAAAAAAAAAAQAAAAAAAgBABAAAAABAACAAAAAAA=</HashCode>
+      <FileName>C_Encrypt.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="C_IOCP" Collapsed="true">
+    <Position X="13.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgBAAGgAAIAAAAgAAAAAAAACAAAABAIAAAAgAAAAA=</HashCode>
+      <FileName>C_IOCP.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="C_ClientInfo" Collapsed="true">
+    <Position X="8.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQBIEBAACABBEAAQAKAAAUERIBgBAEAAAAAAAQgCA=</HashCode>
+      <FileName>C_ClientInfo.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="C_Packet" Collapsed="true">
+    <Position X="8.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAAAAAAAIgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C_Packet.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="C_Socket" Collapsed="true">
+    <Position X="8.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>hIAAgCABAIABXEAIAEAAAcEAAIAAqQSCAAAAAAAgAAA=</HashCode>
+      <FileName>C_Socket.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="C_ComfortableCS" Collapsed="true">
+    <Position X="10.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQAAAAAAAEEAACAABAAAAAAAAA=</HashCode>
+      <FileName>C_ComfortableCS.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="C_Timer" Collapsed="true">
+    <Position X="15.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAADIAAAAAAAAgQCAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>C_Timer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="C_SyncCS&lt;T&gt;" Collapsed="true">
+    <Position X="8.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C_SyncCS.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="C_MemoryPool&lt;T, ALLOC_BLOCK_SIZE&gt;" Collapsed="true">
+    <Position X="15.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAIAAAAAAAAAk=</HashCode>
+      <FileName>C_MemoryPool.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="C_InGameState" Collapsed="true">
+    <Position X="2.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAgAAAAAAAEAAACAAEAAAA=</HashCode>
+      <FileName>C_InGameState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="C_LobbyState" Collapsed="true">
+    <Position X="4.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAgAAAAAAAEAAACAAEAAAA=</HashCode>
+      <FileName>C_LobbyState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="C_LoginState" Collapsed="true">
+    <Position X="6.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAgAAAAAAAEAAACAAEAAAA=</HashCode>
+      <FileName>C_LoginState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="C_State" Collapsed="true">
+    <Position X="4.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAACAAEAAAA=</HashCode>
+      <FileName>C_State.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="C_Sector" Collapsed="true">
+    <Position X="14" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAEAAggwABAABAAAAIAAAIAAAAAAQAABAAA=</HashCode>
+      <FileName>C_Sector.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="TeamInfo" Collapsed="true">
+    <Position X="36" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAACAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>RoomManager.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="RoomInfo" Collapsed="true">
+    <Position X="36" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAIIEaIACUAAUAAAAQgAoAQiUUUAAAhIIEIEQAAQgCI=</HashCode>
+      <FileName>RoomManager.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="WSAOVERLAPPED_EX" Collapsed="true">
+    <Position X="34.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAgAABAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>C_Socket.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="INDEX" Collapsed="true">
+    <Position X="36" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAQAAAAAAAQAAIAEAAAAAAAA=</HashCode>
+      <FileName>C_Global.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="COORD_DOUBLE" Collapsed="true">
+    <Position X="32.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAABAAQAAAAA=</HashCode>
+      <FileName>C_Global.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="BulletCollisionChecker" Collapsed="true">
+    <Position X="30.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAACAAAACQAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C_Global.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="IngamePacket" Collapsed="true">
+    <Position X="15.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAABAAAAAAAAAAEAAAAgABAAAABAQAAAAAAgAIAAAg=</HashCode>
+      <FileName>C_Global.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Weapon" Collapsed="true">
+    <Position X="30.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACCAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>C_Global.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Score" Collapsed="true">
+    <Position X="32.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAgAgAAgAAAgAAAAAAAAAAAABAAAAEAAAAAA=</HashCode>
+      <FileName>C_Global.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="PositionInfo" Collapsed="true">
+    <Position X="34.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAgAAAIAAAAAAAAAAAgAIAAAA=</HashCode>
+      <FileName>C_Global.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="LocationInfo" Collapsed="true">
+    <Position X="30.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAAAAAAAAAAAAAAAAQAQAAAAAAAAAAAA=</HashCode>
+      <FileName>C_Global.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="WeaponInfo" Collapsed="true">
+    <Position X="32.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACIAACAIAQIAgAgAAAAAAAAAAAAAARIAAAAAAACAAAA=</HashCode>
+      <FileName>C_Global.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="GameInfo" Collapsed="true">
+    <Position X="34.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIIAIAAAwABQCAAAIAAAAAAABAIAAAAAAQAAA=</HashCode>
+      <FileName>C_Global.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="BuildingInfo" Collapsed="true">
+    <Position X="29" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAQAAAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C_Global.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="PlayerInfo" Collapsed="true">
+    <Position X="32.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>GRMAAQCoAkAgCjAUgCEKBgBqKEIBAAQAABgAgAmBACE=</HashCode>
+      <FileName>C_Global.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="S_SendBuf" Collapsed="true">
+    <Position X="30.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQAAAAAAAAAAAAABAAAAAAAAAAAAAAAAACAAAAAAAA=</HashCode>
+      <FileName>C_Global.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="S_RecvBuf" Collapsed="true">
+    <Position X="29" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAABAAAAAABAAAgAAAAAgAIAAAAAAA=</HashCode>
+      <FileName>C_Global.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="UserInfo" Collapsed="true">
+    <Position X="29" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAgBAAAAAAAAAAAwA=</HashCode>
+      <FileName>C_Global.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SectorInstance" Collapsed="true">
+    <Position X="34.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAAAAAAAgAAAAAAIQCAAgAAAAAAA=</HashCode>
+      <FileName>C_Sector.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="ItemAttribute" Collapsed="true">
+    <Position X="29" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Item.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="PLAYER_BIT" Collapsed="true">
+    <Position X="36" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAIAAAAAAABAIAAA=</HashCode>
+      <FileName>C_Global.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="WEAPONS" Collapsed="true">
+    <Position X="34.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAEAEAAAEAAAAAAAQAAAAAAAAgAAAQCAAAAAAAA=</HashCode>
+      <FileName>C_Global.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="GameType" Collapsed="true">
+    <Position X="30.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAIAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C_Global.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="STATE" Collapsed="true">
+    <Position X="30.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAEAAAAAAAAAAAAAAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>C_Global.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ROOMSTATUS" Collapsed="true">
+    <Position X="29" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAACABAgAQACAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C_Global.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="STATE_PROTOCOL" Collapsed="true">
+    <Position X="32.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAQAAAAAAAAAAAAAAAAAAAAAAAAAAQAAEAAA=</HashCode>
+      <FileName>C_Global.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="IO_TYPE" Collapsed="true">
+    <Position X="32.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAAAAAAAgAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>C_Global.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="__unnamed_enum_0009_1" Collapsed="true">
+    <Position X="29" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAIAAAAAAAAAAQAAAAAAAAAhAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>C_Global.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ItemCode" Collapsed="true">
+    <Position X="34.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Item.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>

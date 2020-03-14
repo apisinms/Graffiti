@@ -38,18 +38,5 @@ public:
 		default:
 			break;
 		}
-
-		// 이전 상태로 돌아가는 코드
-		{
-			//C_State* prevState = _ptr->PopState();		// 클라의 상태 스택에서 이전 상태를 얻어온다.
-
-			//// 이전에 진행했던 상태가 없었다면
-			//if (prevState == nullptr)
-			//	_ptr->SetState(_ptr->GetLobbyState());		// 로비 상태로 이동한다.
-
-			//// 이전 상태로 이동한다.
-			//else
-			//	_ptr->SetState(prevState);					// 이전 상태로 이동한다.
-		}
 	}
 };

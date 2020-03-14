@@ -78,10 +78,10 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
                     StateManager.instance.Shot(false);
                     isStep0 = true;
 
-                    #if NETWORK
-                    BridgeClientToServer.instance.SendPacketOnce();
-                    #endif
-                }
+#if NETWORK
+					NetworkManager.instance.SendIngamePacket();
+#endif
+				}
                 isStep1 = false; isStep2 = false;
 
                 img_joystick_stick.transform.position = right_joystick.stickFirstPos;
@@ -95,11 +95,11 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
                     StateManager.instance.Shot(false);
                     isStep1 = true;
 
-                    #if NETWORK
-                    BridgeClientToServer.instance.SendPacketOnce();
-                    #endif
-                }
-                isStep0 = false; isStep2 = false;
+#if NETWORK
+					NetworkManager.instance.SendIngamePacket();
+#endif
+				}
+				isStep0 = false; isStep2 = false;
 
                 img_joystick_stick.rectTransform.position = right_joystick.stickFirstPos + (right_joystick.stickDir * right_joystick.maxMoveArea * 0.5f);
                 break;
@@ -109,12 +109,11 @@ public class RightJoystick : MonoBehaviour, IJoystickControll
                 {
                     StateManager.instance.Shot(true);
                     isStep2 = true;
-
-                    #if NETWORK
-                    BridgeClientToServer.instance.SendPacketOnce();
-                    #endif
-                }
-                isStep0 = false; isStep1 = false;
+#if NETWORK
+					NetworkManager.instance.SendIngamePacket();
+#endif
+				}
+				isStep0 = false; isStep1 = false;
 
                 img_joystick_stick.rectTransform.position = right_joystick.stickFirstPos + (right_joystick.stickDir * right_joystick.maxMoveArea);
                 break;

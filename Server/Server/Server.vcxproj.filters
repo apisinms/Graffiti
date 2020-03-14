@@ -40,9 +40,6 @@
     <Filter Include="헤더 파일\Client">
       <UniqueIdentifier>{96db0c89-5ceb-4e3c-8e54-7f33662ceb0c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="헤더 파일\List">
-      <UniqueIdentifier>{a8ec13e6-a3d2-4ff8-a91c-3f581f287d71}</UniqueIdentifier>
-    </Filter>
     <Filter Include="헤더 파일\Packet&amp;Socket">
       <UniqueIdentifier>{338687f3-3efb-458a-8beb-c63242c186f2}</UniqueIdentifier>
     </Filter>
@@ -108,9 +105,6 @@
     <ClInclude Include="C_IOCP.h">
       <Filter>헤더 파일\Network_Model</Filter>
     </ClInclude>
-    <ClInclude Include="C_Select.h">
-      <Filter>헤더 파일\Network_Model</Filter>
-    </ClInclude>
     <ClInclude Include="C_ClientInfo.h">
       <Filter>헤더 파일\Client</Filter>
     </ClInclude>
@@ -123,18 +117,6 @@
     <ClInclude Include="C_LobbyState.h">
       <Filter>헤더 파일\State</Filter>
     </ClInclude>
-    <ClInclude Include="C_ChatState.h">
-      <Filter>헤더 파일\State</Filter>
-    </ClInclude>
-    <ClInclude Include="C_List.h">
-      <Filter>헤더 파일\List</Filter>
-    </ClInclude>
-    <ClInclude Include="C_LinkedList.h">
-      <Filter>헤더 파일\List</Filter>
-    </ClInclude>
-    <ClInclude Include="C_Node.h">
-      <Filter>헤더 파일\List</Filter>
-    </ClInclude>
     <ClInclude Include="C_ComfortableCS.h">
       <Filter>헤더 파일\Utility</Filter>
     </ClInclude>
@@ -146,9 +128,6 @@
     </ClInclude>
     <ClInclude Include="C_Socket.h">
       <Filter>헤더 파일\Packet&amp;Socket</Filter>
-    </ClInclude>
-    <ClInclude Include="C_Stack.h">
-      <Filter>헤더 파일\List</Filter>
     </ClInclude>
     <ClInclude Include="C_Global.h">
       <Filter>헤더 파일\ETC</Filter>
@@ -178,6 +157,9 @@
       <Filter>헤더 파일\Item</Filter>
     </ClInclude>
     <ClInclude Include="C_Timer.h">
+      <Filter>헤더 파일\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="C_MemoryPool.h">
       <Filter>헤더 파일\Utility</Filter>
     </ClInclude>
   </ItemGroup>
@@ -254,6 +236,5 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
 </Project>

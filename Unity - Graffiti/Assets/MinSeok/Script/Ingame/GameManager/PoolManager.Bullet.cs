@@ -130,7 +130,7 @@ public partial class PoolManager : MonoBehaviour
         _info_bullet.tf_bulletClone.localRotation = tf_bulletFirstPos[_index].localRotation;
         _info_bullet.tf_bulletClone.localScale = tf_bulletFirstPos[_index].localScale;
         list_bulletPool[_index].Add(_obj_bullet);
-    }
+	}
 
     public void ReturnShellToPool(ParticleSystem _ps_shell, int _index)
     {

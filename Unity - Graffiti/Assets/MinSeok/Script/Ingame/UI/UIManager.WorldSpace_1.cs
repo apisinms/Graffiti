@@ -451,7 +451,7 @@ public partial class UIManager : MonoBehaviour
         {
             if (isStartCaptureCor[_triggerIdx] == false)
                 curCaptureCor[_triggerIdx] = StartCoroutine(Cor_DecreaseCaptureGageImg(
-               GameManager.instance.gameInfo.mainSprayingTime,
+				GameManager.instance.gameInfo.mainSprayingTime,
                _triggerIdx,
                _tag)); //내 점령지 인덱스를 넘김
         }
@@ -570,7 +570,7 @@ public partial class UIManager : MonoBehaviour
                     StateManager.instance.Idle(true); //점령완료 후 다시 IDLE상태변환
 #if NETWORK
                     NetworkManager.instance.SendIngamePacket();
-                    NetworkManager.instance.SendCaptureSuccess(_triggerIdx);
+					NetworkManager.instance.SendCaptureSuccess(_triggerIdx);
 #endif
                 }
                 yield break;

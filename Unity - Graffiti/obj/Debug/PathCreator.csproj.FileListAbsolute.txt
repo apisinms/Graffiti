@@ -265,7 +265,6 @@ C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEngine
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\nunit.framework.xml
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEditor.VR.xml
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\Temp\bin\Debug\UnityEditor.iOS.Extensions.Xcode.xml
-C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\obj\Debug\PathCreator.csprojAssemblyReference.cache
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\obj\Debug\PathCreator.csproj.CoreCompileInputs.cache
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\obj\Debug\PathCreator.csproj.CopyComplete
 C:\_PROGRAMMING_\_Portfolio\Graffiti\Unity - Graffiti\obj\Debug\PathCreator.dll

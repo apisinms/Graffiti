@@ -1,5 +1,6 @@
 #pragma once
 #include <tchar.h>
+#include "C_MemoryPool.h"
 using namespace std;
 
 #define DEBUG
@@ -28,6 +29,8 @@ using namespace std;
 #define KEEPALIVE_INTERVAL (KEEPALIVE_TIME / 20)		// Heart-beat가 없을시 INTERVAL ms마다 재전송한다(10번)
 
 #define SECOND 1
+#define PACKET_MAX_DELAY		0.1
+#define MAX_FIRE_PER_PACKET		5	// 패킷 당 최대 발사가능한 총알 수
 
 class C_ClientInfo;
 
@@ -71,6 +74,7 @@ struct BulletCollisionChecker
 {
 	byte playerBit;
 	int playerHitCountBit;
+
 	BulletCollisionChecker()
 	{
 		playerBit = 0;
@@ -84,7 +88,7 @@ struct BulletCollisionChecker
 	}
 };
 
-struct IngamePacket
+struct IngamePacket : public C_MemoryPool<IngamePacket>
 {
 	int playerNum;
 	float posX;
@@ -114,7 +118,7 @@ struct IngamePacket
 		this->action         = _pos.action;
 		this->health         = _pos.health;
 		this->collisionCheck = _pos.collisionCheck;
-		this->isReloading    = false;
+		this->isReloading    = _pos.isReloading;
 	}
 
 	void ResetIngamePacket()
@@ -124,6 +128,24 @@ struct IngamePacket
 		action = 0;
 		isReloading = false;
 		collisionCheck.ResetBulletCollisionChecker();
+	}
+};
+
+struct Weapon //: public C_MemoryPool<Weapon>
+{
+	char mainW;
+	char subW;
+
+public:
+	Weapon()
+	{
+		mainW = subW = 0;
+	}
+
+	Weapon(char _mainW, char _subW)
+	{
+		mainW = _mainW;
+		subW = _subW;
 	}
 };
 
@@ -149,24 +171,6 @@ enum GameType
 	_1vs1,
 
 	_MAX_GAMETYPE	// 게임 타입 개수
-};
-
-struct Weapon
-{
-	char mainW;
-	char subW;
-
-public:
-	Weapon() 
-	{
-		mainW = subW = 0;
-	}
-
-	Weapon(char _mainW, char _subW)
-	{
-		mainW = _mainW;
-		subW  = _subW;
-	}
 };
 
 struct Score
@@ -291,6 +295,7 @@ private:
 	vector<PositionInfo*>respawnInfo;	// 리스폰 정보
 	bool isRespawning;			// 리스폰 중인지
 	double respawnElapsedTime;	// 리스폰 on 일때 경과한 시간(초)
+
 	Score score;				// 내 스코어
 	int teamNum;				// 팀 번호
 	list<C_ClientInfo*> sectorPlayerList;	// 인접 섹터에 있는 플레이어 리스트
@@ -344,16 +349,55 @@ public:
 		sectorPlayerList.clear();
 	}
 
-	bool GetLoadStatus() { return loadStatus; }
-	void SetLoadStatus(bool _loadStatus) { loadStatus = _loadStatus; }
+	bool GetLoadStatus() 
+	{ 
+		if (this == nullptr)
+			return false;
 
-	void FocusOn() { isFocus = true; }
-	void FocusOff() { isFocus = false; }
-	bool GetFocus() { return isFocus; }
+		return loadStatus; 
+	}
+	void SetLoadStatus(bool _loadStatus) 
+	{ 
+		if (this == nullptr)
+			return;
 
-	IngamePacket* GetIngamePacket() { return gamePacket; }
+		loadStatus = _loadStatus; 
+	}
+
+	void FocusOn() 
+	{ 
+		if (this == nullptr)
+			return;
+
+		isFocus = true; 
+	}
+	void FocusOff() 
+	{ 
+		if (this == nullptr)
+			return;
+
+		isFocus = false; 
+	}
+	bool GetFocus() 
+	{
+		if (this == nullptr)
+			return false;
+
+		return isFocus;
+	}
+
+	IngamePacket* GetIngamePacket()
+	{ 
+		if (this == nullptr)
+			return nullptr;
+		
+		return gamePacket;
+	}
 	void SetIngamePacket(IngamePacket* _gamePacket)
 	{
+		if (this == nullptr)
+			return;
+
 		if (gamePacket != nullptr)
 			delete gamePacket;
 
@@ -362,55 +406,166 @@ public:
 
 	void SetPlayerNum(int _num)
 	{
+		if (this == nullptr)
+			return;
+
 		if (gamePacket == nullptr)
 			gamePacket = new IngamePacket();
 
 		gamePacket->playerNum = _num;
 	}
-	int GetPlayerNum() { return gamePacket->playerNum; }
-	int GetAnimation() { return gamePacket->action; }
 
-	INDEX GetIndex() { return index; }
-	void SetIndex(INDEX _index) { index = _index; }
+	int GetPlayerNum() 
+	{ 
+		if (this == nullptr)
+			return -1;
 
-	Weapon* GetWeapon() { return weapon; }
+		return gamePacket->playerNum; 
+	}
+	int GetAnimation() 
+	{
+		if (this == nullptr)
+			return -1;
+
+		return gamePacket->action; 
+	}
+
+	INDEX GetIndex() 
+	{ 
+		if (this == nullptr)
+		{
+			INDEX idx;
+			return idx;
+		}
+
+		return index; 
+	}
+	void SetIndex(INDEX _index) 
+	{ 
+		if (this == nullptr)
+			return;
+
+		index = _index; 
+	}
+
+	Weapon* GetWeapon() 
+	{ 
+		if (this == nullptr)
+			return nullptr;
+
+		return weapon; 
+	}
 	void SetWeapon(Weapon* _weapon) 
 	{
+		if (this == nullptr)
+			return;
+
 		if (weapon != nullptr)
 			delete weapon;
 
 		weapon = _weapon;
 	}
 
-	int GetBullet() { return bullet; }
-	void SetBullet(int _bullet) { bullet = _bullet; }
+	int GetBullet()
+	{ 
+		if (this == nullptr)
+			return -1;
 
-	//PlayerRespawnInfo& GetPlayerRespawnInfo() { return playerRespawnInfo; }
-	//void SetPlayerRespawnInfo(PlayerRespawnInfo& _info) { playerRespawnInfo = _info; }
+		return bullet; 
+	}
+	void SetBullet(int _bullet) 
+	{
+		if (this == nullptr)
+			return;
 
-	vector<PositionInfo*>& GetPlayerRespawnInfoList() { return respawnInfo; }
+		bullet = _bullet;
+	}
+
+	vector<PositionInfo*>& GetPlayerRespawnInfoList()
+	{ 
+		return respawnInfo; 
+	}
 	PositionInfo* GetPlayerRespawnInfo(int _idx)
 	{
-		if (_idx < 0 || _idx > respawnInfo.size())
+		if (_idx < 0 || _idx > respawnInfo.size()
+			|| this == nullptr)
 			return nullptr;
 
 		return respawnInfo[_idx];
 	}
 
-	bool IsRespawning() { return isRespawning; }
-	void RespawnOn() { isRespawning = true; }
-	void RespawnOff() { respawnElapsedTime = 0.0; isRespawning = false; }
+	// respawn
+	bool IsRespawning() 
+	{ 
+		if (this == nullptr)
+			return false;
+
+		return isRespawning; 
+	}
+	void RespawnOn() 
+	{ 
+		if (this == nullptr)
+			return;
+
+		isRespawning = true; 
+	}
+
+	void RespawnOff() 
+	{ 
+		if (this == nullptr)
+			return;
+
+		respawnElapsedTime = 0.0; 
+		isRespawning = false; 
+	}
 	
-	double GetRespawnElapsedTime() { return respawnElapsedTime; }
-	void SetRespawnElapsedTime(double _time) { respawnElapsedTime = _time; }
+	double GetRespawnElapsedTime() 
+	{ 
+		if (this == nullptr)
+			return -1;
 
-	Score& GetScore() { return score; }
+		return respawnElapsedTime;
+	}
+	void SetRespawnElapsedTime(double _time) 
+	{ 
+		if (this == nullptr)
+			return;
 
-	int GetTeamNum() {return teamNum;}
-	void SetTeamNum(int _teamNum) {teamNum = _teamNum;}
+		respawnElapsedTime = _time; 
+	}
 
-	list<C_ClientInfo*>& GetSectorPlayerList() { return sectorPlayerList; }
-	void SetSectorPlayerList(list<C_ClientInfo*> _playerList) { sectorPlayerList = _playerList; }	// Set할때는 참조로 받으면 지역변수 소멸되면서 불법접근 됨
+	Score& GetScore() 
+	{
+		return score; 
+	}
+
+	int GetTeamNum() 
+	{
+		if (this == nullptr)
+			return -1;
+
+		return teamNum;
+	}
+	void SetTeamNum(int _teamNum) 
+	{
+		if (this == nullptr)
+			return;
+
+		teamNum = _teamNum;
+	}
+
+	list<C_ClientInfo*>& GetSectorPlayerList() 
+	{
+		return sectorPlayerList; 
+	}
+
+	void SetSectorPlayerList(list<C_ClientInfo*> _playerList) 
+	{ 
+		if (this == nullptr)
+			return;
+
+		sectorPlayerList = _playerList; 
+	}	// Set할때는 참조로 받으면 지역변수 소멸되면서 불법접근 됨
 };
 
 enum STATE : int

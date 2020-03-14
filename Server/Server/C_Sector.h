@@ -12,8 +12,6 @@ private:
 	vector<SectorInstance*> adjacencySector;	// 인접 섹터 목록
 
 	list<C_ClientInfo*>playerList;				// 섹터에 존재하는 플레이어 리스트
-	//list<C_Item*>itemList;					// 섹터에 존재하는 아이템 리스트(추가해야함)
-	//list<C_Bullet*>bulletList;				// 섹터에 존재하는 총알 리스트(추가할지 애매함)
 
 public:
 	SectorInstance()
@@ -53,8 +51,6 @@ public:
 
 		_newIdx.i = (int)(abs(_posZ / GRID_SIZE));
 		_newIdx.j = (int)(abs(_posX / GRID_SIZE));
-
-		//printf("GetIndex:%d, %d\n", _newIdx.i, _newIdx.j);
 
 		// 섹터 범위 안에 있는 인덱스이면 true리턴.
 		if (_newIdx.i >= 0 && _newIdx.i < ROW
@@ -100,7 +96,7 @@ public:
 	byte FlagPlayerBit(vector<SectorInstance*>& _enterSector);
 	byte FlagPlayerBit(list<C_ClientInfo*>& _playerList);
 	
-		// 인덱스를 토대로 해당 섹터 + 인접 섹터의 플레이어 리스트를 하나로 병합하여 리턴해줌
+	// 인덱스를 토대로 해당 섹터 + 인접 섹터의 플레이어 리스트를 하나로 병합하여 리턴해줌
 	list<C_ClientInfo*> GetSectorPlayerList(INDEX _Idx);
 
 	byte GetMovedSectorPlayerList(INDEX _beforeIdx, INDEX _curIdx,

@@ -191,6 +191,22 @@ public partial class NetworkManager : MonoBehaviour
         bw.Write(sendBuf, 0, packetSize);
     }
 
+	// 점령 성공했다고 보낸다.
+	public void SendCaptureSuccess(int _buildingIdx)
+	{
+		int packetSize = 0;
+
+		// 점령성공 프로토콜
+		protocol = SetProtocol(
+		   STATE_PROTOCOL.INGAME_STATE,
+		   PROTOCOL.CAPTURE_PROTOCOL,
+		   RESULT.INGAME_SUCCESS);
+
+		// 점령성공 프로토콜 전송(건물 인덱스도 같이)
+		PackPacket(ref sendBuf, protocol, _buildingIdx, out packetSize);
+		bw.Write(sendBuf, 0, packetSize);
+	}
+
     // 로비로 갈래
     public void SendGotoLobby()
     {
@@ -205,23 +221,6 @@ public partial class NetworkManager : MonoBehaviour
         // 로비가기 프로토콜 전송
         PackPacket(ref sendBuf, protocol, out packetSize);
         bw.Write(sendBuf, 0, packetSize);
-    }
-
-    // 점령 성공했다고 보낸다.
-    public void SendCaptureSuccess(int _buildingIdx)
-    {
-        int packetSize = 0;
-
-        // 점령성공 프로토콜
-        protocol = SetProtocol(
-           STATE_PROTOCOL.INGAME_STATE,
-           PROTOCOL.CAPTURE_PROTOCOL,
-           RESULT.INGAME_SUCCESS);
-
-        // 점령성공 프로토콜 전송(건물 인덱스도 같이)
-        PackPacket(ref sendBuf, protocol, _buildingIdx, out packetSize);
-        bw.Write(sendBuf, 0, packetSize);
-
     }
 
     public void SendItemCode(ItemCode _code)

@@ -1,13 +1,12 @@
 #pragma once
 #include "C_Global.h"
-#include "C_SyncCS.h"
 
 #define MEMBER_PER_TEAM	2
 
 #define TIMER_INTERVAL	50	// 타이머 간격
 #define TIMER_INTERVAL_TIMES_MILLISEC	(TIMER_INTERVAL * 0.001)	// 타이머 간격 * 밀리초단위
 
-#define WEAPON_SELTIME			10 + 3			// 무기 선택 시간(3초 정도는 로딩 + 클라 Invoke 시간 고려)
+#define WEAPON_SELTIME			1 + 3			// 무기 선택 시간(3초 정도는 로딩 + 클라 Invoke 시간 고려)
 #define CAR_SPAWN_TIME_2vs2_SEC	5				// 차 생성 주기(2vs2)
 #define CAR_SPAWN_TIME_1vs1_SEC	10 				// 차 생성 주기(1vs1)
 #define CAPTURE_BONUS_TIME_SEC	10 				// 점령 보너스 시간 주기
@@ -132,7 +131,7 @@ private:
 	bool GetPosProcess(C_ClientInfo* _ptr, char* _buf);		// 위치를 얻어주는 함수
 	bool OnFocusProcess(C_ClientInfo* _ptr);		// 포커스 On시의 처리 함수(다른 플레이어 인게임 정보 보내줌)
 	bool HitAndRunProcess(C_ClientInfo* _ptr, char* _buf);	// 뺑소니 당함
-	bool CaptureProcess(C_ClientInfo* _ptr, char* _buf);
+	bool CaptureSuccess(C_ClientInfo* _ptr, char* _buf);	// 점령 성공
 	bool ItemGetProcess(C_ClientInfo* _ptr, char* _buf);	// 아이템 먹음
 	
 	void InitalizePlayersInfo(RoomInfo* _room);
@@ -147,12 +146,11 @@ private:
 	bool CheckMaxFire(C_ClientInfo* _shotPlayer, int _numOfBullet);
 	int GetNumOfBullet(int _shootCountBit, byte _hitPlayerNum);
 	bool BulletHitProcess(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer, int _numOfBullet);
-	void BulletDecrease(C_ClientInfo* _shotPlayer, int _numOfBullet);
+	bool BulletDecrease(C_ClientInfo* _shotPlayer, int _numOfBullet);
 	bool CheckBulletHitAndGetHitPlayers(C_ClientInfo* _ptr, IngamePacket& _recvPacket, vector<C_ClientInfo*>& _hitPlayers);
 	void BulletHitSend(C_ClientInfo* _shotPlayer, const vector<C_ClientInfo*>& _hitPlayers);
 	bool CheckSameTeam(C_ClientInfo* _player, int _otherPlayerNum);
 
-	void RefillBulletAndHealth(C_ClientInfo* _respawnPlayer);
 	void RefillBullet(C_ClientInfo* _player);
 	void RefillHealth(C_ClientInfo* _player);
 	void ChangeHealthAmount(C_ClientInfo* _player, float _amount);
@@ -176,7 +174,7 @@ public:
 	void WeaponTimerChecker(RoomInfo* _room);
 	void LoadingTimeChecker(RoomInfo* _room);
 	void ReadyTimeChecker(RoomInfo* _room);
-	void RespawnChecker(RoomInfo* _room);
+	void IndividualChecker(RoomInfo* _room);
 	void CarSpawnChecker(RoomInfo* _room);
 	void InGameTimeSync(RoomInfo* _room);
 	void CaptureBonusTimeChecker(RoomInfo* _room);

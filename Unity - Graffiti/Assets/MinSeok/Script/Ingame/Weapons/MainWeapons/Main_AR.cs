@@ -198,9 +198,11 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
 
 	public void CheckFireRange(GameObject _obj_bullet, BulletCollision._BULLET_CLONE_INFO _info_bullet, int _index)
     {
-        if (Vector3.Distance(_obj_bullet.transform.position, PlayersManager.instance.obj_players[_index].transform.position) >= Main_AR.instance.weaponManager.weaponInfoAR.range)
-            PoolManager.instance.ReturnGunToPool(_obj_bullet, _info_bullet, _index);
-    }
+		if (Vector3.Distance(_obj_bullet.transform.position, PlayersManager.instance.obj_players[_index].transform.position) >= Main_AR.instance.weaponManager.weaponInfoAR.range)
+		{
+			PoolManager.instance.ReturnGunToPool(_obj_bullet, _info_bullet, _index);
+		}
+	}
 
     private void StartDecreaseReloadGage(int _index)
     {
@@ -231,6 +233,8 @@ public class Main_AR : MonoBehaviour, IMainWeaponType
     {
         playerARInfo[_index].curAmmo = weaponManager.weaponInfoAR.maxAmmo;
         UIManager.instance.SetAmmoStateTxt(playerARInfo[_index].curAmmo);
+
+		// 서버로 장전 완료 패킷 전송
     }
 
     public void ReloadAmmoProcess(int _index)

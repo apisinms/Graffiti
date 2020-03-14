@@ -23,7 +23,7 @@ public class LeftJoystick : MonoBehaviour, IJoystickControll
     private _INPUT_TYPE inputType;
     float timer;
     bool timerFlag = true;
-    public float waitTime = C_Global.packetInterval * 2;   // 0.2초
+    public float waitTime = C_Global.packetInterval * 3;   // 0.3초
 
     protected struct _Joystick
     {

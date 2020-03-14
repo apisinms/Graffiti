@@ -211,16 +211,19 @@ void InGameManager::PackPacket(char* _setptr, RoomInfo* _room, int& _size)
 	{
 		player = _room->GetPlayerByIndex(i);
 
-		// 2-1. 플레이어 번호 패킹
-		playerNum = player->GetPlayerInfo()->GetPlayerNum();
-		memcpy(ptr, &playerNum, sizeof(playerNum));
-		ptr = ptr + sizeof(playerNum);
-		_size = _size + sizeof(playerNum);
+		if (player->GetPlayerInfo() != nullptr)
+		{
+			// 2-1. 플레이어 번호 패킹
+			playerNum = player->GetPlayerInfo()->GetPlayerNum();
+			memcpy(ptr, &playerNum, sizeof(playerNum));
+			ptr = ptr + sizeof(playerNum);
+			_size = _size + sizeof(playerNum);
 
-		// 2-2. 스코어 패킹!
-		memcpy(ptr, &player->GetPlayerInfo()->GetScore(), sizeof(Score));
-		ptr = ptr + sizeof(Score);
-		_size = _size + sizeof(Score);
+			// 2-2. 스코어 패킹!
+			memcpy(ptr, &player->GetPlayerInfo()->GetScore(), sizeof(Score));
+			ptr = ptr + sizeof(Score);
+			_size = _size + sizeof(Score);
+		}
 	}
 }
 
@@ -502,7 +505,7 @@ bool InGameManager::UpdateProcess(C_ClientInfo* _ptr, char* _buf)
 	IngamePacket recvPacket;
 	UnPackPacket(_buf, recvPacket);
 
-	// 1. 움직임 검사(false이면 불법 움직임은 false리턴)
+	// 1. 움직임 검사(불법 움직임은 false리턴)
 	CheckMovement(_ptr, recvPacket);
 
 	// 2. 총알 검사
@@ -613,7 +616,10 @@ bool InGameManager::HitAndRunProcess(C_ClientInfo* _ptr, char* _buf)
 	UnPackPacket(_buf, posX, posZ);
 
 	// 이 플레이어 죽은 횟수 1증가
-	_ptr->GetPlayerInfo()->GetScore().numOfDeath++;
+	if (_ptr->GetPlayerInfo() != nullptr)
+	{
+		_ptr->GetPlayerInfo()->GetScore().numOfDeath++;
+	}
 
 	// 모든 플레이어들에게 내가 차에 치여 죽었다는 정보(힘과함께)를 보내준다
 	protocol = SetProtocol(
@@ -632,19 +638,18 @@ bool InGameManager::HitAndRunProcess(C_ClientInfo* _ptr, char* _buf)
 	return true;
 }
 
-bool InGameManager::CaptureProcess(C_ClientInfo* _ptr, char* _buf)
+bool InGameManager::CaptureSuccess(C_ClientInfo* _ptr, char* _buf)
 {
-	// 방이 없는 경우 나가게 예외처리
-	if (_ptr == nullptr
-	|| _ptr->GetRoom()->GetRoomStatus() != ROOMSTATUS::ROOM_GAME)
-	{
-		//printf("건물 점령했는데 방이 없음\n");
-		return false;
-	}
-
 	PROTOCOL_INGAME protocol;
 	char buf[BUFSIZE] = { 0, };
 	int packetSize = 0;
+
+	// 방이 없는 경우 나가게 예외처리
+	if (_ptr == nullptr
+		|| _ptr->GetRoom()->GetRoomStatus() != ROOMSTATUS::ROOM_GAME)
+	{
+		return false;
+	}
 
 	// 점령한 건물 인덱스 얻어옴
 	int buildingIdx;
@@ -655,6 +660,7 @@ bool InGameManager::CaptureProcess(C_ClientInfo* _ptr, char* _buf)
 		printf("건물 인덱스가 음수다\n");
 		return false;
 	}
+
 
 	// 방, 팀 정보 얻어옴
 	RoomInfo* room = _ptr->GetRoom();
@@ -667,7 +673,11 @@ bool InGameManager::CaptureProcess(C_ClientInfo* _ptr, char* _buf)
 	if (building->owner != nullptr)
 	{
 		int teamNum = building->owner->GetPlayerInfo()->GetTeamNum();
-		building->owner->GetPlayerInfo()->GetScore().captureNum--;	// 개인
+
+		if (building->owner->GetPlayerInfo() != nullptr)
+		{
+			building->owner->GetPlayerInfo()->GetScore().captureNum--;	// 개인
+		}
 	}
 
 	// 2. 그리고 소유자를 이 클라로하고 점령중인 건물 개수 증가
@@ -683,15 +693,21 @@ bool InGameManager::CaptureProcess(C_ClientInfo* _ptr, char* _buf)
 	}
 
 	int capturePoint = gameInfo[gameType]->capturePoint;
-	_ptr->GetPlayerInfo()->GetScore().captureScore += capturePoint;
+	if (_ptr->GetPlayerInfo() != nullptr)
+	{
+		_ptr->GetPlayerInfo()->GetScore().captureScore += capturePoint;
+	}
 
 	// 4. 점령 카운트증가
-	_ptr->GetPlayerInfo()->GetScore().captureCount++;
+	if (_ptr->GetUserInfo() != nullptr && _ptr->GetPlayerInfo() != nullptr )
+	{
+		_ptr->GetPlayerInfo()->GetScore().captureCount++;
 
-	wprintf(L"건물 번호=%d, %s점령, 단독점령횟수:%d\n",
-		buildingIdx,
-		_ptr->GetUserInfo()->nickname,
-		_ptr->GetPlayerInfo()->GetScore().captureCount);
+		wprintf(L"건물 번호=%d, %s점령, 단독점령횟수:%d\n",
+			buildingIdx,
+			_ptr->GetUserInfo()->nickname,
+			_ptr->GetPlayerInfo()->GetScore().captureCount);
+	}
 
 	// 5. 건물 점령한놈의 플레이어 넘버 + 건물 번호를 모든 클라들에게 보냄.
 	protocol = SetProtocol(
@@ -1010,6 +1026,7 @@ bool InGameManager::CheckMovement(C_ClientInfo* _ptr, IngamePacket& _recvPacket)
 
 		// 마지막으로, 플레이어의 패킷 정보를 저장해둔다.
 		IngamePacket* setPacket = new IngamePacket(_recvPacket);
+		setPacket->health = _ptr->GetPlayerInfo()->GetIngamePacket()->health;	// 단, 체력은 빼고(체력 감소는 총알 처리 부분에서 하니까)
 		_ptr->GetPlayerInfo()->SetIngamePacket(setPacket);
 
 		return true;
@@ -1212,6 +1229,8 @@ bool InGameManager::CheckBullet(C_ClientInfo* _ptr, IngamePacket& _recvPacket)
 		BulletHitSend(_ptr, hitPlayers);
 	}
 
+	//printf("남은총알:%d\n", _ptr->GetPlayerInfo()->GetBullet());
+
 	return validHitFlag;
 }
 
@@ -1251,8 +1270,14 @@ bool InGameManager::CheckMaxFire(C_ClientInfo* _shotPlayer, int _numOfBullet)
 	WeaponInfo* shotPlayerWeapon = weaponInfo[_shotPlayer->GetPlayerInfo()->GetWeapon()->mainW];
 	bool result = false;
 
-	// 원래 0.1초당 나갈 수 있는 발 수를 계산해서 검사해야하지만 최소 1발(정수)은 보장해야하기 때문에 간단히 검사함
-	if ((_numOfBullet <= shotPlayerWeapon->bulletPerShot) && (_numOfBullet > 0))
+	// 최소 보장 발 수인 1발이라면 정상 처리해준다.
+	if (_numOfBullet == 1)
+	{
+		result = true;
+	}
+
+	// 0.1초당 나갈 수 있는 발 수 이하면 ok(유도리있게)
+	else if((_numOfBullet / shotPlayerWeapon->bulletPerShot) <= MAX_FIRE_PER_PACKET)
 	{
 		result = true;
 	}
@@ -1316,7 +1341,7 @@ bool InGameManager::BulletHitProcess(C_ClientInfo* _shotPlayer, C_ClientInfo* _h
 
 	return true;
 }
-void InGameManager::BulletDecrease(C_ClientInfo* _shotPlayer, int _numOfBullet)
+bool InGameManager::BulletDecrease(C_ClientInfo* _shotPlayer, int _numOfBullet)
 {
 	WeaponInfo* shotPlayerWeapon = weaponInfo[_shotPlayer->GetPlayerInfo()->GetWeapon()->mainW];
 
@@ -1327,7 +1352,7 @@ void InGameManager::BulletDecrease(C_ClientInfo* _shotPlayer, int _numOfBullet)
 	// 이미 총알 0발이면 나감
 	if (originalBullet == 0)
 	{
-		return;
+		return false;
 	}
 
 	if (originalBullet - minusBullet <= 0)
@@ -1339,12 +1364,14 @@ void InGameManager::BulletDecrease(C_ClientInfo* _shotPlayer, int _numOfBullet)
 	{
 		_shotPlayer->GetPlayerInfo()->SetBullet(originalBullet - minusBullet);
 	}
+
+	return true;
 }
 bool InGameManager::CheckBulletHitAndGetHitPlayers(C_ClientInfo* _ptr, IngamePacket& _recvPacket, vector<C_ClientInfo*>& _hitPlayers)
 {
 	bool validHitFlag = false;	// 누구라도 맞았는지
 
-	// 누구라도 쐈다면 플레이어 비트가 셋팅되어있으므로
+	// 누구라도 쐈다면 플레이어 비트가 셋팅되어있으므로(허공에쏘면 본인이 세팅됨)
 	if (_recvPacket.collisionCheck.playerBit != 0)
 	{
 		// 1. 우선 최대 발 수 이내로 쐈는지 검사한다.
@@ -1355,7 +1382,8 @@ bool InGameManager::CheckBulletHitAndGetHitPlayers(C_ClientInfo* _ptr, IngamePac
 		}
 		else
 		{
-			BulletDecrease(_ptr, totalNumOfBullet);	// 쏜 만큼 총알 뺌
+			// 쏜 만큼 총알 뺌
+			BulletDecrease(_ptr, totalNumOfBullet);
 		}
 
 		// 2. 맞은 플레이어들이 사정거리에 있는지 검사한다.
@@ -1488,15 +1516,8 @@ bool InGameManager::CheckSameTeam(C_ClientInfo* _player, int _otherPlayerNum)
 }
 
 /// about property
-void InGameManager::RefillBulletAndHealth(C_ClientInfo* _respawnPlayer)
-{
-
-	RefillBullet(_respawnPlayer);
-	RefillHealth(_respawnPlayer);
-}
 void InGameManager::RefillBullet(C_ClientInfo* _player)
 {
-
 	int maxbullet = weaponInfo[_player->GetPlayerInfo()->GetWeapon()->mainW]->maxAmmo;
 	_player->GetPlayerInfo()->SetBullet(maxbullet);
 }
@@ -1545,10 +1566,22 @@ void InGameManager::Kill(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer)
 		return;
 	}
 
-	_shotPlayer->GetPlayerInfo()->GetScore().numOfKill++;	// 쏜 놈
-	_hitPlayer->GetPlayerInfo()->GetScore().numOfDeath++;	// 죽은 놈
+	if (_shotPlayer->GetPlayerInfo() != nullptr)
+	{
+		_shotPlayer->GetPlayerInfo()->GetScore().numOfKill++;	// 쏜 놈
+	}
 
-	int gameType = _shotPlayer->GetGameType();
+	if (_hitPlayer->GetPlayerInfo() != nullptr)
+	{
+		_hitPlayer->GetPlayerInfo()->GetScore().numOfDeath++;	// 죽은 놈
+	}
+
+	int gameType;
+	if (_shotPlayer != nullptr)
+	{
+		gameType = _shotPlayer->GetGameType();
+	}
+
 	if (gameType < 0)
 	{
 		printf("gameType이 음수다\n");
@@ -1556,9 +1589,11 @@ void InGameManager::Kill(C_ClientInfo* _shotPlayer, C_ClientInfo* _hitPlayer)
 	}
 
 	// 개인 킬 점수 더함
-	_shotPlayer->GetPlayerInfo()->GetScore().killScore +=
-		gameInfo[gameType]->killPoint;
-
+	if (_shotPlayer->GetPlayerInfo() != nullptr)
+	{
+		_shotPlayer->GetPlayerInfo()->GetScore().killScore +=
+			gameInfo[gameType]->killPoint;
+	}
 }
 
 void InGameManager::ResetPlayerInfo(C_ClientInfo* _player)
@@ -1670,7 +1705,7 @@ bool InGameManager::IngameProtocolChecker(C_ClientInfo* _ptr)
 	break;
 
 	case CAPTURE_PROTOCOL:
-		return CaptureProcess(_ptr, buf);
+		return CaptureSuccess(_ptr, buf);
 
 	case ITEM_PROTOCOL:
 		return ItemGetProcess(_ptr, buf);
@@ -1847,7 +1882,7 @@ DWORD WINAPI InGameManager::InGameTimerThread(LPVOID _arg)
 				room->GetInGameTimer()->Start();
 			}
 
-			gameManager->RespawnChecker(room);		// 리스폰 검사
+			gameManager->IndividualChecker(room);	// 개인 속성(재장전, 리스폰, 점령) 검사
 			gameManager->CarSpawnChecker(room);		// 차 스폰 검사
 			gameManager->InGameTimeSync(room);		// 시간 동기화 검사
 			gameManager->CaptureBonusTimeChecker(room);	// 점령 보너스 검사
@@ -1907,8 +1942,7 @@ DWORD WINAPI InGameManager::InGameTimerThread(LPVOID _arg)
 	return 0;	// 그리고 쓰레드 종료
 }
 
-// 리스폰 체커
-void InGameManager::RespawnChecker(RoomInfo* _room)
+void InGameManager::IndividualChecker(RoomInfo* _room)
 {
 	IC_CS cs;
 
@@ -1928,7 +1962,7 @@ void InGameManager::RespawnChecker(RoomInfo* _room)
 	{
 		player = *iter;
 
-		// 죽어서 리스폰 대기중인 상태라면
+		// 1. 죽어서 리스폰 대기중인 상태라면
 		if (player->GetPlayerInfo()->IsRespawning() == true)
 		{
 			// 리스폰 대기 후 얼마나 지났는지 얻어온다.
@@ -1959,7 +1993,8 @@ void InGameManager::RespawnChecker(RoomInfo* _room)
 				player->GetPlayerInfo()->SetIngamePacket(new IngamePacket(packet));
 
 				// 2. 그리고 리스폰 해야되니까 체력이랑, 총알 리셋 한다.
-				RefillBulletAndHealth(player);
+				RefillHealth(player);
+				RefillBullet(player);
 
 				// 3. ListSend 함수로 같은 방에 있는 모든 플레이어들에게 리스폰 한다고 전송한다.
 				protocol = SetProtocol(
